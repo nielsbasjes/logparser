@@ -25,8 +25,7 @@ Call the loader with a dummy file (must exist, won't be read) and the parameter 
 
 This will return a list of all possible fields in a format that is simply all the possible fields.
 In version 1.6 an option was added to get this output in a copy-paste step away from (almost)
-working code by either requesting 'example' or leaving the request empty.
-
+working code by either requesting 'example' or leaving the list of requested fields empty.
 
     Example = 
       LOAD 'test.pig' -- Any file as long as it exists 
