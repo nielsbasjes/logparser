@@ -4,3 +4,15 @@
 *.jar
 *.war
 *.ear
+
+target
+*.bak
+*.swp
+*~
+
+#Eclipse stuff
+.metadata
+.settings
+.classpath
+.project
+hs_err_pid*.log
