@@ -94,7 +94,7 @@ public class ApacheHttpdLogParserTest {
      */
     @Test
     public void fullTest1() throws Exception {
-        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:49:40 +0200] \"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
+        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [30/Aug/2012:23:49:40 +0200] \"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
                 + "80 \"\" \"http://localhost/\" 351 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
                 + "\"jquery-ui-theme=Eggplant\" \"Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl\" \"-\" "
                 + "\"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
@@ -113,7 +113,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals("", results.get("NUMBER:connection.client.logname"));
         assertEquals("", results.get("STRING:connection.client.user"));
-        assertEquals("[10/Aug/2012:23:49:40 +0200]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("[30/Aug/2012:23:49:40 +0200]", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("40", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png?aap=noot", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
@@ -121,7 +121,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("http://localhost/", results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));
-        assertEquals("10", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals("30", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("351", results.get("MICROSECONDS:server.process.time"));
