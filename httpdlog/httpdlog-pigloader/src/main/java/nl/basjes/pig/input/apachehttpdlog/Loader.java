@@ -97,7 +97,7 @@ public class Loader
             MapWritable value = (MapWritable) reader.getCurrentValue();
 
             if (value != null) {
-                List<String> values = new ArrayList<String>();
+                List<Object> values = new ArrayList<Object>();
                 Text fieldNameText = new Text();
                 for (String fieldName : requestedFields) {
                     fieldNameText.set(fieldName);
@@ -105,7 +105,12 @@ public class Loader
                     if (theValue == null) {
                         values.add(null);
                     } else {
-                        values.add(theValue.toString());
+                        if (isNumerical(fieldName)){
+                            values.add(Long.parseLong(theValue.toString()));
+                        } else {
+                            values.add(theValue.toString());
+                        }
+
                     }
                 }
                 tuple = tupleFactory.newTuple(values);
@@ -143,6 +148,23 @@ public class Loader
 
     // ------------------------------------------
 
+    private boolean isNumerical(String fieldName){
+        return (
+                // FIXME: This property should come from the disector that created the specific field.
+                fieldName.startsWith("NUMBER:") || 
+                fieldName.startsWith("BYTES:") || 
+                fieldName.startsWith("MICROSECONDS:") ||
+                fieldName.startsWith("SECONDS:") || 
+                fieldName.startsWith("TIME.DAY:") || 
+                fieldName.startsWith("TIME.HOUR:") || 
+                fieldName.startsWith("TIME.MINUTE:") || 
+                fieldName.startsWith("TIME.MONTH:") || 
+                fieldName.startsWith("TIME.SECOND:") || 
+                fieldName.startsWith("TIME.YEAR:") ||
+                fieldName.startsWith("COUNT:")
+            );
+    }
+    
     @Override
     public ResourceSchema getSchema(String location, Job job) throws IOException {
         ResourceSchema rs = new ResourceSchema();
@@ -152,21 +174,8 @@ public class Loader
             ResourceFieldSchema rfs = new ResourceFieldSchema();
             rfs.setName(fieldName);
             rfs.setDescription(fieldName);
-            
-            if (
-                    // FIXME: This property should come from the disector that created the specific field.
-                    fieldName.startsWith("NUMBER:") || 
-                    fieldName.startsWith("BYTES:") || 
-                    fieldName.startsWith("MICROSECONDS:") ||
-                    fieldName.startsWith("SECONDS:") || 
-                    fieldName.startsWith("TIME.DAY:") || 
-                    fieldName.startsWith("TIME.HOUR:") || 
-                    fieldName.startsWith("TIME.MINUTE:") || 
-                    fieldName.startsWith("TIME.MONTH:") || 
-                    fieldName.startsWith("TIME.SECOND:") || 
-                    fieldName.startsWith("TIME.YEAR:") ||
-                    fieldName.startsWith("COUNT:")
-                ) {
+
+            if (isNumerical(fieldName)){
                 rfs.setType(DataType.LONG);
             } else {
                 rfs.setType(DataType.CHARARRAY);
