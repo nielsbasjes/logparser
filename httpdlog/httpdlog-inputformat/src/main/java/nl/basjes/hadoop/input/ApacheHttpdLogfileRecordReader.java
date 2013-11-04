@@ -43,7 +43,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private static final String APACHE_HTTPD_LOGFILE_INPUT_FORMAT = "Apache HTTPD Logfile InputFormat";
 
-    protected class ParsedRecord extends MapWritable {
+    public class ParsedRecord extends MapWritable {
         public void set(String name, String value) {
             put(new Text(name), new Text(value));
         }
@@ -105,8 +105,7 @@ public class ApacheHttpdLogfileRecordReader extends
                                 "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
             }
 
-            parser = new ApacheHttpdLoglineParser<ParsedRecord>(
-                    ParsedRecord.class, logformat);
+            parser = getParser(logformat);
 
             String[] fieldList = null;
             if (requestedFields == null) {
@@ -143,6 +142,11 @@ public class ApacheHttpdLogfileRecordReader extends
         } catch (NoSuchMethodException e) {
             throw new IOException(e.toString());
         }
+    }
+
+    public ApacheHttpdLoglineParser<ParsedRecord> getParser(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
+        return new ApacheHttpdLoglineParser<ParsedRecord>(
+                ParsedRecord.class, logformat);
     }
 
     // --------------------------------------------
