@@ -1,4 +1,4 @@
-package nl.basjes.parse;
+package nl.basjes.hadoop.input;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -8,9 +8,6 @@ import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-
-import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
-import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 
 public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     public OmnitureInputFormat() {
@@ -24,7 +21,7 @@ public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     @Override
     public RecordReader<LongWritable, MapWritable> createRecordReader(final InputSplit split, final TaskAttemptContext context) throws IOException,
             InterruptedException {
-        return new ApacheHttpdLogfileRecordReader(getLogformat(), getRequestedFields());
+        return new OmnitureRecordReader(getLogformat(), getRequestedFields());
     }
 
 }
