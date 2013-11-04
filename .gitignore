@@ -9,6 +9,7 @@ target
 *.bak
 *.swp
 *~
+bin
 
 #Eclipse stuff
 .metadata
@@ -16,3 +17,11 @@ target
 .classpath
 .project
 hs_err_pid*.log
+
+#test files
+x
+xx
+y
+yy
+z
+zz
