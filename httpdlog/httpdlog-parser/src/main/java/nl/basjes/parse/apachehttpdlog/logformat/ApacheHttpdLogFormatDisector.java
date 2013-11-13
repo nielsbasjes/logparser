@@ -488,7 +488,7 @@ public final class ApacheHttpdLogFormatDisector implements Disector {
         parsers.add(new TokenParser("%{cookie}i"    , "request.cookies" ,   "HTTP.COOKIES"   , TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("%{set-cookie}o", "response.cookies",   "HTTP.SETCOOKIES", TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("%{user-agent}i", "request.user-agent", "HTTP.USERAGENT",  TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{referer}i",    "request.referer",    "HTTP.URI",        TokenParser.FORMAT_NO_SPACE_STRING, 1));
+        parsers.add(new TokenParser("%{referer}i",    "request.referer",    "HTTP.URI",        TokenParser.FORMAT_STRING, 1));
 
         return parsers;
     }

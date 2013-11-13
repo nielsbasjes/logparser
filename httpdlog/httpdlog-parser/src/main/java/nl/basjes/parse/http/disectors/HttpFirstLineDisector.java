@@ -30,7 +30,7 @@ public class HttpFirstLineDisector implements Disector {
     // The "first line" of a request can be split up a bit further
     // The format of the first line of an HTTP/1.x request looks like this:
     private final Pattern firstlineSplitter = Pattern
-            .compile("^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) ([^ ]*) (HTTP)/(.*)$");
+            .compile("^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) (.*) (HTTP)/(.*)$");
 
     // --------------------------------------------
 
