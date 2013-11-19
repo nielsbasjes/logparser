@@ -47,6 +47,14 @@ public class ApacheHttpdLogfileInputFormat extends
     }
 
     private String logformat = null;
+    public String getLogformat() {
+        return logformat;
+    }
+
+    public Set<String> getRequestedFields() {
+        return requestedFields;
+    }
+
     private Set<String> requestedFields = new HashSet<String>();
 
     public ApacheHttpdLogfileInputFormat() {
@@ -65,7 +73,7 @@ public class ApacheHttpdLogfileInputFormat extends
     public RecordReader<LongWritable, MapWritable> createRecordReader(
             final InputSplit split, final TaskAttemptContext context)
         throws IOException, InterruptedException {
-        return new ApacheHttpdLogfileRecordReader(logformat, requestedFields);
+        return new ApacheHttpdLogfileRecordReader(getLogformat(), getRequestedFields());
     }
 
 }

@@ -79,7 +79,17 @@ public class Loader
     @Override
     public InputFormat<?, ?> getInputFormat() 
         throws IOException {
-        return new ApacheHttpdLogfileInputFormat(logformat, requestedFields);
+        return new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
+    }
+
+    // ------------------------------------------
+
+    public String getLogformat() {
+        return logformat;
+    }
+
+    public List<String> getRequestedFields() {
+        return requestedFields;
     }
 
     // ------------------------------------------

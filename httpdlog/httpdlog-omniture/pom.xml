@@ -34,9 +34,62 @@
   </properties>
   <dependencies>
     <dependency>
+      <groupId>org.apache.pig</groupId>
+      <artifactId>pig</artifactId>
+      <version>${pig.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>httpdlog-parser</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>httpdlog-inputformat</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+        <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>httpdlog-pigloader</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
   </dependencies>
+  
+    <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-super-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/job.xml</descriptor>
+              </descriptors>
+              <archive>
+                <addMavenDescriptor>true</addMavenDescriptor>
+                <manifestEntries>
+                  <Class-Path>/</Class-Path>
+                </manifestEntries>
+              </archive>
+              <!-- <archive> <addMavenDescriptor>true</addMavenDescriptor> <manifest> <mainClass>${mainClass}</mainClass> </manifest> </archive> -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>

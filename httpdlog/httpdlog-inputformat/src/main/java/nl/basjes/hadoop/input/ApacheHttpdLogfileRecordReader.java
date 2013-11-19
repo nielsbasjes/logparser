@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
@@ -43,7 +44,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private static final String APACHE_HTTPD_LOGFILE_INPUT_FORMAT = "Apache HTTPD Logfile InputFormat";
 
-    protected class ParsedRecord extends MapWritable {
+    public class ParsedRecord extends MapWritable {
         public void set(String name, String value) {
             put(new Text(name), new Text(value));
         }
@@ -52,7 +53,7 @@ public class ApacheHttpdLogfileRecordReader extends
     // --------------------------------------------
 
     private final LineRecordReader                 lineReader      = new LineRecordReader();
-    private ApacheHttpdLoglineParser<ParsedRecord> parser;
+    private Parser<ParsedRecord>                   parser;
 
     private final ParsedRecord                     currentValue    = new ParsedRecord();
 
@@ -105,8 +106,7 @@ public class ApacheHttpdLogfileRecordReader extends
                                 "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
             }
 
-            parser = new ApacheHttpdLoglineParser<ParsedRecord>(
-                    ParsedRecord.class, logformat);
+            parser = getParser(logformat);
 
             String[] fieldList = null;
             if (requestedFields == null) {
@@ -143,6 +143,11 @@ public class ApacheHttpdLogfileRecordReader extends
         } catch (NoSuchMethodException e) {
             throw new IOException(e.toString());
         }
+    }
+
+    public Parser<ParsedRecord> getParser(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
+        return new ApacheHttpdLoglineParser<ParsedRecord>(
+                ParsedRecord.class, logformat);
     }
 
     // --------------------------------------------
