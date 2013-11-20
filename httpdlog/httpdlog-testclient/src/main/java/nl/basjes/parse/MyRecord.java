@@ -27,31 +27,31 @@ public class MyRecord {
 
     private Map<String, String> results = new HashMap<String, String>(32);
 
-//   @Field("STRING:request.firstline.uri.query.g.query.*")
-//   public void setQueryDeepMany(final String name, final String value) {
-//       results.append("INPUT MANY: "+name + "=" + value + "\n");
-//   }
+    @Field("STRING:request.firstline.uri.query.*")
+    public void setQueryDeepMany(final String name, final String value) {
+        results.put(name, value);
+    }
+
+    @Field("STRING:request.firstline.uri.query.img")
+    public void setQueryImg(final String name, final String value) {
+        results.put(name, value);
+    }
+
+    @Field("IP:connection.client.host")
+    public void setIP(final String value) {
+        results.put("IP:connection.client.host", value);
+    }
 
     @Field({
     "HTTP.QUERYSTRING:request.firstline.uri.query",
-    "STRING:request.firstline.uri.query.pageName",
-    "STRING:request.firstline.uri.query.products",
-    "PRODUCTS:request.firstline.uri.query.products",
-    "HTTP.URI:request.firstline.uri.query.g",
-    "HTTP.QUERYSTRING:request.firstline.uri.query.g.query",
-    "STRING:request.firstline.uri.query.g.query.bltg.slt_nm",
-    "HTTP.URI:request.firstline.uri.query.g",
-    "HTTP.QUERYSTRING:request.firstline.uri.query.g.query",
-    "HTTP.URI:request.firstline.uri.query.r",
-    "IP:connection.client.ip",
     "NUMBER:connection.client.logname",
     "STRING:connection.client.user",
     "TIME.STAMP:request.receive.time",
     "HTTP.URI:request.firstline.uri",
     "STRING:request.status.last",
     "BYTES:response.body.bytesclf",
-    "HTTP.HEADER:request.header.Referer",
-    "HTTP.HEADER:request.header.User-Agent",
+    "HTTP.URI:request.referer",
+    "HTTP.USERAGENT:request.user-agent",
     "TIME.DAY:request.receive.time.day",
     "TIME.HOUR:request.receive.time.hour",
     "TIME.MONTHNAME:request.receive.time.monthname",

@@ -25,10 +25,114 @@ The framework needs two things:
 Usage (Java)
 ===
 For the Java API there is an annotation based parser.
-> TODO: Document.
 
-> For now just have a look at the unit tests to see how it can be done.
+I assume we have a logformat variable that looks something like this:
 
+    String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+
+**Step 1: What CAN we get from this line?**
+
+To figure out what values we CAN get from this line we instantiate the parser with a dummy class that does not have ANY @Field annotations.
+
+    Parser<Dummy> dummyParser = new ApacheHttpdLoglineParser<Dummy>(Dummy.class, logformat);
+    List<String> possiblePaths = dummyParser.getPossiblePaths();
+    for (String path: possiblePaths) {
+        System.out.println(path);
+    }
+
+You will get a list that looks something like this:
+
+    IP:connection.client.host
+    NUMBER:connection.client.logname
+    STRING:connection.client.user
+    TIME.STAMP:request.receive.time
+    TIME.DAY:request.receive.time.day
+    TIME.MONTHNAME:request.receive.time.monthname
+    TIME.MONTH:request.receive.time.month
+    TIME.YEAR:request.receive.time.year
+    TIME.HOUR:request.receive.time.hour
+    TIME.MINUTE:request.receive.time.minute
+    TIME.SECOND:request.receive.time.second
+    TIME.MILLISECOND:request.receive.time.millisecond
+    TIME.ZONE:request.receive.time.timezone
+    HTTP.FIRSTLINE:request.firstline
+    HTTP.METHOD:request.firstline.method
+    HTTP.URI:request.firstline.uri
+    HTTP.QUERYSTRING:request.firstline.uri.query
+    STRING:request.firstline.uri.query.*
+    HTTP.PROTOCOL:request.firstline.protocol
+    HTTP.PROTOCOL.VERSION:request.firstline.protocol.version
+    STRING:request.status.last
+    BYTES:response.body.bytesclf
+    HTTP.URI:request.referer
+    HTTP.QUERYSTRING:request.referer.query
+    STRING:request.referer.query.*
+    HTTP.USERAGENT:request.user-agent
+
+Now some of these lines contain a * . 
+This is a wildcard that can be replaced with any 'name'.
+
+**Step 2 Create the receiving POJO** 
+
+We need to create the receiving record class that is simply a POJO that does not need any interface or inheritance. 
+In this class we create setters that will be called when the specified field has been found in the line.
+
+So we can now add to this class a setter that simply receives a single value: 
+
+    @Field("IP:connection.client.host")
+    public void setIP(final String value) {
+        ip = value;
+    }
+
+If we really want the name of the field we can also do this
+
+    @Field("STRING:request.firstline.uri.query.img")
+    public void setQueryImg(final String name, final String value) {
+        results.put(name, value);
+    }
+
+This latter form is very handy because this way we can obtain all values for a wildcard field
+
+    @Field("STRING:request.firstline.uri.query.*")
+    public void setQueryStringValues(final String name, final String value) {
+        results.put(name, value);
+    }
+
+Or a combination of the above examples
+
+    @Field({"IP:connection.client.host", 
+            "STRING:request.firstline.uri.query.*"})
+    public void setValue(final String name, final String value) {
+        results.put(name, value);
+    }
+
+**Step 3 Use the parser in your application.**
+
+You create an instance of the parser
+
+        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
+
+And then call the parse method repeatedly for each line.
+You can do this like this (for each call a new instance of "MyRecord" is instantiated !!):
+
+        MyRecord record = parser.parse(logline);
+ 
+Or you can call it like this:
+Only once:
+
+        MyRecord record = new MyRecord(); 
+
+And then for each logline:
+
+        record.clear(); // Which is up to you to implement to 'reset' the record to it's initial state.
+        parser.parse(record, logline);
+
+Notes about the setters
+
+- Only if a value exists in the actual logline the setter will be called (mainly relevant if you want to get a specific query param or cookie).
+- If you specifiy the same field on several setters then each of these setters will be called.
+
+Have a look at the 'httpdlog-testclient' for a working example.
 
 Usage (PIG)
 ===
