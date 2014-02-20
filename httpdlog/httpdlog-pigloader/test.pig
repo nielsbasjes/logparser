@@ -1,5 +1,4 @@
-REGISTER target/httpdlog-pigloader-1.0-SNAPSHOT-job.jar
--- REGISTER /home/niels/.m2/repository/joda-time/joda-time/2.2/joda-time-2.2.jar
+REGISTER target/httpdlog-pigloader-*-job.jar
 
 Fields = 
   LOAD 'test.pig' -- Any file as long as it exists 
