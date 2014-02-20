@@ -1,10 +1,8 @@
-package nl.basjes.storm;
+package nl.basjes.storm.bolt;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.basjes.storm.bolt.ApacheHttpdLoglineParserBolt;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -104,7 +102,7 @@ public class ParserBoltTest implements Serializable {
         StormTopology topology = builder.createTopology();
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("Unit test", new HashMap<String,String>(), topology);
-        Thread.sleep(10000L);// Run for 1 seconds
+        Thread.sleep(10000L);// Run for 10 seconds
         cluster.killTopology("Unit test");
         cluster.shutdown();
 
