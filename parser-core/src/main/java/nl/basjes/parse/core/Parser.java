@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +18,6 @@
 package nl.basjes.parse.core;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +80,7 @@ public class Parser<RECORD> {
     public Set<String> getNeeded() {
         return targets.keySet();
     }
-    
+
     // --------------------------------------------
 
     public Set<String> getUsefulIntermediateFields() {
@@ -208,9 +207,9 @@ public class Parser<RECORD> {
 
     private void findUsefulDisectorsFromField(final Set<String> needed,
             final Set<String> possibletargets, final String subRootType, final String subRootName, final boolean thisIsTheRoot) {
-        
+
         String subRootId = subRootType + ':' + subRootName;
-        
+
         LOG.debug("findUsefulDisectors:\"" + subRootType + "\" \"" + subRootName + "\"");
 
         // When we reach this point we have disectors to get here.
@@ -247,7 +246,7 @@ public class Parser<RECORD> {
             }
 
             for (String checkField : checkFields) {
-                if (possibletargets.contains(checkField) 
+                if (possibletargets.contains(checkField)
                     && !compiledDisectors.containsKey(disector.outputType + ":" + checkField)) {
                     LOG.debug("Checking field:\"{}\"" , checkField);
                     if (!compiledDisectors.containsKey(subRootId)) {
@@ -349,7 +348,7 @@ public class Parser<RECORD> {
         if (method == null || fieldValues == null) {
             return; // Nothing to do here
         }
-        
+
         final Class<?>[] parameters = method.getParameterTypes();
         if (
                 ((parameters.length == 1) && (parameters[0] == String.class)) ||
@@ -381,6 +380,9 @@ public class Parser<RECORD> {
         throws InstantiationException, IllegalAccessException, DisectionFailure, InvalidDisectorException, MissingDisectorsException {
         assembleDisectors();
         final Parsable<RECORD> parsable = createParsable();
+        if (parsable == null) {
+          return null;
+        }
         parsable.setRootDisection(rootType, rootName, value);
         return parse(parsable).getRecord();
     }
@@ -443,12 +445,10 @@ public class Parser<RECORD> {
                         } else {
                             method.invoke(record, value);
                         }
-                    } catch (final IllegalArgumentException e) {
-                        throw new FatalErrorDuringCallOfSetterMethod("IllegalArgumentException " + e.getMessage());
-                    } catch (final IllegalAccessException e) {
-                        throw new FatalErrorDuringCallOfSetterMethod("IllegalAccessException " + e.getMessage());
-                    } catch (final InvocationTargetException e) {
-                        throw new FatalErrorDuringCallOfSetterMethod("InvocationTargetException " + e.getMessage());
+                    } catch (final Exception e) {
+                        throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
+                                                                     e.getCause() + "\" when calling \"" +
+                                                                     method.toGenericString() + "\"");
                     }
                 }
             }
@@ -464,17 +464,12 @@ public class Parser<RECORD> {
 
     public Parsable<RECORD> createParsable() throws InstantiationException, IllegalAccessException {
         RECORD record = null;
-        
+
         try {
             Constructor<RECORD> co = recordClass.getConstructor();
             record = co.newInstance();
-        } catch (SecurityException e) {
-            return null;
-        } catch (NoSuchMethodException e) {
-            return null;
-        } catch (IllegalArgumentException e) {
-            return null;
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
+            LOG.error("Unable to create instance: " + e.toString());
             return null;
         }
         return createParsable(record);
@@ -486,8 +481,8 @@ public class Parser<RECORD> {
      * This method is for use by the developer to query the parser about
      * the possible paths that may be extracted.
      * @return A list of all possible paths that could be determined automatically.
-     * @throws InvalidDisectorException 
-     * @throws MissingDisectorsException 
+     * @throws InvalidDisectorException
+     * @throws MissingDisectorsException
      */
     public List<String> getPossiblePaths() throws MissingDisectorsException, InvalidDisectorException {
         return getPossiblePaths(15);
@@ -498,8 +493,8 @@ public class Parser<RECORD> {
      * the possible paths that may be extracted.
      * @param maxDepth The maximum recursion depth
      * @return A list of all possible paths that could be determined automatically.
-     * @throws InvalidDisectorException 
-     * @throws MissingDisectorsException 
+     * @throws InvalidDisectorException
+     * @throws MissingDisectorsException
      */
     public List<String> getPossiblePaths(int maxDepth) throws MissingDisectorsException, InvalidDisectorException {
         assembleDisectors();
