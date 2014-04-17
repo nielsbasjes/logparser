@@ -1038,5 +1038,5 @@ Fields: {fields: chararray}
 (HTTP.COOKIES:request.cookies)
 (HTTP.COOKIE:request.cookies.*)
 (SECONDS:response.server.processing.time)
-Clicks: {ConnectionClientHost: chararray,RequestReceiveTime: chararray,Referrer: chararray,GoogleQuery: chararray,BUI: chararray,RequestUseragent: chararray}
-(10.20.30.40,[03/Apr/2013:00:00:11 +0200],ADVNLGOT002010100200499999999,the dark secret of harvest home dvd,DummyValueBUI,Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0))
+Clicks: {ConnectionClientHost: chararray,RequestReceiveTime: chararray,Referrer: chararray,ScreenResolution: chararray,GoogleQuery: chararray,BUI: chararray,RequestUseragent: chararray}
+(10.20.30.40,[03/Apr/2013:00:00:11 +0200],ADVNLGOT002010100200499999999,1600x900,the dark secret of harvest home dvd,DummyValueBUI,Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0))

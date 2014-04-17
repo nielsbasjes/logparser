@@ -1,4 +1,4 @@
-REGISTER target/httpdlog-omniture-1.0-SNAPSHOT-job.jar
+REGISTER target/httpdlog-omniture-*-job.jar
 
 %declare LOGFORMAT '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i" "%{Cookie}i" %T'
 
@@ -11,7 +11,6 @@ Fields =
 DESCRIBE Fields;
 DUMP Fields;
 
-
 Clicks = 
   LOAD 'sample.log' 
   USING nl.basjes.pig.input.apachehttpdlog.omniture.OmnitureLoader(
@@ -19,14 +18,15 @@ Clicks =
     'IP:connection.client.host',
     'TIME.STAMP:request.receive.time',
     'STRING:request.firstline.uri.query.g.query.referrer',
+    'STRING:request.firstline.uri.query.s',
     'STRING:request.firstline.uri.query.r.query.q',
     'HTTP.COOKIE:request.cookies.bui',
     'HTTP.USERAGENT:request.user-agent')
-
     AS ( 
     ConnectionClientHost,
     RequestReceiveTime,
     Referrer,
+    ScreenResolution,
     GoogleQuery,
     BUI,
     RequestUseragent);
@@ -38,8 +38,9 @@ DUMP Clicks;
 -- ConnectionClientHost = 10.20.30.40
 -- RequestReceiveTime   = 03/Apr/2013:00:00:11 +0200]
 -- Referrer             = ADVNLGOT002010100200499999999
+-- ScreenResolution     = 1600x900
 -- GoogleQuery          = the dark secret of harvest home dvd
 -- BUI                  = DummyValueBUI
--- RequestUseragent     = Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0))
+-- RequestUseragent     = Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)
 
 
