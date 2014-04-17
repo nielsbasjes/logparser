@@ -18,6 +18,10 @@ bin
 .project
 hs_err_pid*.log
 
+#IntelliJ stuff
+.idea
+*.iml
+
 #test files
 x
 xx
