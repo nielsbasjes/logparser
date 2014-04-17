@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -81,7 +81,7 @@ public class ApacheHttpdLogParserTest {
     // fullcombined
     private String logFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
                              + "\"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
-    
+
     // Because header names are case insensitive we use the lowercase version internally
     // This next value is what should be used internally
     private String expectedLogFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
@@ -238,10 +238,10 @@ public class ApacheHttpdLogParserTest {
     public void testMakeHeaderNamesLowercaseInLogFormat(){
         assertEquals(expectedLogFormat, ApacheHttpdLogFormatDisector.makeHeaderNamesLowercaseInLogFormat(logFormat));
     }
-    
+
 
     // ------------------------------------------
-    
+
     public class EmptyTestRecord extends HashMap<String, String> {
         @Override
         public String put(String key, String value) {
@@ -249,7 +249,7 @@ public class ApacheHttpdLogParserTest {
         }
         private static final long serialVersionUID = 1L;
     }
-    
+
     @Test
     public void testQueryStringDisector() throws Exception {
         String logformat = "%r";
@@ -264,7 +264,7 @@ public class ApacheHttpdLogParserTest {
         parser.parse(record, "GET /index.html HTTP/1.1");
         assertEquals(null, record.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
-        
+
         parser.parse(record, "GET /index.html?foo HTTP/1.1");
         assertEquals("", record.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
@@ -293,8 +293,8 @@ public class ApacheHttpdLogParserTest {
         assertEquals("foofoo", record.get("STRING:request.firstline.uri.query.foo"));
         assertEquals("barbar", record.get("STRING:request.firstline.uri.query.bar"));
 
-        
+
 
     }
-    
+
 }
