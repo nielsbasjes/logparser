@@ -75,6 +75,8 @@ public class Parser<RECORD> {
 
     private final Set<String> locatedTargets = new HashSet<String>();
 
+    private boolean usable = false;
+
     // --------------------------------------------
 
     public Set<String> getNeeded() {
@@ -201,6 +203,7 @@ public class Parser<RECORD> {
             throw new MissingDisectorsException(allMissing);
         }
 
+        usable = true;
     }
 
     // --------------------------------------------
@@ -405,6 +408,10 @@ public class Parser<RECORD> {
     Parsable<RECORD> parse(final Parsable<RECORD> parsable)
         throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
         assembleDisectors();
+
+        if (!usable) {
+            return null;
+        }
 
         // Values look like "TYPE:foo.bar"
         Set<ParsedField> toBeParsed = new HashSet<ParsedField>(parsable.getToBeParsed());
