@@ -57,7 +57,7 @@ public class TimeStampDisector implements Disector {
 
     @Override
     public String[] getPossibleOutput() {
-        String[] result = new String[9];
+        String[] result = new String[10];
         result[0] = "TIME.DAY:day";
         result[1] = "TIME.MONTHNAME:monthname";
         result[2] = "TIME.MONTH:month";
@@ -67,6 +67,7 @@ public class TimeStampDisector implements Disector {
         result[6] = "TIME.SECOND:second";
         result[7] = "TIME.MILLISECOND:millisecond";
         result[8] = "TIME.ZONE:timezone";
+        result[9] = "TIME.EPOCH:epoch";
         return result;
     }
 
@@ -104,6 +105,7 @@ public class TimeStampDisector implements Disector {
         parsable.addDisection(inputname, "TIME.SECOND",      "second",      dateTime.secondOfMinute().getAsString());
         parsable.addDisection(inputname, "TIME.MILLISECOND", "millisecond", dateTime.millisOfSecond().getAsString());
         parsable.addDisection(inputname, "TIME.TIMEZONE",    "timezone",    dateTime.getZone().getID());
+        parsable.addDisection(inputname, "TIME.EPOCH",       "epoch",       Long.toString(dateTime.getMillis()));
     }
 
     // --------------------------------------------
