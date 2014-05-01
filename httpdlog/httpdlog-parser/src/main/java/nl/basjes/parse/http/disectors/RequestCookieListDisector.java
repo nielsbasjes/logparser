@@ -18,10 +18,9 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
+import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -83,13 +82,10 @@ public class RequestCookieListDisector implements Disector {
                     parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
                 }
             } else {
-                try {
-                    String theName = value.substring(0, equalPos).trim().toLowerCase();
-                    String theValue = value.substring(equalPos + 1, value.length()).trim();
-                    parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, URLDecoder.decode(theValue, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    return;
-                }
+                String theName = value.substring(0, equalPos).trim().toLowerCase();
+                String theValue = value.substring(equalPos + 1, value.length()).trim();
+                parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
+                        Utils.resilientUrlDecode(theValue));
             }
         }
     }

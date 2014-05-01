@@ -18,9 +18,7 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-
+import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -79,13 +77,9 @@ public class QueryStringFieldDisector implements Disector {
                     parsable.addDisection(inputname, getDisectionType(inputname, value), value.toLowerCase(), "");
                 }
             } else {
-                try {
-                    String name = value.substring(0, equalPos).toLowerCase();
-                    parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                                URLDecoder.decode(value.substring(equalPos+1, value.length()), "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                String name = value.substring(0, equalPos).toLowerCase();
+                parsable.addDisection(inputname, getDisectionType(inputname, name), name,
+                        Utils.resilientUrlDecode(value.substring(equalPos + 1, value.length())));
             }
         }
     }
