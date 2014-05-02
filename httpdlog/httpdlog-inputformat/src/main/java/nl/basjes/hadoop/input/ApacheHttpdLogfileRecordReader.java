@@ -37,10 +37,14 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize" })
 public class ApacheHttpdLogfileRecordReader extends
         RecordReader<LongWritable, MapWritable> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogfileRecordReader.class);
 
     private static final String APACHE_HTTPD_LOGFILE_INPUT_FORMAT = "Apache HTTPD Logfile InputFormat";
 
@@ -152,34 +156,50 @@ public class ApacheHttpdLogfileRecordReader extends
 
     // --------------------------------------------
 
+    private int errorLinesLogged = 0;
+    private final static int MAX_ERROR_LINES_LOGGED = 10;
+
     @Override
     public boolean nextKeyValue() throws IOException {
         if (allPossiblePaths == null) {
 
+          boolean haveValue = false;
+          while (!haveValue) {
             if (!lineReader.nextKeyValue()) {
-                return false;
+              return false;
             }
 
             counterLinesRead.increment(1L);
 
             currentValue.clear();
+            String inputLine = lineReader.getCurrentValue().toString();
             try {
-                parser.parse(currentValue, lineReader.getCurrentValue().toString());
-                counterGoodLines.increment(1L);
+              parser.parse(currentValue, lineReader.getCurrentValue().toString());
+              counterGoodLines.increment(1L);
+              haveValue = true;
             } catch (InstantiationException e) {
-                return false;
+              return false;
             } catch (IllegalAccessException e) {
-                return false;
+              LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
+              return false;
             } catch (DisectionFailure e) {
-                counterBadLines.increment(1L);
-                return true; // Ignore bad lines and simply continue
+              counterBadLines.increment(1L);
+              if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {
+                LOG.error("Parse error >>>{}<<< in line: >>>{}<<<", e.getMessage(), inputLine);
+                errorLinesLogged++;
+                if (errorLinesLogged == MAX_ERROR_LINES_LOGGED) {
+                  LOG.error(">>>>>>>>>>> We now stop logging parse errors! <<<<<<<<<<<");
+                }
+              }
+              // Ignore bad lines and simply continue
             } catch (InvalidDisectorException e) {
-                return false;
+              LOG.error("InvalidDisectorException >>>{}<<<", e.getMessage());
+              return false;
             } catch (MissingDisectorsException e) {
-                return false;
+              LOG.error("MissingDisectorsException >>>{}<<<", e.getMessage());
+              return false;
             }
-
-            return true;
+          }
         } else {
             // We now ONLY return the possible names of the fields that can be
             // requested
@@ -194,6 +214,7 @@ public class ApacheHttpdLogfileRecordReader extends
             currentValue.set(allPossiblePathsFieldName, value);
             return true;
         }
+      return true;
     }
 
     @Override

@@ -18,13 +18,13 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
+import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 public class RequestCookieListDisector implements Disector {
     // --------------------------------------------
@@ -66,7 +66,7 @@ public class RequestCookieListDisector implements Disector {
     private final Pattern fieldSeparatorPattern = Pattern.compile("; ");
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();
@@ -83,12 +83,15 @@ public class RequestCookieListDisector implements Disector {
                     parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
                 }
             } else {
+                String theName = value.substring(0, equalPos).trim().toLowerCase();
+                String theValue = value.substring(equalPos + 1, value.length()).trim();
                 try {
-                    String theName = value.substring(0, equalPos).trim().toLowerCase();
-                    String theValue = value.substring(equalPos + 1, value.length()).trim();
-                    parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, URLDecoder.decode(theValue, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    return;
+                    parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
+                          Utils.resilientUrlDecode(theValue));
+                }
+                catch (IllegalArgumentException e) {
+                    // This usually means that there was invalid encoding in the line
+                    throw new DisectionFailure(e.getMessage());
                 }
             }
         }
