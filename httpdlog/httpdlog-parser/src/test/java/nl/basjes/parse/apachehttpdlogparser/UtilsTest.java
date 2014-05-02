@@ -31,15 +31,21 @@ public class UtilsTest {
         assertEquals("  ", Utils.resilientUrlDecode(" %20"));
         assertEquals("  ", Utils.resilientUrlDecode("%20 "));
         assertEquals("  ", Utils.resilientUrlDecode("%20%20"));
-        assertEquals("  ", Utils.resilientUrlDecode("%u2020"));
+        assertEquals("  ", Utils.resilientUrlDecode("%u0020%u0020"));
+        assertEquals("  ", Utils.resilientUrlDecode("%20%u0020"));
+        assertEquals("  ", Utils.resilientUrlDecode("%u0020%20"));
 
-        // Deformed characters (desired is they are discarded)
-        assertEquals(" ", Utils.resilientUrlDecode(" %2"));
-        assertEquals(" ", Utils.resilientUrlDecode("%20%2"));
-        assertEquals("", Utils.resilientUrlDecode("%u202"));
-        assertEquals("", Utils.resilientUrlDecode("%u20"));
-        assertEquals("", Utils.resilientUrlDecode("%u2"));
-        assertEquals("", Utils.resilientUrlDecode("%u"));
-        assertEquals("", Utils.resilientUrlDecode("%"));
+
+        // Deformed characters at the end of the line (desired is they are discarded)
+        assertEquals("x ", Utils.resilientUrlDecode("x %2"));
+        assertEquals("x ", Utils.resilientUrlDecode("x%20%2"));
+        assertEquals("x", Utils.resilientUrlDecode("x%u202"));
+        assertEquals("x", Utils.resilientUrlDecode("x%u20"));
+        assertEquals("x", Utils.resilientUrlDecode("x%u2"));
+        assertEquals("x", Utils.resilientUrlDecode("x%u"));
+        assertEquals("x", Utils.resilientUrlDecode("x%"));
+
+        // Combined test case (7 spaces and a chopped one)
+        assertEquals("       ", Utils.resilientUrlDecode("%20 %20%u0020%20 %20%2"));
     }
 }
