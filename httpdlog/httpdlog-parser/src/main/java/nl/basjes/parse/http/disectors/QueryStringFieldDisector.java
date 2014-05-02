@@ -22,6 +22,9 @@ import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
+
+import static nl.basjes.parse.Utils.resilientUrlDecode;
 
 public class QueryStringFieldDisector implements Disector {
     // --------------------------------------------
@@ -60,7 +63,7 @@ public class QueryStringFieldDisector implements Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         String fieldValue = field.getValue();
@@ -78,8 +81,13 @@ public class QueryStringFieldDisector implements Disector {
                 }
             } else {
                 String name = value.substring(0, equalPos).toLowerCase();
-                parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                        Utils.resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                try {
+                    parsable.addDisection(inputname, getDisectionType(inputname, name), name,
+                          resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                } catch (IllegalArgumentException e) {
+                    // This usually means that there was invalid encoding in the line
+                    throw new DisectionFailure(e.getMessage());
+                }
             }
         }
     }
