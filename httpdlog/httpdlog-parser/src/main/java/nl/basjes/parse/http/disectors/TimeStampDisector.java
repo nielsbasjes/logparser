@@ -52,7 +52,6 @@ public class TimeStampDisector extends Disector {
         formatter = DateTimeFormat.forPattern(this.dateTimePattern);
     }
 
-
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "TIME.STAMP";
@@ -66,7 +65,7 @@ public class TimeStampDisector extends Disector {
 
     @Override
     public String[] getPossibleOutput() {
-        String[] result = new String[9];
+        String[] result = new String[10];
         result[0] = "TIME.DAY:day";
         result[1] = "TIME.MONTHNAME:monthname";
         result[2] = "TIME.MONTH:month";
@@ -76,6 +75,7 @@ public class TimeStampDisector extends Disector {
         result[6] = "TIME.SECOND:second";
         result[7] = "TIME.MILLISECOND:millisecond";
         result[8] = "TIME.ZONE:timezone";
+        result[9] = "TIME.EPOCH:epoch";
         return result;
     }
 
@@ -132,6 +132,9 @@ public class TimeStampDisector extends Disector {
         }
         if (requestedFields.contains("timezone")) {
             parsable.addDisection(inputname, "TIME.TIMEZONE", "timezone", dateTime.getZone().getID());
+        }
+        if (requestedFields.contains("epoch")) {
+            parsable.addDisection(inputname, "TIME.EPOCH",       "epoch",       Long.toString(dateTime.getMillis()));
         }
     }
 

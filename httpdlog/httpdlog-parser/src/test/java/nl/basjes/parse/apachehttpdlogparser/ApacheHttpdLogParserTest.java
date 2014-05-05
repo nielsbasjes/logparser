@@ -59,6 +59,7 @@ public class ApacheHttpdLogParserTest {
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
             "TIME.MONTHNAME:request.receive.time.monthname",
+            "TIME.EPOCH:request.receive.time.epoch",
             "HTTP.COOKIES:request.cookies",
             "HTTP.SETCOOKIES:response.cookies",
             "HTTP.COOKIE:request.cookies.jquery-ui-theme",
@@ -117,6 +118,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("", results.get("NUMBER:connection.client.logname"));
         assertEquals("", results.get("STRING:connection.client.user"));
         assertEquals("[30/Aug/2012:23:49:40 +0200]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("1346363380000", results.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals("40", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png?aap=noot", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
