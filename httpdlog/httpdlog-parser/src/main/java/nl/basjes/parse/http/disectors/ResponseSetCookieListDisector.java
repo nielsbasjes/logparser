@@ -19,14 +19,16 @@
 package nl.basjes.parse.http.disectors;
 
 import java.net.HttpCookie;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-public class ResponseSetCookieListDisector implements Disector {
+public class ResponseSetCookieListDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.SETCOOKIES";
@@ -48,9 +50,11 @@ public class ResponseSetCookieListDisector implements Disector {
 
     // --------------------------------------------
 
+    private Set<String> requestedCookies = new HashSet<String>(16);
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedCookies.add(outputname.substring(inputname.length() + 1));
     }
 
     // --------------------------------------------
@@ -101,10 +105,13 @@ public class ResponseSetCookieListDisector implements Disector {
             
             for (HttpCookie cookie : cookies) {
                 cookie.setVersion(1);
-                parsable.addDisection(inputname, 
-                        getDisectionType(inputname, cookie.getName().toLowerCase()), 
-                        cookie.getName().toLowerCase(), 
-                        value);
+                String cookieName = cookie.getName().toLowerCase();
+                if (requestedCookies.contains(cookieName)) {
+                    parsable.addDisection(inputname,
+                            getDisectionType(inputname, cookieName),
+                            cookieName,
+                            value);
+                }
             }
         }
         

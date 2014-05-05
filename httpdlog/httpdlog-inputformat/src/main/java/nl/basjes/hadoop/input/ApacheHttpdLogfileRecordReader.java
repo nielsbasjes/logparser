@@ -18,6 +18,7 @@
 package nl.basjes.hadoop.input;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,12 +143,13 @@ public class ApacheHttpdLogfileRecordReader extends
             throw new IOException(e.toString());
         } catch (NoSuchMethodException e) {
             throw new IOException(e.toString());
+        } catch (ParseException e) {
+            throw new IOException(e.toString());
         }
     }
 
-    public Parser<ParsedRecord> getParser(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
-        return new ApacheHttpdLoglineParser<ParsedRecord>(
-                ParsedRecord.class, logformat);
+    public Parser<ParsedRecord> getParser(String logFormat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+        return new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logFormat);
     }
 
     // --------------------------------------------

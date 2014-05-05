@@ -35,21 +35,24 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //@SuppressWarnings({
 //        "PMD.LongVariable", // I like my variable names this way
 //        "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize", // No beans here
 //        "PMD.DataflowAnomalyAnalysis", // Results in a lot of mostly useless messages.
 //})
-public final class ApacheHttpdLogFormatDisector implements Disector {
+public final class ApacheHttpdLogFormatDisector extends Disector {
 
-    private String logFormat = null;
-    private List<String> logFormatNames = null;
-    private List<String> logFormatTypes = null;
-    private String logFormatRegEx = null;
-    private Pattern logFormatPattern = null;
-    private boolean isUsable = false;
-//    private boolean enableDebug = false;
+    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDisector.class);
+
+    private String       logFormat          = null;
+    private List<String> logFormatNames     = null;
+    private List<String> logFormatTypes     = null;
+    private String       logFormatRegEx     = null;
+    private Pattern      logFormatPattern   = null;
+    private boolean      isUsable           = false;
 
     private List<Token> logFormatTokens;
 
@@ -59,9 +62,29 @@ public final class ApacheHttpdLogFormatDisector implements Disector {
     
     // --------------------------------------------
 
-    public ApacheHttpdLogFormatDisector(final String logformat) throws IOException {
+    public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {
         isUsable = false; // Make sure we classify as unusable while we're busy
+        setLogFormat(logFormat);
+    }
 
+    public ApacheHttpdLogFormatDisector(){
+        isUsable = false; // Make sure we classify as unusable while we're busy
+    }
+
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        if (newInstance instanceof ApacheHttpdLogFormatDisector) {
+            try {
+                ((ApacheHttpdLogFormatDisector)newInstance).setLogFormat(logFormat);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
+        }
+    }
+
+    public void setLogFormat(final String logformat) throws ParseException {
         this.logFormat = logformat;
         // LogFormat "%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"" combined
         // LogFormat "%h %l %u %t "%r" %>s %b" common
@@ -69,14 +92,7 @@ public final class ApacheHttpdLogFormatDisector implements Disector {
         // LogFormat "%{User-agent}i" agent
 
         // Now we disassemble the format into parts
-        try {
-            logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
-        } catch (final ParseException e) {
-            // Because this is an Overridden method we cannot add an additional
-            // exception type.
-            // So we do:
-            throw new IOException("Parsing error", e);
-        }
+        logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
 
         List<String> outputTypesList = new ArrayList<String>(20);
 
@@ -98,8 +114,6 @@ public final class ApacheHttpdLogFormatDisector implements Disector {
 
     @Override
     public void prepareForDisect(String inputname, String outputname) {
-//        System.out.println("prepareForDisect"+this.toString()+" "+inputname+" "+outputname);
-
         Set<String> currentSet = expectedDisections.get(inputname);
         if (currentSet == null) {
             currentSet = new HashSet<String>();

@@ -18,6 +18,8 @@
 
 package nl.basjes.parse.http.disectors;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,7 @@ import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-public class HttpFirstLineDisector implements Disector {
+public class HttpFirstLineDisector extends Disector {
     // --------------------------------------------
     // The "first line" of a request can be split up a bit further
     // The format of the first line of an HTTP/1.x request looks like this:
@@ -70,16 +72,24 @@ public class HttpFirstLineDisector implements Disector {
         final boolean matches = matcher.find();
 
         if (matches && matcher.groupCount() == 4) {
-            parsable.addDisection(inputname, "HTTP.METHOD",           "method",           matcher.group(1));
-            parsable.addDisection(inputname, "HTTP.URI",              "uri",              matcher.group(2));
-            parsable.addDisection(inputname, "HTTP.PROTOCOL",         "protocol",         matcher.group(3));
-            parsable.addDisection(inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher.group(4));
+            outputDisection(parsable, inputname, "HTTP.METHOD",           "method",           matcher, 1);
+            outputDisection(parsable, inputname, "HTTP.URI",              "uri",              matcher, 2);
+            outputDisection(parsable, inputname, "HTTP.PROTOCOL",         "protocol",         matcher, 3);
+            outputDisection(parsable, inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher, 4);
         }
     }
 
+    private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) {
+        if (requestedParameters.contains(name)) {
+            parsable.addDisection(inputname, type, name, matcher.group(offset));
+        }
+    }
+
+    private Set<String> requestedParameters = new HashSet<String>(16);
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedParameters.add(outputname.substring(inputname.length() + 1));
     }
 
     @Override

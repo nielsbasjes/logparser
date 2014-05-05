@@ -37,11 +37,12 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    public class TestRecord {
+    public static class TestRecord {
         private Map<String, String> results = new HashMap<String, String>(32);
 
         @Field({
             "STRING:request.firstline.uri.query.aap",
+            "STRING:request.firstline.uri.query.noot",
             "STRING:request.querystring.aap",
             "IP:connection.client.ip",
             "NUMBER:connection.client.logname",
@@ -52,6 +53,8 @@ public class ApacheHttpdLogParserTest {
             "STRING:request.status.last",
             "BYTES:response.body.bytesclf",
             "HTTP.URI:request.referer",
+            "STRING:request.referer.query.mies",
+            "STRING:request.referer.query.wim",
             "HTTP.USERAGENT:request.user-agent",
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
@@ -95,7 +98,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void fullTest1() throws Exception {
         String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [30/Aug/2012:23:49:40 +0200] \"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
-                + "80 \"\" \"http://localhost/\" 351 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
+                + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
                 + "\"jquery-ui-theme=Eggplant\" \"Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl\" \"-\" "
                 + "\"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
 
@@ -118,7 +121,8 @@ public class ApacheHttpdLogParserTest {
         assertEquals("/icons/powered_by_rh.png?aap=noot", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
         assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
-        assertEquals("http://localhost/", results.get("HTTP.URI:request.referer"));
+        assertEquals("http://localhost/index.php?mies=wim", results.get("HTTP.URI:request.referer"));
+        assertEquals("wim", results.get("STRING:request.referer.query.mies"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));
         assertEquals("30", results.get("TIME.DAY:request.receive.time.day"));
@@ -177,7 +181,7 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    public class TestRecordMissing {
+    public static class TestRecordMissing {
         @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing", })
         public void dummy(final String name, final String value) {
         }
@@ -196,7 +200,7 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    public class TestRecordMissing2 {
+    public static class TestRecordMissing2 {
         @Field({ "BLURP:request.firstline.uri.query.ThisShouldBeMissing", "HTTP.HEADER:response.header.etag" })
         public void dummy(final String name, final String value) {
         }

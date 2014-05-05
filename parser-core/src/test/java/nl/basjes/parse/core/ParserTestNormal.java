@@ -30,17 +30,9 @@ import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.junit.Test;
 
-import ch.qos.logback.classic.Level;
-
 public class ParserTestNormal {
 
-    public static void setLoggingLevel(Level level) {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.setLevel(level);
-    }
-
-    public class TestDisector implements Disector {
+    public static class TestDisector extends Disector {
         private String      inputType;
         private String      outputType;
         private String      outputName;
@@ -88,38 +80,38 @@ public class ParserTestNormal {
         }
     }
 
-    public class TestDisectorOne extends TestDisector {
+    public static class TestDisectorOne extends TestDisector {
         public TestDisectorOne() {
             super("INPUTTYPE", "SOMETYPE", "output1");
         }
     }
 
-    public class TestDisectorTwo extends TestDisector {
+    public static class TestDisectorTwo extends TestDisector {
         public TestDisectorTwo() {
             super("INPUTTYPE", "OTHERTYPE", "output2");
         }
     }
 
-    public class TestDisectorThree extends TestDisector {
+    public static class TestDisectorThree extends TestDisector {
         public TestDisectorThree() {
             super("SOMETYPE", "FOO", "foo");
         }
     }
 
-    public class TestDisectorFour extends TestDisector {
+    public static class TestDisectorFour extends TestDisector {
         public TestDisectorFour() {
             super("SOMETYPE", "BAR", "bar");
         }
     }
 
-    public class TestDisectorWildCard extends TestDisector {
+    public static class TestDisectorWildCard extends TestDisector {
         public TestDisectorWildCard() {
             super("SOMETYPE", "WILD", "*");
         }
 
     }
 
-    public class TestParser<RECORD> extends Parser<RECORD> {
+    public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) throws IOException, MissingDisectorsException, InvalidDisectorException {
             super(clazz);
             addDisector(new TestDisectorOne());
@@ -188,7 +180,7 @@ public class ParserTestNormal {
         // setLoggingLevel(Level.ALL);
         Parser<ParserTestNormalTestRecord> parser = new TestParser<ParserTestNormalTestRecord>(ParserTestNormalTestRecord.class);
 
-        // Criple the parser
+        // Cripple the parser
         parser.dropDisector(TestDisectorTwo.class);
 
         ParserTestNormalTestRecord output = new ParserTestNormalTestRecord();

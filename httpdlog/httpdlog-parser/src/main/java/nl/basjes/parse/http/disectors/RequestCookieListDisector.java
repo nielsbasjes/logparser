@@ -18,6 +18,8 @@
 
 package nl.basjes.parse.http.disectors;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import nl.basjes.parse.Utils;
@@ -25,7 +27,7 @@ import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-public class RequestCookieListDisector implements Disector {
+public class RequestCookieListDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.COOKIES";
@@ -47,9 +49,11 @@ public class RequestCookieListDisector implements Disector {
 
     // --------------------------------------------
 
+    private Set<String> requestedCookies = new HashSet<String>(16);
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedCookies.add(outputname.substring(inputname.length() + 1));
     }
 
     // --------------------------------------------
@@ -79,13 +83,17 @@ public class RequestCookieListDisector implements Disector {
             if (equalPos == -1) {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
-                    parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
+                    if (requestedCookies.contains(theName)) {
+                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
+                    }
                 }
             } else {
                 String theName = value.substring(0, equalPos).trim().toLowerCase();
-                String theValue = value.substring(equalPos + 1, value.length()).trim();
-                parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
-                        Utils.resilientUrlDecode(theValue));
+                if (requestedCookies.contains(theName)) {
+                    String theValue = value.substring(equalPos + 1, value.length()).trim();
+                    parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
+                            Utils.resilientUrlDecode(theValue));
+                }
             }
         }
     }

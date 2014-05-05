@@ -1,6 +1,7 @@
 package nl.basjes.hadoop.input;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Set;
 
 import nl.basjes.parse.OmnitureLogLineParser;
@@ -12,12 +13,11 @@ public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
 
     public OmnitureRecordReader(String newLogformat,
             Set<String> newRequestedFields) {
-        super(newLogformat,newRequestedFields);
+        super(newLogformat, newRequestedFields);
     }
 
-    public Parser<ParsedRecord> getParser(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
-        return new OmnitureLogLineParser<ParsedRecord>(
-                ParsedRecord.class, logformat);
+    public Parser<ParsedRecord> getParser(String logFormat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+        return new OmnitureLogLineParser<ParsedRecord>(ParsedRecord.class, logFormat);
     }
 
 }

@@ -19,6 +19,7 @@
 package nl.basjes.parse.apachehttpdlog;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
 import nl.basjes.parse.core.Parser;
@@ -38,13 +39,15 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     public ApacheHttpdLoglineParser(
             final Class<RECORD> clazz,
-            final String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
+            final String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
         // This indicates what we need
         super(clazz);
 
         // The pieces we have to get there
         addDisector(new ApacheHttpdLogFormatDisector(logformat));
-        addDisector(new TimeStampDisector());
+        // We set the default parser to what we find in the Apache httpd Logfiles
+        //                                 [05/Sep/2010:11:27:50 +0200]
+        addDisector(new TimeStampDisector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
         addDisector(new HttpFirstLineDisector());
         addDisector(new QueryStringDisector());
         addDisector(new QueryStringFieldDisector());

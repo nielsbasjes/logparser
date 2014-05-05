@@ -25,7 +25,7 @@ import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-public class ResponseSetCookieDisector implements Disector {
+public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.SETCOOKIE";

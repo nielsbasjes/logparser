@@ -18,7 +18,9 @@
 
 package nl.basjes.parse.http.disectors;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
@@ -28,21 +30,28 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class TimeStampDisector implements Disector {
+public class TimeStampDisector extends Disector {
 
     // --------------------------------------------
 
     private DateTimeFormatter formatter;
+    private String dateTimePattern;
 
     public TimeStampDisector() {
         // We set the default parser to what we find in the Apache httpd Logfiles
-        //                                     [05/Sep/2010:11:27:50 +0200]
-        formatter = DateTimeFormat.forPattern("[dd/MMM/yyyy:HH:mm:ss ZZ]");
+        //                  [05/Sep/2010:11:27:50 +0200]
+        setDateTimePattern("[dd/MMM/yyyy:HH:mm:ss ZZ]");
     }
 
     public TimeStampDisector(String timestampFormat) {
         formatter = DateTimeFormat.forPattern(timestampFormat);
     }
+
+    public void setDateTimePattern(String datetimePattern) {
+        this.dateTimePattern = datetimePattern;
+        formatter = DateTimeFormat.forPattern(this.dateTimePattern);
+    }
+
 
     // --------------------------------------------
 
@@ -72,9 +81,11 @@ public class TimeStampDisector implements Disector {
 
     // --------------------------------------------
 
+    private Set<String> requestedFields = new HashSet<String>(16);
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedFields.add(outputname.substring(inputname.length() + 1));
     }
 
     // --------------------------------------------
@@ -95,15 +106,33 @@ public class TimeStampDisector implements Disector {
         }
         DateTime dateTime = formatter.parseDateTime(fieldValue);
 
-        parsable.addDisection(inputname, "TIME.DAY",         "day",         dateTime.dayOfMonth().getAsString());
-        parsable.addDisection(inputname, "TIME.MONTHNAME",   "monthname",   dateTime.monthOfYear().getAsText(Locale.getDefault()));
-        parsable.addDisection(inputname, "TIME.MONTH",       "month",       dateTime.monthOfYear().getAsString());
-        parsable.addDisection(inputname, "TIME.YEAR",        "year",        dateTime.year().getAsString());
-        parsable.addDisection(inputname, "TIME.HOUR",        "hour",        dateTime.hourOfDay().getAsString());
-        parsable.addDisection(inputname, "TIME.MINUTE",      "minute",      dateTime.minuteOfHour().getAsString());
-        parsable.addDisection(inputname, "TIME.SECOND",      "second",      dateTime.secondOfMinute().getAsString());
-        parsable.addDisection(inputname, "TIME.MILLISECOND", "millisecond", dateTime.millisOfSecond().getAsString());
-        parsable.addDisection(inputname, "TIME.TIMEZONE",    "timezone",    dateTime.getZone().getID());
+        if (requestedFields.contains("day")) {
+            parsable.addDisection(inputname, "TIME.DAY", "day", dateTime.dayOfMonth().getAsString());
+        }
+        if (requestedFields.contains("monthname")) {
+            parsable.addDisection(inputname, "TIME.MONTHNAME", "monthname", dateTime.monthOfYear().getAsText(Locale.getDefault()));
+        }
+        if (requestedFields.contains("month")) {
+            parsable.addDisection(inputname, "TIME.MONTH", "month", dateTime.monthOfYear().getAsString());
+        }
+        if (requestedFields.contains("year")) {
+            parsable.addDisection(inputname, "TIME.YEAR", "year", dateTime.year().getAsString());
+        }
+        if (requestedFields.contains("hour")) {
+            parsable.addDisection(inputname, "TIME.HOUR", "hour", dateTime.hourOfDay().getAsString());
+        }
+        if (requestedFields.contains("minute")) {
+            parsable.addDisection(inputname, "TIME.MINUTE", "minute", dateTime.minuteOfHour().getAsString());
+        }
+        if (requestedFields.contains("second")) {
+            parsable.addDisection(inputname, "TIME.SECOND", "second", dateTime.secondOfMinute().getAsString());
+        }
+        if (requestedFields.contains("millisecond")) {
+            parsable.addDisection(inputname, "TIME.MILLISECOND", "millisecond", dateTime.millisOfSecond().getAsString());
+        }
+        if (requestedFields.contains("timezone")) {
+            parsable.addDisection(inputname, "TIME.TIMEZONE", "timezone", dateTime.getZone().getID());
+        }
     }
 
     // --------------------------------------------

@@ -37,7 +37,7 @@ public class ParserTestTypeColission {
         root.setLevel(level);
     }
 
-    public class TestDisector implements Disector {
+    public static class TestDisector extends Disector {
         private String inputType;
         private String outputType;
         private String outputName;
@@ -80,43 +80,43 @@ public class ParserTestTypeColission {
         }
     }
 
-    public class TestDisectorOne extends TestDisector {
+    public static class TestDisectorOne extends TestDisector {
         public TestDisectorOne() {
             super("INPUTTYPE", "SOMETYPE", "output", "+1");
         }
     }
 
-    public class TestDisectorTwo extends TestDisector {
+    public static class TestDisectorTwo extends TestDisector {
         public TestDisectorTwo() {
             super("INPUTTYPE", "OTHERTYPE", "output", "+2");
         }
     }
 
-    public class TestDisectorSubOne extends TestDisector {
+    public static class TestDisectorSubOne extends TestDisector {
         public TestDisectorSubOne() {
             super("SOMETYPE", "SOMESUBTYPE", "output", "+S1");
         }
     }
 
-    public class TestDisectorSubTwo extends TestDisector {
+    public static class TestDisectorSubTwo extends TestDisector {
         public TestDisectorSubTwo() {
             super("OTHERTYPE", "OTHERSUBTYPE", "output", "+S2");
         }
     }
 
-    public class TestDisectorSubSubOne extends TestDisector {
+    public static class TestDisectorSubSubOne extends TestDisector {
         public TestDisectorSubSubOne() {
             super("SOMESUBTYPE", "SOMESUBSUBTYPE", "output", "+SS1");
         }
     }
 
-    public class TestDisectorSubSubTwo extends TestDisector {
+    public static class TestDisectorSubSubTwo extends TestDisector {
         public TestDisectorSubSubTwo() {
             super("OTHERSUBTYPE", "OTHERSUBSUBTYPE", "output", "+SS2");
         }
     }
 
-    public class TestParser<RECORD> extends Parser<RECORD> {
+    public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) throws IOException,
                 MissingDisectorsException, InvalidDisectorException {
             super(clazz);
@@ -130,7 +130,7 @@ public class ParserTestTypeColission {
         }
     }
 
-    public class TestRecord {
+    public static class TestRecord {
         private String output1 = "xxx";
 
         @Field("SOMETYPE:output")

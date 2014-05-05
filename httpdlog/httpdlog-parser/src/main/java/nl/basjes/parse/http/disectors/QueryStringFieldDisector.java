@@ -22,8 +22,13 @@ import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class QueryStringFieldDisector implements Disector {
+import java.util.HashSet;
+import java.util.Set;
+
+public class QueryStringFieldDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.QUERYSTRING";
@@ -45,9 +50,12 @@ public class QueryStringFieldDisector implements Disector {
 
     // --------------------------------------------
 
+    private Set<String> requestedParameters = new HashSet<String>(16);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryStringFieldDisector.class);
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedParameters.add(outputname.substring(inputname.length() + 1));
     }
 
     // --------------------------------------------
@@ -74,12 +82,17 @@ public class QueryStringFieldDisector implements Disector {
             int equalPos = value.indexOf('=');
             if (equalPos == -1) {
                 if (!"".equals(value)) {
-                    parsable.addDisection(inputname, getDisectionType(inputname, value), value.toLowerCase(), "");
+                    String name = value.toLowerCase();
+                    if (requestedParameters.contains(name)) {
+                        parsable.addDisection(inputname, getDisectionType(inputname, value), name, "");
+                    }
                 }
             } else {
                 String name = value.substring(0, equalPos).toLowerCase();
-                parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                        Utils.resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                if (requestedParameters.contains(name)) {
+                    parsable.addDisection(inputname, getDisectionType(inputname, name), name,
+                            Utils.resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                }
             }
         }
     }

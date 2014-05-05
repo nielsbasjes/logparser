@@ -22,7 +22,7 @@ import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-public class QueryStringDisector implements Disector {
+public class QueryStringDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.URI";

@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public class Parser<RECORD> {
 
-    private class DisectorPhase {
+    private static class DisectorPhase {
         public DisectorPhase(final String inputType, final String outputType, final String name, final Disector instance) {
             this.inputType  = inputType;
             this.outputType = outputType;
@@ -165,7 +164,7 @@ public class Parser<RECORD> {
         Set<String> needed = new HashSet<String>(getNeeded());
         needed.add(rootType + ':' + rootName);
 
-        Set<String> allpossiblesubtargets = new HashSet<String>();
+        Set<String> allPossibleSubtargets = new HashSet<String>();
         for (String need : needed) {
             String neededName = need.substring(need.indexOf(':') + 1);
             LOG.debug("Needed:{}", neededName);
@@ -178,7 +177,7 @@ public class Parser<RECORD> {
                 } else {
                     sb.append('.').append(part);
                 }
-                allpossiblesubtargets.add(sb.toString());
+                allPossibleSubtargets.add(sb.toString());
                 LOG.debug("Possible: {}", sb.toString());
             }
         }
@@ -186,21 +185,22 @@ public class Parser<RECORD> {
         // Step 2: From the root we explore all possibly useful trees (recursively)
         compiledDisectors        = new HashMap<String, Set<DisectorPhase>>();
         usefulIntermediateFields = new HashSet<String>();
-        findUsefulDisectorsFromField(needed, allpossiblesubtargets, rootType, rootName, true);
+        findUsefulDisectorsFromField(allPossibleSubtargets, rootType, rootName, true);
 
         // Step 3: Inform all disectors to prepare for the run
-        for (Disector disector : allDisectors) {
-            disector.prepareForRun();
+        for (Set<DisectorPhase> disectorPhases : compiledDisectors.values()) {
+            for (DisectorPhase disectorPhase : disectorPhases) {
+                disectorPhase.instance.prepareForRun();
+            }
         }
-
         // Step 4: As a final step we verify that every required input can be found
         Set<String> missingDisectors = getTheMissingFields();
         if (missingDisectors != null && !missingDisectors.isEmpty()) {
-            String allMissing = "";
+            StringBuilder allMissing = new StringBuilder(missingDisectors.size()*64);
             for (String missing:missingDisectors){
-                allMissing += missing + " ";
+                allMissing.append(missing).append(' ');
             }
-            throw new MissingDisectorsException(allMissing);
+            throw new MissingDisectorsException(allMissing.toString());
         }
 
         usable = true;
@@ -208,8 +208,10 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    private void findUsefulDisectorsFromField(final Set<String> needed,
-            final Set<String> possibletargets, final String subRootType, final String subRootName, final boolean thisIsTheRoot) {
+    private void findUsefulDisectorsFromField(
+            final Set<String> possibleTargets,
+            final String subRootType, final String subRootName,
+            final boolean thisIsTheRoot) {
 
         String subRootId = subRootType + ':' + subRootName;
 
@@ -219,7 +221,7 @@ public class Parser<RECORD> {
         // So we store this to later validate if we have everything.
         locatedTargets.add(subRootId);
 
-        for (DisectorPhase disector : availableDisectors) {
+        for (DisectorPhase disector: availableDisectors) {
 
             if (!(disector.inputType.equals(subRootType))) {
                 continue; // Wrong type
@@ -237,9 +239,9 @@ public class Parser<RECORD> {
                 // We need to see if any of the wanted types start with the
                 // subRootName (it may have a '.' in the rest of the line !)
                 String subRootNameMatch = subRootName + '.';
-                for (String possibletarget : possibletargets) {
-                    if (possibletarget.startsWith(subRootNameMatch)) {
-                        checkFields.add(possibletarget);
+                for (String possibleTarget : possibleTargets) {
+                    if (possibleTarget.startsWith(subRootNameMatch)) {
+                        checkFields.add(possibleTarget);
                     }
                 }
             } else if (thisIsTheRoot) {
@@ -248,45 +250,26 @@ public class Parser<RECORD> {
                 checkFields.add(subRootName + '.' + disector.name);
             }
 
-            for (String checkField : checkFields) {
-                if (possibletargets.contains(checkField)
+            for (String checkField: checkFields) {
+                if (possibleTargets.contains(checkField)
                     && !compiledDisectors.containsKey(disector.outputType + ":" + checkField)) {
-                    LOG.debug("Checking field:\"{}\"" , checkField);
-                    if (!compiledDisectors.containsKey(subRootId)) {
-                        if (LOG.isDebugEnabled()){
-                            LOG.debug("Adding 1: (" + disector.inputType + ")" + subRootName + " --> "
-                                    + disector.instance.getClass().getName() + " --> (" + disector.outputType + ")" + checkField);
-                        }
-                        Set<DisectorPhase> phases = new HashSet<DisectorPhase>();
-                        phases.add(new DisectorPhase(disector.inputType, disector.outputType, checkField, disector.instance));
-                        compiledDisectors.put(subRootId, phases);
+
+                    Set<DisectorPhase> subRootPhases = compiledDisectors.get(subRootId);
+                    if (subRootPhases == null) {
+                        // New so we can simply add it.
+                        subRootPhases = new HashSet<DisectorPhase>();
+                        compiledDisectors.put(subRootId, subRootPhases);
                         usefulIntermediateFields.add(subRootName);
-                    } else {
-                        Set<DisectorPhase> subRootPhases = compiledDisectors.get(subRootId);
-                        Iterator<DisectorPhase> disectorIter = subRootPhases.iterator();
-                        boolean haveIt = false;
-                        while (disectorIter.hasNext()){
-                            DisectorPhase phase =  disectorIter.next();
-                            if (phase.instance == disector.instance) {
-                                haveIt = true;
-                                break; // Already have this one
-                            }
-                        }
-                        if (haveIt) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Already: (" + disector.inputType + ")" + subRootName
-                                                + " --> " + disector.instance.getClass().getName()
-                                                + " --> (" + disector.outputType + ")" + checkField);
-                            }
-                        } else {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Adding 2: (" + disector.inputType + ")" + subRootName
-                                        + " --> " + disector.instance.getClass().getName()
-                                        + " --> (" + disector.outputType + ")" + checkField);
-                            }
-                            subRootPhases.add(new DisectorPhase(disector.inputType, disector.outputType, checkField,
-                                    disector.instance));
-                        }
+                    }
+
+                    Class<? extends Disector> clazz = disector.instance.getClass();
+                    DisectorPhase disectorPhaseInstance = findDisectorInstance(subRootPhases, clazz);
+
+                    if (disectorPhaseInstance == null) {
+                        disectorPhaseInstance =
+                                new DisectorPhase(disector.inputType, disector.outputType,
+                                        checkField, disector.instance.getNewInstance());
+                        subRootPhases.add(disectorPhaseInstance);
                     }
 
                     // Tell the disector instance what to expect
@@ -295,13 +278,23 @@ public class Parser<RECORD> {
                                 + " --> " + disector.instance.getClass().getName()
                                 + " --> (" + disector.outputType + ")" + checkField);
                     }
-                    disector.instance.prepareForDisect(subRootName, checkField);
+                    disectorPhaseInstance.instance.prepareForDisect(subRootName, checkField);
 
                     // Recurse from this point down
-                    findUsefulDisectorsFromField(needed, possibletargets, disector.outputType, checkField, false);
+                    findUsefulDisectorsFromField(possibleTargets, disector.outputType, checkField, false);
                 }
             }
         }
+    }
+
+    private DisectorPhase findDisectorInstance(Set<DisectorPhase> disectorPhases,
+                                               Class<? extends Disector> clazz) {
+        for (DisectorPhase phase : disectorPhases) {
+            if (phase.instance.getClass() == clazz) {
+                return phase;
+            }
+        }
+        return null;
     }
 
     // --------------------------------------------
@@ -384,7 +377,7 @@ public class Parser<RECORD> {
         assembleDisectors();
         final Parsable<RECORD> parsable = createParsable();
         if (parsable == null) {
-          return null;
+            return null;
         }
         parsable.setRootDisection(rootType, rootName, value);
         return parse(parsable).getRecord();
@@ -470,7 +463,7 @@ public class Parser<RECORD> {
     }
 
     public Parsable<RECORD> createParsable() throws InstantiationException, IllegalAccessException {
-        RECORD record = null;
+        RECORD record;
 
         try {
             Constructor<RECORD> co = recordClass.getConstructor();
@@ -527,10 +520,6 @@ public class Parser<RECORD> {
 
     /**
      * Add all child paths in respect to the base (which is already present in the result set)
-     * @param pathNodes
-     * @param paths
-     * @param base
-     * @param maxDepth
      */
     private void findAdditionalPossiblePaths(Map<String, String[]> pathNodes, List<String> paths, String base, String baseType,
             int maxDepth) {

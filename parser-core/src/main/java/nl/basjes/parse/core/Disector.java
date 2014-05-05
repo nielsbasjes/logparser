@@ -19,15 +19,21 @@ package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface Disector {
+import java.lang.reflect.Constructor;
+
+public abstract class Disector {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Disector.class);
 
     // --------------------------------------------
 
     /**
      * This method must disect the provided field from the parsable into 'smaller' pieces.
      */
-    void disect(final Parsable<?> parsable, final String inputname)
+    public abstract void disect(final Parsable<?> parsable, final String inputname)
         throws DisectionFailure, InvalidDisectorException;
 
     // --------------------------------------------
@@ -35,7 +41,7 @@ public interface Disector {
     /**
      * @return The required typename of the input
      */
-    String getInputType();
+    public abstract String getInputType();
 
     // --------------------------------------------
 
@@ -43,7 +49,7 @@ public interface Disector {
      * What are all possible outputs that can be provided.
      * @return array of "type:name" values that indicates all the possible outputs
      */
-    String[] getPossibleOutput();
+    public abstract String[] getPossibleOutput();
 
     // --------------------------------------------
 
@@ -55,7 +61,7 @@ public interface Disector {
      * This can be used by the disector implementation to optimize the internal parsing
      * algorithms and lookup tables and such.
      */
-    void prepareForDisect(final String inputname, final String outputname);
+    public abstract void prepareForDisect(final String inputname, final String outputname);
 
     // --------------------------------------------
 
@@ -63,8 +69,23 @@ public interface Disector {
      * The framework will tell the disector that it should get ready to run.
      * I.e. finalize the bootstrapping.
      */
-    void prepareForRun() throws InvalidDisectorException;
+    public abstract void prepareForRun() throws InvalidDisectorException;
 
     // --------------------------------------------
+
+    public Disector getNewInstance() {
+        try {
+            Constructor<? extends Disector> co = this.getClass().getConstructor();
+            Disector newInstance = co.newInstance();
+            initializeNewInstance(newInstance);
+            return newInstance;
+        } catch (Exception e) {
+            LOG.error("Unable to create instance: " + e.toString());
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unused")
+    protected void initializeNewInstance(Disector newInstance) { };
 
 }
