@@ -20,40 +20,42 @@ package nl.basjes.parse;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.regex.Pattern;
 
 public class Utils {
+
+    private static Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
+    private static Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]{0,1}$");
+    private static Pattern validNonStandard   = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
+    private static Pattern choppedNonStandard = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 
     public static String resilientUrlDecode(String input) {
         String cookedInput = input;
 
+        if (cookedInput.indexOf('%') > -1) {
+            // Transform all existing UTF-8 standard into UTF-16 standard.
+            cookedInput = validStandard.matcher(cookedInput).replaceAll("%00%$1");
 
-        cookedInput = cookedInput.replaceAll("%[0-9A-Fa-f]$","");
-        cookedInput = cookedInput.replaceAll("%$", "");
+            // Discard chopped encoded char at the end of the line (there is no way to know what it was)
+            cookedInput = choppedStandard.matcher(cookedInput).replaceAll("");
 
-        if (cookedInput.contains("%u")) {
-            cookedInput = cookedInput.replaceAll("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])","%$1%$2");
-
+            // Handle non standard (rejected by W3C) encoding that is used anyway by some
+            // See: http://stackoverflow.com/a/5408655/114196
             if (cookedInput.contains("%u")) {
-                cookedInput = cookedInput.replaceAll("%u[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]$", "");
-                if (cookedInput.contains("%u")) {
-                    cookedInput = cookedInput.replaceAll("%u[0-9A-Fa-f][0-9A-Fa-f]$", "");
-                }
-                if (cookedInput.contains("%u")) {
-                    cookedInput = cookedInput.replaceAll("%u[0-9A-Fa-f]$", "");
-                }
-                if (cookedInput.contains("%u")) {
-                    cookedInput = cookedInput.replaceAll("%u$", "");
-                }
+              // Transform all existing non standard into UTF-16 standard.
+              cookedInput = validNonStandard.matcher(cookedInput).replaceAll("%$1%$2");
+
+              // Discard chopped encoded char at the end of the line
+              cookedInput = choppedNonStandard.matcher(cookedInput).replaceAll("");
             }
         }
 
         try {
-            return URLDecoder.decode(cookedInput,"UTF-8");
+            return URLDecoder.decode(cookedInput,"UTF-16");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace(); // Should never happen
+            // Will never happen because the encoding is hardcoded
+            return null;
         }
-        return null;
     }
-
 
 }

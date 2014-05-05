@@ -18,12 +18,14 @@
 
 package nl.basjes.parse.http.disectors;
 
-import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
+
+import static nl.basjes.parse.Utils.resilientUrlDecode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -68,11 +70,11 @@ public class QueryStringFieldDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         String fieldValue = field.getValue();
-        if (fieldValue == null || fieldValue.isEmpty()){
+        if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }
 
@@ -90,8 +92,13 @@ public class QueryStringFieldDisector extends Disector {
             } else {
                 String name = value.substring(0, equalPos).toLowerCase();
                 if (requestedParameters.contains(name)) {
-                    parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                            Utils.resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                    try {
+                        parsable.addDisection(inputname, getDisectionType(inputname, name), name,
+                                resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                    } catch (IllegalArgumentException e) {
+                        // This usually means that there was invalid encoding in the line
+                        throw new DisectionFailure(e.getMessage());
+                    }
                 }
             }
         }
