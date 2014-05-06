@@ -21,8 +21,6 @@ package nl.basjes.parse.http.disectors;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 import static nl.basjes.parse.Utils.resilientUrlDecode;
@@ -52,8 +50,14 @@ public class QueryStringFieldDisector extends Disector {
 
     // --------------------------------------------
 
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        // Nothing to do
+    }
+
+    // --------------------------------------------
+
     private Set<String> requestedParameters = new HashSet<String>(16);
-    private static final Logger LOG = LoggerFactory.getLogger(QueryStringFieldDisector.class);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {

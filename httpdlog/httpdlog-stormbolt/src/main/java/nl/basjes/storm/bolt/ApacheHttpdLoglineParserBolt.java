@@ -28,8 +28,16 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
             this.field=field;
             this.name=name;
         }
-        public String field;
-        public String name;
+        private String field;
+        private String name;
+
+        public String getField() {
+            return field;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     private List<RequestedField> requestedFields; 
@@ -43,7 +51,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
 
     private transient Parser<ParsedRecord> parser;
 
-    private transient ParsedRecord   record;
+    private transient ParsedRecord parsedRecord;
 
     public ApacheHttpdLoglineParserBolt(String logformat, String fieldName) {
         super();
@@ -53,14 +61,14 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     }
 
     private ParsedRecord getRecord() {
-        if (record == null) {
-            record = new ParsedRecord();
+        if (parsedRecord == null) {
+            parsedRecord = new ParsedRecord();
         }
-        return record;
+        return parsedRecord;
     }
 
-    public void requestField(String field,String name){
-        requestedFields.add(new RequestedField(field,name));
+    public void requestField(String field, String name){
+        requestedFields.add(new RequestedField(field, name));
     }
     
     private Parser<ParsedRecord> getParser() {
@@ -71,7 +79,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
 
                 String[] fields = new String[requestedFields.size()];
                 for (int i = 0; i < requestedFields.size(); i++) {
-                    fields[i] = requestedFields.get(i).field;
+                    fields[i] = requestedFields.get(i).getField();
                 }
                 parser.addParseTarget(setterMethod, fields);
 
@@ -84,26 +92,20 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
-        String apachelogline = tuple.getStringByField(fieldName);
-//        System.out.println(apachelogline);
+        String apacheLogLine = tuple.getStringByField(fieldName);
         ParsedRecord record = getRecord();
         try {
             record.clear();
-            getParser().parse(record, apachelogline);
+            getParser().parse(record, apacheLogLine);
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (DisectionFailure e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InvalidDisectorException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (MissingDisectorsException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -111,7 +113,6 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         for (RequestedField requestedField: requestedFields) {
             out.add(record.get(requestedField.field));
         }
-//        System.out.println(out.toString());
         collector.emit(out);
     }
 
@@ -119,7 +120,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
         List<String> fields = new ArrayList<String>();
         for (RequestedField requestedField: requestedFields) {
-            fields.add(requestedField.name);
+            fields.add(requestedField.getName());
         }
         ofd.declare(new Fields(fields));
     }

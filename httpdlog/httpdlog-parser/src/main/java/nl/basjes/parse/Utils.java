@@ -22,7 +22,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
-public class Utils {
+public final class Utils {
+
+    private Utils() {}
 
     private static Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
     private static Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]{0,1}$");
@@ -42,16 +44,16 @@ public class Utils {
             // Handle non standard (rejected by W3C) encoding that is used anyway by some
             // See: http://stackoverflow.com/a/5408655/114196
             if (cookedInput.contains("%u")) {
-              // Transform all existing non standard into UTF-16 standard.
-              cookedInput = validNonStandard.matcher(cookedInput).replaceAll("%$1%$2");
+                // Transform all existing non standard into UTF-16 standard.
+                cookedInput = validNonStandard.matcher(cookedInput).replaceAll("%$1%$2");
 
-              // Discard chopped encoded char at the end of the line
-              cookedInput = choppedNonStandard.matcher(cookedInput).replaceAll("");
+                // Discard chopped encoded char at the end of the line
+                cookedInput = choppedNonStandard.matcher(cookedInput).replaceAll("");
             }
         }
 
         try {
-            return URLDecoder.decode(cookedInput,"UTF-16");
+            return URLDecoder.decode(cookedInput, "UTF-16");
         } catch (UnsupportedEncodingException e) {
             // Will never happen because the encoding is hardcoded
             return null;

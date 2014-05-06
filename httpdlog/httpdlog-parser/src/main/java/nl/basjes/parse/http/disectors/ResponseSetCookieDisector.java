@@ -51,6 +51,12 @@ public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
 
     @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        // Nothing to do
+    }
+
+
+    @Override
     public void prepareForDisect(final String inputname, final String outputname) {
         // We do not do anything extra here
     }

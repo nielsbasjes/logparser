@@ -52,6 +52,11 @@ public class TimeStampDisector extends Disector {
         formatter = DateTimeFormat.forPattern(this.dateTimePattern);
     }
 
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        ((TimeStampDisector)newInstance).setDateTimePattern(dateTimePattern);
+    }
+
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "TIME.STAMP";

@@ -30,8 +30,6 @@ import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.junit.Test;
 
-import ch.qos.logback.classic.Level;
-
 public class ParserTestExceptions {
 
     public static class TestDisector extends Disector {
@@ -40,9 +38,17 @@ public class ParserTestExceptions {
         private String outputName;
 
         public TestDisector(String inputType, String outputType, String outputName) {
-            this.inputType  = inputType;
-            this.outputType = outputType;
-            this.outputName = outputName;
+            init(inputType, outputType, outputName);
+        }
+
+        public final void init(String inputtype, String outputtype, String outputname) {
+            this.inputType  = inputtype;
+            this.outputType = outputtype;
+            this.outputName = outputname;
+        }
+
+        protected void initializeNewInstance(Disector newInstance) {
+            ((TestDisector)newInstance).init(inputType, outputType, outputName);
         }
 
         @Override
@@ -168,9 +174,11 @@ public class ParserTestExceptions {
             output7 = output7 + "=BAR:" + name + ":" + value;
         }
 
+        @SuppressWarnings("unused")
         public void badSetter1() {
         }
 
+        @SuppressWarnings("unused")
         public void badSetter2(String name, Long value) {
         }
     }
@@ -239,7 +247,7 @@ public class ParserTestExceptions {
         parser.getPossiblePaths(3);
     }
 
-    public class BrokenTestDisector extends Disector {
+    public static class BrokenTestDisector extends Disector {
 
         public BrokenTestDisector() {
         }
@@ -258,6 +266,10 @@ public class ParserTestExceptions {
             String[] result = new String[1];
             result[0] = "foo:bar";
             return result;
+        }
+
+        @Override
+        protected void initializeNewInstance(Disector newInstance) {
         }
 
         @Override

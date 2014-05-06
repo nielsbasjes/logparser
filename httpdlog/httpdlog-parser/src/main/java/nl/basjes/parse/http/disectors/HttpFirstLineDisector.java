@@ -85,6 +85,15 @@ public class HttpFirstLineDisector extends Disector {
         }
     }
 
+    // --------------------------------------------
+
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        // Nothing to do
+    }
+
+    // --------------------------------------------
+
     private Set<String> requestedParameters = new HashSet<String>(16);
 
     @Override

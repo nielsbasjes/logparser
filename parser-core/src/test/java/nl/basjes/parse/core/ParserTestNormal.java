@@ -45,6 +45,17 @@ public class ParserTestNormal {
             this.outputNames.add(outputName);
         }
 
+        public void init(String inputtype, String outputtype, String outputname) {
+            this.inputType = inputtype;
+            this.outputType = outputtype;
+            this.outputName = outputname;
+            this.outputNames.add(outputname);
+        }
+
+        protected void initializeNewInstance(Disector newInstance) {
+            ((TestDisector)newInstance).init(inputType, outputType, outputName);
+        }
+
         @Override
         public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
