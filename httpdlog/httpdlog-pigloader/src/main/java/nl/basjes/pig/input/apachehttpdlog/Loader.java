@@ -164,13 +164,14 @@ public class Loader
                 fieldName.startsWith("NUMBER:") || 
                 fieldName.startsWith("BYTES:") || 
                 fieldName.startsWith("MICROSECONDS:") ||
-                fieldName.startsWith("SECONDS:") || 
-                fieldName.startsWith("TIME.DAY:") || 
-                fieldName.startsWith("TIME.HOUR:") || 
+                fieldName.startsWith("SECONDS:") ||
+                fieldName.startsWith("TIME.DAY:") ||
+                fieldName.startsWith("TIME.HOUR:") ||
                 fieldName.startsWith("TIME.MINUTE:") || 
-                fieldName.startsWith("TIME.MONTH:") || 
-                fieldName.startsWith("TIME.SECOND:") || 
+                fieldName.startsWith("TIME.MONTH:") ||
+                fieldName.startsWith("TIME.SECOND:") ||
                 fieldName.startsWith("TIME.YEAR:") ||
+                fieldName.startsWith("TIME.EPOCH:") ||
                 fieldName.startsWith("COUNT:")
             );
     }
