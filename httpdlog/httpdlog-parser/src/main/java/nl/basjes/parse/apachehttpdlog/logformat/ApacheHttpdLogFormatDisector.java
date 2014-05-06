@@ -63,8 +63,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         setLogFormat(logFormat);
     }
 
-//    public ApacheHttpdLogFormatDisector() {
-//    }
+    public ApacheHttpdLogFormatDisector() {
+    }
 
     @Override
     protected void initializeNewInstance(Disector newInstance) {
@@ -109,7 +109,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        requestedFields.add(outputname.substring(inputname.length() + 1));
+        requestedFields.add(outputname);
     }
 
     // --------------------------------------------

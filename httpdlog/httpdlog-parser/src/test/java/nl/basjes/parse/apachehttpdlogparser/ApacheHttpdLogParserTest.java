@@ -113,8 +113,8 @@ public class ApacheHttpdLogParserTest {
 
         System.out.println(results.toString());
 
-        assertEquals(null, results.get("STRING:request.firstline.uri.query.foo"));
         assertEquals("noot", results.get("STRING:request.firstline.uri.query.aap"));
+        assertEquals(null, results.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, results.get("STRING:request.querystring.aap"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals("", results.get("NUMBER:connection.client.logname"));
