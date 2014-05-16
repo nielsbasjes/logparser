@@ -25,13 +25,7 @@ import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
-import nl.basjes.parse.http.disectors.HttpFirstLineDisector;
-import nl.basjes.parse.http.disectors.QueryStringDisector;
-import nl.basjes.parse.http.disectors.QueryStringFieldDisector;
-import nl.basjes.parse.http.disectors.RequestCookieListDisector;
-import nl.basjes.parse.http.disectors.ResponseSetCookieDisector;
-import nl.basjes.parse.http.disectors.ResponseSetCookieListDisector;
-import nl.basjes.parse.http.disectors.TimeStampDisector;
+import nl.basjes.parse.http.disectors.*;
 
 public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
@@ -49,7 +43,7 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         //                                 [05/Sep/2010:11:27:50 +0200]
         addDisector(new TimeStampDisector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
         addDisector(new HttpFirstLineDisector());
-        addDisector(new QueryStringDisector());
+        addDisector(new HttpUriDisector());
         addDisector(new QueryStringFieldDisector());
         addDisector(new RequestCookieListDisector());
         addDisector(new ResponseSetCookieListDisector());

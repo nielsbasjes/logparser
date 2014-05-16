@@ -21,8 +21,12 @@ package nl.basjes.parse.http.disectors;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 
-public class QueryStringDisector extends Disector {
+import java.net.URI;
+import java.net.URISyntaxException;
+
+public class HttpUriDisector extends Disector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.URI";
@@ -36,8 +40,14 @@ public class QueryStringDisector extends Disector {
 
     @Override
     public String[] getPossibleOutput() {
-        String[] result = new String[1];
-        result[0] = "HTTP.QUERYSTRING:query";
+        String[] result = new String[7];
+        result[0] = "HTTP.PROTOCOL:protocol";
+        result[1] = "HTTP.USERINFO:userinfo";
+        result[2] = "HTTP.HOST:host";
+        result[3] = "HTTP.PORT:port";
+        result[4] = "HTTP.PATH:path";
+        result[5] = "HTTP.QUERYSTRING:query";
+        result[6] = "HTTP.REF:ref";
         return result;
     }
 
@@ -54,7 +64,7 @@ public class QueryStringDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();
@@ -62,32 +72,21 @@ public class QueryStringDisector extends Disector {
             return; // Nothing to do here
         }
 
-        int questionMark   = fieldValue.indexOf('?');
-        int firstAmpersand = fieldValue.indexOf('&');
-
-        String resultingValue;
-        // Now we can have one of 3 situations:
-        // 1) No query string
-        // 2) Query string starts with a ? (and optionally followed by one or
-        // more &)
-        // 3) Query string starts with a &. This is invalid but does occur!
-        if (questionMark == -1) {
-            if (firstAmpersand == -1) {
-                resultingValue = ""; // We do not have anything.
-            } else {
-                resultingValue = "&"+fieldValue.substring(firstAmpersand, fieldValue.length());
-            }
-        } else if (firstAmpersand == -1) {
-            // Replace the ? with a & to make parsing later easier
-            resultingValue = "&"+fieldValue.substring(questionMark+1, fieldValue.length());
-        } else {
-            // We have both. So we take the first one.
-            int usedOffset = Math.min(questionMark, firstAmpersand) + 1;
-            resultingValue = "&"+fieldValue.substring(usedOffset, fieldValue.length());
+        URI uri;
+        try {
+            uri = new URI(fieldValue);
+        } catch (URISyntaxException e) {
+            throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
         }
 
-
-        parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", resultingValue);
+        parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart());
+        parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
+        parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost());
+        if (uri.getPort() != -1) {
+            parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()));
+        }
+        parsable.addDisection(inputname, "HTTP.PATH", "path", uri.getRawPath());
+        parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", uri.getRawQuery());
     }
     // --------------------------------------------
 
