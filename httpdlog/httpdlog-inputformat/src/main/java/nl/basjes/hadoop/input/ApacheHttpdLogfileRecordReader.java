@@ -67,6 +67,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     // --------------------------------------------
 
+    @SuppressWarnings("unused") // Used by the Hadoop framework
     public ApacheHttpdLogfileRecordReader() {
         // Nothing to do here
     }

@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class Utils {
 
     private static Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
-    private static Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]{0,1}$");
+    private static Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]?$");
     private static Pattern validNonStandard   = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
     private static Pattern choppedNonStandard = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 

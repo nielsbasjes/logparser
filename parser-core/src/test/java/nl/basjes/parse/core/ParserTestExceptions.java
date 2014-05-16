@@ -30,8 +30,6 @@ import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.junit.Test;
 
-import ch.qos.logback.classic.Level;
-
 public class ParserTestExceptions {
 
     public static class TestDisector extends Disector {
@@ -168,9 +166,11 @@ public class ParserTestExceptions {
             output7 = output7 + "=BAR:" + name + ":" + value;
         }
 
+        @SuppressWarnings("UnusedDeclaration")
         public void badSetter1() {
         }
 
+        @SuppressWarnings("UnusedDeclaration")
         public void badSetter2(String name, Long value) {
         }
     }

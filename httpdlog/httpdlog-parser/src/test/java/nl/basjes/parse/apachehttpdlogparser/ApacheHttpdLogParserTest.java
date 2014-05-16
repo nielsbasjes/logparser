@@ -184,7 +184,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecordMissing {
-        @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing", })
+        @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing" })
         public void dummy(final String name, final String value) {
         }
     }

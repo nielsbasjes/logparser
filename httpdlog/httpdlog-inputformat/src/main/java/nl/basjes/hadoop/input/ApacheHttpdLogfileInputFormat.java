@@ -18,6 +18,7 @@
 package nl.basjes.hadoop.input;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ApacheHttpdLogfileInputFormat extends
 
     // --------------------------------------------
 
-    public static List<String> listPossibleFields(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException {
+    public static List<String> listPossibleFields(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
         return new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logformat).getPossiblePaths();
     }
 

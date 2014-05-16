@@ -18,7 +18,6 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -290,7 +289,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
         final List<Token> allTokens = new ArrayList<Token>(50);
         // We now look for the holes and add "FIXED STRING" tokens
-        int tokenBegin = 0;
+        int tokenBegin;
         int tokenEnd = 0;
         for (Token token : tokens) {
             tokenBegin = token.getStartPos();
