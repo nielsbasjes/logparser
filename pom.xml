@@ -28,11 +28,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
-    <!-- FIXME: This is a bit too hardcoded for CDH 4.3.0. MUST be more flexible!! -->
+    <!-- FIXME: This is a bit too hardcoded for CDH 5.0.0. MUST be more flexible!! -->
     <hadoop.releases.repo>https://repository.cloudera.com/artifactory/cloudera-repos/</hadoop.releases.repo>
-    <hadoop.version>2.0.0-cdh4.5.0</hadoop.version>
-    <!-- <hive.version>0.10.0-cdh4.3.0</hive.version> -->
-    <pig.version>0.11.0-cdh4.5.0</pig.version>
+    <hadoop.version>2.3.0-cdh5.0.0</hadoop.version>
+    <hive.version>0.12.0-cdh5.0.0</hive.version>
+    <pig.version>0.12.0-cdh5.0.0</pig.version>
     <slf4j.version>1.6.1</slf4j.version>
     <jackson.version>2.1.1</jackson.version>
   </properties>
