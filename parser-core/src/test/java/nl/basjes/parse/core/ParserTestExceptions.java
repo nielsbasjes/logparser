@@ -174,9 +174,11 @@ public class ParserTestExceptions {
             output7 = output7 + "=BAR:" + name + ":" + value;
         }
 
+        @SuppressWarnings("UnusedDeclaration")
         public void badSetter1() {
         }
 
+        @SuppressWarnings("UnusedDeclaration")
         public void badSetter2(String name, Long value) {
         }
     }
@@ -273,6 +275,10 @@ public class ParserTestExceptions {
         @Override
         public void prepareForRun() throws InvalidDisectorException {
             throw new InvalidDisectorException();
+        }
+
+        @Override
+        protected void initializeNewInstance(Disector newInstance) {
         }
     }
 
