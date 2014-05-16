@@ -21,10 +21,8 @@ package nl.basjes.parse.apachehttpdlog.logformat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,11 +35,11 @@ import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@SuppressWarnings({
-//        "PMD.LongVariable", // I like my variable names this way
-//        "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize", // No beans here
-//        "PMD.DataflowAnomalyAnalysis", // Results in a lot of mostly useless messages.
-//})
+@SuppressWarnings({
+    "PMD.LongVariable", // I like my variable names this way
+    "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize", // No beans here
+    "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
+})
 public final class ApacheHttpdLogFormatDisector extends Disector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDisector.class);
@@ -62,12 +60,10 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     // --------------------------------------------
 
     public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {
-        isUsable = false; // Make sure we classify as unusable while we're busy
         setLogFormat(logFormat);
     }
 
-    public ApacheHttpdLogFormatDisector(){
-        isUsable = false; // Make sure we classify as unusable while we're busy
+    public ApacheHttpdLogFormatDisector() {
     }
 
     @Override
@@ -104,21 +100,16 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
             outputTypesList.add(token.getType() + ':' + token.getName());
         }
 
-        outputTypes = outputTypesList.toArray(new String[0]);
+        outputTypes = outputTypesList.toArray(new String[outputTypesList.size()]);
     }
 
     // --------------------------------------------
 
-    private Map<String, Set<String>> expectedDisections = new HashMap<String, Set<String>>();
+    private Set<String> requestedFields = new HashSet<String>(16);
 
     @Override
-    public void prepareForDisect(String inputname, String outputname) {
-        Set<String> currentSet = expectedDisections.get(inputname);
-        if (currentSet == null) {
-            currentSet = new HashSet<String>();
-        }
-        currentSet.add(outputname);
-        expectedDisections.put(inputname, currentSet);
+    public void prepareForDisect(final String inputname, final String outputname) {
+        requestedFields.add(outputname);
     }
 
     // --------------------------------------------
@@ -128,20 +119,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // At this point we have all the tokens and now we construct the
         // complete regex and the list to use when extracting
         // We build the regexp so that it only extracts the needed parts.
-
-        // TODO: Make it possible for multiple input subtrees
-        // We enforce here that there can be only one.
-        if (expectedDisections.size() > 1){
-            throw new InvalidDisectorException();
-        }
-
-        Set<String> requestedOutput;
-        if (expectedDisections.size() == 0) { // Special edge case if there is NOTHING requested from this disector
-            requestedOutput = new HashSet<String>();
-        } else {
-            // For now: only one possible
-            requestedOutput = expectedDisections.get(expectedDisections.keySet().iterator().next());
-        }
 
         // Allocated buffer is a bit bigger than needed
         final StringBuilder regex = new StringBuilder(logFormatTokens.size() * 16);
@@ -154,7 +131,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
             if (TokenParser.FIXED_STRING.equals(token.getType())) {
                 // Only insert the fixed part
                 regex.append(Pattern.quote(token.getRegex()));
-            } else if (requestedOutput.contains(token.getName())) {
+            } else if (requestedFields.contains(token.getName())) {
                 logFormatNames.add(token.getName());
                 logFormatTypes.add(token.getType());
                 regex.append("(").append(token.getRegex()).append(")");

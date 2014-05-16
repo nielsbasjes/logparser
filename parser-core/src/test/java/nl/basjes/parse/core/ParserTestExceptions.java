@@ -38,9 +38,17 @@ public class ParserTestExceptions {
         private String outputName;
 
         public TestDisector(String inputType, String outputType, String outputName) {
-            this.inputType  = inputType;
-            this.outputType = outputType;
-            this.outputName = outputName;
+            init(inputType, outputType, outputName);
+        }
+
+        public final void init(String inputtype, String outputtype, String outputname) {
+            this.inputType  = inputtype;
+            this.outputType = outputtype;
+            this.outputName = outputname;
+        }
+
+        protected void initializeNewInstance(Disector newInstance) {
+            ((TestDisector)newInstance).init(inputType, outputType, outputName);
         }
 
         @Override
@@ -166,11 +174,9 @@ public class ParserTestExceptions {
             output7 = output7 + "=BAR:" + name + ":" + value;
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public void badSetter1() {
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public void badSetter2(String name, Long value) {
         }
     }

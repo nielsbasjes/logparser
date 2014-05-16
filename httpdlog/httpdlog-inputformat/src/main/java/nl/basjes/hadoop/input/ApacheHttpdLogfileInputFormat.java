@@ -34,22 +34,20 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, MapWritable> {
-//    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogfileInputFormat.class);
 
     // --------------------------------------------
 
-    public static List<String> listPossibleFields(String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+    public static List<String> listPossibleFields(String logformat)
+        throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
         return new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logformat).getPossiblePaths();
     }
 
-    private String logformat = null;
-    public String getLogformat() {
-        return logformat;
+    private String logFormat = null;
+    public String getLogFormat() {
+        return logFormat;
     }
 
     public Set<String> getRequestedFields() {
@@ -64,7 +62,7 @@ public class ApacheHttpdLogfileInputFormat extends
 
     public ApacheHttpdLogfileInputFormat(String newLogformat, Collection<String> newRequestedFields) {
         super();
-        logformat = newLogformat;
+        logFormat = newLogformat;
         requestedFields.addAll(newRequestedFields);
     }
 
@@ -74,7 +72,7 @@ public class ApacheHttpdLogfileInputFormat extends
     public RecordReader<LongWritable, MapWritable> createRecordReader(
             final InputSplit split, final TaskAttemptContext context)
         throws IOException, InterruptedException {
-        return new ApacheHttpdLogfileRecordReader(getLogformat(), getRequestedFields());
+        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
     }
 
 }

@@ -26,10 +26,10 @@ public class ParserBoltTest implements Serializable {
     // ========================================================================
     
     public class TestApacheLogsSpout extends BaseRichSpout {
-        SpoutOutputCollector _collector;
+        private SpoutOutputCollector collector;
 
-        public void open(@SuppressWarnings("rawtypes") Map conf, TopologyContext context, SpoutOutputCollector collector) {
-            _collector = collector;
+        public void open(@SuppressWarnings("rawtypes") Map conf, TopologyContext context, SpoutOutputCollector collectorr) {
+            this.collector = collectorr;
         }
 
         public void nextTuple() {
@@ -43,7 +43,7 @@ public class ParserBoltTest implements Serializable {
                     + "nl%26sa%3DN%26biw%3D1882%26bih%3D1014%26tbs%3Disch:1\" "
                     + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
                     + "Version/5.0.1 Safari/533.17.8\"";
-            _collector.emit(new Values(logline));
+            collector.emit(new Values(logline));
         }
 
         public void declareOutputFields(OutputFieldsDeclarer declarer) {
@@ -58,15 +58,15 @@ public class ParserBoltTest implements Serializable {
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             Fields fields = tuple.getFields();
             Assert.assertEquals(7, fields.size());
-            Assert.assertEquals("2010",tuple.getStringByField( "year"));
-            Assert.assertEquals("9",tuple.getStringByField( "month"));
-            Assert.assertEquals("5",tuple.getStringByField( "day"));
-            Assert.assertEquals("11",tuple.getStringByField( "hour"));
-            Assert.assertEquals("27",tuple.getStringByField( "minute"));
-            Assert.assertEquals("50",tuple.getStringByField("second"));
+            Assert.assertEquals("2010", tuple.getStringByField("year"));
+            Assert.assertEquals("9", tuple.getStringByField("month"));
+            Assert.assertEquals("5", tuple.getStringByField("day"));
+            Assert.assertEquals("11", tuple.getStringByField("hour"));
+            Assert.assertEquals("27", tuple.getStringByField("minute"));
+            Assert.assertEquals("50", tuple.getStringByField("second"));
             Assert.assertEquals("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) " +
                                 "AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 " +
-                                "Safari/533.17.8",tuple.getStringByField("useragent"));
+                                "Safari/533.17.8", tuple.getStringByField("useragent"));
             System.out.println("Ok");
         }
 
@@ -78,7 +78,7 @@ public class ParserBoltTest implements Serializable {
 
     // ========================================================================
     @Test
-    public void RunRest() throws InterruptedException {
+    public void runRest() throws InterruptedException {
         TopologyBuilder builder = new TopologyBuilder();
 
         // ----------
@@ -101,8 +101,8 @@ public class ParserBoltTest implements Serializable {
 
         StormTopology topology = builder.createTopology();
         LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("Unit test", new HashMap<String,String>(), topology);
-        Thread.sleep(10000L);// Run for 10 seconds
+        cluster.submitTopology("Unit test", new HashMap<String, String>(), topology);
+        Thread.sleep(10000L); // Run for 10 seconds
         cluster.killTopology("Unit test");
         cluster.shutdown();
 

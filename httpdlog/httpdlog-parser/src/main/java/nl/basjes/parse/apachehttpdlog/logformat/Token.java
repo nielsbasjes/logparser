@@ -18,13 +18,8 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
-
 public class Token {
-    private static Map<String, String> typeOverrule = new HashMap<String, String>();
+//    private static Map<String, String> typeOverrule = new HashMap<String, String>();
 
     private String name;
     private String type;
@@ -53,9 +48,9 @@ public class Token {
         // RFC 2616 Section 4.2 states: "Field names are case-insensitive."
         name = nName.toLowerCase();
         type = nType;
-        if (typeOverrule.containsKey(name.toLowerCase())) {
-            type = typeOverrule.get(name.toLowerCase());
-        }
+//        if (typeOverrule.containsKey(name.toLowerCase())) {
+//            type = typeOverrule.get(name.toLowerCase());
+//        }
         regex = nRegex;
         startPos = nStartPos;
         length = nLength;

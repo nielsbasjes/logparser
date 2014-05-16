@@ -80,12 +80,12 @@ public abstract class Disector {
             initializeNewInstance(newInstance);
             return newInstance;
         } catch (Exception e) {
-            LOG.error("Unable to create instance: " + e.toString());
+            LOG.error("Unable to create instance of " + this.getClass().getCanonicalName() + ": " + e.toString());
         }
         return null;
     }
 
     @SuppressWarnings("unused")
-    protected void initializeNewInstance(Disector newInstance) { }
+    protected abstract void initializeNewInstance(Disector newInstance);
 
 }

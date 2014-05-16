@@ -43,13 +43,18 @@ public class TimeStampDisector extends Disector {
         setDateTimePattern("[dd/MMM/yyyy:HH:mm:ss ZZ]");
     }
 
-    public TimeStampDisector(String timestampFormat) {
-        formatter = DateTimeFormat.forPattern(timestampFormat);
+    public TimeStampDisector(String newDateTimePattern) {
+        setDateTimePattern(newDateTimePattern);
     }
 
-    public void setDateTimePattern(String datetimePattern) {
-        this.dateTimePattern = datetimePattern;
-        formatter = DateTimeFormat.forPattern(this.dateTimePattern);
+    public void setDateTimePattern(String newDateTimePattern) {
+        dateTimePattern = newDateTimePattern;
+        formatter = DateTimeFormat.forPattern(dateTimePattern);
+    }
+
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        ((TimeStampDisector)newInstance).setDateTimePattern(dateTimePattern);
     }
 
     // --------------------------------------------

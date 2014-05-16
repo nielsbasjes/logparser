@@ -98,8 +98,10 @@ public class ApacheHttpdLogParserTest {
      */
     @Test
     public void fullTest1() throws Exception {
-        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [30/Aug/2012:23:49:40 +0200] \"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
-                + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
+        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [30/Aug/2012:23:49:40 +0200] "
+                + "\"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
+                + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 "
+                + "\"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
                 + "\"jquery-ui-theme=Eggplant\" \"Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl\" \"-\" "
                 + "\"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
 
@@ -111,8 +113,8 @@ public class ApacheHttpdLogParserTest {
 
         System.out.println(results.toString());
 
-        assertEquals(null, results.get("STRING:request.firstline.uri.query.foo"));
         assertEquals("noot", results.get("STRING:request.firstline.uri.query.aap"));
+        assertEquals(null, results.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, results.get("STRING:request.querystring.aap"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals("", results.get("NUMBER:connection.client.logname"));

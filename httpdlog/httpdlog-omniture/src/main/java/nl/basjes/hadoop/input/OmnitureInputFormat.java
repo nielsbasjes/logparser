@@ -15,13 +15,13 @@ public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     }
 
     public OmnitureInputFormat(String newLogformat, Collection<String> newRequestedFields) {
-        super(newLogformat,newRequestedFields);
+        super(newLogformat, newRequestedFields);
     }
 
     @Override
     public RecordReader<LongWritable, MapWritable> createRecordReader(final InputSplit split, final TaskAttemptContext context) throws IOException,
             InterruptedException {
-        return new OmnitureRecordReader(getLogformat(), getRequestedFields());
+        return new OmnitureRecordReader(getLogFormat(), getRequestedFields());
     }
 
 }

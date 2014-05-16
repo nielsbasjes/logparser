@@ -43,13 +43,23 @@ public class ParserTestTypeColission {
         private String outputName;
         private String salt; // Each value that comes in is appended with this "salt"
 
-        public TestDisector(String inputType, String outputType,
-                String outputName, String salt) {
+        public TestDisector(String inputType, String outputType, String outputName, String salt) {
             this.inputType = inputType;
             this.outputType = outputType;
             this.outputName = outputName;
             this.salt = salt;
         }
+
+        public void init(String inputtype, String outputtype, String outputname, String saltt) {
+            this.inputType = inputtype;
+            this.outputType = outputtype;
+            this.outputName = outputname;
+            this.salt = saltt;
+        }
+        protected void initializeNewInstance(Disector newInstance) {
+            ((TestDisector)newInstance).init(inputType, outputType, outputName, salt);
+        }
+
 
         @Override
         public void disect(Parsable<?> parsable, String inputname)

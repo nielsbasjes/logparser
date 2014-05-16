@@ -68,7 +68,6 @@ public class CookiesTest {
             "STRING:response.cookies.nba-4.expires",
             "STRING:response.cookies.nba-4.path",
             "STRING:response.cookies.nba-4.domain"
-
             })
         public void setValue(final String name, final String value) {
             results.put(name, value);

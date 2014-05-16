@@ -160,49 +160,49 @@ public class ApacheHttpdLogfileRecordReader extends
     // --------------------------------------------
 
     private int errorLinesLogged = 0;
-    private final static int MAX_ERROR_LINES_LOGGED = 10;
+    private static final int MAX_ERROR_LINES_LOGGED = 10;
 
     @Override
     public boolean nextKeyValue() throws IOException {
         if (allPossiblePaths == null) {
 
-          boolean haveValue = false;
-          while (!haveValue) {
-            if (!lineReader.nextKeyValue()) {
-              return false;
-            }
-
-            counterLinesRead.increment(1L);
-
-            currentValue.clear();
-            String inputLine = lineReader.getCurrentValue().toString();
-            try {
-              parser.parse(currentValue, lineReader.getCurrentValue().toString());
-              counterGoodLines.increment(1L);
-              haveValue = true;
-            } catch (InstantiationException e) {
-              return false;
-            } catch (IllegalAccessException e) {
-              LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
-              return false;
-            } catch (DisectionFailure e) {
-              counterBadLines.increment(1L);
-              if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {
-                LOG.error("Parse error >>>{}<<< in line: >>>{}<<<", e.getMessage(), inputLine);
-                errorLinesLogged++;
-                if (errorLinesLogged == MAX_ERROR_LINES_LOGGED) {
-                  LOG.error(">>>>>>>>>>> We now stop logging parse errors! <<<<<<<<<<<");
+            boolean haveValue = false;
+            while (!haveValue) {
+                if (!lineReader.nextKeyValue()) {
+                    return false;
                 }
-              }
-              // Ignore bad lines and simply continue
-            } catch (InvalidDisectorException e) {
-              LOG.error("InvalidDisectorException >>>{}<<<", e.getMessage());
-              return false;
-            } catch (MissingDisectorsException e) {
-              LOG.error("MissingDisectorsException >>>{}<<<", e.getMessage());
-              return false;
+
+                counterLinesRead.increment(1L);
+
+                currentValue.clear();
+                String inputLine = lineReader.getCurrentValue().toString();
+                try {
+                    parser.parse(currentValue, lineReader.getCurrentValue().toString());
+                    counterGoodLines.increment(1L);
+                    haveValue = true;
+                } catch (InstantiationException e) {
+                    return false;
+                } catch (IllegalAccessException e) {
+                    LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
+                    return false;
+                } catch (DisectionFailure e) {
+                    counterBadLines.increment(1L);
+                    if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {
+                        LOG.error("Parse error >>>{}<<< in line: >>>{}<<<", e.getMessage(), inputLine);
+                        errorLinesLogged++;
+                        if (errorLinesLogged == MAX_ERROR_LINES_LOGGED) {
+                            LOG.error(">>>>>>>>>>> We now stop logging parse errors! <<<<<<<<<<<");
+                        }
+                    }
+                    // Ignore bad lines and simply continue
+                } catch (InvalidDisectorException e) {
+                    LOG.error("InvalidDisectorException >>>{}<<<", e.getMessage());
+                    return false;
+                } catch (MissingDisectorsException e) {
+                    LOG.error("MissingDisectorsException >>>{}<<<", e.getMessage());
+                    return false;
+                }
             }
-          }
         } else {
             // We now ONLY return the possible names of the fields that can be
             // requested
@@ -217,7 +217,7 @@ public class ApacheHttpdLogfileRecordReader extends
             currentValue.set(allPossiblePathsFieldName, value);
             return true;
         }
-      return true;
+        return true;
     }
 
     @Override

@@ -50,6 +50,13 @@ public class RequestCookieListDisector extends Disector {
 
     // --------------------------------------------
 
+    @Override
+    protected void initializeNewInstance(Disector newInstance) {
+        // Nothing to do
+    }
+
+    // --------------------------------------------
+
     private Set<String> requestedCookies = new HashSet<String>(16);
 
     @Override
