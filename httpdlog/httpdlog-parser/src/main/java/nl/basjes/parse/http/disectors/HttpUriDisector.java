@@ -58,9 +58,24 @@ public class HttpUriDisector extends Disector {
         // Nothing to do
     }
 
+    private boolean wantProtocol = false;
+    private boolean wantUserinfo = false;
+    private boolean wantHost     = false;
+    private boolean wantPort     = false;
+    private boolean wantPath     = false;
+    private boolean wantQuery    = false;
+    private boolean wantRef      = false;
+
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        String name = outputname.substring(inputname.length() + 1);
+        if ("protocol".equals(name)) { wantProtocol = true; }
+        if ("userinfo".equals(name)) { wantUserinfo = true; }
+        if ("host".equals(name))     { wantHost     = true; }
+        if ("port".equals(name))     { wantPort     = true; }
+        if ("path".equals(name))     { wantPath     = true; }
+        if ("query".equals(name))    { wantQuery    = true; }
+        if ("ref".equals(name))      { wantRef      = true; }
     }
 
     @Override
@@ -79,21 +94,77 @@ public class HttpUriDisector extends Disector {
             return; // Nothing to do here
         }
 
-        URI uri;
-        try {
-            uri = new URI(fieldValue);
-        } catch (URISyntaxException e) {
-            throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
-        }
+        int questionMark   = fieldValue.indexOf('?');
+        int firstAmpersand = fieldValue.indexOf('&');
 
-        parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart());
-        parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
-        parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost());
-        if (uri.getPort() != -1) {
-            parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()));
+        if (wantQuery || wantPath || wantRef) {
+            String pathValue;
+            String queryValue;
+            String refValue;
+            // Now we can have one of 3 situations:
+            // 1) No query string
+            // 2) Query string starts with a ? (and optionally followed by one or
+            // more &)
+            // 3) Query string starts with a &. This is invalid but does occur!
+            if (questionMark == -1) {
+                if (firstAmpersand == -1) {
+                    pathValue = fieldValue;
+                    queryValue = ""; // We do not have anything.
+                } else {
+                    pathValue = fieldValue.substring(0, firstAmpersand);
+                    queryValue = fieldValue.substring(firstAmpersand, fieldValue.length());
+                }
+            } else if (firstAmpersand == -1) {
+                // Replace the ? with a & to make parsing later easier
+                pathValue = fieldValue.substring(0, questionMark);
+                queryValue = "&" + fieldValue.substring(questionMark + 1, fieldValue.length());
+            } else {
+                // We have both. So we take the first one.
+                int usedOffset = Math.min(questionMark, firstAmpersand);
+                pathValue = fieldValue.substring(0, usedOffset);
+                queryValue = "&" + fieldValue.substring(usedOffset + 1, fieldValue.length()).replaceAll("\\?","&");
+            }
+
+            int hashMark = queryValue.indexOf('#');
+            if (hashMark != -1) {
+                refValue = queryValue.substring(hashMark + 1);
+                queryValue = queryValue.substring(0,hashMark);
+            } else {
+                refValue = "";
+            }
+
+            if (wantQuery) {
+                parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", queryValue);
+            }
+            if (wantPath) {
+                parsable.addDisection(inputname, "HTTP.PATH", "path", pathValue);
+            }
+            if (wantRef) {
+                parsable.addDisection(inputname, "HTTP.REF", "ref", refValue);
+            }
         }
-        parsable.addDisection(inputname, "HTTP.PATH", "path", uri.getRawPath());
-        parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", uri.getRawQuery());
+        if (wantProtocol||wantUserinfo||wantHost||wantPort) {
+            URI uri;
+            try {
+                uri = new URI(fieldValue);
+            } catch (URISyntaxException e) {
+                throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
+            }
+            if (wantProtocol) {
+                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart());
+            }
+            if (wantUserinfo) {
+                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
+            }
+            if (wantHost) {
+                parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost());
+            }
+            if (wantPort) {
+                if (uri.getPort() != -1) {
+                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()));
+                }
+            }
+        }
     }
     // --------------------------------------------
 
