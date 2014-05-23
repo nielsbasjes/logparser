@@ -28,12 +28,18 @@ import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.CompressionCodecFactory;
+import org.apache.hadoop.io.compress.SplittableCompressionCodec;
 import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+
 
 public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, MapWritable> {
@@ -75,4 +81,13 @@ public class ApacheHttpdLogfileInputFormat extends
         return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
     }
 
+    @Override
+    protected boolean isSplitable(JobContext context, Path file) {
+        final CompressionCodec codec =
+            new CompressionCodecFactory(context.getConfiguration()).getCodec(file);
+        if (null == codec) {
+            return true;
+        }
+        return codec instanceof SplittableCompressionCodec;
+    }  
 }
