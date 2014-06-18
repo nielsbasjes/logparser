@@ -51,7 +51,9 @@ public class ApacheHttpdLogfileRecordReader extends
 
     public class ParsedRecord extends MapWritable {
         public void set(String name, String value) {
-            put(new Text(name), new Text(value));
+            if (value != null) {
+                put(new Text(name), new Text(value));
+            }
         }
     }
 
