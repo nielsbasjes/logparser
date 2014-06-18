@@ -448,7 +448,10 @@ public class Parser<RECORD> {
                     } catch (final Exception e) {
                         throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
                                                                      e.getCause() + "\" when calling \"" +
-                                                                     method.toGenericString() + "\"");
+                                                                     method.toGenericString() + "\" for " +
+                                                                     " key = \"" + key + "\" " +
+                                                                     " name = \"" + name + "\" " +
+                                                                     " value = \"" + value + "\"" );
                     }
                 }
             }
