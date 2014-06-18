@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -43,8 +43,8 @@ import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-public class Loader 
-       extends LoadFunc 
+public class Loader
+       extends LoadFunc
        implements LoadMetadata {
 
     @SuppressWarnings("rawtypes")
@@ -75,9 +75,9 @@ public class Loader
     }
 
     // ------------------------------------------
-    
+
     @Override
-    public InputFormat<?, ?> getInputFormat() 
+    public InputFormat<?, ?> getInputFormat()
         throws IOException {
         return new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
     }
@@ -95,7 +95,7 @@ public class Loader
     // ------------------------------------------
 
     @Override
-    public Tuple getNext() 
+    public Tuple getNext()
         throws IOException {
         Tuple tuple = null;
 
@@ -144,13 +144,13 @@ public class Loader
     public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit)
         throws IOException {
         // Note that for this Loader, we don't care about the PigSplit.
-        this.reader = newReader; 
+        this.reader = newReader;
     }
 
     // ------------------------------------------
 
     @Override
-    public void setLocation(String location, Job job) 
+    public void setLocation(String location, Job job)
         throws IOException {
         // The location is assumed to be comma separated paths.
         FileInputFormat.setInputPaths(job, location);
@@ -161,13 +161,13 @@ public class Loader
     private boolean isNumerical(String fieldName){
         return (
                 // FIXME: This property should come from the disector that created the specific field.
-                fieldName.startsWith("NUMBER:") || 
-                fieldName.startsWith("BYTES:") || 
+                fieldName.startsWith("NUMBER:") ||
+                fieldName.startsWith("BYTES:") ||
                 fieldName.startsWith("MICROSECONDS:") ||
                 fieldName.startsWith("SECONDS:") ||
                 fieldName.startsWith("TIME.DAY:") ||
                 fieldName.startsWith("TIME.HOUR:") ||
-                fieldName.startsWith("TIME.MINUTE:") || 
+                fieldName.startsWith("TIME.MINUTE:") ||
                 fieldName.startsWith("TIME.MONTH:") ||
                 fieldName.startsWith("TIME.SECOND:") ||
                 fieldName.startsWith("TIME.YEAR:") ||
@@ -175,7 +175,7 @@ public class Loader
                 fieldName.startsWith("COUNT:")
             );
     }
-    
+
     @Override
     public ResourceSchema getSchema(String location, Job job) throws IOException {
         ResourceSchema rs = new ResourceSchema();
@@ -211,13 +211,13 @@ public class Loader
     public String[] getPartitionKeys(String location, Job job) throws IOException {
         return null;
     }
-    
+
     // ------------------------------------------
 
     @Override
     public void setPartitionFilter(Expression partitionFilter) throws IOException {
     }
-    
+
     // ------------------------------------------
 
 }
