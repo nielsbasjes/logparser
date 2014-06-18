@@ -116,7 +116,13 @@ public class Loader
                         values.add(null);
                     } else {
                         if (isNumerical(fieldName)){
-                            values.add(Long.parseLong(theValue.toString()));
+                            try {
+                                values.add(Long.parseLong(theValue.toString()));
+                            }
+                            catch (NumberFormatException nfe) {
+                                // If we cannot add it as a number we do add it at all (receiver expects a number).
+                                values.add(null);
+                            }
                         } else {
                             values.add(theValue.toString());
                         }
