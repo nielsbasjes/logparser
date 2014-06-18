@@ -60,6 +60,9 @@ public class ApacheHttpdLogParserTest {
             "TIME.HOUR:request.receive.time.hour",
             "TIME.MONTHNAME:request.receive.time.monthname",
             "TIME.EPOCH:request.receive.time.epoch",
+            "TIME.WEEK:request.receive.time.weekofweekyear",
+            "TIME.YEAR:request.receive.time.weekyear",
+            "TIME.YEAR:request.receive.time.year",
             "HTTP.COOKIES:request.cookies",
             "HTTP.SETCOOKIES:response.cookies",
             "HTTP.COOKIE:request.cookies.jquery-ui-theme",
@@ -98,7 +101,7 @@ public class ApacheHttpdLogParserTest {
      */
     @Test
     public void fullTest1() throws Exception {
-        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [30/Aug/2012:23:49:40 +0200] "
+        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:49:40 +0100] "
                 + "\"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
                 + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 "
                 + "\"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
@@ -119,8 +122,11 @@ public class ApacheHttpdLogParserTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals("", results.get("NUMBER:connection.client.logname"));
         assertEquals("", results.get("STRING:connection.client.user"));
-        assertEquals("[30/Aug/2012:23:49:40 +0200]", results.get("TIME.STAMP:request.receive.time"));
-        assertEquals("1346363380000", results.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals("[31/Dec/2012:23:49:40 +0100]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("1356994180000", results.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals("1", results.get("TIME.WEEK:request.receive.time.weekofweekyear"));
+        assertEquals("2013", results.get("TIME.YEAR:request.receive.time.weekyear"));
+        assertEquals("2012", results.get("TIME.YEAR:request.receive.time.year"));
         assertEquals("40", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png?aap=noot", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
@@ -129,9 +135,9 @@ public class ApacheHttpdLogParserTest {
         assertEquals("wim", results.get("STRING:request.referer.query.mies"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));
-        assertEquals("30", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals("31", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
-        assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
+        assertEquals("December", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("351", results.get("MICROSECONDS:server.process.time"));
         assertEquals("Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl",
                 results.get("HTTP.SETCOOKIES:response.cookies"));

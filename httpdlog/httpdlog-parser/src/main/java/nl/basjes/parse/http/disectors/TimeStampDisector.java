@@ -18,9 +18,7 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
@@ -37,6 +35,7 @@ public class TimeStampDisector extends Disector {
     private DateTimeFormatter formatter;
     private String dateTimePattern;
 
+    @SuppressWarnings("UnusedDeclaration")
     public TimeStampDisector() {
         // We set the default parser to what we find in the Apache httpd Logfiles
         //                  [05/Sep/2010:11:27:50 +0200]
@@ -70,27 +69,52 @@ public class TimeStampDisector extends Disector {
 
     @Override
     public String[] getPossibleOutput() {
-        String[] result = new String[10];
-        result[0] = "TIME.DAY:day";
-        result[1] = "TIME.MONTHNAME:monthname";
-        result[2] = "TIME.MONTH:month";
-        result[3] = "TIME.YEAR:year";
-        result[4] = "TIME.HOUR:hour";
-        result[5] = "TIME.MINUTE:minute";
-        result[6] = "TIME.SECOND:second";
-        result[7] = "TIME.MILLISECOND:millisecond";
-        result[8] = "TIME.ZONE:timezone";
-        result[9] = "TIME.EPOCH:epoch";
+        String[] result = new String[12];
+        result[0]  = "TIME.DAY:day";
+        result[1]  = "TIME.MONTHNAME:monthname";
+        result[2]  = "TIME.MONTH:month";
+        result[3]  = "TIME.WEEK:weekofweekyear";
+        result[4]  = "TIME.YEAR:weekyear";
+        result[5]  = "TIME.YEAR:year";
+        result[6]  = "TIME.HOUR:hour";
+        result[7]  = "TIME.MINUTE:minute";
+        result[8]  = "TIME.SECOND:second";
+        result[9]  = "TIME.MILLISECOND:millisecond";
+        result[10] = "TIME.ZONE:timezone";
+        result[11] = "TIME.EPOCH:epoch";
         return result;
     }
 
     // --------------------------------------------
 
-    private Set<String> requestedFields = new HashSet<String>(16);
+    private boolean wantDay            = false;
+    private boolean wantMonthname      = false;
+    private boolean wantMonth          = false;
+    private boolean wantWeekOfWeekYear = false;
+    private boolean wantWeekYear       = false;
+    private boolean wantYear           = false;
+    private boolean wantHour           = false;
+    private boolean wantMinute         = false;
+    private boolean wantSecond         = false;
+    private boolean wantMillisecond    = false;
+    private boolean wantTimezone       = false;
+    private boolean wantEpoch          = false;
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
-        requestedFields.add(outputname.substring(inputname.length() + 1));
+        String name = outputname.substring(inputname.length() + 1);
+        if ("day".equals(name))            { wantDay            = true; }
+        if ("monthname".equals(name))      { wantMonthname      = true; }
+        if ("month".equals(name))          { wantMonth          = true; }
+        if ("weekofweekyear".equals(name)) { wantWeekOfWeekYear = true; }
+        if ("weekyear".equals(name))       { wantWeekYear       = true; }
+        if ("year".equals(name))           { wantYear           = true; }
+        if ("hour".equals(name))           { wantHour           = true; }
+        if ("minute".equals(name))         { wantMinute         = true; }
+        if ("second".equals(name))         { wantSecond         = true; }
+        if ("millisecond".equals(name))    { wantMillisecond    = true; }
+        if ("timezone".equals(name))       { wantTimezone       = true; }
+        if ("epoch".equals(name))          { wantEpoch          = true; }
     }
 
     // --------------------------------------------
@@ -111,35 +135,41 @@ public class TimeStampDisector extends Disector {
         }
         DateTime dateTime = formatter.parseDateTime(fieldValue);
 
-        if (requestedFields.contains("day")) {
+        if (wantDay) {
             parsable.addDisection(inputname, "TIME.DAY", "day", dateTime.dayOfMonth().getAsString());
         }
-        if (requestedFields.contains("monthname")) {
+        if (wantMonthname) {
             parsable.addDisection(inputname, "TIME.MONTHNAME", "monthname", dateTime.monthOfYear().getAsText(Locale.getDefault()));
         }
-        if (requestedFields.contains("month")) {
+        if (wantMonth) {
             parsable.addDisection(inputname, "TIME.MONTH", "month", dateTime.monthOfYear().getAsString());
         }
-        if (requestedFields.contains("year")) {
+        if (wantWeekOfWeekYear) {
+            parsable.addDisection(inputname, "TIME.WEEK", "weekofweekyear", dateTime.weekOfWeekyear().getAsString());
+        }
+        if (wantWeekYear) {
+            parsable.addDisection(inputname, "TIME.YEAR", "weekyear", dateTime.weekyear().getAsString());
+        }
+        if (wantYear) {
             parsable.addDisection(inputname, "TIME.YEAR", "year", dateTime.year().getAsString());
         }
-        if (requestedFields.contains("hour")) {
+        if (wantHour) {
             parsable.addDisection(inputname, "TIME.HOUR", "hour", dateTime.hourOfDay().getAsString());
         }
-        if (requestedFields.contains("minute")) {
+        if (wantMinute) {
             parsable.addDisection(inputname, "TIME.MINUTE", "minute", dateTime.minuteOfHour().getAsString());
         }
-        if (requestedFields.contains("second")) {
+        if (wantSecond) {
             parsable.addDisection(inputname, "TIME.SECOND", "second", dateTime.secondOfMinute().getAsString());
         }
-        if (requestedFields.contains("millisecond")) {
+        if (wantMillisecond) {
             parsable.addDisection(inputname, "TIME.MILLISECOND", "millisecond", dateTime.millisOfSecond().getAsString());
         }
-        if (requestedFields.contains("timezone")) {
+        if (wantTimezone) {
             parsable.addDisection(inputname, "TIME.TIMEZONE", "timezone", dateTime.getZone().getID());
         }
-        if (requestedFields.contains("epoch")) {
-            parsable.addDisection(inputname, "TIME.EPOCH",       "epoch",       Long.toString(dateTime.getMillis()));
+        if (wantEpoch) {
+            parsable.addDisection(inputname, "TIME.EPOCH", "epoch", Long.toString(dateTime.getMillis()));
         }
     }
 
