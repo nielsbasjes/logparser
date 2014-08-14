@@ -17,25 +17,13 @@
  */
 package nl.basjes.parse.core;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import nl.basjes.parse.core.exceptions.CannotChangeDisectorsAfterConstructionException;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.FatalErrorDuringCallOfSetterMethod;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
-
+import nl.basjes.parse.core.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class Parser<RECORD> {
 
@@ -96,9 +84,9 @@ public class Parser<RECORD> {
         }
 
         final String inputType = disector.getInputType();
-        final String[] outputs = disector.getPossibleOutput();
+        final List<String> outputs = disector.getPossibleOutput();
 
-        if (outputs == null || outputs.length == 0){
+        if (outputs == null || outputs.size() == 0){
             return; // If a disector cannot produce any output we are not adding it.
         }
 
@@ -508,11 +496,11 @@ public class Parser<RECORD> {
 
         List<String> paths = new ArrayList<String>();
 
-        Map<String, String[]> pathNodes = new HashMap<String, String[]>();
+        Map<String, List<String>> pathNodes = new HashMap<String, List<String>>();
 
         for (Disector disector : allDisectors) {
             final String inputType = disector.getInputType();
-            final String[] outputs = disector.getPossibleOutput();
+            final List<String> outputs = disector.getPossibleOutput();
             pathNodes.put(inputType, outputs);
         }
 
@@ -524,14 +512,14 @@ public class Parser<RECORD> {
     /**
      * Add all child paths in respect to the base (which is already present in the result set)
      */
-    private void findAdditionalPossiblePaths(Map<String, String[]> pathNodes, List<String> paths, String base, String baseType,
+    private void findAdditionalPossiblePaths(Map<String, List<String>> pathNodes, List<String> paths, String base, String baseType,
             int maxDepth) {
         if (maxDepth == 0) {
             return;
         }
 
         if (pathNodes.containsKey(baseType)) {
-            String[] childPaths = pathNodes.get(baseType);
+            List<String> childPaths = pathNodes.get(baseType);
             for (String childPath : childPaths) {
                 final int colonPos = childPath.indexOf(':');
                 final String childType = childPath.substring(0, colonPos);

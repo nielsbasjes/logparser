@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,18 +17,14 @@
  */
 package nl.basjes.parse.core;
 
-import static org.junit.Assert.assertEquals;
+import nl.basjes.parse.core.exceptions.*;
+import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import nl.basjes.parse.core.exceptions.CannotChangeDisectorsAfterConstructionException;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class ParserTestExceptions {
 
@@ -63,9 +59,9 @@ public class ParserTestExceptions {
         }
 
         @Override
-        public String[] getPossibleOutput() {
-            String[] result = new String[1];
-            result[0] = outputType + ":" + outputName;
+        public List<String> getPossibleOutput() {
+            List<String> result = new ArrayList<String>();
+            result.add(outputType + ":" + outputName);
             return result;
         }
 
@@ -167,7 +163,7 @@ public class ParserTestExceptions {
         public void setValue6(String name, String value) {
             output6 = output6 + "=FOO:" + name + ":" + value;
         }
-        
+
         private String output7 = "Z";
         @Field({ "BAR:output1.bar"})
         public void setValue7(String name, String value) {
@@ -223,8 +219,8 @@ public class ParserTestExceptions {
 //        assertEquals(true, paths.contains("BAR:output1.bar"));
     }
 
-    
-    
+
+
     @Test(expected=InvalidFieldMethodSignature.class)
     public void testBadSetter1() throws Exception {
 //        setLoggingLevel(Level.ALL);
@@ -262,9 +258,9 @@ public class ParserTestExceptions {
         }
 
         @Override
-        public String[] getPossibleOutput() {
-            String[] result = new String[1];
-            result[0] = "foo:bar";
+        public List<String> getPossibleOutput() {
+            List<String> result = new ArrayList<String>();
+            result.add("foo:bar");
             return result;
         }
 
@@ -324,5 +320,5 @@ public class ParserTestExceptions {
         parser.getPossiblePaths(0);
         parser.dropDisector(TestDisectorOne.class);
     }
-    
+
 }

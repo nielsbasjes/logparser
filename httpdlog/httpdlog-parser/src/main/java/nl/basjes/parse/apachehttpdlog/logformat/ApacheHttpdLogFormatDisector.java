@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,15 +18,6 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -34,6 +25,11 @@ import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings({
     "PMD.LongVariable", // I like my variable names this way
@@ -51,12 +47,12 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private Pattern      logFormatPattern   = null;
     private boolean      isUsable           = false;
 
-    private List<Token> logFormatTokens;
+    private List<Token>  logFormatTokens;
 
-    private String[] outputTypes;
+    private List<String> outputTypes;
 
     private static final String FIXED_STRING_TYPE = "NONE";
-    
+
     // --------------------------------------------
 
     public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {
@@ -89,7 +85,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // Now we disassemble the format into parts
         logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
 
-        List<String> outputTypesList = new ArrayList<String>(20);
+        outputTypes = new ArrayList<String>(20);
 
         for (final Token token : logFormatTokens) {
             String type = token.getType();
@@ -97,10 +93,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 continue;
             }
 
-            outputTypesList.add(token.getType() + ':' + token.getName());
+            outputTypes.add(token.getType() + ':' + token.getName());
         }
-
-        outputTypes = outputTypesList.toArray(new String[outputTypesList.size()]);
     }
 
     // --------------------------------------------
@@ -160,7 +154,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     }
 
     @Override
-    public String[] getPossibleOutput() {
+    public List<String> getPossibleOutput() {
         return outputTypes;
     }
 
@@ -227,7 +221,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // We first change all the references to headers to lowercase
         // because we must handle these as "case insensitive"
         String cleanedApacheLogFormat = makeHeaderNamesLowercaseInLogFormat(apacheLogFormat);
-        
+
         // Now we let all tokens figure out if they are present in here
         for (TokenParser tokenParser : tokenParsers) {
             List<Token> newTokens = tokenParser.getTokens(cleanedApacheLogFormat);
@@ -240,7 +234,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // ---------------------------------------
         // We sort them by position of the token in the format specifier
         Collections.sort(tokens, new TokenSorterByStartPos());
-        
+
         // First we take out the duplicates with a lower prio(=relevance score)
         final List<Token> kickTokens = new ArrayList<Token>(50);
         Token prevToken = null;

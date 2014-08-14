@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,14 +20,17 @@ package nl.basjes.parse;
 
 import nl.basjes.parse.http.disectors.QueryStringFieldDisector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OmnitureQueryStringFieldDisector extends QueryStringFieldDisector {
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[4];
-        result[0] = "STRING:*";
-        result[1] = "PRODUCTS:products";
-        result[2] = "HTTP.URI:g";
-        result[3] = "HTTP.URI:r";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("STRING:*");
+        result.add("PRODUCTS:products");
+        result.add("HTTP.URI:g");
+        result.add("HTTP.URI:r");
         return result;
     }
 

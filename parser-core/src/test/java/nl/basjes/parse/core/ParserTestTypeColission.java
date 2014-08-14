@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,17 +17,17 @@
  */
 package nl.basjes.parse.core;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
+import ch.qos.logback.classic.Level;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
-
 import org.junit.Test;
 
-import ch.qos.logback.classic.Level;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class ParserTestTypeColission {
 
@@ -75,9 +75,9 @@ public class ParserTestTypeColission {
         }
 
         @Override
-        public String[] getPossibleOutput() {
-            String[] result = new String[1];
-            result[0] = outputType + ":" + outputName;
+        public List<String> getPossibleOutput() {
+            List<String> result = new ArrayList<String>();
+            result.add(outputType + ":" + outputName);
             return result;
         }
 

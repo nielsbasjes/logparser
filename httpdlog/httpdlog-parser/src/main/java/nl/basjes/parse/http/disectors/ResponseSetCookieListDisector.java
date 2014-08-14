@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -19,6 +19,7 @@
 package nl.basjes.parse.http.disectors;
 
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +43,9 @@ public class ResponseSetCookieListDisector extends Disector {
 
     /** This should output all possible types */
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[1];
-        result[0] = "HTTP.SETCOOKIE:*";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("HTTP.SETCOOKIE:*");
         return result;
     }
 
@@ -91,7 +92,7 @@ public class ResponseSetCookieListDisector extends Disector {
         // and HttpCookie.parse(...) doesn't always work :(
         String[] parts = fieldSeparatorPattern.split(fieldValue);
 
-        String previous=""; 
+        String previous="";
         for (String part:parts) {
             int expiresIndex = part.toLowerCase().indexOf("expires=");
             if (expiresIndex != -1) {
@@ -107,7 +108,7 @@ public class ResponseSetCookieListDisector extends Disector {
             }
 
             List<HttpCookie> cookies = HttpCookie.parse(value);
-            
+
             for (HttpCookie cookie : cookies) {
                 cookie.setVersion(1);
                 String cookieName = cookie.getName().toLowerCase();
@@ -119,7 +120,7 @@ public class ResponseSetCookieListDisector extends Disector {
                 }
             }
         }
-        
+
     }
 
     // --------------------------------------------

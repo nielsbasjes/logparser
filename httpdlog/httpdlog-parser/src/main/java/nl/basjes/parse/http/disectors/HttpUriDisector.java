@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +25,8 @@ import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HttpUriDisector extends Disector {
     // --------------------------------------------
@@ -39,15 +41,15 @@ public class HttpUriDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[7];
-        result[0] = "HTTP.PROTOCOL:protocol";
-        result[1] = "HTTP.USERINFO:userinfo";
-        result[2] = "HTTP.HOST:host";
-        result[3] = "HTTP.PORT:port";
-        result[4] = "HTTP.PATH:path";
-        result[5] = "HTTP.QUERYSTRING:query";
-        result[6] = "HTTP.REF:ref";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("HTTP.PROTOCOL:protocol");
+        result.add("HTTP.USERINFO:userinfo");
+        result.add("HTTP.HOST:host");
+        result.add("HTTP.PORT:port");
+        result.add("HTTP.PATH:path");
+        result.add("HTTP.QUERYSTRING:query");
+        result.add("HTTP.REF:ref");
         return result;
     }
 

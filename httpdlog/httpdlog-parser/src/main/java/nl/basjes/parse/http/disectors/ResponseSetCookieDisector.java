@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,12 +18,13 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.net.HttpCookie;
-import java.util.List;
-
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+
+import java.net.HttpCookie;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
@@ -39,12 +40,12 @@ public class ResponseSetCookieDisector extends Disector {
 
     /** This should output all possible types */
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[4];
-        result[0] = "STRING:value";
-        result[1] = "STRING:expires";
-        result[2] = "STRING:path";
-        result[3] = "STRING:domain";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("STRING:value");
+        result.add("STRING:expires");
+        result.add("STRING:path");
+        result.add("STRING:domain");
         return result;
     }
 

@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,14 +18,16 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpFirstLineDisector extends Disector {
     // --------------------------------------------
@@ -45,12 +47,12 @@ public class HttpFirstLineDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[4];
-        result[0] = "HTTP.METHOD:method";
-        result[1] = "HTTP.URI:uri";
-        result[2] = "HTTP.PROTOCOL:protocol";
-        result[3] = "HTTP.PROTOCOL.VERSION:protocol.version";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("HTTP.METHOD:method");
+        result.add("HTTP.URI:uri");
+        result.add("HTTP.PROTOCOL:protocol");
+        result.add("HTTP.PROTOCOL.VERSION:protocol.version");
         return result;
     }
 

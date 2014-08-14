@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,15 +18,16 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.util.Locale;
-
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class TimeStampDisector extends Disector {
 
@@ -68,20 +69,20 @@ public class TimeStampDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public String[] getPossibleOutput() {
-        String[] result = new String[12];
-        result[0]  = "TIME.DAY:day";
-        result[1]  = "TIME.MONTHNAME:monthname";
-        result[2]  = "TIME.MONTH:month";
-        result[3]  = "TIME.WEEK:weekofweekyear";
-        result[4]  = "TIME.YEAR:weekyear";
-        result[5]  = "TIME.YEAR:year";
-        result[6]  = "TIME.HOUR:hour";
-        result[7]  = "TIME.MINUTE:minute";
-        result[8]  = "TIME.SECOND:second";
-        result[9]  = "TIME.MILLISECOND:millisecond";
-        result[10] = "TIME.ZONE:timezone";
-        result[11] = "TIME.EPOCH:epoch";
+    public List<String> getPossibleOutput() {
+        List<String> result = new ArrayList<String>();
+        result.add("TIME.DAY:day");
+        result.add("TIME.MONTHNAME:monthname");
+        result.add("TIME.MONTH:month");
+        result.add("TIME.WEEK:weekofweekyear");
+        result.add("TIME.YEAR:weekyear");
+        result.add("TIME.YEAR:year");
+        result.add("TIME.HOUR:hour");
+        result.add("TIME.MINUTE:minute");
+        result.add("TIME.SECOND:second");
+        result.add("TIME.MILLISECOND:millisecond");
+        result.add("TIME.ZONE:timezone");
+        result.add("TIME.EPOCH:epoch");
         return result;
     }
 
