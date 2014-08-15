@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,17 +18,16 @@
 
 package nl.basjes.parse.apachehttpdlogparser;
 
-import static org.junit.Assert.assertEquals;
+import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.core.Field;
+import nl.basjes.parse.core.Parser;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.Field;
-import nl.basjes.parse.core.Parser;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class CookiesTest {
 
@@ -90,9 +89,9 @@ public class CookiesTest {
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
                 "NBA-1=1234, " +
-                "NBA-2=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT, " +
-                "NBA-3=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT; path=/, " +
-                "NBA-4=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es" +
+                "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
+                "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
+                "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es" +
             "\" \"-\" \"-\"";
 
     // ----------------------------
@@ -157,18 +156,18 @@ public class CookiesTest {
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));
         assertEquals("127.0.0.1.1351111543699529", results.get("HTTP.COOKIE:request.cookies.apache"));
         assertEquals("NBA-1=1234, " +
-                "NBA-2=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT, " +
-                "NBA-3=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT; path=/, " +
-                "NBA-4=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es", 
+                "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
+                "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
+                "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
                 results.get("HTTP.SETCOOKIES:response.cookies"));
-        assertEquals("NBA-4=1234; expires=Thu, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
+        assertEquals("NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
                 results.get("HTTP.SETCOOKIE:response.cookies.nba-4"));
         assertEquals("1234", results.get("STRING:response.cookies.nba-4.value"));
-        
+
         // The returned value may be off by 1 or 2 seconds due to rounding.
         assertEquals(1577836810D, Double.parseDouble(results.get("STRING:response.cookies.nba-4.expires")), 2D);
         assertEquals("/", results.get("STRING:response.cookies.nba-4.path"));
         assertEquals(".basj.es", results.get("STRING:response.cookies.nba-4.domain"));
-        
+
     }
 }
