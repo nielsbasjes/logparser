@@ -21,14 +21,18 @@ package nl.basjes.parse.apachehttpdlogparser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
+import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.junit.Test;
@@ -253,6 +257,11 @@ public class ApacheHttpdLogParserTest {
         assertEquals(expectedLogFormat, ApacheHttpdLogFormatDisector.makeHeaderNamesLowercaseInLogFormat(logFormat));
     }
 
+    @Test
+    public void VerifyCommonFormatNamesMapping() throws Exception {
+      ApacheHttpdLogFormatDisector disector = new ApacheHttpdLogFormatDisector("combined");
+      assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", disector.getLogFormat());
+    }
 
     // ------------------------------------------
 

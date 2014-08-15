@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,6 +18,11 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
+import java.text.ParseException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -25,11 +30,6 @@ import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.ParseException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SuppressWarnings({
     "PMD.LongVariable", // I like my variable names this way
@@ -52,7 +52,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private List<String> outputTypes;
 
     private static final String FIXED_STRING_TYPE = "NONE";
-
+    
     // --------------------------------------------
 
     public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {
@@ -77,10 +77,38 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
     public void setLogFormat(final String logformat) throws ParseException {
         this.logFormat = logformat;
-        // LogFormat "%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"" combined
-        // LogFormat "%h %l %u %t "%r" %>s %b" common
+
+        // Commonly used logformats as documented in the manuals of the Apache Httpd
+        // LogFormat "%h %l %u %t \"%r\" %>s %b" common
+        // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+        // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
         // LogFormat "%{Referer}i -> %U" referer
         // LogFormat "%{User-agent}i" agent
+
+        switch (logformat.toLowerCase(Locale.getDefault())) {
+            case "common":
+                this.logFormat = "%h %l %u %t \"%r\" %>s %b";
+                break;
+            case "combined":
+                this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+                break;
+            case "combinedio":
+                this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O";
+                break;
+            case "referer":
+                this.logFormat = "%{Referer}i -> %U";
+                break;
+            case "agent":
+                this.logFormat = "%{User-agent}i";
+                break;
+            default:
+                this.logFormat = logformat;
+                break;
+        }
+
+        if (!this.logFormat.equals(logformat)) {
+            LOG.info("Specified logformat \"" + logformat + "\" was mapped to " + this.logFormat);
+        }
 
         // Now we disassemble the format into parts
         logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
@@ -95,6 +123,14 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
             outputTypes.add(token.getType() + ':' + token.getName());
         }
+    }
+
+    public String getLogFormat() {
+      return logFormat;
+    }
+
+    public String getLogFormatRegEx() {
+      return logFormatRegEx;
     }
 
     // --------------------------------------------
@@ -138,6 +174,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
         logFormatRegEx = regex.toString();
 //        System.out.println("APACHE LOG REGEX: "+logFormatRegEx);
+        LOG.info("Source logformat : " + this.logFormat);
+        LOG.info("Used regex       : " + logFormatRegEx);
 
         // Now we compile this expression ONLY ONCE!
         logFormatPattern = Pattern.compile(logFormatRegEx);
