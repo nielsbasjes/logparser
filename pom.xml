@@ -24,7 +24,7 @@
   <packaging>pom</packaging>
   <name>Parser (group)</name>
   <properties>
-    <jdkLevel>1.6</jdkLevel>
+    <jdkLevel>1.7</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
