@@ -26,10 +26,10 @@ public final class Utils {
 
     private Utils() {}
 
-    private static Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
-    private static Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]?$");
-    private static Pattern validNonStandard   = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
-    private static Pattern choppedNonStandard = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
+    private static final Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
+    private static final Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]?$");
+    private static final Pattern validNonStandard   = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
+    private static final Pattern choppedNonStandard = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 
     public static String resilientUrlDecode(String input) {
         String cookedInput = input;

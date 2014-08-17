@@ -31,10 +31,8 @@ public final class Main {
 
     /**
      * @param args
-     * @throws IOException
      * @throws IllegalAccessException
      * @throws InstantiationException
-     * @throws MissingDisectorsException
      */
     @SuppressWarnings({ "PMD.SystemPrintln" })
     public static void main(final String[] args) throws Exception {

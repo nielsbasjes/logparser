@@ -26,7 +26,7 @@ import nl.basjes.parse.core.Field;
 
 public class MyRecord {
 
-    private Map<String, String> results = new HashMap<String, String>(32);
+    private final Map<String, String> results = new HashMap<>(32);
 
 //   @Field("STRING:request.firstline.uri.query.g.query.*")
 //   public void setQueryDeepMany(final String name, final String value) {

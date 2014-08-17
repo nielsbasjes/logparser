@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.util.Date;
 import java.util.List;
 
 public abstract class Disector {
@@ -36,7 +35,7 @@ public abstract class Disector {
      * This method must disect the provided field from the parsable into 'smaller' pieces.
      */
     public abstract void disect(final Parsable<?> parsable, final String inputname)
-        throws DisectionFailure, InvalidDisectorException;
+        throws DisectionFailure;
 
     // --------------------------------------------
 

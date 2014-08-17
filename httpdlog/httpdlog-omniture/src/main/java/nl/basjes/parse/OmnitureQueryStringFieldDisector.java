@@ -26,7 +26,7 @@ import java.util.List;
 public class OmnitureQueryStringFieldDisector extends QueryStringFieldDisector {
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("STRING:*");
         result.add("PRODUCTS:products");
         result.add("HTTP.URI:g");

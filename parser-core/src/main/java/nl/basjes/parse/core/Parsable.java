@@ -32,7 +32,7 @@ public final class Parsable<RECORD> {
     private final RECORD                   record;
 
     // This caches the values and intermediate values
-    private final Map<String, ParsedField> cache      = new TreeMap<String, ParsedField>();
+    private final Map<String, ParsedField> cache      = new TreeMap<>();
 
     // The end nodes we really need as output
     // Values look like "TYPE:foo.bar"
@@ -42,7 +42,7 @@ public final class Parsable<RECORD> {
     private final Set<String>              usefulIntermediates;
 
     // The set of ParsedFields that need to be parsed further
-    private final Set<ParsedField>         toBeParsed = new HashSet<ParsedField>();
+    private final Set<ParsedField>         toBeParsed = new HashSet<>();
 
     private String                         rootname   = null;
 
@@ -77,11 +77,11 @@ public final class Parsable<RECORD> {
     }
 
         /** Store a newly parsed value in the result set */
-    public void addDisection(final String base, final String type, final String name, final String value, EnumSet<Castable> castableTo) {
+    public void addDisection(final String base, final String type, final String name, final String value, EnumSet<Casts> castsTo) {
         LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
 
-        if (castableTo == null || castableTo.isEmpty()) {
-            castableTo = EnumSet.of(Castable.STRING);
+        if (castsTo == null || castsTo.isEmpty()) {
+            castsTo = EnumSet.of(Casts.STRING);
         }
 
         String completeName;
@@ -103,11 +103,11 @@ public final class Parsable<RECORD> {
         }
 
         if (needed.contains(neededName)) {
-            parser.store(record, neededName, neededName, value, castableTo );
+            parser.store(record, neededName, neededName, value, castsTo);
         }
 
         if (needed.contains(neededWildCardName)) {
-            parser.store(record, neededWildCardName, neededName, value, castableTo);
+            parser.store(record, neededWildCardName, neededName, value, castsTo);
         }
 
     }

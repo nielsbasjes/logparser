@@ -19,11 +19,8 @@ package nl.basjes.parse.core;
 
 import ch.qos.logback.classic.Level;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -67,7 +64,7 @@ public class ParserTestTypeColission {
             throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             parsable.addDisection(inputname, outputType, outputName,
-                    field.getValue()+salt, EnumSet.of(Castable.STRING));
+                    field.getValue()+salt, EnumSet.of(Casts.STRING));
         }
 
         @Override
@@ -77,7 +74,7 @@ public class ParserTestTypeColission {
 
         @Override
         public List<String> getPossibleOutput() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(outputType + ":" + outputName);
             return result;
         }
@@ -128,8 +125,7 @@ public class ParserTestTypeColission {
     }
 
     public static class TestParser<RECORD> extends Parser<RECORD> {
-        public TestParser(final Class<RECORD> clazz) throws IOException,
-                MissingDisectorsException, InvalidDisectorException {
+        public TestParser(final Class<RECORD> clazz) {
             super(clazz);
             addDisector(new TestDisectorOne());
             addDisector(new TestDisectorTwo());
@@ -175,7 +171,7 @@ public class ParserTestTypeColission {
     @Test
     public void testParseString() throws Exception {
         setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         TestRecord output = new TestRecord();
         parser.parse(output, "Something");

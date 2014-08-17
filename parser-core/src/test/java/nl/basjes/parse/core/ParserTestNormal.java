@@ -18,11 +18,9 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +31,7 @@ public class ParserTestNormal {
         private String      inputType;
         private String      outputType;
         private String      outputName;
-        private Set<String> outputNames = new HashSet<String>();
+        private final Set<String> outputNames = new HashSet<>();
 
         public TestDisector(String inputType, String outputType, String outputName) {
             this.inputType = inputType;
@@ -57,7 +55,7 @@ public class ParserTestNormal {
         public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             for (String outputname : outputNames) {
-                parsable.addDisection(inputname, outputType, outputname, field.getValue(), EnumSet.of(Castable.STRING));
+                parsable.addDisection(inputname, outputType, outputname, field.getValue(), EnumSet.of(Casts.STRING));
             }
         }
 
@@ -68,7 +66,7 @@ public class ParserTestNormal {
 
         @Override
         public List<String> getPossibleOutput() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(outputType + ":" + outputName);
             return result;
         }
@@ -120,7 +118,7 @@ public class ParserTestNormal {
     }
 
     public static class TestParser<RECORD> extends Parser<RECORD> {
-        public TestParser(final Class<RECORD> clazz) throws IOException, MissingDisectorsException, InvalidDisectorException {
+        public TestParser(final Class<RECORD> clazz) {
             super(clazz);
             addDisector(new TestDisectorOne());
             addDisector(new TestDisectorTwo());
@@ -134,7 +132,7 @@ public class ParserTestNormal {
     @Test
     public void testParseString() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<ParserTestNormalTestRecord>(ParserTestNormalTestRecord.class);
+        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);
@@ -161,7 +159,7 @@ public class ParserTestNormal {
     @Test
     public void testParseStringInstantiate() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<ParserTestNormalTestRecord>(ParserTestNormalTestRecord.class);
+        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);
@@ -186,7 +184,7 @@ public class ParserTestNormal {
     @Test(expected = MissingDisectorsException.class)
     public void testMissingDisector() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<ParserTestNormalTestRecord>(ParserTestNormalTestRecord.class);
+        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         // Cripple the parser
         parser.dropDisector(TestDisectorTwo.class);
@@ -198,7 +196,7 @@ public class ParserTestNormal {
     @Test
     public void testGetPossiblePaths() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<ParserTestNormalTestRecord>(ParserTestNormalTestRecord.class);
+        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);

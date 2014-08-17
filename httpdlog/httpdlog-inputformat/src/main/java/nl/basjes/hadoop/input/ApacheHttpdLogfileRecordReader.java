@@ -65,7 +65,7 @@ public class ApacheHttpdLogfileRecordReader extends
     private final ParsedRecord                     currentValue    = new ParsedRecord();
 
     private String                                 logformat       = null;
-    private Set<String>                            requestedFields = new HashSet<String>();
+    private final Set<String>                      requestedFields = new HashSet<>();
 
     // --------------------------------------------
 
@@ -117,7 +117,7 @@ public class ApacheHttpdLogfileRecordReader extends
             parser = getParser(logformat);
 
             String[] fieldList = null;
-            if (requestedFields == null) {
+            if (requestedFields.isEmpty()) {
                 String fields = conf.get(
                         "nl.basjes.parse.apachehttpdlogline.fields", null);
 
@@ -142,21 +142,17 @@ public class ApacheHttpdLogfileRecordReader extends
                         String.class, String.class), fieldList);
             }
 
-        } catch (MissingDisectorsException e) {
-            throw new IOException(e.toString());
-        } catch (InvalidDisectorException e) {
-            throw new IOException(e.toString());
-        } catch (SecurityException e) {
-            throw new IOException(e.toString());
-        } catch (NoSuchMethodException e) {
-            throw new IOException(e.toString());
-        } catch (ParseException e) {
+        } catch ( MissingDisectorsException
+                | ParseException
+                | NoSuchMethodException
+                | SecurityException
+                | InvalidDisectorException e) {
             throw new IOException(e.toString());
         }
     }
 
     public Parser<ParsedRecord> getParser(String logFormat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
-        return new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logFormat);
+        return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logFormat);
     }
 
     // --------------------------------------------
@@ -182,11 +178,11 @@ public class ApacheHttpdLogfileRecordReader extends
                     parser.parse(currentValue, lineReader.getCurrentValue().toString());
                     counterGoodLines.increment(1L);
                     haveValue = true;
-                } catch (InstantiationException e) {
-                    return false;
-                } catch (IllegalAccessException e) {
-                    LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
-                    return false;
+//                } catch (InstantiationException e) {
+//                    return false;
+//                } catch (IllegalAccessException e) {
+//                    LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
+//                    return false;
                 } catch (DisectionFailure e) {
                     counterBadLines.increment(1L);
                     if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {

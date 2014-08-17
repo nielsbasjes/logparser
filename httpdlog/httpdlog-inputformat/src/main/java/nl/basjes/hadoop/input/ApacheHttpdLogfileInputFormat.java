@@ -47,8 +47,8 @@ public class ApacheHttpdLogfileInputFormat extends
     // --------------------------------------------
 
     public static List<String> listPossibleFields(String logformat)
-        throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
-        return new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logformat).getPossiblePaths();
+        throws MissingDisectorsException, InvalidDisectorException, ParseException {
+        return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat).getPossiblePaths();
     }
 
     private String logFormat = null;
@@ -60,7 +60,7 @@ public class ApacheHttpdLogfileInputFormat extends
         return requestedFields;
     }
 
-    private Set<String> requestedFields = new HashSet<String>();
+    private final Set<String> requestedFields = new HashSet<>();
 
     public ApacheHttpdLogfileInputFormat() {
         super();

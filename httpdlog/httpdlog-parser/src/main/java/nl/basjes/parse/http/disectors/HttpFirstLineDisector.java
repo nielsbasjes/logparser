@@ -18,14 +18,12 @@
 
 package nl.basjes.parse.http.disectors;
 
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +46,7 @@ public class HttpFirstLineDisector extends Disector {
 
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("HTTP.METHOD:method");
         result.add("HTTP.URI:uri");
         result.add("HTTP.PROTOCOL:protocol");
@@ -83,7 +81,7 @@ public class HttpFirstLineDisector extends Disector {
 
     private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) {
         if (requestedParameters.contains(name)) {
-            parsable.addDisection(inputname, type, name, matcher.group(offset));
+            parsable.addDisection(inputname, type, name, matcher.group(offset), EnumSet.of(Casts.STRING));
         }
     }
 
@@ -96,7 +94,7 @@ public class HttpFirstLineDisector extends Disector {
 
     // --------------------------------------------
 
-    private Set<String> requestedParameters = new HashSet<>(16);
+    private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {

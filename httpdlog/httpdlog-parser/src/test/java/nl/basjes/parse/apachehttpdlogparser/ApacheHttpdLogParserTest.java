@@ -21,18 +21,14 @@ package nl.basjes.parse.apachehttpdlogparser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
-import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.junit.Test;
@@ -42,7 +38,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecord {
-        private Map<String, String> results = new HashMap<String, String>(32);
+        private final Map<String, String> results = new HashMap<>(32);
 
         @Field({
             "STRING:request.firstline.uri.query.aap",
@@ -90,12 +86,12 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private String logFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
+    private final String logFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
                              + "\"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
     // This next value is what should be used internally
-    private String expectedLogFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
+    private final String expectedLogFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
             + "\"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
@@ -112,7 +108,7 @@ public class ApacheHttpdLogParserTest {
                 + "\"jquery-ui-theme=Eggplant\" \"Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl\" \"-\" "
                 + "\"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<TestRecord>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
 
         TestRecord record = new TestRecord();
         parser.parse(record, line);
@@ -158,7 +154,7 @@ public class ApacheHttpdLogParserTest {
 
     @Test
     public void fullTest2() throws Exception {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<TestRecord>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
 
         String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /icons/powered_by_rh.png HTTP/1.1\" 200 1213 80"
                 + " \"\" \"http://localhost/\" 1306 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\""
@@ -204,7 +200,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void testMissing() throws Exception {
         try {
-            Parser<TestRecordMissing> parser = new ApacheHttpdLoglineParser<TestRecordMissing>(TestRecordMissing.class, logFormat);
+            Parser<TestRecordMissing> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing.class, logFormat);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDisectorsException e) {
@@ -223,7 +219,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void testMissing2() throws Exception {
         try {
-            Parser<TestRecordMissing2> parser = new ApacheHttpdLoglineParser<TestRecordMissing2>(TestRecordMissing2.class, logFormat);
+            Parser<TestRecordMissing2> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing2.class, logFormat);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDisectorsException e) {
@@ -236,7 +232,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void testGetPossiblePaths() throws Exception {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<TestRecord>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
 
         List<String> paths = parser.getPossiblePaths(5);
 //        for (String path:paths){
@@ -277,7 +273,7 @@ public class ApacheHttpdLogParserTest {
     public void testQueryStringDisector() throws Exception {
         String logformat = "%r";
 
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<EmptyTestRecord>(EmptyTestRecord.class, logformat);
+        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);
 
         String[] params = {"STRING:request.firstline.uri.query.foo",
                            "STRING:request.firstline.uri.query.bar",
@@ -360,6 +356,14 @@ public class ApacheHttpdLogParserTest {
         assertEquals("&bar=barbar&foo=foofoo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
         assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
 
+    }
+
+    // ------------------------------------------
+
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void EnsureNotYetImplementedFailure() throws Exception {
+        new ApacheHttpdLogFormatDisector("%{format}t");
     }
 
 }

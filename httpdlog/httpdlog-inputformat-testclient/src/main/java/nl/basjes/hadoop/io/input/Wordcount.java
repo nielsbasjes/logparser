@@ -44,7 +44,7 @@ public class Wordcount extends Configured implements Tool {
 
     // ----------------------------------------------------------------------
 
-    private static// httpd.conf has this next line:
+    private static final// httpd.conf has this next line:
           // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
     String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
 
@@ -54,7 +54,7 @@ public class Wordcount extends Configured implements Tool {
             Mapper<Object, MapWritable, Text, IntWritable> {
 
         private static final IntWritable ONE  = new IntWritable(1);
-        private Text                     word = new Text();
+        private final Text                     word = new Text();
 
         @Override
         public void map(Object key, MapWritable value, Context context)
@@ -70,7 +70,7 @@ public class Wordcount extends Configured implements Tool {
 
     public static class IntSumReducer extends
             Reducer<Text, IntWritable, Text, IntWritable> {
-        private IntWritable result = new IntWritable();
+        private final IntWritable result = new IntWritable();
 
         @Override
         public void reduce(Text key, Iterable<IntWritable> values,

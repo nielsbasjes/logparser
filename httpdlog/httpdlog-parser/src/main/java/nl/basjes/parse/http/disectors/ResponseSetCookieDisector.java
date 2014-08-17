@@ -18,7 +18,7 @@
 
 package nl.basjes.parse.http.disectors;
 
-import nl.basjes.parse.core.Castable;
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -43,7 +43,7 @@ public class ResponseSetCookieDisector extends Disector {
     /** This should output all possible types */
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("STRING:value");
         result.add("STRING:expires");
         result.add("STRING:path");
@@ -86,12 +86,12 @@ public class ResponseSetCookieDisector extends Disector {
         List<HttpCookie> cookies = HttpCookie.parse(fieldValue);
 
         for (HttpCookie cookie : cookies) {
-            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue(), EnumSet.of(Castable.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue(), EnumSet.of(Casts.STRING));
             parsable.addDisection(inputname, getDisectionType(inputname, "expires"), "expires",
-                    Long.toString(nowSeconds+cookie.getMaxAge()), EnumSet.of(Castable.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath(), EnumSet.of(Castable.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain(), EnumSet.of(Castable.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment(), EnumSet.of(Castable.STRING));
+                    Long.toString(nowSeconds+cookie.getMaxAge()), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath(), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain(), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment(), EnumSet.of(Casts.STRING));
         }
     }
 

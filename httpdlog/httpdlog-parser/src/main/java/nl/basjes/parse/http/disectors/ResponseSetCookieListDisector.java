@@ -19,12 +19,10 @@
 package nl.basjes.parse.http.disectors;
 
 import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -44,7 +42,7 @@ public class ResponseSetCookieListDisector extends Disector {
     /** This should output all possible types */
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("HTTP.SETCOOKIE:*");
         return result;
     }
@@ -56,7 +54,7 @@ public class ResponseSetCookieListDisector extends Disector {
     }
 
     // --------------------------------------------
-    private Set<String> requestedCookies = new HashSet<String>(16);
+    private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
@@ -116,7 +114,8 @@ public class ResponseSetCookieListDisector extends Disector {
                     parsable.addDisection(inputname,
                             getDisectionType(inputname, cookieName),
                             cookieName,
-                            value);
+                            value,
+                            EnumSet.of(Casts.STRING));
                 }
             }
         }

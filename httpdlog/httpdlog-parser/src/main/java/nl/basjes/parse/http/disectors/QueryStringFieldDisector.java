@@ -18,15 +18,13 @@
 
 package nl.basjes.parse.http.disectors;
 
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static nl.basjes.parse.Utils.resilientUrlDecode;
 
@@ -45,7 +43,7 @@ public class QueryStringFieldDisector extends Disector {
     /** This should output all possible types */
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("STRING:*");
         return result;
     }
@@ -59,7 +57,7 @@ public class QueryStringFieldDisector extends Disector {
 
     // --------------------------------------------
 
-    private Set<String> requestedParameters = new HashSet<String>(16);
+    private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
@@ -92,7 +90,7 @@ public class QueryStringFieldDisector extends Disector {
                 if (!"".equals(value)) {
                     String name = value.toLowerCase();
                     if (requestedParameters.contains(name)) {
-                        parsable.addDisection(inputname, getDisectionType(inputname, value), name, "");
+                        parsable.addDisection(inputname, getDisectionType(inputname, value), name, "", EnumSet.of(Casts.STRING));
                     }
                 }
             } else {
@@ -100,7 +98,7 @@ public class QueryStringFieldDisector extends Disector {
                 if (requestedParameters.contains(name)) {
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                                resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                                resilientUrlDecode(value.substring(equalPos + 1, value.length())), EnumSet.of(Casts.STRING));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
                         throw new DisectionFailure(e.getMessage());

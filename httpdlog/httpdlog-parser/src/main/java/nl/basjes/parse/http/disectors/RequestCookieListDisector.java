@@ -18,13 +18,11 @@
 
 package nl.basjes.parse.http.disectors;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import nl.basjes.parse.Utils;
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -45,7 +43,7 @@ public class RequestCookieListDisector extends Disector {
     /** This should output all possible types */
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("HTTP.COOKIE:*");
         return result;
     }
@@ -59,7 +57,7 @@ public class RequestCookieListDisector extends Disector {
 
     // --------------------------------------------
 
-    private Set<String> requestedCookies = new HashSet<String>(16);
+    private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {
@@ -94,7 +92,7 @@ public class RequestCookieListDisector extends Disector {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
                     if (requestedCookies.contains(theName)) {
-                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
+                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "", EnumSet.of(Casts.STRING));
                     }
                 }
             } else {
@@ -103,7 +101,7 @@ public class RequestCookieListDisector extends Disector {
                     String theValue = value.substring(equalPos + 1, value.length()).trim();
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
-                                Utils.resilientUrlDecode(theValue));
+                                Utils.resilientUrlDecode(theValue), EnumSet.of(Casts.STRING));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
                         throw new DisectionFailure(e.getMessage());

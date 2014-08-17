@@ -17,7 +17,7 @@ public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
     }
 
     public Parser<ParsedRecord> getParser(String logFormat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
-        return new OmnitureLogLineParser<ParsedRecord>(ParsedRecord.class, logFormat);
+        return new OmnitureLogLineParser<>(ParsedRecord.class, logFormat);
     }
 
 }

@@ -20,7 +20,6 @@ package nl.basjes.parse.core;
 import nl.basjes.parse.core.exceptions.*;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -51,7 +50,7 @@ public class ParserTestExceptions {
         @Override
         public void disect(Parsable<?> parsable, final String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDisection(inputname, outputType, outputName, field.getValue(), EnumSet.of(Castable.STRING));
+            parsable.addDisection(inputname, outputType, outputName, field.getValue(), EnumSet.of(Casts.STRING));
         }
 
         @Override
@@ -61,7 +60,7 @@ public class ParserTestExceptions {
 
         @Override
         public List<String> getPossibleOutput() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(outputType + ":" + outputName);
             return result;
         }
@@ -100,7 +99,7 @@ public class ParserTestExceptions {
     }
 
     public static class TestParser<RECORD> extends Parser<RECORD> {
-        public TestParser(final Class<RECORD> clazz) throws IOException, MissingDisectorsException, InvalidDisectorException {
+        public TestParser(final Class<RECORD> clazz) {
             super(clazz);
             addDisector(new TestDisectorOne());
             addDisector(new TestDisectorTwo());
@@ -176,14 +175,14 @@ public class ParserTestExceptions {
         }
 
         @SuppressWarnings("UnusedDeclaration")
-        public void badSetter2(String name, Long value) {
+        public void badSetter2(String name, Float value) {
         }
     }
 
     @Test
     public void testParseString() throws Exception {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), params);
@@ -205,7 +204,7 @@ public class ParserTestExceptions {
     @Test
     public void testGetPossiblePaths() throws Exception {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), params);
@@ -225,7 +224,7 @@ public class ParserTestExceptions {
     @Test(expected=InvalidFieldMethodSignature.class)
     public void testBadSetter1() throws Exception {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(TestRecord.class.getMethod("badSetter1"), params);
@@ -236,7 +235,7 @@ public class ParserTestExceptions {
     @Test(expected=InvalidFieldMethodSignature.class)
     public void testBadSetter2() throws Exception {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), params);
@@ -260,7 +259,7 @@ public class ParserTestExceptions {
 
         @Override
         public List<String> getPossibleOutput() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add("foo:bar");
             return result;
         }
@@ -289,7 +288,7 @@ public class ParserTestExceptions {
 
     @Test(expected=CannotChangeDisectorsAfterConstructionException.class)
     public void testChangeAfterStart() throws Exception {
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         parser.getPossiblePaths(3);
         parser.addDisector(new BrokenTestDisector());
     }
@@ -297,7 +296,7 @@ public class ParserTestExceptions {
     @Test(expected=MissingDisectorsException.class)
     public void testDropDisector1() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.dropDisector(TestDisectorOne.class);
         parser.getPossiblePaths();
@@ -306,7 +305,7 @@ public class ParserTestExceptions {
     @Test
     public void testDropDisector2() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.dropDisector(TestDisectorOne.class);
         parser.addDisector(new TestDisectorOne());
@@ -316,7 +315,7 @@ public class ParserTestExceptions {
     @Test(expected=CannotChangeDisectorsAfterConstructionException.class)
     public void testDropDisector3() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.getPossiblePaths(0);
         parser.dropDisector(TestDisectorOne.class);

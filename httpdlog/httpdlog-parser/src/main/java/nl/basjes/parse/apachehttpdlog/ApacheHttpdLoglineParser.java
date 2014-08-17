@@ -18,13 +18,10 @@
 
 package nl.basjes.parse.apachehttpdlog;
 
-import java.io.IOException;
 import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 import nl.basjes.parse.http.disectors.*;
 
 public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
@@ -33,7 +30,7 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     public ApacheHttpdLoglineParser(
             final Class<RECORD> clazz,
-            final String logformat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+            final String logformat) throws ParseException {
         // This indicates what we need
         super(clazz);
 

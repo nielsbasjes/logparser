@@ -19,9 +19,11 @@
 package nl.basjes.parse.apachehttpdlog.logformat;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 
+import nl.basjes.parse.core.Casts;
 import org.apache.commons.lang.StringUtils;
 
 public class TokenParser {
@@ -58,6 +60,7 @@ public class TokenParser {
     private final String logFormatToken;
     private final String valueName;
     private final String valueType;
+    private final EnumSet<Casts> casts;
     private final String regex;
     private final int prio;
 
@@ -65,17 +68,20 @@ public class TokenParser {
     public TokenParser(final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
+            final EnumSet<Casts> nCasts,
             final String nRegex) {
-        this(nLogFormatToken, nValueName, nValueType, nRegex, 10);
+        this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 10);
     }
     public TokenParser(final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
+            final EnumSet<Casts> nCasts,
             final String nRegex,
             final int nPrio) {
         logFormatToken = nLogFormatToken;
         valueName = nValueName;
         valueType = nValueType;
+        casts = nCasts;
         regex = nRegex;
         prio = nPrio;
     }
@@ -94,6 +100,10 @@ public class TokenParser {
         return valueType;
     }
 
+    public EnumSet<Casts> getCasts() {
+        return casts;
+    }
+
     public String getRegex() {
         return regex;
     }
@@ -109,6 +119,7 @@ public class TokenParser {
         return new Token(
                 valueName,
                 valueType,
+                casts,
                 regex,
                 pos, logFormatToken.length(),
                 prio);
@@ -121,7 +132,7 @@ public class TokenParser {
             return null;
         }
 
-        final List<Token> result = new ArrayList<Token>(5); // Usually a good guess
+        final List<Token> result = new ArrayList<>(5); // Usually a good guess
 
         int offset = 0;
         while (true) {

@@ -18,6 +18,7 @@
 
 package nl.basjes.parse.http.disectors;
 
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -26,6 +27,7 @@ import nl.basjes.parse.core.exceptions.DisectionFailure;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class HttpUriDisector extends Disector {
@@ -42,7 +44,7 @@ public class HttpUriDisector extends Disector {
 
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("HTTP.PROTOCOL:protocol");
         result.add("HTTP.USERINFO:userinfo");
         result.add("HTTP.HOST:host");
@@ -136,13 +138,13 @@ public class HttpUriDisector extends Disector {
             }
 
             if (wantQuery) {
-                parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", queryValue);
+                parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", queryValue, EnumSet.of(Casts.STRING));
             }
             if (wantPath) {
-                parsable.addDisection(inputname, "HTTP.PATH", "path", pathValue);
+                parsable.addDisection(inputname, "HTTP.PATH", "path", pathValue, EnumSet.of(Casts.STRING));
             }
             if (wantRef) {
-                parsable.addDisection(inputname, "HTTP.REF", "ref", refValue);
+                parsable.addDisection(inputname, "HTTP.REF", "ref", refValue, EnumSet.of(Casts.STRING));
             }
         }
         if (wantProtocol||wantUserinfo||wantHost||wantPort) {
@@ -153,17 +155,17 @@ public class HttpUriDisector extends Disector {
                 throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
             }
             if (wantProtocol) {
-                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart());
+                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart(), EnumSet.of(Casts.STRING));
             }
             if (wantUserinfo) {
-                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
+                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo(), EnumSet.of(Casts.STRING));
             }
             if (wantHost) {
-                parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost());
+                parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost(), EnumSet.of(Casts.STRING));
             }
             if (wantPort) {
                 if (uri.getPort() != -1) {
-                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()));
+                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()), EnumSet.of(Casts.STRING, Casts.LONG));
                 }
             }
         }

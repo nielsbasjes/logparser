@@ -18,7 +18,6 @@
 
 package nl.basjes.parse;
 
-import java.io.IOException;
 import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
@@ -29,7 +28,7 @@ import nl.basjes.parse.http.disectors.QueryStringFieldDisector;
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
-        throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+        throws MissingDisectorsException, InvalidDisectorException, ParseException {
         super(clazz, logformat);
     }
 

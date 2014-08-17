@@ -28,8 +28,8 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
             this.field=field;
             this.name=name;
         }
-        private String field;
-        private String name;
+        private final String field;
+        private final String name;
 
         public String getField() {
             return field;
@@ -40,7 +40,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         }
     }
 
-    private List<RequestedField> requestedFields;
+    private final List<RequestedField> requestedFields;
 
     public class ParsedRecord extends HashMap<String, String> {
         @Override
@@ -57,7 +57,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         super();
         this.logformat = logformat;
         this.fieldName = fieldName;
-        this.requestedFields = new ArrayList<RequestedField>(10);
+        this.requestedFields = new ArrayList<>(10);
     }
 
     private ParsedRecord getRecord() {
@@ -74,7 +74,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     private Parser<ParsedRecord> getParser() {
         if (parser == null) {
             try {
-                parser = new ApacheHttpdLoglineParser<ParsedRecord>(ParsedRecord.class, logformat);
+                parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
                 Method setterMethod = ParsedRecord.class.getMethod("put", String.class, String.class);
 
                 String[] fields = new String[requestedFields.size()];
@@ -97,19 +97,13 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         try {
             record.clear();
             getParser().parse(record, apacheLogLine);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (DisectionFailure e) {
-            e.printStackTrace();
-        } catch (InvalidDisectorException e) {
-            e.printStackTrace();
-        } catch (MissingDisectorsException e) {
+        } catch ( MissingDisectorsException
+                | InvalidDisectorException
+                | DisectionFailure e) {
             e.printStackTrace();
         }
 
-        List<Object> out = new ArrayList<Object>();
+        List<Object> out = new ArrayList<>();
         for (RequestedField requestedField: requestedFields) {
             out.add(record.get(requestedField.field));
         }
@@ -118,7 +112,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
-        List<String> fields = new ArrayList<String>();
+        List<String> fields = new ArrayList<>();
         for (RequestedField requestedField: requestedFields) {
             fields.add(requestedField.getName());
         }

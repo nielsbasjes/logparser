@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,21 +18,25 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
+import nl.basjes.parse.core.Casts;
+
+import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class NamedTokenParser extends TokenParser {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     // --------------------------------------------
 
     public NamedTokenParser(final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
+            final EnumSet<Casts> nCasts,
             final String nRegex) {
-        super(nLogFormatToken, nValueName, nValueType, nRegex);
+        super(nLogFormatToken, nValueName, nValueType, nCasts, nRegex);
 
         // Compile the regular expression
         pattern = Pattern.compile(getLogFormatToken());
@@ -58,6 +62,7 @@ public class NamedTokenParser extends TokenParser {
         return new Token(
                 getValueName() + fieldname,
                 getValueType(),
+                getCasts(),
                 getRegex(),
                 startOffset + start, end - start);
     }

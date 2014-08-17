@@ -36,8 +36,8 @@ public class CookiesTest {
 
     public class TestRecord {
 
-        private Map<String, String> results = new HashMap<String, String>(32);
-        private Map<String, Long> longResults = new HashMap<String, Long>(32);
+        private final Map<String, String> results     = new HashMap<>(32);
+        private final Map<String, Long>   longResults = new HashMap<>(32);
 
         @Field({
             "HTTP.QUERYSTRING:request.firstline.uri.query",
@@ -93,13 +93,13 @@ public class CookiesTest {
 
     }
 
-    private String logformat = "%h %a %A %l %u %t \"%r\" " +
+    private final String logformat = "%h %a %A %l %u %t \"%r\" " +
             "%>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" " +
             "\"%{Cookie}i\" " +
             "\"%{Set-Cookie}o\" " +
             "\"%{If-None-Match}i\" \"%{Etag}o\"";
 
-    private String cookiesLine =
+    private final String cookiesLine =
             "127.0.0.1 127.0.0.1 127.0.0.1 - - [24/Oct/2012:23:00:44 +0200] \"GET /index.php HTTP/1.1\" " +
             "200 13 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
@@ -114,7 +114,7 @@ public class CookiesTest {
 
     @Test
     public void testEmptyRecordPossibles() throws Exception {
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<EmptyTestRecord>(EmptyTestRecord.class, logformat);
+        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -126,7 +126,7 @@ public class CookiesTest {
 
     @Test
     public void testRecordPossibles() throws Exception {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<TestRecord>(TestRecord.class, logformat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logformat);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -139,7 +139,7 @@ public class CookiesTest {
     @Test
     public void cookiesTest() throws Exception {
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<TestRecord>(TestRecord.class, logformat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logformat);
 
         TestRecord record = new TestRecord();
         parser.parse(record, cookiesLine);

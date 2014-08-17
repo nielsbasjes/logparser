@@ -50,8 +50,8 @@ public class Loader
     @SuppressWarnings("rawtypes")
     private RecordReader        reader;
     private String              logformat;
-    private List<String>        requestedFields = new ArrayList<>();
-    private TupleFactory        tupleFactory;
+    private final List<String>  requestedFields = new ArrayList<>();
+    private final TupleFactory  tupleFactory;
 
     // ------------------------------------------
 

@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,33 +18,40 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
+import nl.basjes.parse.core.Casts;
+
+import java.util.EnumSet;
+
 public class Token {
 //    private static Map<String, String> typeOverrule = new HashMap<String, String>();
 
-    private String name;
-    private String type;
-    private String regex;
-    private int startPos;
-    private int length;
-    private int prio;
+    private final String name;
+    private final String type;
+    private final String regex;
+    private final int startPos;
+    private final int length;
+    private final EnumSet<Casts> casts;
+    private final int prio;
 
     public Token(
             final String nName,
             final String nType,
+            final EnumSet<Casts> nCasts,
             final String nRegex,
             final int nStartPos,
             final int nLength) {
-        this(nName, nType, nRegex, nStartPos, nLength, 0);
+        this(nName, nType, nCasts, nRegex, nStartPos, nLength,  0);
     }
 
     public Token(
             final String nName,
             final String nType,
+            final EnumSet<Casts> nCasts,
             final String nRegex,
             final int nStartPos,
             final int nLength,
             final int nPrio) {
-        
+
         // RFC 2616 Section 4.2 states: "Field names are case-insensitive."
         name = nName.toLowerCase();
         type = nType;
@@ -54,6 +61,7 @@ public class Token {
         regex = nRegex;
         startPos = nStartPos;
         length = nLength;
+        casts = nCasts;
         prio = nPrio;
     }
 
@@ -78,10 +86,14 @@ public class Token {
         return length;
     }
 
+    public EnumSet<Casts> getCasts() {
+        return casts;
+    }
+
     public int getPrio() {
         return prio;
     }
-    
+
     // This is used by your favorite debugger.
     @Override
     public String toString() {

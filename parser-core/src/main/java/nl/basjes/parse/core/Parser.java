@@ -35,10 +35,10 @@ public class Parser<RECORD> {
             this.instance   = instance;
         }
 
-        private String   inputType;
-        private String   outputType;
-        private String   name;
-        private Disector instance;
+        private final String   inputType;
+        private final String   outputType;
+        private final String   name;
+        private final Disector instance;
     }
 
     // --------------------------------------------
@@ -47,8 +47,8 @@ public class Parser<RECORD> {
 
     private final Class<RECORD> recordClass;
 
-    private final Set<DisectorPhase> availableDisectors = new HashSet<DisectorPhase>();
-    private final Set<Disector> allDisectors = new HashSet<Disector>();
+    private final Set<DisectorPhase> availableDisectors = new HashSet<>();
+    private final Set<Disector> allDisectors = new HashSet<>();
 
     // Key = "request.time.hour"
     // Value = the set of disectors that must all be started once we have this value
@@ -58,9 +58,9 @@ public class Parser<RECORD> {
     private String rootName;
 
     // The target methods in the record class that will want to receive the values
-    private final Map<String, Set<Method>> targets = new TreeMap<String, Set<Method>>();
+    private final Map<String, Set<Method>> targets = new TreeMap<>();
 
-    private final Set<String> locatedTargets = new HashSet<String>();
+    private final Set<String> locatedTargets = new HashSet<>();
 
     private boolean usable = false;
 
@@ -107,7 +107,7 @@ public class Parser<RECORD> {
             throw new CannotChangeDisectorsAfterConstructionException();
         }
 
-        Set<DisectorPhase> removePhase = new HashSet<DisectorPhase>();
+        Set<DisectorPhase> removePhase = new HashSet<>();
         for (final DisectorPhase disectorPhase : availableDisectors) {
             if (disectorPhase.instance.getClass().equals(disectorClassToDrop)) {
                 removePhase.add(disectorPhase);
@@ -115,7 +115,7 @@ public class Parser<RECORD> {
         }
         availableDisectors.removeAll(removePhase);
 
-        Set<Disector> removeDisector = new HashSet<Disector>();
+        Set<Disector> removeDisector = new HashSet<>();
         for (final Disector disector : allDisectors) {
             if (disector.getClass().equals(disectorClassToDrop)) {
                 removeDisector.add(disector);
@@ -126,7 +126,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    protected void setRootType(final String newRootType) throws MissingDisectorsException, InvalidDisectorException {
+    protected void setRootType(final String newRootType) {
         compiledDisectors = null;
 
         rootType = newRootType;
@@ -149,13 +149,14 @@ public class Parser<RECORD> {
         // Step 1: Acquire all potentially useful subtargets
         // We first build a set of all possible subtargets that may be useful
         // this way we can skip anything we know not to be useful
-        Set<String> needed = new HashSet<String>(getNeeded());
+        Set<String> needed = new HashSet<>(getNeeded());
         needed.add(rootType + ':' + rootName);
+        LOG.debug("Root: >>>{}:{}<<<", rootType, rootName);
 
-        Set<String> allPossibleSubtargets = new HashSet<String>();
+        Set<String> allPossibleSubtargets = new HashSet<>();
         for (String need : needed) {
             String neededName = need.substring(need.indexOf(':') + 1);
-            LOG.debug("Needed:{}", neededName);
+            LOG.debug("Needed  : >>>{}<<<", neededName);
             String[] needs = neededName.split("\\.");
             StringBuilder sb = new StringBuilder(need.length());
 
@@ -166,13 +167,13 @@ public class Parser<RECORD> {
                     sb.append('.').append(part);
                 }
                 allPossibleSubtargets.add(sb.toString());
-                LOG.debug("Possible: {}", sb.toString());
+                LOG.debug("Possible: >>>{}<<<", sb.toString());
             }
         }
 
         // Step 2: From the root we explore all possibly useful trees (recursively)
-        compiledDisectors        = new HashMap<String, Set<DisectorPhase>>();
-        usefulIntermediateFields = new HashSet<String>();
+        compiledDisectors        = new HashMap<>();
+        usefulIntermediateFields = new HashSet<>();
         findUsefulDisectorsFromField(allPossibleSubtargets, rootType, rootName, true);
 
         // Step 3: Inform all disectors to prepare for the run
@@ -217,7 +218,7 @@ public class Parser<RECORD> {
 
             // If it starts with a . it extends.
             // If it doesn't then it starts at the beginning
-            Set<String> checkFields = new HashSet<String>();
+            Set<String> checkFields = new HashSet<>();
 
             // If true then this disector can output any name instead of just one
             boolean isWildCardDisector = disector.name.equals("*");
@@ -245,7 +246,7 @@ public class Parser<RECORD> {
                     Set<DisectorPhase> subRootPhases = compiledDisectors.get(subRootId);
                     if (subRootPhases == null) {
                         // New so we can simply add it.
-                        subRootPhases = new HashSet<DisectorPhase>();
+                        subRootPhases = new HashSet<>();
                         compiledDisectors.put(subRootId, subRootPhases);
                         usefulIntermediateFields.add(subRootName);
                     }
@@ -288,7 +289,7 @@ public class Parser<RECORD> {
     // --------------------------------------------
 
     public Set<String> getTheMissingFields() {
-        Set<String> missing = new HashSet<String>();
+        Set<String> missing = new HashSet<>();
         for (String target : getNeeded()) {
             if (!locatedTargets.contains(target)) {
                 // Handle wildcard targets differently
@@ -351,7 +352,7 @@ public class Parser<RECORD> {
                 // We have 1 real target
                 Set<Method> fieldTargets = targets.get(fieldValue);
                 if (fieldTargets == null) {
-                    fieldTargets = new HashSet<Method>();
+                    fieldTargets = new HashSet<>();
                 }
                 fieldTargets.add(method);
                 targets.put(fieldValue, fieldTargets);
@@ -370,7 +371,7 @@ public class Parser<RECORD> {
      * For this method to work the RECORD class may NOT be an inner class.
      */
     public RECORD parse(final String value)
-        throws InstantiationException, IllegalAccessException, DisectionFailure, InvalidDisectorException, MissingDisectorsException {
+        throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
         assembleDisectors();
         final Parsable<RECORD> parsable = createParsable();
         if (parsable == null) {
@@ -386,7 +387,7 @@ public class Parser<RECORD> {
      * Parse the value and call all configured setters in the provided instance of RECORD.
      */
     public RECORD parse(final RECORD record, final String value)
-        throws InstantiationException, IllegalAccessException, DisectionFailure, InvalidDisectorException, MissingDisectorsException {
+        throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
         assembleDisectors();
         final Parsable<RECORD> parsable = createParsable(record);
         parsable.setRootDisection(rootType, rootName, value);
@@ -404,7 +405,7 @@ public class Parser<RECORD> {
         }
 
         // Values look like "TYPE:foo.bar"
-        Set<ParsedField> toBeParsed = new HashSet<ParsedField>(parsable.getToBeParsed());
+        Set<ParsedField> toBeParsed = new HashSet<>(parsable.getToBeParsed());
 
         while (toBeParsed.size() > 0) {
             for (ParsedField fieldThatNeedsToBeParsed : toBeParsed) {
@@ -429,7 +430,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    RECORD store(final RECORD record, final String key, final String name, final String value, final EnumSet<Castable> castableTo) {
+    RECORD store(final RECORD record, final String key, final String name, final String value, final EnumSet<Casts> castsTo) {
         final Set<Method> methods = targets.get(key);
         boolean calledASetter = true;
         if (methods == null) {
@@ -439,42 +440,47 @@ public class Parser<RECORD> {
                 if (method != null) {
                     try {
                         Class<?>[] parameters = method.getParameterTypes();
-                        Class<?> valueClass = parameters[parameters.length-1]; // Always the last one
+                        Class<?> valueClass = parameters[parameters.length - 1]; // Always the last one
 
                         if (valueClass == String.class) {
-                            if (castableTo.contains(Castable.STRING)) {
+                            if (castsTo.contains(Casts.STRING)) {
                                 if (parameters.length == 2) {
                                     method.invoke(record, name, value);
                                 } else {
                                     method.invoke(record, value);
                                 }
                             }
-                        }
-                        else
+                        } else
                         if (valueClass == Long.class) {
-                            if (castableTo.contains(Castable.LONG)) {
-                                Long longValue = Long.parseLong(value);
-                                // FIXME: Handle exceptions
+                            if (castsTo.contains(Casts.LONG)) {
+                                Long longValue;
+                                try {
+                                    longValue = (value == null ? null : Long.parseLong(value));
+                                } catch (NumberFormatException e) {
+                                    longValue = null;
+                                }
                                 if (parameters.length == 2) {
                                     method.invoke(record, name, longValue);
                                 } else {
                                     method.invoke(record, longValue);
                                 }
                             }
-                        }
-                        else
+                        } else
                         if (valueClass == Double.class) {
-                            if (castableTo.contains(Castable.DOUBLE)) {
-                                Double doubleValue = Double.parseDouble(value);
-                                // FIXME: Handle exceptions
+                            if (castsTo.contains(Casts.DOUBLE)) {
+                                Double doubleValue;
+                                try {
+                                    doubleValue = (value == null ? null : Double.parseDouble(value));
+                                } catch (NumberFormatException e) {
+                                    doubleValue = null;
+                                }
                                 if (parameters.length == 2) {
                                     method.invoke(record, name, doubleValue);
                                 } else {
                                     method.invoke(record, doubleValue);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             calledASetter = false;
                         }
                     } catch (final Exception e) {
@@ -500,10 +506,10 @@ public class Parser<RECORD> {
     // --------------------------------------------
 
     Parsable<RECORD> createParsable(RECORD record) {
-        return new Parsable<RECORD>(this, record);
+        return new Parsable<>(this, record);
     }
 
-    public Parsable<RECORD> createParsable() throws InstantiationException, IllegalAccessException {
+    public Parsable<RECORD> createParsable() {
         RECORD record;
 
         try {
@@ -540,13 +546,13 @@ public class Parser<RECORD> {
     public List<String> getPossiblePaths(int maxDepth) throws MissingDisectorsException, InvalidDisectorException {
         assembleDisectors();
 
-        if (allDisectors == null) {
+        if (allDisectors.isEmpty()) {
             return null; // nothing to do.
         }
 
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
 
-        Map<String, List<String>> pathNodes = new HashMap<String, List<String>>();
+        Map<String, List<String>> pathNodes = new HashMap<>();
 
         for (Disector disector : allDisectors) {
             final String inputType = disector.getInputType();

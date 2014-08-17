@@ -18,7 +18,7 @@
 
 package nl.basjes.parse.http.disectors;
 
-import nl.basjes.parse.core.Castable;
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
@@ -72,7 +72,7 @@ public class TimeStampDisector extends Disector {
 
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.add("TIME.DAY:day");
         result.add("TIME.MONTHNAME:monthname");
         result.add("TIME.MONTH:month");
@@ -140,51 +140,51 @@ public class TimeStampDisector extends Disector {
 
         if (wantDay) {
             parsable.addDisection(inputname, "TIME.DAY", "day",
-                    dateTime.dayOfMonth().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.dayOfMonth().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantMonthname) {
             parsable.addDisection(inputname, "TIME.MONTHNAME", "monthname",
-                    dateTime.monthOfYear().getAsText(Locale.getDefault()), EnumSet.of(Castable.STRING));
+                    dateTime.monthOfYear().getAsText(Locale.getDefault()), EnumSet.of(Casts.STRING));
         }
         if (wantMonth) {
             parsable.addDisection(inputname, "TIME.MONTH", "month",
-                    dateTime.monthOfYear().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.monthOfYear().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantWeekOfWeekYear) {
             parsable.addDisection(inputname, "TIME.WEEK", "weekofweekyear",
-                    dateTime.weekOfWeekyear().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.weekOfWeekyear().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantWeekYear) {
             parsable.addDisection(inputname, "TIME.YEAR", "weekyear",
-                    dateTime.weekyear().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.weekyear().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantYear) {
             parsable.addDisection(inputname, "TIME.YEAR", "year",
-                    dateTime.year().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.year().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantHour) {
             parsable.addDisection(inputname, "TIME.HOUR", "hour",
-                    dateTime.hourOfDay().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.hourOfDay().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantMinute) {
             parsable.addDisection(inputname, "TIME.MINUTE", "minute",
-                    dateTime.minuteOfHour().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.minuteOfHour().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantSecond) {
             parsable.addDisection(inputname, "TIME.SECOND", "second",
-                    dateTime.secondOfMinute().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.secondOfMinute().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantMillisecond) {
             parsable.addDisection(inputname, "TIME.MILLISECOND", "millisecond",
-                    dateTime.millisOfSecond().getAsString(), EnumSet.of(Castable.STRING, Castable.LONG));
+                    dateTime.millisOfSecond().getAsString(), EnumSet.of(Casts.STRING, Casts.LONG));
         }
         if (wantTimezone) {
             parsable.addDisection(inputname, "TIME.TIMEZONE", "timezone",
-                    dateTime.getZone().getID(), EnumSet.of(Castable.STRING));
+                    dateTime.getZone().getID(), EnumSet.of(Casts.STRING));
         }
         if (wantEpoch) {
             parsable.addDisection(inputname, "TIME.EPOCH", "epoch",
-                    Long.toString(dateTime.getMillis()), EnumSet.of(Castable.STRING, Castable.LONG));
+                    Long.toString(dateTime.getMillis()), EnumSet.of(Casts.STRING, Casts.LONG));
         }
     }
 
