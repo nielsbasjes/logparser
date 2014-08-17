@@ -37,6 +37,7 @@ public class CookiesTest {
     public class TestRecord {
 
         private Map<String, String> results = new HashMap<String, String>(32);
+        private Map<String, Long> longResults = new HashMap<String, Long>(32);
 
         @Field({
             "HTTP.QUERYSTRING:request.firstline.uri.query",
@@ -75,6 +76,21 @@ public class CookiesTest {
         public Map<String, String> getResults() {
             return results;
         }
+        @Field({
+                "TIME.SECOND:request.receive.time.second",
+// FIXME:                "BYTES:response.body.bytesclf",
+                "TIME.DAY:request.receive.time.day",
+                "TIME.HOUR:request.receive.time.hour",
+        })
+
+        public void setValueLong(final String name, final Long value) {
+            longResults.put(name, value);
+        }
+
+        public Map<String, Long> getLongResults() {
+            return longResults;
+        }
+
     }
 
     private String logformat = "%h %a %A %l %u %t \"%r\" " +
@@ -131,6 +147,7 @@ public class CookiesTest {
         // ---------------
 
         Map<String, String> results = record.getResults();
+        Map<String, Long> longResults = record.getLongResults();
 
         // System.out.println(results.toString());
 
@@ -141,8 +158,11 @@ public class CookiesTest {
         assertEquals("[24/Oct/2012:23:00:44 +0200]", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("October", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("24", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals(new Long(24), longResults.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
+        assertEquals(new Long(23), longResults.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
+        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second"));
 
         assertEquals("/index.php", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));

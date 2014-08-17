@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -52,7 +52,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private List<String> outputTypes;
 
     private static final String FIXED_STRING_TYPE = "NONE";
-    
+
     // --------------------------------------------
 
     public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {

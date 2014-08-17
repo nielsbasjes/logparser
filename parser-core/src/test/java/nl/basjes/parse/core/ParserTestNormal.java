@@ -23,10 +23,7 @@ import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -60,7 +57,7 @@ public class ParserTestNormal {
         public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             for (String outputname : outputNames) {
-                parsable.addDisection(inputname, outputType, outputname, field.getValue());
+                parsable.addDisection(inputname, outputType, outputname, field.getValue(), EnumSet.of(Castable.STRING));
             }
         }
 

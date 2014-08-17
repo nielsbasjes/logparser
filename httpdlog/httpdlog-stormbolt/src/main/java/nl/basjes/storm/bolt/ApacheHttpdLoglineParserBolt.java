@@ -40,8 +40,8 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         }
     }
 
-    private List<RequestedField> requestedFields; 
-    
+    private List<RequestedField> requestedFields;
+
     public class ParsedRecord extends HashMap<String, String> {
         @Override
         public String put(String key, String value) {
@@ -70,7 +70,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     public void requestField(String field, String name){
         requestedFields.add(new RequestedField(field, name));
     }
-    
+
     private Parser<ParsedRecord> getParser() {
         if (parser == null) {
             try {

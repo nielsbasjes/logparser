@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,10 +17,7 @@
  */
 package nl.basjes.parse.core;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,9 +71,18 @@ public final class Parsable<RECORD> {
 
     // --------------------------------------------
 
-    /** Store a newly parsed value in the result set */
+    @Deprecated
     public void addDisection(final String base, final String type, final String name, final String value) {
+        addDisection(base, type, name, value, null);
+    }
+
+        /** Store a newly parsed value in the result set */
+    public void addDisection(final String base, final String type, final String name, final String value, EnumSet<Castable> castableTo) {
         LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+
+        if (castableTo == null || castableTo.isEmpty()) {
+            castableTo = EnumSet.of(Castable.STRING);
+        }
 
         String completeName;
         String neededWildCardName;
@@ -97,11 +103,11 @@ public final class Parsable<RECORD> {
         }
 
         if (needed.contains(neededName)) {
-            parser.store(record, neededName, neededName, value);
+            parser.store(record, neededName, neededName, value, castableTo );
         }
 
         if (needed.contains(neededWildCardName)) {
-            parser.store(record, neededWildCardName, neededName, value);
+            parser.store(record, neededWildCardName, neededName, value, castableTo);
         }
 
     }

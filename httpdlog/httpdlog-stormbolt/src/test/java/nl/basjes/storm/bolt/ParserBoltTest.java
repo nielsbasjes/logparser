@@ -24,7 +24,7 @@ import backtype.storm.utils.Utils;
 @SuppressWarnings("serial")
 public class ParserBoltTest implements Serializable {
     // ========================================================================
-    
+
     public class TestApacheLogsSpout extends BaseRichSpout {
         private SpoutOutputCollector collector;
 
@@ -52,7 +52,7 @@ public class ParserBoltTest implements Serializable {
     }
 
     // ========================================================================
-    
+
     public class ValidateOutput extends BaseBasicBolt {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {

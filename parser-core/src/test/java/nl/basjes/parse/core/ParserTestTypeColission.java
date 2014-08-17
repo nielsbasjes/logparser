@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -66,7 +67,7 @@ public class ParserTestTypeColission {
             throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             parsable.addDisection(inputname, outputType, outputName,
-                    field.getValue()+salt);
+                    field.getValue()+salt, EnumSet.of(Castable.STRING));
         }
 
         @Override

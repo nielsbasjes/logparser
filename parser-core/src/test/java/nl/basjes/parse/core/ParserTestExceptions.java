@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -50,7 +51,7 @@ public class ParserTestExceptions {
         @Override
         public void disect(Parsable<?> parsable, final String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDisection(inputname, outputType, outputName, field.getValue());
+            parsable.addDisection(inputname, outputType, outputName, field.getValue(), EnumSet.of(Castable.STRING));
         }
 
         @Override
@@ -238,7 +239,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Long.class), params);
+        parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), params);
 
         parser.getPossiblePaths(3);
     }

@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -43,11 +43,11 @@ public class ParsedField {
     public static String makeId(String type, String name) {
         return type+':'+name;
     }
-    
+
     public String getId() {
         return makeId(type, name);
     }
-    
+
     public String toString(){
         return getId();
     }

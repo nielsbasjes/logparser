@@ -96,7 +96,7 @@ public class HttpFirstLineDisector extends Disector {
 
     // --------------------------------------------
 
-    private Set<String> requestedParameters = new HashSet<String>(16);
+    private Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
     public void prepareForDisect(final String inputname, final String outputname) {

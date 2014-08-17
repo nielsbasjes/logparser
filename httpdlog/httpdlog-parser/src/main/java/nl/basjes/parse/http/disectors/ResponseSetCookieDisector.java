@@ -18,12 +18,14 @@
 
 package nl.basjes.parse.http.disectors;
 
+import nl.basjes.parse.core.Castable;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 
 import java.net.HttpCookie;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class ResponseSetCookieDisector extends Disector {
@@ -84,12 +86,12 @@ public class ResponseSetCookieDisector extends Disector {
         List<HttpCookie> cookies = HttpCookie.parse(fieldValue);
 
         for (HttpCookie cookie : cookies) {
-            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue());
+            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue(), EnumSet.of(Castable.STRING));
             parsable.addDisection(inputname, getDisectionType(inputname, "expires"), "expires",
-                    Long.toString(nowSeconds+cookie.getMaxAge()));
-            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath());
-            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain());
-            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment());
+                    Long.toString(nowSeconds+cookie.getMaxAge()), EnumSet.of(Castable.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath(), EnumSet.of(Castable.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain(), EnumSet.of(Castable.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment(), EnumSet.of(Castable.STRING));
         }
     }
 

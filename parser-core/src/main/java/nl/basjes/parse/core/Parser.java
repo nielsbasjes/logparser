@@ -335,8 +335,17 @@ public class Parser<RECORD> {
 
         final Class<?>[] parameters = method.getParameterTypes();
         if (
+                // Setters that receive a String
                 ((parameters.length == 1) && (parameters[0] == String.class)) ||
-                ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == String.class))
+                ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == String.class)) ||
+
+                // Setters that receive a Long
+                ((parameters.length == 1) && (parameters[0] == Long.class)) ||
+                ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == Long.class)) ||
+
+                // Setters that receive a Double
+                ((parameters.length == 1) && (parameters[0] == Double.class)) ||
+                ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == Double.class))
         ) {
             for (final String fieldValue : fieldValues) {
                 // We have 1 real target
@@ -420,18 +429,53 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    RECORD store(final RECORD record, final String key, final String name, final String value) {
+    RECORD store(final RECORD record, final String key, final String name, final String value, final EnumSet<Castable> castableTo) {
         final Set<Method> methods = targets.get(key);
+        boolean calledASetter = true;
         if (methods == null) {
             LOG.error("NO methods for \""+key+"\"");
         } else {
             for (Method method : methods) {
                 if (method != null) {
                     try {
-                        if (method.getParameterTypes().length == 2) {
-                            method.invoke(record, name, value);
-                        } else {
-                            method.invoke(record, value);
+                        Class<?>[] parameters = method.getParameterTypes();
+                        Class<?> valueClass = parameters[parameters.length-1]; // Always the last one
+
+                        if (valueClass == String.class) {
+                            if (castableTo.contains(Castable.STRING)) {
+                                if (parameters.length == 2) {
+                                    method.invoke(record, name, value);
+                                } else {
+                                    method.invoke(record, value);
+                                }
+                            }
+                        }
+                        else
+                        if (valueClass == Long.class) {
+                            if (castableTo.contains(Castable.LONG)) {
+                                Long longValue = Long.parseLong(value);
+                                // FIXME: Handle exceptions
+                                if (parameters.length == 2) {
+                                    method.invoke(record, name, longValue);
+                                } else {
+                                    method.invoke(record, longValue);
+                                }
+                            }
+                        }
+                        else
+                        if (valueClass == Double.class) {
+                            if (castableTo.contains(Castable.DOUBLE)) {
+                                Double doubleValue = Double.parseDouble(value);
+                                // FIXME: Handle exceptions
+                                if (parameters.length == 2) {
+                                    method.invoke(record, name, doubleValue);
+                                } else {
+                                    method.invoke(record, doubleValue);
+                                }
+                            }
+                        }
+                        else {
+                            calledASetter = false;
                         }
                     } catch (final Exception e) {
                         throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
@@ -443,6 +487,12 @@ public class Parser<RECORD> {
                     }
                 }
             }
+        }
+        if (!calledASetter) {
+            throw new FatalErrorDuringCallOfSetterMethod("No setter called for " +
+                    " key = \"" + key + "\" " +
+                    " name = \"" + name + "\" " +
+                    " value = \"" + value + "\"" );
         }
         return record;
     }

@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -62,7 +62,7 @@ public class MyRecord {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        TreeSet<String> keys = new TreeSet<String>(results.keySet());
+        TreeSet<String> keys = new TreeSet<>(results.keySet());
         for (String key : keys) {
             sb.append(key).append(" = ").append(results.get(key)).append('\n');
         }

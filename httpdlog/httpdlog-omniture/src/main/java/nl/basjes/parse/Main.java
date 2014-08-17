@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -77,7 +77,7 @@ public final class Main {
                 + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
                 + "Version/5.0.1 Safari/533.17.8\"";
 
-        Parser<MyRecord> parser = new OmnitureLogLineParser<MyRecord>(MyRecord.class, logformat);
+        Parser<MyRecord> parser = new OmnitureLogLineParser<>(MyRecord.class, logformat);
 
         System.out.println("==================================");
         List<String> possiblePaths = parser.getPossiblePaths();

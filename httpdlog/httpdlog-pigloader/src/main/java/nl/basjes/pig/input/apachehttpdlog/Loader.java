@@ -50,7 +50,7 @@ public class Loader
     @SuppressWarnings("rawtypes")
     private RecordReader        reader;
     private String              logformat;
-    private List<String>        requestedFields = new ArrayList<String>();
+    private List<String>        requestedFields = new ArrayList<>();
     private TupleFactory        tupleFactory;
 
     // ------------------------------------------
@@ -59,7 +59,7 @@ public class Loader
      * Pig Loaders only take string parameters. The CTOR is really the only
      * interaction the user has with the Loader from the script.
      *
-     * @param parameters
+     * @param parameters specified from the call within the pig code
      */
     public Loader(String... parameters) {
 
@@ -107,7 +107,7 @@ public class Loader
             MapWritable value = (MapWritable) reader.getCurrentValue();
 
             if (value != null) {
-                List<Object> values = new ArrayList<Object>();
+                List<Object> values = new ArrayList<>();
                 Text fieldNameText = new Text();
                 for (String fieldName : requestedFields) {
                     fieldNameText.set(fieldName);
@@ -185,7 +185,7 @@ public class Loader
     @Override
     public ResourceSchema getSchema(String location, Job job) throws IOException {
         ResourceSchema rs = new ResourceSchema();
-        List<ResourceFieldSchema> fieldSchemaList = new ArrayList<ResourceFieldSchema>();
+        List<ResourceFieldSchema> fieldSchemaList = new ArrayList<>();
 
         for (String fieldName : requestedFields) {
             ResourceFieldSchema rfs = new ResourceFieldSchema();

@@ -1,7 +1,7 @@
 /*
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2013 Niels Basjes
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -50,9 +50,9 @@ public final class Main {
                 + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
                 + "Version/5.0.1 Safari/533.17.8\"";
 
-        // To figure out what values we CAN get from this line we instantiate the parser with a dummy class 
+        // To figure out what values we CAN get from this line we instantiate the parser with a dummy class
         // that does not have ANY @Field annotations.
-        Parser<Dummy> dummyParser = new ApacheHttpdLoglineParser<Dummy>(Dummy.class, logformat);
+        Parser<Object> dummyParser = new ApacheHttpdLoglineParser<>(Object.class, logformat);
         System.out.println("==================================");
         List<String> possiblePaths = dummyParser.getPossiblePaths();
         for (String path: possiblePaths) {
@@ -61,7 +61,7 @@ public final class Main {
         System.out.println("==================================");
 
         // Once we have the list of possible values we create a separate class that uses these values for the setters
-        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
+        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
 
         MyRecord record = parser.parse(logline);
         System.out.println("INPUT = "+ logline);
