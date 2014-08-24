@@ -153,8 +153,8 @@ public class CookiesTest {
 
         assertEquals(null, results.get("QUERYSTRING:request.firstline.uri.query.foo"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
-        assertEquals("", results.get("NUMBER:connection.client.logname"));
-        assertEquals("", results.get("STRING:connection.client.user"));
+        assertEquals(null, results.get("NUMBER:connection.client.logname"));
+        assertEquals(null, results.get("STRING:connection.client.user"));
         assertEquals("[24/Oct/2012:23:00:44 +0200]", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("October", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("24", results.get("TIME.DAY:request.receive.time.day"));
@@ -167,11 +167,11 @@ public class CookiesTest {
         assertEquals("/index.php", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
         assertEquals("13", results.get("BYTES:response.body.bytesclf"));
-        assertEquals("", results.get("HTTP.URI:request.referer"));
+        assertEquals(null, results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                      results.get("HTTP.USERAGENT:request.user-agent"));
         assertEquals("80991", results.get("MICROSECONDS:server.process.time"));
-        assertEquals("", results.get("HTTP.HEADER:response.header.etag"));
+        assertEquals(null, results.get("HTTP.HEADER:response.header.etag"));
 
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));
         assertEquals("127.0.0.1.1351111543699529", results.get("HTTP.COOKIE:request.cookies.apache"));

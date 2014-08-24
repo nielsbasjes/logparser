@@ -44,6 +44,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private String       logFormat          = null;
     private List<String> logFormatNames     = null;
     private List<String> logFormatTypes     = null;
+    private List<EnumSet<Casts>> logFormatCasts = null;
     private String       logFormatRegEx     = null;
     private Pattern      logFormatPattern   = null;
     private boolean      isUsable           = false;
@@ -156,6 +157,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
         logFormatNames = new ArrayList<>(20);
         logFormatTypes = new ArrayList<>(20);
+        logFormatCasts = new ArrayList<>(20);
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {
@@ -165,6 +167,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
             } else if (requestedFields.contains(token.getName())) {
                 logFormatNames.add(token.getName());
                 logFormatTypes.add(token.getType());
+                logFormatCasts.add(token.getCasts());
                 regex.append("(").append(token.getRegex()).append(")");
             } else {
                 regex.append("(?:").append(token.getRegex()).append(")");
@@ -214,14 +217,15 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         if (matches) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String matchedStr = matcher.group(i);
-                final String matchedName = logFormatNames.get(i - 1);
-                final String matchedType = logFormatTypes.get(i - 1);
+                final String matchedName            = logFormatNames.get(i - 1);
+                final String matchedType            = logFormatTypes.get(i - 1);
+                final EnumSet<Casts> matchedCasts   = logFormatCasts.get(i - 1);
 
-                // In Apache logfiles a '-' means empty value.
+                // In Apache logfiles a '-' means a 'no specified' / 'empty' value.
                 if (matchedStr.equals("-")){
-                    matchedStr="";
+                    matchedStr=null;
                 }
-                parsable.addDisection(inputname, matchedType, matchedName, matchedStr, EnumSet.of(Casts.STRING));
+                parsable.addDisection(inputname, matchedType, matchedName, matchedStr, matchedCasts);
             }
         } else {
             throw new DisectionFailure("The input line :\n"+line.getValue()+"\n" +
@@ -531,7 +535,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // strftime(3) format. (potentially localized)
         // FIXME: Implement %{format}t "should be in strftime(3) format. (potentially localized)"
         // This next parser is created to deliberately cause an error when it is used !!!
-        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}t", "", "", null, "") {
+        parsers.add(new NamedTokenParser("\\%\\{([^\\}]*)\\}t", "", "", null, "") {
                 public Token getNextToken(final String logFormat, final int startOffset) {
                     if (super.getNextToken(logFormat, startOffset) != null) {
                         throw new UnsupportedOperationException("%{format}t has not been implemented yet");

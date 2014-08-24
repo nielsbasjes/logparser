@@ -110,8 +110,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
         try {
             if (logformat == null) {
-                logformat = conf.get("nl.basjes.parse.apachehttpdlogline.format",
-                                "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
+                logformat = conf.get("nl.basjes.parse.apachehttpdlogline.format", "common");
             }
 
             parser = getParser(logformat);

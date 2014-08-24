@@ -120,8 +120,8 @@ public class ApacheHttpdLogParserTest {
         assertEquals(null, results.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, results.get("STRING:request.querystring.aap"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
-        assertEquals("", results.get("NUMBER:connection.client.logname"));
-        assertEquals("", results.get("STRING:connection.client.user"));
+        assertEquals(null, results.get("NUMBER:connection.client.logname"));
+        assertEquals(null, results.get("STRING:connection.client.user"));
         assertEquals("[31/Dec/2012:23:49:40 +0100]", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("1356994180000", results.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals("1", results.get("TIME.WEEK:request.receive.time.weekofweekyear"));
@@ -168,8 +168,8 @@ public class ApacheHttpdLogParserTest {
 
         assertEquals(null, results.get("HTTP.QUERYSTRING:request.firstline.uri.query.foo"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
-        assertEquals("", results.get("NUMBER:connection.client.logname"));
-        assertEquals("", results.get("STRING:connection.client.user"));
+        assertEquals(null, results.get("NUMBER:connection.client.logname"));
+        assertEquals(null, results.get("STRING:connection.client.user"));
         assertEquals("[10/Aug/2012:23:55:11 +0200]", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("11", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png", results.get("HTTP.URI:request.firstline.uri"));
@@ -182,7 +182,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("1306", results.get("MICROSECONDS:server.process.time"));
-        assertEquals("", results.get("HTTP.SETCOOKIES:response.cookies"));
+        assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
                 results.get("HTTP.COOKIES:request.cookies"));
         assertEquals("\\\"3780ff-4bd-4c1ce3df91380\\\"", results.get("HTTP.HEADER:response.header.etag"));
