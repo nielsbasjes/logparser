@@ -21,7 +21,6 @@ import nl.basjes.parse.core.exceptions.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
