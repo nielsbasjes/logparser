@@ -46,7 +46,7 @@ public class Wordcount extends Configured implements Tool {
 
     private static final// httpd.conf has this next line:
           // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-    String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+    String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
 
     // ----------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ public class Wordcount extends Configured implements Tool {
             System.exit(2);
         }
 
-        conf.set("nl.basjes.parse.apachehttpdlogline.format", logformat);
+        conf.set("nl.basjes.parse.apachehttpdlogline.format", LOGFORMAT);
 
         // A ',' separated list of fields
         conf.set("nl.basjes.parse.apachehttpdlogline.fields",
@@ -134,7 +134,7 @@ public class Wordcount extends Configured implements Tool {
         // Developer suggestion:
         // This is what you do to find out what the possible fields are:
         List<String> possibleFields = ApacheHttpdLogfileInputFormat
-                .listPossibleFields(logformat);
+                .listPossibleFields(LOGFORMAT);
         System.out.println("----------------------------------------");
         System.out.println("All possible fields are:");
         for (String field : possibleFields) {

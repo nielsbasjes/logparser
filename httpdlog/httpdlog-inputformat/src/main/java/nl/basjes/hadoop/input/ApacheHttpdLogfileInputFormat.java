@@ -85,9 +85,6 @@ public class ApacheHttpdLogfileInputFormat extends
     protected boolean isSplitable(JobContext context, Path file) {
         final CompressionCodec codec =
             new CompressionCodecFactory(context.getConfiguration()).getCodec(file);
-        if (null == codec) {
-            return true;
-        }
-        return codec instanceof SplittableCompressionCodec;
+        return (null == codec) || codec instanceof SplittableCompressionCodec;
     }
 }

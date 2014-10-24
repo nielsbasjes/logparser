@@ -26,29 +26,29 @@ public final class Utils {
 
     private Utils() {}
 
-    private static final Pattern validStandard      = Pattern.compile("%([0-9A-Fa-f]{2})");
-    private static final Pattern choppedStandard    = Pattern.compile("%[0-9A-Fa-f]?$");
-    private static final Pattern validNonStandard   = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
-    private static final Pattern choppedNonStandard = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
+    private static final Pattern VALID_STANDARD         = Pattern.compile("%([0-9A-Fa-f]{2})");
+    private static final Pattern CHOPPED_STANDARD       = Pattern.compile("%[0-9A-Fa-f]?$");
+    private static final Pattern VALID_NON_STANDARD     = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
+    private static final Pattern CHOPPED_NON_STANDARD   = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 
     public static String resilientUrlDecode(String input) {
         String cookedInput = input;
 
         if (cookedInput.indexOf('%') > -1) {
             // Transform all existing UTF-8 standard into UTF-16 standard.
-            cookedInput = validStandard.matcher(cookedInput).replaceAll("%00%$1");
+            cookedInput = VALID_STANDARD.matcher(cookedInput).replaceAll("%00%$1");
 
             // Discard chopped encoded char at the end of the line (there is no way to know what it was)
-            cookedInput = choppedStandard.matcher(cookedInput).replaceAll("");
+            cookedInput = CHOPPED_STANDARD.matcher(cookedInput).replaceAll("");
 
             // Handle non standard (rejected by W3C) encoding that is used anyway by some
             // See: http://stackoverflow.com/a/5408655/114196
             if (cookedInput.contains("%u")) {
                 // Transform all existing non standard into UTF-16 standard.
-                cookedInput = validNonStandard.matcher(cookedInput).replaceAll("%$1%$2");
+                cookedInput = VALID_NON_STANDARD.matcher(cookedInput).replaceAll("%$1%$2");
 
                 // Discard chopped encoded char at the end of the line
-                cookedInput = choppedNonStandard.matcher(cookedInput).replaceAll("");
+                cookedInput = CHOPPED_NON_STANDARD.matcher(cookedInput).replaceAll("");
             }
         }
 

@@ -21,14 +21,12 @@ package nl.basjes.parse;
 import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 import nl.basjes.parse.http.disectors.QueryStringFieldDisector;
 
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
-        throws MissingDisectorsException, InvalidDisectorException, ParseException {
+        throws ParseException {
         super(clazz, logformat);
     }
 

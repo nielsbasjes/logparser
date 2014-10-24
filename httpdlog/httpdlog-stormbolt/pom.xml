@@ -33,23 +33,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>Default</id>
-      <name>Default maven2 repository</name>
-      <url>http://repo1.maven.org/maven2/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-   <repository>
-     <id>clojars</id>
-     <url>http://clojars.org/repo/</url>
-   </repository>
- </repositories>
-
-
-
   <dependencies>
     <dependency>
       <groupId>storm</groupId>
@@ -62,12 +45,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>httpdlog-parser</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
     </dependency>
   </dependencies>
 

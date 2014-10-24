@@ -489,7 +489,7 @@ public class Parser<RECORD> {
                                                                      method.toGenericString() + "\" for " +
                                                                      " key = \"" + key + "\" " +
                                                                      " name = \"" + name + "\" " +
-                                                                     " value = \"" + value + "\"" );
+                                                                     " value = \"" + value + "\"");
                     }
                 }
             }
@@ -498,7 +498,7 @@ public class Parser<RECORD> {
             throw new FatalErrorDuringCallOfSetterMethod("No setter called for " +
                     " key = \"" + key + "\" " +
                     " name = \"" + name + "\" " +
-                    " value = \"" + value + "\"" );
+                    " value = \"" + value + "\"");
         }
         return record;
     }

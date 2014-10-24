@@ -67,17 +67,13 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     @Override
     protected void initializeNewInstance(Disector newInstance) {
         if (newInstance instanceof ApacheHttpdLogFormatDisector) {
-            try {
-                ((ApacheHttpdLogFormatDisector)newInstance).setLogFormat(logFormat);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            ((ApacheHttpdLogFormatDisector)newInstance).setLogFormat(logFormat);
         } else {
             LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
         }
     }
 
-    public void setLogFormat(final String logformat) throws ParseException {
+    public void setLogFormat(final String logformat) {
         this.logFormat = logformat;
 
         // Commonly used logformats as documented in the manuals of the Apache Httpd
@@ -88,24 +84,24 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // LogFormat "%{User-agent}i" agent
 
         switch (logformat.toLowerCase(Locale.getDefault())) {
-            case "common":
-                this.logFormat = "%h %l %u %t \"%r\" %>s %b";
-                break;
-            case "combined":
-                this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
-                break;
-            case "combinedio":
-                this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O";
-                break;
-            case "referer":
-                this.logFormat = "%{Referer}i -> %U";
-                break;
-            case "agent":
-                this.logFormat = "%{User-agent}i";
-                break;
-            default:
-                this.logFormat = logformat;
-                break;
+        case "common":
+            this.logFormat = "%h %l %u %t \"%r\" %>s %b";
+            break;
+        case "combined":
+            this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+            break;
+        case "combinedio":
+            this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O";
+            break;
+        case "referer":
+            this.logFormat = "%{Referer}i -> %U";
+            break;
+        case "agent":
+            this.logFormat = "%{User-agent}i";
+            break;
+        default:
+            this.logFormat = logformat;
+            break;
         }
 
         if (!this.logFormat.equals(logformat)) {
@@ -128,11 +124,11 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     }
 
     public String getLogFormat() {
-      return logFormat;
+        return logFormat;
     }
 
     public String getLogFormatRegEx() {
-      return logFormatRegEx;
+        return logFormatRegEx;
     }
 
     // --------------------------------------------
@@ -455,7 +451,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // %p The canonical port of the server serving the request
         parsers.add(new TokenParser("%p",
                 "request.server.port.canonical", "PORT",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %{format}p The canonical port of the server serving the request or
@@ -463,21 +459,21 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // are canonical, local, or remote.
         parsers.add(new TokenParser("%{canonical}p",
                 "connection.server.port.canonical", "PORT",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{local}p",
                 "connection.server.port", "PORT",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{remote}p",
                 "connection.client.port", "PORT",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %P The process ID of the child that serviced the request.
         parsers.add(new TokenParser("%P",
                 "connection.server.child.processid", "NUMBER",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %{format}P The process ID or thread id of the child that serviced the
@@ -485,15 +481,15 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // APR 1.2.0 or higher.
         parsers.add(new TokenParser("%{pid}P",
                 "connection.server.child.processid", "NUMBER",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{tid}P",
                 "connection.server.child.threadid", "NUMBER",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{hextid}P",
                 "connection.server.child.hexthreadid", "NUMBER",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_CLF_HEXNUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_HEXNUMBER));
 
         // -------
         // %q The query string (prepended with a ? if a query string exists,
@@ -506,24 +502,24 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // %r First line of request
         parsers.add(new TokenParser("%r",
                 "request.firstline", "HTTP.FIRSTLINE",
-                Casts.STRING_ONLY,TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // %R The handler generating the response (if any).
         parsers.add(new TokenParser("%R",
                 "request.handler", "STRING",
-                Casts.STRING_ONLY,TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // %s Status. For requests that got internally redirected, this is the
         // status of the *original* request --- %>s for the last.
         parsers.add(new TokenParser("%s",
                 "request.status.original", "STRING",
-                Casts.STRING_ONLY,TokenParser.FORMAT_NO_SPACE_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         parsers.add(new TokenParser("%>s",
                 "request.status.last", "STRING",
-                Casts.STRING_ONLY,TokenParser.FORMAT_NO_SPACE_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %t Time the request was received (standard english format)
@@ -536,19 +532,19 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // FIXME: Implement %{format}t "should be in strftime(3) format. (potentially localized)"
         // This next parser is created to deliberately cause an error when it is used !!!
         parsers.add(new NamedTokenParser("\\%\\{([^\\}]*)\\}t", "", "", null, "") {
-                public Token getNextToken(final String logFormat, final int startOffset) {
-                    if (super.getNextToken(logFormat, startOffset) != null) {
-                        throw new UnsupportedOperationException("%{format}t has not been implemented yet");
-                    }
-                    return null;
+            public Token getNextToken(final String logformat, final int startOffset) {
+                if (super.getNextToken(logformat, startOffset) != null) {
+                    throw new UnsupportedOperationException("%{format}t has not been implemented yet");
                 }
-                });
+                return null;
+            }
+        });
 
         // -------
         // %T The time taken to serve the request, in seconds.
         parsers.add(new TokenParser("%T",
                 "response.server.processing.time", "SECONDS",
-                Casts.STRING_OR_LONG,TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %u Remote user (from auth; may be bogus if return status (%s) is 401)

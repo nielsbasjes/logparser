@@ -254,9 +254,9 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void VerifyCommonFormatNamesMapping() throws Exception {
-      ApacheHttpdLogFormatDisector disector = new ApacheHttpdLogFormatDisector("combined");
-      assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", disector.getLogFormat());
+    public void verifyCommonFormatNamesMapping() throws Exception {
+        ApacheHttpdLogFormatDisector disector = new ApacheHttpdLogFormatDisector("combined");
+        assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", disector.getLogFormat());
     }
 
     // ------------------------------------------
@@ -280,7 +280,7 @@ public class ApacheHttpdLogParserTest {
                            "HTTP.PATH:request.firstline.uri.path",
                            "HTTP.QUERYSTRING:request.firstline.uri.query",
                            "HTTP.REF:request.firstline.uri.ref"
-                    };
+        };
         parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), params);
 
         EmptyTestRecord record = new EmptyTestRecord();
@@ -362,7 +362,7 @@ public class ApacheHttpdLogParserTest {
 
 
     @Test(expected = UnsupportedOperationException.class)
-    public void EnsureNotYetImplementedFailure() throws Exception {
+    public void ensureNotYetImplementedFailure() throws Exception {
         new ApacheHttpdLogFormatDisector("%{format}t");
     }
 

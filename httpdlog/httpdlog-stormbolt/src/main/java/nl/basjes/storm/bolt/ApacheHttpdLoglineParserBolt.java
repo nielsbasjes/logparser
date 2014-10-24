@@ -97,9 +97,9 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         try {
             record.clear();
             getParser().parse(record, apacheLogLine);
-        } catch ( MissingDisectorsException
-                | InvalidDisectorException
-                | DisectionFailure e) {
+        } catch (MissingDisectorsException
+                |InvalidDisectorException
+                |DisectionFailure e) {
             e.printStackTrace();
         }
 

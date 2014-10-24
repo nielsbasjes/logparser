@@ -30,7 +30,7 @@ public final class Main {
     }
 
     /**
-     * @param args
+     * @param args The commandline arguments
      * @throws IllegalAccessException
      * @throws InstantiationException
      */

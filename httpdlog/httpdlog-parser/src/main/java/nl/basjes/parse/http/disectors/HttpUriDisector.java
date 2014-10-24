@@ -126,13 +126,13 @@ public class HttpUriDisector extends Disector {
                 // We have both. So we take the first one.
                 int usedOffset = Math.min(questionMark, firstAmpersand);
                 pathValue = fieldValue.substring(0, usedOffset);
-                queryValue = "&" + fieldValue.substring(usedOffset + 1, fieldValue.length()).replaceAll("\\?","&");
+                queryValue = "&" + fieldValue.substring(usedOffset + 1, fieldValue.length()).replaceAll("\\?", "&");
             }
 
             int hashMark = queryValue.indexOf('#');
             if (hashMark != -1) {
                 refValue = queryValue.substring(hashMark + 1);
-                queryValue = queryValue.substring(0,hashMark);
+                queryValue = queryValue.substring(0, hashMark);
             } else {
                 refValue = "";
             }

@@ -13,7 +13,7 @@ public class OmnitureLoader extends Loader {
      * Pig Loaders only take string parameters. The CTOR is really the only
      * interaction the user has with the Loader from the script.
      *
-     * @param parameters
+     * @param parameters The parameters entered from the PIG code.
      */
     public OmnitureLoader(String... parameters) {
         super(parameters);

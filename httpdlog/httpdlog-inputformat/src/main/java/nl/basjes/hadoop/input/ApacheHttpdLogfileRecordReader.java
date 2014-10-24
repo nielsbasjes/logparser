@@ -141,16 +141,16 @@ public class ApacheHttpdLogfileRecordReader extends
                         String.class, String.class), fieldList);
             }
 
-        } catch ( MissingDisectorsException
-                | ParseException
-                | NoSuchMethodException
-                | SecurityException
-                | InvalidDisectorException e) {
+        } catch (MissingDisectorsException
+                |ParseException
+                |NoSuchMethodException
+                |SecurityException
+                |InvalidDisectorException e) {
             throw new IOException(e.toString());
         }
     }
 
-    public Parser<ParsedRecord> getParser(String logFormat) throws IOException, MissingDisectorsException, InvalidDisectorException, ParseException {
+    public Parser<ParsedRecord> getParser(String logFormat) throws ParseException {
         return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logFormat);
     }
 

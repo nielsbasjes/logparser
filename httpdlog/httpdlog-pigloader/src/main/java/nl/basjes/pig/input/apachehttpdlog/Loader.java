@@ -118,8 +118,7 @@ public class Loader
                         if (isNumerical(fieldName)){
                             try {
                                 values.add(Long.parseLong(theValue.toString()));
-                            }
-                            catch (NumberFormatException nfe) {
+                            } catch (NumberFormatException nfe) {
                                 // If we cannot add it as a number we do add it at all (receiver expects a number).
                                 values.add(null);
                             }

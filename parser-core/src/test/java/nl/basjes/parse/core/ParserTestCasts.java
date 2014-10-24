@@ -53,7 +53,7 @@ public class ParserTestCasts {
             parsable.addDisection(inputname, "OUTPUT_TYPE", "double_good", "123"      , Casts.DOUBLE_ONLY);
 
             parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_null"  , null  , Casts.STRING_OR_LONG);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_null" ,null  , Casts.STRING_OR_DOUBLE);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_null", null  , Casts.STRING_OR_DOUBLE);
             parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_null"        , null  , Casts.STRING_OR_LONG_OR_DOUBLE);
             parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_good"  , "123" , Casts.STRING_OR_LONG);
             parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_good", "123" , Casts.STRING_OR_DOUBLE);
@@ -104,7 +104,7 @@ public class ParserTestCasts {
     }
 
     public static class TestRecord {
-        public int count = 0;
+        private int count = 0;
         @Field({"OUTPUT_TYPE:string_null",
                 "OUTPUT_TYPE:string_long_null",
                 "OUTPUT_TYPE:string_double_null",
