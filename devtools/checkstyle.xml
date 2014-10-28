@@ -10,7 +10,9 @@
 
   <!-- Checks whether files end with a new line. -->
   <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
-  <module name="NewlineAtEndOfFile" />
+  <module name="NewlineAtEndOfFile">
+    <property name="lineSeparator" value="lf"/>
+  </module>
 
   <!-- Checks that property files contain the same keys. -->
   <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
@@ -126,7 +128,6 @@
     <module name="InterfaceIsType" />
     <module name="VisibilityModifier" />
 
-
     <!-- Miscellaneous other checks. -->
     <!-- See http://checkstyle.sf.net/config_misc.html -->
     <module name="ArrayTypeStyle" />
@@ -134,7 +135,11 @@
       <property name="basicOffset" value="4" />
       <property name="braceAdjustment" value="0" />
       <property name="caseIndent" value="0" />
+      <property name="throwsIndent" value="4" />
+      <property name="arrayInitIndent" value="4" />
+      <property name="lineWrappingIndentation" value="4" />
     </module>
+
     <!-- module name="TodoComment"/ -->
     <module name="UpperEll" />
 
