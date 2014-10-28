@@ -32,9 +32,10 @@ I assume we have a logformat variable that looks something like this:
 
 **Step 1: What CAN we get from this line?**
 
-To figure out what values we CAN get from this line we instantiate the parser with a dummy class that does not have ANY @Field annotations.
+To figure out what values we CAN get from this line we instantiate the parser with a dummy class that does not have 
+ANY @Field annotations.
 
-    Parser<Dummy> dummyParser = new ApacheHttpdLoglineParser<Dummy>(Dummy.class, logformat);
+    Parser<Object> dummyParser = new ApacheHttpdLoglineParser<Object>(Object.class, logformat);
     List<String> possiblePaths = dummyParser.getPossiblePaths();
     for (String path: possiblePaths) {
         System.out.println(path);
