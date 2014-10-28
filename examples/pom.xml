@@ -25,17 +25,26 @@
   </parent>
 
   <groupId>nl.basjes.parse.httpdlog</groupId>
-  <artifactId>httpdlog</artifactId>
+  <artifactId>httpdlog-examples</artifactId>
   <packaging>pom</packaging>
-  <name>Parser - Apache HTTPD (group)</name>
+  <name>Parser - Apache HTTPD - Examples (group)</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <modules>
-    <module>httpdlog-parser</module>
-    <module>httpdlog-inputformat</module>
-    <module>httpdlog-inputformat-testclient</module>
-    <module>httpdlog-pigloader</module>
-    <module>httpdlog-stormbolt</module>
-    <module>httpdlog-testclient</module>
-    <module>httpdlog-omniture</module>
+    <module>hadoop-inputformat</module>
+    <module>pojo</module>
+    <module>pig</module>
   </modules>
 </project>
