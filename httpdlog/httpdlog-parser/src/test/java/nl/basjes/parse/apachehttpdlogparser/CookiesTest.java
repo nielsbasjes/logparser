@@ -81,7 +81,7 @@ public class CookiesTest {
 // FIXME:                "BYTES:response.body.bytesclf",
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
-        })
+               })
 
         public void setValueLong(final String name, final Long value) {
             longResults.put(name, value);

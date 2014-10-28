@@ -27,15 +27,15 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.reduce.LongSumReducer;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -44,17 +44,18 @@ public class Wordcount extends Configured implements Tool {
 
     // ----------------------------------------------------------------------
 
-    private static final// httpd.conf has this next line:
-          // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-    String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+    private String logFormat;
+    public Wordcount(String logFormat) {
+        this.logFormat = logFormat;
+    }
 
     // ----------------------------------------------------------------------
 
     public static class TokenizerMapper extends
-            Mapper<Object, MapWritable, Text, IntWritable> {
+            Mapper<Object, MapWritable, Text, LongWritable> {
 
-        private static final IntWritable ONE  = new IntWritable(1);
-        private final Text                     word = new Text();
+        private static final LongWritable ONE  = new LongWritable(1);
+        private final Text                word = new Text();
 
         @Override
         public void map(Object key, MapWritable value, Context context)
@@ -63,24 +64,6 @@ public class Wordcount extends Configured implements Tool {
                 word.set(entry.getValue().toString());
                 context.write(word, ONE);
             }
-        }
-    }
-
-    // ----------------------------------------------------------------------
-
-    public static class IntSumReducer extends
-            Reducer<Text, IntWritable, Text, IntWritable> {
-        private final IntWritable result = new IntWritable();
-
-        @Override
-        public void reduce(Text key, Iterable<IntWritable> values,
-                Context context) throws IOException, InterruptedException {
-            int sum = 0;
-            for (IntWritable val : values) {
-                sum += val.get();
-            }
-            result.set(sum);
-            context.write(key, result);
         }
     }
 
@@ -96,7 +79,7 @@ public class Wordcount extends Configured implements Tool {
             System.exit(2);
         }
 
-        conf.set("nl.basjes.parse.apachehttpdlogline.format", LOGFORMAT);
+        conf.set("nl.basjes.parse.apachehttpdlogline.format", logFormat);
 
         // A ',' separated list of fields
         conf.set("nl.basjes.parse.apachehttpdlogline.fields",
@@ -108,8 +91,8 @@ public class Wordcount extends Configured implements Tool {
 
         job.setInputFormatClass(ApacheHttpdLogfileInputFormat.class);
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(IntSumReducer.class);
-        job.setReducerClass(IntSumReducer.class);
+        job.setCombinerClass(LongSumReducer.class);
+        job.setReducerClass(LongSumReducer.class);
 
         // configuration should contain reference to your namenode
         FileSystem fs = FileSystem.get(conf);
@@ -119,7 +102,7 @@ public class Wordcount extends Configured implements Tool {
         FileOutputFormat.setOutputPath(job, outputPath);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(LongWritable.class);
 
         if (job.waitForCompletion(true)) {
             return 0;
@@ -131,10 +114,14 @@ public class Wordcount extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
 
+        // httpd.conf has this next line:
+        //       LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+        String logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+
         // Developer suggestion:
         // This is what you do to find out what the possible fields are:
         List<String> possibleFields = ApacheHttpdLogfileInputFormat
-                .listPossibleFields(LOGFORMAT);
+                .listPossibleFields(logFormat);
         System.out.println("----------------------------------------");
         System.out.println("All possible fields are:");
         for (String field : possibleFields) {
@@ -142,6 +129,9 @@ public class Wordcount extends Configured implements Tool {
         }
         System.out.println("----------------------------------------");
 
-        System.exit(ToolRunner.run(new Configuration(), new Wordcount(), args));
+        System.exit(ToolRunner.run(new Configuration(), new Wordcount(logFormat), args));
     }
+
+    // ----------------------------------------------------------------------
+
 }

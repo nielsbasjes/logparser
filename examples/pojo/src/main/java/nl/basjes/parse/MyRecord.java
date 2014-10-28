@@ -43,19 +43,19 @@ public class MyRecord {
     }
 
     @Field({
-    "HTTP.QUERYSTRING:request.firstline.uri.query",
-    "NUMBER:connection.client.logname",
-    "STRING:connection.client.user",
-    "TIME.STAMP:request.receive.time",
-    "HTTP.URI:request.firstline.uri",
-    "STRING:request.status.last",
-    "BYTES:response.body.bytesclf",
-    "HTTP.URI:request.referer",
-    "HTTP.USERAGENT:request.user-agent",
-    "TIME.DAY:request.receive.time.day",
-    "TIME.HOUR:request.receive.time.hour",
-    "TIME.MONTHNAME:request.receive.time.monthname",
-    "STRING:request.status.last"})
+        "HTTP.QUERYSTRING:request.firstline.uri.query",
+        "NUMBER:connection.client.logname",
+        "STRING:connection.client.user",
+        "TIME.STAMP:request.receive.time",
+        "HTTP.URI:request.firstline.uri",
+        "STRING:request.status.last",
+        "BYTES:response.body.bytesclf",
+        "HTTP.URI:request.referer",
+        "HTTP.USERAGENT:request.user-agent",
+        "TIME.DAY:request.receive.time.day",
+        "TIME.HOUR:request.receive.time.hour",
+        "TIME.MONTHNAME:request.receive.time.monthname",
+        "STRING:request.status.last"})
     public void setValue(final String name, final String value) {
         results.put(name, value);
     }

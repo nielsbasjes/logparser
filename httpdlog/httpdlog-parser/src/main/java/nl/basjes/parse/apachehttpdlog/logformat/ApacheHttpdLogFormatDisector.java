@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
     "PMD.LongVariable", // I like my variable names this way
     "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
-})
+    })
 public final class ApacheHttpdLogFormatDisector extends Disector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDisector.class);
