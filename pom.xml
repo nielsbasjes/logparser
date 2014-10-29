@@ -77,25 +77,30 @@
 
   </dependencies>
 
-  <distributionManagement>
-    <!--<snapshotRepository>-->
-      <!--<id>ossrh</id>-->
-      <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-    <!--</snapshotRepository>-->
-    <!--<repository>-->
-      <!--<id>ossrh</id>-->
-      <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-    <!--</repository>-->
-    <snapshotRepository>
-      <id>klooien</id>
-      <name>klooien.lan.basjes.nl-snapshots</name>
-      <url>http://klooien.lan.basjes.nl:8081/artifactory/libs-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <profiles>
     <profile>
       <id>release</id>
+
+      <distributionManagement>
+        <!--<snapshotRepository>-->
+        <!--<id>ossrh</id>-->
+        <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+        <!--</snapshotRepository>-->
+        <!--<repository>-->
+        <!--<id>ossrh</id>-->
+        <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+        <!--</repository>-->
+        <repository>
+          <id>klooien.lan.basjes.nl</id>
+          <name>klooien.lan.basjes.nl-releases</name>
+          <url>http://klooien.lan.basjes.nl:8081/artifactory/libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+          <id>klooien</id>
+          <name>klooien.lan.basjes.nl-snapshots</name>
+          <url>http://klooien.lan.basjes.nl:8081/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+      </distributionManagement>
 
       <build>
         <plugins>
@@ -114,16 +119,17 @@
               </execution>
             </executions>
           </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.3</version>
+            <version>2.1.2</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
-                <phase>verify</phase>
+                <phase>deploy</phase>
                 <goals>
-                  <goal>jar</goal>
+                  <goal>jar-no-fork</goal>
                 </goals>
               </execution>
             </executions>
@@ -136,8 +142,25 @@
             <executions>
               <execution>
                 <id>attach-javadocs</id>
+                <phase>deploy</phase>
                 <goals>
                   <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <!-- explicitly define maven-deploy-plugin after other to force exec order -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.7</version>
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
                 </goals>
               </execution>
             </executions>
