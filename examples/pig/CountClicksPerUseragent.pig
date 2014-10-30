@@ -1,7 +1,7 @@
-REGISTER target/httpdlog-pigloader-*-job.jar
+REGISTER ../../httpdlog/httpdlog-pigloader/target/httpdlog-pigloader-*.jar
 
 Fields = 
-  LOAD 'test.pig' -- Any file as long as it exists 
+  LOAD 'access_log.gz' -- Any file as long as it exists 
   USING nl.basjes.pig.input.apachehttpdlog.Loader(
     '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
     'Fields' ) AS (fields);

@@ -1,4 +1,4 @@
-REGISTER target/httpdlog-pigloader-*-job.jar
+REGISTER ../../httpdlog/httpdlog-pigloader/target/httpdlog-pigloader-*.jar
 
 Fields = 
   LOAD 'test.pig' -- Any file as long as it exists 
