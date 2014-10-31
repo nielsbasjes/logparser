@@ -31,10 +31,6 @@
   <artifactId>httpdlog-serde</artifactId>
   <name>Parser - Apache HTTPD - HCatalog SerDe</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.hadoop</groupId>

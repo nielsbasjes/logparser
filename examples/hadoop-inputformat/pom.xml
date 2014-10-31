@@ -43,7 +43,6 @@
       <groupId>nl.basjes.parse.httpdlog</groupId>
       <version>${project.version}</version>
       <artifactId>httpdlog-inputformat</artifactId>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
 
