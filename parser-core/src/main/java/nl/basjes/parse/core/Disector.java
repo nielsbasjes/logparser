@@ -86,7 +86,6 @@ public abstract class Disector {
         return null;
     }
 
-    @SuppressWarnings("unused")
     protected abstract void initializeNewInstance(Disector newInstance);
 
 }

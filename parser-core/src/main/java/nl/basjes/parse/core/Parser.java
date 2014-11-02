@@ -66,13 +66,13 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    public Set<String> getNeeded() {
+    Set<String> getNeeded() {
         return targets.keySet();
     }
 
     // --------------------------------------------
 
-    public Set<String> getUsefulIntermediateFields() {
+    Set<String> getUsefulIntermediateFields() {
         return usefulIntermediateFields;
     }
 
@@ -288,7 +288,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    public Set<String> getTheMissingFields() {
+    private Set<String> getTheMissingFields() {
         Set<String> missing = new HashSet<>();
         for (String target : getNeeded()) {
             if (!locatedTargets.contains(target)) {
