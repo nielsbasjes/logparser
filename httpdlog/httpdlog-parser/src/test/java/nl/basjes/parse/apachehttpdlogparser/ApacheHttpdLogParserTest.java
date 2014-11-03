@@ -86,12 +86,12 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private final String logFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
+    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
                              + "\"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
     // This next value is what should be used internally
-    private final String expectedLogFormat = "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
+    private final String expectedLogFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
             + "\"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
@@ -101,7 +101,7 @@ public class ApacheHttpdLogParserTest {
      */
     @Test
     public void fullTest1() throws Exception {
-        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:49:40 +0100] "
+        String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:49:40 +0100] "
                 + "\"GET /icons/powered_by_rh.png?aap=noot HTTP/1.1\" 200 1213 "
                 + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 "
                 + "\"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" "
@@ -156,7 +156,7 @@ public class ApacheHttpdLogParserTest {
     public void fullTest2() throws Exception {
         Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
 
-        String line = "127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /icons/powered_by_rh.png HTTP/1.1\" 200 1213 80"
+        String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /icons/powered_by_rh.png HTTP/1.1\" 200 1213 80"
                 + " \"\" \"http://localhost/\" 1306 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\""
                 + " \"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858\" \"-\" \"-\" \"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
 

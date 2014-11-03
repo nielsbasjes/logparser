@@ -187,11 +187,6 @@ public class ApacheHttpdLogfileRecordReader extends
                     parser.parse(currentValue, lineReader.getCurrentValue().toString());
                     counterGoodLines.increment(1L);
                     haveValue = true;
-//                } catch (InstantiationException e) {
-//                    return false;
-//                } catch (IllegalAccessException e) {
-//                    LOG.error("IllegalAccessException >>>{}<<<", e.getMessage());
-//                    return false;
                 } catch (DisectionFailure e) {
                     counterBadLines.increment(1L);
                     if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {

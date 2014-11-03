@@ -337,8 +337,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // -------
         // %% The percent sign
         parsers.add(new TokenParser("%%",
-                TokenParser.FIXED_STRING, TokenParser.FIXED_STRING,
-                null, "%%"));
+                TokenParser.FIXED_STRING, FIXED_STRING_TYPE,
+                null, "%"));
 
         // -------
         // %a Remote IP-address
