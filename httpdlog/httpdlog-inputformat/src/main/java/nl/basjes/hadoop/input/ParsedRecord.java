@@ -17,27 +17,81 @@
 */
 package nl.basjes.hadoop.input;
 
+
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 
 public class ParsedRecord extends MapWritable {
+
+    private MapWritable StringValues;
+    private MapWritable LongValues;
+    private MapWritable DoubleValues;
+
+    public static final Text STRING = new Text("String");
+    public static final Text LONG = new Text("Long");
+    public static final Text DOUBLE = new Text("Double");
+
+    public ParsedRecord() {
+        LongValues = new MapWritable();
+        DoubleValues = new MapWritable();
+        super.put(LONG, LongValues);
+        super.put(DOUBLE, DoubleValues);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        LongValues.clear();
+        DoubleValues.clear();
+    }
+
     public void set(String name, String value) {
         if (value != null) {
-            put(new Text("S_"+name), new Text(value));
+            put(new Text(name), new Text(value));
         }
     }
 
     public void set(String name, Long value) {
         if (value != null) {
-            put(new Text("L_"+name), new LongWritable(value));
+            LongValues.put(new Text(name), new LongWritable(value));
         }
     }
 
     public void set(String name, Double value) {
         if (value != null) {
-            put(new Text("D_"+name), new DoubleWritable(value));
+            DoubleValues.put(new Text(name), new DoubleWritable(value));
         }
     }
+
+    private Text nameText = new Text();
+
+    public String getString(String name) {
+        nameText.set(name);
+        Text value = (Text)get(nameText);
+        if (value == null) {
+            return null;
+        }
+        return value.toString();
+    }
+
+    public Long getLong(String name) {
+        nameText.set(name);
+        LongWritable value = (LongWritable) LongValues.get(nameText);
+        if (value == null) {
+            return null;
+        }
+        return value.get();
+    }
+
+    public Double getDouble(String name) {
+        nameText.set(name);
+        DoubleWritable value = (DoubleWritable) DoubleValues.get(nameText);
+        if (value == null) {
+            return null;
+        }
+        return value.get();
+    }
+
 }

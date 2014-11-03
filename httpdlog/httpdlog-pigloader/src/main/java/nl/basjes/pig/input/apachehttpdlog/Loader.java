@@ -26,6 +26,7 @@ import java.util.List;
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
+import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parser;
 import org.apache.hadoop.io.*;
@@ -52,6 +53,7 @@ public class Loader
     private ApacheHttpdLogfileRecordReader reader;
     private Parser parser;
 
+    private boolean isBuildingFields;
     private String logformat;
     private final List<String> requestedFields = new ArrayList<>();
     private final TupleFactory tupleFactory;
@@ -72,6 +74,7 @@ public class Loader
                 logformat = param;
             } else {
                 requestedFields.add(param);
+                isBuildingFields = isBuildingFields || "fields".equals(param.toLowerCase());
             }
         }
 
@@ -114,54 +117,105 @@ public class Loader
             throws IOException {
         Tuple tuple = null;
 
+        if (isBuildingFields) {
+            isBuildingFields = false; // Terminate on the next iteration
+            return tupleFactory.newTuple(createPigExample());
+        }
+
         boolean notDone = reader.nextKeyValue();
         if (!notDone) {
             return null;
         }
 
-        MapWritable value = reader.getCurrentValue();
+        ParsedRecord value = (ParsedRecord)reader.getCurrentValue();
 
         if (value != null) {
             List<Object> values = new ArrayList<>();
-            Text fieldNameText = new Text();
             for (String fieldName : requestedFields) {
-                fieldNameText.set("S_" + fieldName);
-                Writable theValue = value.get(fieldNameText);
-
                 EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
 
                 if (casts != null) {
-
                     if (casts.contains(Casts.LONG)) {
-                        fieldNameText.set("L_" + fieldName);
-                        LongWritable theLongValue = (LongWritable) value.get(fieldNameText);
-                        if (theLongValue != null) {
-                            values.add(theLongValue.get());
-                            continue;
-                        }
+                        values.add(value.getLong(fieldName));
+                        continue;
                     }
 
                     if (casts.contains(Casts.DOUBLE)) {
-                        fieldNameText.set("D_" + fieldName);
-                        DoubleWritable theDoubleValue = (DoubleWritable) value.get(fieldNameText);
-                        if (theDoubleValue != null) {
-                            values.add(theDoubleValue.get());
-                            continue;
-                        }
+                        values.add(value.getDouble(fieldName));
+                        continue;
                     }
                 }
 
+                String theValue = value.getString(fieldName);
                 if (theValue == null) {
                     values.add(null);
                     continue;
                 }
 
-                values.add(theValue.toString());
+                values.add(theValue);
             }
             tuple = tupleFactory.newTuple(values);
         }
 
         return tuple;
+    }
+
+    // ------------------------------------------
+
+    private String createPigExample() throws IOException {
+        StringBuilder sb = new StringBuilder(1024);
+        Text fieldName = new Text(requestedFields.get(0));
+
+        ArrayList<String> fields = new ArrayList<>(128);
+        ArrayList<String> names = new ArrayList<>(128);
+
+        while (reader.nextKeyValue()) {
+            MapWritable currentValue = reader.getCurrentValue();
+
+            Writable value = currentValue.get(fieldName);
+            if (value == null) {
+                continue;
+            }
+            fields.add(value.toString());
+            String name = value.toString().split(":")[1].replace('.', '_');
+//            EnumSet<Casts> casts = reader.getParser().getCasts(value.toString());
+//            System.err.println("VALUE = " + value + " --- " + casts);
+//
+//            String cast = "bytearray";
+//            if (casts != null) {
+//                if (casts.contains(Casts.LONG)) {
+//                    cast = "long";
+//                } else {
+//                    if (casts.contains(Casts.DOUBLE)) {
+//                        cast = "double";
+//                    } else {
+//                        if (casts.contains(Casts.STRING)) {
+//                            cast = "chararray";
+//                        }
+//                    }
+//                }
+//
+//                names.add(name + ':' + cast);
+//            } else {
+                names.add(name);
+//            }
+        }
+
+        return sb.append("\n")
+                .append("\n")
+                .append("\n")
+                .append("Clicks =\n")
+                .append("    LOAD 'access.log'\n")
+                .append("    USING ").append(this.getClass().getCanonicalName()).append("(\n")
+                .append("    '").append(logformat).append("',\n")
+                .append('\n')
+                .append("        '").append(join(fields, "'\n        '")).append("')\n")
+                .append("    AS (\n")
+                .append("        ").append(join(names, "\n        ")).append(");\n")
+                .append("\n")
+                .append("\n")
+                .append("\n")
+                .toString();
     }
 
     // ------------------------------------------
