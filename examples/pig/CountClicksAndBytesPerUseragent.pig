@@ -1,13 +1,13 @@
 REGISTER ../../httpdlog/httpdlog-pigloader/target/httpdlog-pigloader-*.jar
 
-Fields = 
-  LOAD 'access_log.gz' -- Any file as long as it exists 
-  USING nl.basjes.pig.input.apachehttpdlog.Loader(
-    '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
-    'Fields' ) AS (fields);
-
-DESCRIBE Fields;
-DUMP Fields;
+--Fields =
+--  LOAD 'access_log.gz' -- Any file as long as it exists
+--  USING nl.basjes.pig.input.apachehttpdlog.Loader(
+--    '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
+--    'Fields' ) AS (fields);
+--
+--DESCRIBE Fields;
+--DUMP Fields;
 
 Clicks = 
   LOAD 'access_log.gz' 
@@ -40,7 +40,7 @@ Clicks =
     'STRING:request.referer.query.foo',
     'HTTP.USERAGENT:request.user-agent')
 
-    AS ( 
+    AS (
     ConnectionClientHost,
     ConnectionClientLogname,
     ConnectionClientUser,
@@ -61,12 +61,11 @@ Clicks =
     RequestFirstlineProtocol,
     RequestFirstlineProtocolVersion,
     RequestStatusLast,
-    ResponseBodyBytesclf,
+    ResponseBodyBytesclf:long,
     RequestReferer,
     RequestRefererQuery,
     RequestRefererQueryFoo,
-    RequestUseragent);
-
+    RequestUseragent:chararray);
 
 DESCRIBE Clicks;
 DUMP Clicks;
@@ -77,8 +76,9 @@ GroupedClicks =
 
 CountedClicks =
   FOREACH GroupedClicks
-  GENERATE group AS useragent:chararray, 
-           COUNT(Clicks) AS count;
+  GENERATE group AS useragent:chararray,
+           COUNT(Clicks) AS count,
+           SUM(Clicks.ResponseBodyBytesclf) AS TotalResponseBytes;
 
 DESCRIBE CountedClicks;
 DUMP CountedClicks;
