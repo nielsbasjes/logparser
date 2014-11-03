@@ -217,7 +217,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 final String matchedType            = logFormatTypes.get(i - 1);
                 final EnumSet<Casts> matchedCasts   = logFormatCasts.get(i - 1);
 
-                // In Apache logfiles a '-' means a 'no specified' / 'empty' value.
+                // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
                 if (matchedStr.equals("-")){
                     matchedStr=null;
                 }
@@ -328,11 +328,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     // --------------------------------------------
     private List<TokenParser> createAllTokenParsers() {
         List<TokenParser> parsers = new ArrayList<>(60);
-
-//        final EnumSet<Casts> Casts.DocFlavor.STRING = EnumSet.of(Casts.STRING);
-//        final EnumSet<Casts> LongOnly = EnumSet.of(Casts.LONG);
-//        final EnumSet<Casts> Casts.STRING_OR_LONG = EnumSet.of(Casts.STRING, Casts.LONG);
-
 
         // Quote from
         // http://httpd.apache.org/docs/2.2/mod/mod_log_config.html#logformat

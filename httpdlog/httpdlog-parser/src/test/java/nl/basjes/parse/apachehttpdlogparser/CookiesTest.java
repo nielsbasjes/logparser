@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CookiesTest {
 
@@ -78,11 +79,10 @@ public class CookiesTest {
         }
         @Field({
                 "TIME.SECOND:request.receive.time.second",
-// FIXME:                "BYTES:response.body.bytesclf",
+                "BYTES:response.body.bytesclf",
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
                })
-
         public void setValueLong(final String name, final Long value) {
             longResults.put(name, value);
         }
@@ -101,7 +101,7 @@ public class CookiesTest {
 
     private final String cookiesLine =
             "127.0.0.1 127.0.0.1 127.0.0.1 - - [24/Oct/2012:23:00:44 +0200] \"GET /index.php HTTP/1.1\" " +
-            "200 13 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
+            "200 - 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
                 "NBA-1=1234, " +
@@ -166,7 +166,14 @@ public class CookiesTest {
 
         assertEquals("/index.php", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
-        assertEquals("13", results.get("BYTES:response.body.bytesclf"));
+
+        // The "-" value means "Not specified" which is mapped to the setter being called
+        // with a 'null' value intending to say "We know it is not there".
+        assertTrue(results.containsKey("BYTES:response.body.bytesclf"));
+        assertEquals(null, results.get("BYTES:response.body.bytesclf"));
+        assertTrue(longResults.containsKey("BYTES:response.body.bytesclf"));
+        assertEquals(null, longResults.get("BYTES:response.body.bytesclf"));
+
         assertEquals(null, results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                      results.get("HTTP.USERAGENT:request.user-agent"));
