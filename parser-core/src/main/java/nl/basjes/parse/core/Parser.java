@@ -59,6 +59,7 @@ public class Parser<RECORD> {
 
     // The target methods in the record class that will want to receive the values
     private final Map<String, Set<Method>> targets = new TreeMap<>();
+    private final Map<String, EnumSet<Casts>> castsOfTargets = new TreeMap<>();
 
     private final Set<String> locatedTargets = new HashSet<>();
 
@@ -68,6 +69,10 @@ public class Parser<RECORD> {
 
     Set<String> getNeeded() {
         return targets.keySet();
+    }
+
+    public EnumSet<Casts> getCasts(String name) {
+        return castsOfTargets.get(name);
     }
 
     // --------------------------------------------
@@ -267,7 +272,8 @@ public class Parser<RECORD> {
                                 + " --> " + disector.instance.getClass().getName()
                                 + " --> (" + disector.outputType + ")" + checkField);
                     }
-                    disectorPhaseInstance.instance.prepareForDisect(subRootName, checkField);
+                    castsOfTargets.put(disector.outputType + ':' + checkField,
+                            disectorPhaseInstance.instance.prepareForDisect(subRootName, checkField));
 
                     // Recurse from this point down
                     findUsefulDisectorsFromField(possibleTargets, disector.outputType, checkField, false);
@@ -430,8 +436,9 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    RECORD store(final RECORD record, final String key, final String name, final String value, final EnumSet<Casts> castsTo) {
+    RECORD store(final RECORD record, final String key, final String name, final String value) {
         final Set<Method> methods = targets.get(key);
+        final EnumSet<Casts> castsTo = castsOfTargets.get(name);
         boolean calledASetter = true;
         if (methods == null) {
             LOG.error("NO methods for \""+key+"\"");
@@ -489,7 +496,8 @@ public class Parser<RECORD> {
                                                                      method.toGenericString() + "\" for " +
                                                                      " key = \"" + key + "\" " +
                                                                      " name = \"" + name + "\" " +
-                                                                     " value = \"" + value + "\"");
+                                                                     " value = \"" + value + "\"" +
+                                                                     " castsTo = \""  + castsTo + "\"" );
                     }
                 }
             }
@@ -505,7 +513,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    Parsable<RECORD> createParsable(RECORD record) {
+    private Parsable<RECORD> createParsable(RECORD record) {
         return new Parsable<>(this, record);
     }
 

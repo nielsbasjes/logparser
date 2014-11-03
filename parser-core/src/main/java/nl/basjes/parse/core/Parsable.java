@@ -71,18 +71,9 @@ public final class Parsable<RECORD> {
 
     // --------------------------------------------
 
-    @Deprecated
+    /** Store a newly parsed value in the result set */
     public void addDisection(final String base, final String type, final String name, final String value) {
-        addDisection(base, type, name, value, null);
-    }
-
-        /** Store a newly parsed value in the result set */
-    public void addDisection(final String base, final String type, final String name, final String value, EnumSet<Casts> castsTo) {
         LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
-
-        if (castsTo == null || castsTo.isEmpty()) {
-            castsTo = EnumSet.of(Casts.STRING);
-        }
 
         String completeName;
         String neededWildCardName;
@@ -103,11 +94,11 @@ public final class Parsable<RECORD> {
         }
 
         if (needed.contains(neededName)) {
-            parser.store(record, neededName, neededName, value, castsTo);
+            parser.store(record, neededName, neededName, value);
         }
 
         if (needed.contains(neededWildCardName)) {
-            parser.store(record, neededWildCardName, neededName, value, castsTo);
+            parser.store(record, neededWildCardName, neededName, value);
         }
 
     }

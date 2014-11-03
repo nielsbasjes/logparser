@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({
     "PMD.LongVariable", // I like my variable names this way
-    "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize", // No beans here
+    "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
+    "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
     })
 public final class ApacheHttpdLogFormatDisector extends Disector {
@@ -44,7 +45,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private String       logFormat          = null;
     private List<String> logFormatNames     = null;
     private List<String> logFormatTypes     = null;
-    private List<EnumSet<Casts>> logFormatCasts = null;
     private String       logFormatRegEx     = null;
     private Pattern      logFormatPattern   = null;
     private boolean      isUsable           = false;
@@ -136,8 +136,14 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private final Set<String> requestedFields = new HashSet<>(16);
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         requestedFields.add(outputname);
+        for (Token token: logFormatTokens) {
+            if (outputname.equals(token.getName())) {
+                return token.getCasts();
+            }
+        }
+        return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -153,7 +159,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
         logFormatNames = new ArrayList<>(20);
         logFormatTypes = new ArrayList<>(20);
-        logFormatCasts = new ArrayList<>(20);
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {
@@ -163,7 +168,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
             } else if (requestedFields.contains(token.getName())) {
                 logFormatNames.add(token.getName());
                 logFormatTypes.add(token.getType());
-                logFormatCasts.add(token.getCasts());
                 regex.append("(").append(token.getRegex()).append(")");
             } else {
                 regex.append("(?:").append(token.getRegex()).append(")");
@@ -173,7 +177,6 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         regex.append('$'); // Link to end of the line
 
         logFormatRegEx = regex.toString();
-//        System.out.println("APACHE LOG REGEX: "+logFormatRegEx);
         LOG.info("Source logformat : " + this.logFormat);
         LOG.info("Used regex       : " + logFormatRegEx);
 
@@ -215,13 +218,12 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 String matchedStr = matcher.group(i);
                 final String matchedName            = logFormatNames.get(i - 1);
                 final String matchedType            = logFormatTypes.get(i - 1);
-                final EnumSet<Casts> matchedCasts   = logFormatCasts.get(i - 1);
 
                 // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
                 if (matchedStr.equals("-")){
                     matchedStr=null;
                 }
-                parsable.addDisection(inputname, matchedType, matchedName, matchedStr, matchedCasts);
+                parsable.addDisection(inputname, matchedType, matchedName, matchedStr);
             }
         } else {
             throw new DisectionFailure("The input line :\n"+line.getValue()+"\n" +

@@ -30,6 +30,7 @@ import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
@@ -49,18 +50,11 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private static final String APACHE_HTTPD_LOGFILE_INPUT_FORMAT = "Apache HTTPD Logfile InputFormat";
 
-    public class ParsedRecord extends MapWritable {
-        public void set(String name, String value) {
-            if (value != null) {
-                put(new Text(name), new Text(value));
-            }
-        }
-    }
-
     // --------------------------------------------
 
     private final LineRecordReader                 lineReader      = new LineRecordReader();
-    private Parser<ParsedRecord>                   parser;
+    private ApacheHttpdLoglineParser<ParsedRecord> parser;
+    private String[] fieldList = null;
 
     private final ParsedRecord                     currentValue    = new ParsedRecord();
 
@@ -82,6 +76,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private void addRequestedFields(Set<String> newRequestedFields) {
         requestedFields.addAll(newRequestedFields);
+        fieldList = requestedFields.toArray(new String[requestedFields.size()]);
     }
 
     private void setLogFormat(String newLogformat) {
@@ -108,14 +103,10 @@ public class ApacheHttpdLogfileRecordReader extends
         counterGoodLines = context.getCounter(APACHE_HTTPD_LOGFILE_INPUT_FORMAT, "2:Good lines");
         counterBadLines  = context.getCounter(APACHE_HTTPD_LOGFILE_INPUT_FORMAT, "3:Bad lines");
 
-        try {
+        if (logformat == null || requestedFields.isEmpty()) {
             if (logformat == null) {
                 logformat = conf.get("nl.basjes.parse.apachehttpdlogline.format", "common");
             }
-
-            parser = getParser(logformat);
-
-            String[] fieldList = null;
             if (requestedFields.isEmpty()) {
                 String fields = conf.get(
                         "nl.basjes.parse.apachehttpdlogline.fields", null);
@@ -127,18 +118,33 @@ public class ApacheHttpdLogfileRecordReader extends
                 fieldList = requestedFields.toArray(new String[requestedFields.size()]);
             }
 
-            if (fieldList == null) {
-                return; // Nothing else to do here
+            if (logformat != null && fieldList != null) {
+                parser = createParser();
             }
+        }
+    }
 
-            if (fieldList.length == 1
-                && fieldList[0] != null
-                && fieldList[0].toLowerCase().equals("fields")) {
+    private ApacheHttpdLoglineParser<ParsedRecord> createParser() throws IOException {
+        if (fieldList == null || logformat == null) {
+            return null;
+        }
+
+        try {
+            parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+
+            if (fieldList.length == 1 &&
+                fieldList[0] != null &&
+                fieldList[0].toLowerCase().trim().equals("fields")) {
                 allPossiblePaths = parser.getPossiblePaths();
                 allPossiblePathsFieldName = fieldList[0];
             } else {
+                // FIXME: So far I do not see a way to do this more efficiently yet
                 parser.addParseTarget(ParsedRecord.class.getMethod("set",
                         String.class, String.class), fieldList);
+                parser.addParseTarget(ParsedRecord.class.getMethod("set",
+                        String.class, Long.class), fieldList);
+                parser.addParseTarget(ParsedRecord.class.getMethod("set",
+                        String.class, Double.class), fieldList);
             }
 
         } catch (MissingDisectorsException
@@ -148,10 +154,14 @@ public class ApacheHttpdLogfileRecordReader extends
                 |InvalidDisectorException e) {
             throw new IOException(e.toString());
         }
+        return parser;
     }
 
-    public Parser<ParsedRecord> getParser(String logFormat) throws ParseException {
-        return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logFormat);
+    public ApacheHttpdLoglineParser<ParsedRecord> getParser() throws IOException {
+        if (parser == null) {
+            parser = createParser();
+        }
+        return parser;
     }
 
     // --------------------------------------------
@@ -226,8 +236,7 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     @Override
-    public MapWritable getCurrentValue() throws IOException,
-            InterruptedException {
+    public MapWritable getCurrentValue() {
         return currentValue;
     }
 

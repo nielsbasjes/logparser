@@ -50,7 +50,7 @@ public class ParserTestExceptions {
         @Override
         public void disect(Parsable<?> parsable, final String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDisection(inputname, outputType, outputName, field.getValue(), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, outputType, outputName, field.getValue());
         }
 
         @Override
@@ -66,7 +66,8 @@ public class ParserTestExceptions {
         }
 
         @Override
-        public void prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+            return Casts.STRING_ONLY;
         }
 
         @Override
@@ -265,7 +266,8 @@ public class ParserTestExceptions {
         }
 
         @Override
-        public void prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+            return Casts.STRING_ONLY;
         }
 
         @Override

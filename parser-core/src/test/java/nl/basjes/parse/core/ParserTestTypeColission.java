@@ -63,8 +63,7 @@ public class ParserTestTypeColission {
         public void disect(Parsable<?> parsable, String inputname)
             throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDisection(inputname, outputType, outputName,
-                    field.getValue()+salt, EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, outputType, outputName, field.getValue()+salt);
         }
 
         @Override
@@ -80,7 +79,8 @@ public class ParserTestTypeColission {
         }
 
         @Override
-        public void prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+            return Casts.STRING_ONLY;
         }
 
         @Override

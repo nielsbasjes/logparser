@@ -20,12 +20,15 @@ package nl.basjes.pig.input.apachehttpdlog;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Text;
+import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
+import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Parser;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -33,25 +36,26 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.pig.Expression;
 import org.apache.pig.LoadFunc;
 import org.apache.pig.LoadMetadata;
-import org.apache.pig.PigException;
 import org.apache.pig.ResourceSchema;
 import org.apache.pig.ResourceSchema.ResourceFieldSchema;
 import org.apache.pig.ResourceStatistics;
-import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 public class Loader
-       extends LoadFunc
-       implements LoadMetadata {
+        extends LoadFunc
+        implements LoadMetadata {
 
     @SuppressWarnings("rawtypes")
-    private RecordReader        reader;
-    private String              logformat;
-    private final List<String>  requestedFields = new ArrayList<>();
-    private final TupleFactory  tupleFactory;
+    private ApacheHttpdLogfileRecordReader reader;
+    private Parser parser;
+
+    private String logformat;
+    private final List<String> requestedFields = new ArrayList<>();
+    private final TupleFactory tupleFactory;
+    private ApacheHttpdLogfileInputFormat theInputFormat;
 
     // ------------------------------------------
 
@@ -71,6 +75,17 @@ public class Loader
             }
         }
 
+        if (logformat == null) {
+            throw new IllegalArgumentException("Must specify the logformat");
+        }
+
+        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
+        reader = theInputFormat.getRecordReader();
+        try {
+            parser = reader.getParser();
+        } catch (IOException e) {
+            e.printStackTrace(); // Simply log the error and let if fail hard a bit later on.
+        }
         tupleFactory = TupleFactory.getInstance();
     }
 
@@ -78,8 +93,8 @@ public class Loader
 
     @Override
     public InputFormat<?, ?> getInputFormat()
-        throws IOException {
-        return new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
+            throws IOException {
+        return theInputFormat;
     }
 
     // ------------------------------------------
@@ -96,90 +111,83 @@ public class Loader
 
     @Override
     public Tuple getNext()
-        throws IOException {
+            throws IOException {
         Tuple tuple = null;
 
-        try {
-            boolean notDone = reader.nextKeyValue();
-            if (!notDone) {
-                return null;
-            }
-            MapWritable value = (MapWritable) reader.getCurrentValue();
+        boolean notDone = reader.nextKeyValue();
+        if (!notDone) {
+            return null;
+        }
 
-            if (value != null) {
-                List<Object> values = new ArrayList<>();
-                Text fieldNameText = new Text();
-                for (String fieldName : requestedFields) {
-                    fieldNameText.set(fieldName);
-                    Object theValue = value.get(fieldNameText);
-                    if (theValue == null) {
-                        values.add(null);
-                    } else {
-                        if (isNumerical(fieldName)){
-                            try {
-                                values.add(Long.parseLong(theValue.toString()));
-                            } catch (NumberFormatException nfe) {
-                                // If we cannot add it as a number we do add it at all (receiver expects a number).
-                                values.add(null);
-                            }
-                        } else {
-                            values.add(theValue.toString());
+        MapWritable value = reader.getCurrentValue();
+
+        if (value != null) {
+            List<Object> values = new ArrayList<>();
+            Text fieldNameText = new Text();
+            for (String fieldName : requestedFields) {
+                fieldNameText.set("S_" + fieldName);
+                Writable theValue = value.get(fieldNameText);
+
+                EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
+
+                if (casts != null) {
+
+                    if (casts.contains(Casts.LONG)) {
+                        fieldNameText.set("L_" + fieldName);
+                        LongWritable theLongValue = (LongWritable) value.get(fieldNameText);
+                        if (theLongValue != null) {
+                            values.add(theLongValue.get());
+                            continue;
                         }
+                    }
 
+                    if (casts.contains(Casts.DOUBLE)) {
+                        fieldNameText.set("D_" + fieldName);
+                        DoubleWritable theDoubleValue = (DoubleWritable) value.get(fieldNameText);
+                        if (theDoubleValue != null) {
+                            values.add(theDoubleValue.get());
+                            continue;
+                        }
                     }
                 }
-                tuple = tupleFactory.newTuple(values);
-            }
 
-        } catch (InterruptedException e) {
-            // add more information to the runtime exception condition.
-            int errCode = 6018;
-            String errMsg = "Error while reading input";
-            throw new ExecException(errMsg, errCode,
-                    PigException.REMOTE_ENVIRONMENT, e);
+                if (theValue == null) {
+                    values.add(null);
+                    continue;
+                }
+
+                values.add(theValue.toString());
+            }
+            tuple = tupleFactory.newTuple(values);
         }
 
         return tuple;
-
     }
 
     // ------------------------------------------
 
     @Override
     public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit)
-        throws IOException {
+            throws IOException {
         // Note that for this Loader, we don't care about the PigSplit.
-        this.reader = newReader;
+
+        if (newReader instanceof ApacheHttpdLogfileRecordReader) {
+            this.reader = (ApacheHttpdLogfileRecordReader) newReader;
+        } else {
+            throw new IncorrectRecordReaderException();
+        }
     }
 
     // ------------------------------------------
 
     @Override
     public void setLocation(String location, Job job)
-        throws IOException {
+            throws IOException {
         // The location is assumed to be comma separated paths.
         FileInputFormat.setInputPaths(job, location);
     }
 
     // ------------------------------------------
-
-    private boolean isNumerical(String fieldName){
-        return (
-                // FIXME: This property should come from the disector that created the specific field.
-                fieldName.startsWith("NUMBER:") ||
-                fieldName.startsWith("BYTES:") ||
-                fieldName.startsWith("MICROSECONDS:") ||
-                fieldName.startsWith("SECONDS:") ||
-                fieldName.startsWith("TIME.DAY:") ||
-                fieldName.startsWith("TIME.HOUR:") ||
-                fieldName.startsWith("TIME.MINUTE:") ||
-                fieldName.startsWith("TIME.MONTH:") ||
-                fieldName.startsWith("TIME.SECOND:") ||
-                fieldName.startsWith("TIME.YEAR:") ||
-                fieldName.startsWith("TIME.EPOCH:") ||
-                fieldName.startsWith("COUNT:")
-            );
-    }
 
     @Override
     public ResourceSchema getSchema(String location, Job job) throws IOException {
@@ -191,12 +199,22 @@ public class Loader
             rfs.setName(fieldName);
             rfs.setDescription(fieldName);
 
-            if (isNumerical(fieldName)){
-                rfs.setType(DataType.LONG);
+            EnumSet<Casts> casts = theInputFormat.getRecordReader().getParser().getCasts(fieldName);
+            if (casts != null) {
+                if (casts.contains(Casts.LONG)) {
+                    rfs.setType(DataType.LONG);
+                } else {
+                    if (casts.contains(Casts.DOUBLE)) {
+                        rfs.setType(DataType.DOUBLE);
+                    } else {
+                        rfs.setType(DataType.CHARARRAY);
+                    }
+                }
             } else {
-                rfs.setType(DataType.CHARARRAY);
+                rfs.setType(DataType.BYTEARRAY);
             }
             fieldSchemaList.add(rfs);
+
         }
 
         rs.setFields(fieldSchemaList.toArray(new ResourceFieldSchema[fieldSchemaList.size()]));

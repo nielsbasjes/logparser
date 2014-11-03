@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -94,8 +95,9 @@ public abstract class Disector {
      * was part of the answer from getPossibleOutput.
      * This can be used by the disector implementation to optimize the internal parsing
      * algorithms and lookup tables and such.
+     * The disector must return the types to which this value can be mapped later on during the run.
      */
-    public abstract void prepareForDisect(final String inputname, final String outputname);
+    public abstract EnumSet<Casts> prepareForDisect(final String inputname, final String outputname);
 
     // --------------------------------------------
 

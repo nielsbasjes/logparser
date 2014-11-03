@@ -21,6 +21,7 @@ import nl.basjes.parse.core.exceptions.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -40,23 +41,23 @@ public class ParserTestCasts {
 
         @Override
         public void disect(Parsable<?> parsable, final String inputname) throws DisectionFailure {
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_null", null       , Casts.STRING_ONLY);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_good", "123"      , Casts.STRING_ONLY);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_null", null       );
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_good", "123"      );
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_null"  , null       , Casts.LONG_ONLY);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_bad"   , "Something"      , Casts.LONG_ONLY);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_good"  , "123"      , Casts.LONG_ONLY);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_null"  , null       );
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_bad"   , "Something");
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_good"  , "123"      );
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_null", null       , Casts.DOUBLE_ONLY);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_bad" , "Something", Casts.DOUBLE_ONLY);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_good", "123"      , Casts.DOUBLE_ONLY);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_null", null       );
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_bad" , "Something");
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_good", "123"      );
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_null"  , null  , Casts.STRING_OR_LONG);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_null", null  , Casts.STRING_OR_DOUBLE);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_null"        , null  , Casts.STRING_OR_LONG_OR_DOUBLE);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_good"  , "123" , Casts.STRING_OR_LONG);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_good", "123" , Casts.STRING_OR_DOUBLE);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_good"        , "123" , Casts.STRING_OR_LONG_OR_DOUBLE);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_null"  , null);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_null", null);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_null"        , null);
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_good"  , "123");
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_good", "123");
+            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_good"        , "123");
 
         }
 
@@ -86,7 +87,25 @@ public class ParserTestCasts {
         }
 
         @Override
-        public void prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+            if (outputname.equals("string_null")) return Casts.STRING_ONLY;
+            if (outputname.equals("string_good")) return Casts.STRING_ONLY;
+
+            if (outputname.equals("long_null"  )) return Casts.LONG_ONLY;
+            if (outputname.equals("long_bad"   )) return Casts.LONG_ONLY;
+            if (outputname.equals("long_good"  )) return Casts.LONG_ONLY;
+
+            if (outputname.equals("double_null")) return Casts.DOUBLE_ONLY;
+            if (outputname.equals("double_bad" )) return Casts.DOUBLE_ONLY;
+            if (outputname.equals("double_good")) return Casts.DOUBLE_ONLY;
+
+            if (outputname.equals("string_long_null"  )) return Casts.STRING_OR_LONG;
+            if (outputname.equals("string_double_null")) return Casts.STRING_OR_DOUBLE;
+            if (outputname.equals("multi_null"        )) return Casts.STRING_OR_LONG_OR_DOUBLE;
+            if (outputname.equals("string_long_good"  )) return Casts.STRING_OR_LONG;
+            if (outputname.equals("string_double_good")) return Casts.STRING_OR_DOUBLE;
+            if (outputname.equals("multi_good"        )) return Casts.STRING_OR_LONG_OR_DOUBLE;
+            return null;
         }
 
         @Override

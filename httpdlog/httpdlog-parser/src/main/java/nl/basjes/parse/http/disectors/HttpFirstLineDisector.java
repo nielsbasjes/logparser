@@ -81,7 +81,7 @@ public class HttpFirstLineDisector extends Disector {
 
     private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) {
         if (requestedParameters.contains(name)) {
-            parsable.addDisection(inputname, type, name, matcher.group(offset), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, type, name, matcher.group(offset));
         }
     }
 
@@ -97,8 +97,9 @@ public class HttpFirstLineDisector extends Disector {
     private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         requestedParameters.add(outputname.substring(inputname.length() + 1));
+        return Casts.STRING_ONLY;
     }
 
     @Override

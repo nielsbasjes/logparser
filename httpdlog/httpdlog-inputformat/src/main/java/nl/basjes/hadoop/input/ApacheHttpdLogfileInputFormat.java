@@ -44,6 +44,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, MapWritable> {
 
+    private ApacheHttpdLogfileRecordReader theRecordReader;
     // --------------------------------------------
 
     public static List<String> listPossibleFields(String logformat)
@@ -52,6 +53,7 @@ public class ApacheHttpdLogfileInputFormat extends
     }
 
     private String logFormat = null;
+
     public String getLogFormat() {
         return logFormat;
     }
@@ -74,11 +76,21 @@ public class ApacheHttpdLogfileInputFormat extends
 
     // --------------------------------------------
 
+    public ApacheHttpdLogfileRecordReader getRecordReader() {
+        if (theRecordReader == null) {
+            theRecordReader = new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
+        }
+        return theRecordReader;
+    }
+
+    public ApacheHttpdLoglineParser<?> getParser() throws IOException {
+        return getRecordReader().getParser();
+    }
+
     @Override
     public RecordReader<LongWritable, MapWritable> createRecordReader(
-            final InputSplit split, final TaskAttemptContext context)
-        throws IOException, InterruptedException {
-        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
+            final InputSplit split, final TaskAttemptContext context) {
+        return getRecordReader();
     }
 
     @Override

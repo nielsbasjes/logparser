@@ -60,8 +60,9 @@ public class QueryStringFieldDisector extends Disector {
     private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         requestedParameters.add(outputname.substring(inputname.length() + 1));
+        return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -90,7 +91,7 @@ public class QueryStringFieldDisector extends Disector {
                 if (!"".equals(value)) {
                     String name = value.toLowerCase();
                     if (requestedParameters.contains(name)) {
-                        parsable.addDisection(inputname, getDisectionType(inputname, value), name, "", EnumSet.of(Casts.STRING));
+                        parsable.addDisection(inputname, getDisectionType(inputname, value), name, "");
                     }
                 }
             } else {
@@ -98,7 +99,7 @@ public class QueryStringFieldDisector extends Disector {
                 if (requestedParameters.contains(name)) {
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, name), name,
-                                resilientUrlDecode(value.substring(equalPos + 1, value.length())), EnumSet.of(Casts.STRING));
+                                resilientUrlDecode(value.substring(equalPos + 1, value.length())));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
                         throw new DisectionFailure(e.getMessage());

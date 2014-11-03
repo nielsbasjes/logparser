@@ -55,7 +55,7 @@ public class ParserTestNormal {
         public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             for (String outputname : outputNames) {
-                parsable.addDisection(inputname, outputType, outputname, field.getValue(), EnumSet.of(Casts.STRING));
+                parsable.addDisection(inputname, outputType, outputname, field.getValue());
             }
         }
 
@@ -72,13 +72,14 @@ public class ParserTestNormal {
         }
 
         @Override
-        public void prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
             String name = outputname;
             String prefix = inputname + '.';
             if (outputname.startsWith(prefix)) {
                 name = outputname.substring(prefix.length());
             }
             outputNames.add(name);
+            return Casts.STRING_ONLY;
         }
 
         @Override

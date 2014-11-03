@@ -60,8 +60,9 @@ public class RequestCookieListDisector extends Disector {
     private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         requestedCookies.add(outputname.substring(inputname.length() + 1));
+        return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -92,7 +93,7 @@ public class RequestCookieListDisector extends Disector {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
                     if (requestedCookies.contains(theName)) {
-                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "", EnumSet.of(Casts.STRING));
+                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
                     }
                 }
             } else {
@@ -101,7 +102,7 @@ public class RequestCookieListDisector extends Disector {
                     String theValue = value.substring(equalPos + 1, value.length()).trim();
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
-                                Utils.resilientUrlDecode(theValue), EnumSet.of(Casts.STRING));
+                                Utils.resilientUrlDecode(theValue));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
                         throw new DisectionFailure(e.getMessage());

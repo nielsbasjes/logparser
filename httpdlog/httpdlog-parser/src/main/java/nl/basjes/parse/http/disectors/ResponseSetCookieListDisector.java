@@ -57,8 +57,9 @@ public class ResponseSetCookieListDisector extends Disector {
     private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         requestedCookies.add(outputname.substring(inputname.length() + 1));
+        return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -114,8 +115,7 @@ public class ResponseSetCookieListDisector extends Disector {
                     parsable.addDisection(inputname,
                             getDisectionType(inputname, cookieName),
                             cookieName,
-                            value,
-                            EnumSet.of(Casts.STRING));
+                            value);
                 }
             }
         }

@@ -60,8 +60,9 @@ public class ResponseSetCookieDisector extends Disector {
 
 
     @Override
-    public void prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
         // We do not do anything extra here
+        return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -86,12 +87,12 @@ public class ResponseSetCookieDisector extends Disector {
         List<HttpCookie> cookies = HttpCookie.parse(fieldValue);
 
         for (HttpCookie cookie : cookies) {
-            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue(), EnumSet.of(Casts.STRING));
+            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue());
             parsable.addDisection(inputname, getDisectionType(inputname, "expires"), "expires",
-                    Long.toString(nowSeconds+cookie.getMaxAge()), EnumSet.of(Casts.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath(), EnumSet.of(Casts.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain(), EnumSet.of(Casts.STRING));
-            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment(), EnumSet.of(Casts.STRING));
+                    Long.toString(nowSeconds+cookie.getMaxAge()));
+            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath());
+            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain());
+            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment());
         }
     }
 
