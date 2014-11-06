@@ -21,6 +21,7 @@ package nl.basjes.parse.apachehttpdlogparser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -281,7 +282,7 @@ public class ApacheHttpdLogParserTest {
                            "HTTP.QUERYSTRING:request.firstline.uri.query",
                            "HTTP.REF:request.firstline.uri.ref"
         };
-        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), params);
+        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
 
         EmptyTestRecord record = new EmptyTestRecord();
 

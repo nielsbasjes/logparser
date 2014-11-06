@@ -21,6 +21,7 @@ import nl.basjes.parse.core.exceptions.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -186,7 +187,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), params);
+        parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         TestRecord output = new TestRecord();
         parser.parse(output, "Something");
@@ -208,7 +209,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), params);
+        parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         List<String> paths = parser.getPossiblePaths(3);
         for (String path:paths){
@@ -228,7 +229,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("badSetter1"), params);
+        parser.addParseTarget(TestRecord.class.getMethod("badSetter1"), Arrays.asList(params));
 
         parser.getPossiblePaths(3);
     }
@@ -239,7 +240,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), params);
+        parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), Arrays.asList(params));
 
         parser.getPossiblePaths(3);
     }

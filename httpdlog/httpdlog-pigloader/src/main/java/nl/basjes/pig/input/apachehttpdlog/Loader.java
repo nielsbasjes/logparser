@@ -28,7 +28,6 @@ import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Parser;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -51,7 +50,6 @@ public class Loader
 
     @SuppressWarnings("rawtypes")
     private ApacheHttpdLogfileRecordReader reader;
-    private Parser parser;
 
     private boolean isBuildingFields;
     private String logformat;
@@ -84,11 +82,6 @@ public class Loader
 
         theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
         reader = theInputFormat.getRecordReader();
-        try {
-            parser = reader.getParser();
-        } catch (IOException e) {
-            e.printStackTrace(); // Simply log the error and let if fail hard a bit later on.
-        }
         tupleFactory = TupleFactory.getInstance();
     }
 
@@ -176,29 +169,39 @@ public class Loader
             if (value == null) {
                 continue;
             }
-            fields.add(value.toString());
+
+            if (value.toString().contains("*")){
+                fields.add(value.toString() + "', \t-- You cannot put a * here yet. You MUST specify a specific field.");
+            } else {
+                fields.add(value.toString());
+            }
+
             String name = value.toString().split(":")[1].replace('.', '_');
-//            EnumSet<Casts> casts = reader.getParser().getCasts(value.toString());
-//            System.err.println("VALUE = " + value + " --- " + casts);
-//
-//            String cast = "bytearray";
-//            if (casts != null) {
-//                if (casts.contains(Casts.LONG)) {
-//                    cast = "long";
-//                } else {
-//                    if (casts.contains(Casts.DOUBLE)) {
-//                        cast = "double";
-//                    } else {
-//                        if (casts.contains(Casts.STRING)) {
-//                            cast = "chararray";
-//                        }
-//                    }
-//                }
-//
-//                names.add(name + ':' + cast);
-//            } else {
-                names.add(name);
-//            }
+            String nameComment = "";
+            if (name.contains("*")){
+                nameComment = ", \t-- You cannot put a * here yet. You MUST specify name.";
+            }
+
+            EnumSet<Casts> casts = reader.getParser().getCasts(value.toString());
+
+            String cast = "bytearray";
+            if (casts != null) {
+                if (casts.contains(Casts.LONG)) {
+                    cast = "long";
+                } else {
+                    if (casts.contains(Casts.DOUBLE)) {
+                        cast = "double";
+                    } else {
+                        if (casts.contains(Casts.STRING)) {
+                            cast = "chararray";
+                        }
+                    }
+                }
+
+                names.add(name + ':' + cast + nameComment);
+            } else {
+                names.add(name + nameComment);
+            }
         }
 
         return sb.append("\n")
@@ -209,9 +212,9 @@ public class Loader
                 .append("    USING ").append(this.getClass().getCanonicalName()).append("(\n")
                 .append("    '").append(logformat).append("',\n")
                 .append('\n')
-                .append("        '").append(join(fields, "'\n        '")).append("')\n")
+                .append("        '").append(join(fields, "',\n        '")).append("')\n")
                 .append("    AS (\n")
-                .append("        ").append(join(names, "\n        ")).append(");\n")
+                .append("        ").append(join(names, ",\n        ")).append(");\n")
                 .append("\n")
                 .append("\n")
                 .append("\n")

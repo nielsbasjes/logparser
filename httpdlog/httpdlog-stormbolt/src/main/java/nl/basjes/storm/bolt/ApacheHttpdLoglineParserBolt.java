@@ -77,9 +77,10 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
                 parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
                 Method setterMethod = ParsedRecord.class.getMethod("put", String.class, String.class);
 
-                String[] fields = new String[requestedFields.size()];
+                List<String> fields = new ArrayList<>(requestedFields.size());
+
                 for (int i = 0; i < requestedFields.size(); i++) {
-                    fields[i] = requestedFields.get(i).getField();
+                    fields.add(requestedFields.get(i).getField());
                 }
                 parser.addParseTarget(setterMethod, fields);
 

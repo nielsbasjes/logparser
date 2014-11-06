@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
@@ -75,14 +76,18 @@ public class ApacheHttpdLogfileInputFormat extends
 
     // --------------------------------------------
 
+    public ApacheHttpdLogfileRecordReader createRecordReader() {
+        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
+    }
+
     public ApacheHttpdLogfileRecordReader getRecordReader() {
         if (theRecordReader == null) {
-            theRecordReader = new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
+            theRecordReader = createRecordReader();
         }
         return theRecordReader;
     }
 
-    public ApacheHttpdLoglineParser<?> getParser() throws IOException {
+    public Parser<?> getParser() throws IOException {
         return getRecordReader().getParser();
     }
 

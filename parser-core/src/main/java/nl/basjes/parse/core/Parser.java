@@ -72,7 +72,23 @@ public class Parser<RECORD> {
     }
 
     public EnumSet<Casts> getCasts(String name) {
+        try {
+            assembleDisectors();
+        } catch (MissingDisectorsException
+                |InvalidDisectorException e) {
+            e.printStackTrace();
+        }
         return castsOfTargets.get(name);
+    }
+
+    public Map<String, EnumSet<Casts>> getAllCasts() {
+        try {
+            assembleDisectors();
+        } catch (MissingDisectorsException
+                |InvalidDisectorException e) {
+            e.printStackTrace();
+        }
+        return castsOfTargets;
     }
 
     // --------------------------------------------
@@ -326,7 +342,7 @@ public class Parser<RECORD> {
         for (final Method method : recordClass.getMethods()) {
             final Field field = method.getAnnotation(Field.class);
             if (field != null) {
-                addParseTarget(method, field.value());
+                addParseTarget(method, Arrays.asList(field.value()));
             }
         }
     }
@@ -335,7 +351,7 @@ public class Parser<RECORD> {
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final Method method, final String[] fieldValues) {
+    public void addParseTarget(final Method method, final List<String> fieldValues) {
         if (method == null || fieldValues == null) {
             return; // Nothing to do here
         }

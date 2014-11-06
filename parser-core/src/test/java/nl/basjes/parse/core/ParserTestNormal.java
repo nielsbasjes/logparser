@@ -136,7 +136,7 @@ public class ParserTestNormal {
         Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);
+        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         parser.dropDisector(TestDisectorWildCard.class);
         parser.addDisector(new TestDisectorWildCard());
@@ -163,7 +163,7 @@ public class ParserTestNormal {
         Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);
+        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         ParserTestNormalTestRecord output = parser.parse("Something");
 
@@ -200,7 +200,7 @@ public class ParserTestNormal {
         Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), params);
+        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         List<String> paths = parser.getPossiblePaths(3);
         for (String path : paths) {

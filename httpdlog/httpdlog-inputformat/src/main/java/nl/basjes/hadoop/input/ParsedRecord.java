@@ -22,10 +22,10 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 
 public class ParsedRecord extends MapWritable {
 
-    private MapWritable StringValues;
     private MapWritable LongValues;
     private MapWritable DoubleValues;
 
@@ -36,6 +36,9 @@ public class ParsedRecord extends MapWritable {
     public ParsedRecord() {
         LongValues = new MapWritable();
         DoubleValues = new MapWritable();
+
+        // All names we put in here must contain a ':'.
+        // So these two are safe to put in there like this.
         super.put(LONG, LongValues);
         super.put(DOUBLE, DoubleValues);
     }
@@ -69,7 +72,7 @@ public class ParsedRecord extends MapWritable {
 
     public String getString(String name) {
         nameText.set(name);
-        Text value = (Text)get(nameText);
+        Text value = (Text) get(nameText);
         if (value == null) {
             return null;
         }

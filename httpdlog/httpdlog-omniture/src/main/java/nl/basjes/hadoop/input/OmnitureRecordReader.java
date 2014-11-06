@@ -13,7 +13,7 @@ public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
         super(newLogformat, newRequestedFields);
     }
 
-    public Parser<ParsedRecord> getParser(String logFormat) throws ParseException {
+    protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
         return new OmnitureLogLineParser<>(ParsedRecord.class, logFormat);
     }
 

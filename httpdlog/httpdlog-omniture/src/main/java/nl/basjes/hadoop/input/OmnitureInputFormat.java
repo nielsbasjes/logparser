@@ -19,8 +19,7 @@ public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     }
 
     @Override
-    public RecordReader<LongWritable, MapWritable> createRecordReader(final InputSplit split, final TaskAttemptContext context) throws IOException,
-            InterruptedException {
+    public ApacheHttpdLogfileRecordReader createRecordReader() {
         return new OmnitureRecordReader(getLogFormat(), getRequestedFields());
     }
 
