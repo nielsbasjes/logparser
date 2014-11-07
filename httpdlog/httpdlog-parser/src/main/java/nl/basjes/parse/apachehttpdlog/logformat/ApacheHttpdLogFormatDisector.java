@@ -105,7 +105,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         }
 
         if (!this.logFormat.equals(logformat)) {
-            LOG.info("Specified logformat \"" + logformat + "\" was mapped to " + this.logFormat);
+            LOG.debug("Specified logformat \"" + logformat + "\" was mapped to " + this.logFormat);
         }
 
         // Now we disassemble the format into parts
@@ -177,8 +177,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         regex.append('$'); // Link to end of the line
 
         logFormatRegEx = regex.toString();
-        LOG.info("Source logformat : " + this.logFormat);
-        LOG.info("Used regex       : " + logFormatRegEx);
+        LOG.debug("Source logformat : " + logFormat);
+        LOG.debug("Used regex       : " + logFormatRegEx);
 
         // Now we compile this expression ONLY ONCE!
         logFormatPattern = Pattern.compile(logFormatRegEx);

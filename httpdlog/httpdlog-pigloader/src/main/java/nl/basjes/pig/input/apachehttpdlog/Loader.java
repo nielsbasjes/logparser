@@ -182,7 +182,7 @@ public class Loader
                 nameComment = ", \t-- You cannot put a * here yet. You MUST specify name.";
             }
 
-            EnumSet<Casts> casts = reader.getParser().getCasts(value.toString());
+            EnumSet<Casts> casts = reader.getCasts(value.toString());
 
             String cast = "bytearray";
             if (casts != null) {
@@ -256,7 +256,7 @@ public class Loader
             rfs.setName(fieldName);
             rfs.setDescription(fieldName);
 
-            EnumSet<Casts> casts = theInputFormat.getRecordReader().getParser().getCasts(fieldName);
+            EnumSet<Casts> casts = theInputFormat.getRecordReader().getCasts(fieldName);
             if (casts != null) {
                 if (casts.contains(Casts.LONG)) {
                     rfs.setType(DataType.LONG);
@@ -271,7 +271,6 @@ public class Loader
                 rfs.setType(DataType.BYTEARRAY);
             }
             fieldSchemaList.add(rfs);
-
         }
 
         rs.setFields(fieldSchemaList.toArray(new ResourceFieldSchema[fieldSchemaList.size()]));

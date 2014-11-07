@@ -87,10 +87,6 @@ public class ApacheHttpdLogfileInputFormat extends
         return theRecordReader;
     }
 
-    public Parser<?> getParser() throws IOException {
-        return getRecordReader().getParser();
-    }
-
     @Override
     public RecordReader<LongWritable, MapWritable> createRecordReader(
             final InputSplit split, final TaskAttemptContext context) {

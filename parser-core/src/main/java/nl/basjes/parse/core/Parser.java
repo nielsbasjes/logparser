@@ -67,7 +67,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    Set<String> getNeeded() {
+    public Set<String> getNeeded() {
         return targets.keySet();
     }
 
@@ -568,7 +568,7 @@ public class Parser<RECORD> {
      * @throws MissingDisectorsException
      */
     public List<String> getPossiblePaths(int maxDepth) throws MissingDisectorsException, InvalidDisectorException {
-        assembleDisectors();
+//        assembleDisectors();
 
         if (allDisectors.isEmpty()) {
             return null; // nothing to do.
