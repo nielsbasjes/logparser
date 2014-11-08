@@ -54,7 +54,8 @@ You will get a list that looks something like this:
     HTTP.USERAGENT:request.user-agent
 
 Now some of these lines contain a * . 
-This is a wildcard that can be replaced with any 'name'.
+This is a wildcard that can be replaced with any 'name' if you need a specific value.
+You can also leave the '*' and get everything that is found in the actual log line.
 
 **Step 2 Create the receiving POJO** 
 
@@ -90,6 +91,14 @@ Or a combination of the above examples where you specify multiple field patterns
         results.put(name, value);
     }
 
+*Notes about the setters*
+
+- Only if a value exists in the actual logline the setter will be called (mainly relevant if you want to get a specific query param or cookie).
+- If you specifiy the same field on several setters then each of these setters will be called.
+- There is NO guarantee about the order the setters will be called.
+
+Have a look at the 'examples/pojo' directory for a working example.
+
 **Step 3 Use the parser in your application.**
 
 You create an instance of the parser
@@ -97,27 +106,22 @@ You create an instance of the parser
         Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
 
 And then call the parse method repeatedly for each line.
-You can do this like this (for each call a new instance of "MyRecord" is instantiated !!):
+There are two ways to do this:
+1) Let the parser create and a new instance of "MyRecord" for each parsed line (think about the GC consequences!!):
 
         MyRecord record = parser.parse(logline);
  
-Or you can call it like this:
-Only once:
+2) Reuse the same instance.
+So you do this only once:
 
         MyRecord record = new MyRecord(); 
 
 And then for each logline:
 
-        record.clear(); // Which is up to you to implement to 'reset' the record to it's initial state.
+        record.clear(); // Which is up to you to implement to 'reset' the record instance to it's initial/empty state.
         parser.parse(record, logline);
-
-Notes about the setters
-
-- Only if a value exists in the actual logline the setter will be called (mainly relevant if you want to get a specific query param or cookie).
-- If you specifiy the same field on several setters then each of these setters will be called.
-
-Have a look at the 'examples/pojo' directory for a working example.
 
 License
 ===
-This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then simply contact me and we'll talk about this.
+This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then
+simply contact me and we'll talk about this.

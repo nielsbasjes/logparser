@@ -7,12 +7,9 @@ The framework needs two things:
 
 Usage (Pig)
 ===
+You simply register the httpdlog-pigloader-1.3.jar
 
-Usage (PIG)
-===
-You simply register the httpdlog-pigloader-1.0-SNAPSHOT-job.jar
-
-    REGISTER target/httpdlog-pigloader-1.0-SNAPSHOT-job.jar
+    REGISTER httpdlog-pigloader-1.3.jar
 
 **Step 1: What CAN we get from this line?**
 
@@ -129,32 +126,37 @@ The current version does not yet handle those wildcards.
 
 Now that we have all the possible values that CAN be produced from this logformat we simply choose
 the ones we need and tell the Loader we want those.
+As you can see in the next example the order of the requested fields is irrelevant in the sense that it only has to match the list of atom names in the 'AS' specification.
     
     Clicks = 
       LOAD 'access_log.gz' 
       USING nl.basjes.pig.input.apachehttpdlog.Loader(
         '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
-        'IP:connection.client.host',
         'HTTP.URI:request.firstline.uri',
         'STRING:request.firstline.uri.query.foo',
+        'STRING:request.firstline.uri.query.bar',
         'STRING:request.status.last',
+        'BYTES:response.body.bytesclf',
         'HTTP.URI:request.referer',
         'STRING:request.referer.query.foo',
+        'IP:connection.client.host',
         'HTTP.USERAGENT:request.user-agent')
     
         AS ( 
-        ConnectionClientHost:chararray,
-        RequestFirstlineUri:chararray,
-        RequestFirstlineUriQueryFoo:chararray,
-        RequestStatusLast:chararray,
-        ResponseBodyBytesclf:long,
-        RequestReferer:chararray,
-        RequestRefererQueryFoo:chararray,
-        RequestUseragent:chararray);
-    
+        Uri:chararray,
+        Foo:chararray,
+        Bar:chararray,
+        Status:chararray,
+        BodyBytes:long,
+        Referer:chararray,
+        RefererFoo:chararray,
+        ClientIP:chararray,
+        Useragent:chararray);
+
 From here you can do as you want with the resulting tuples. Note that almost everything is output
 as a chararray, yet things that are numerical are output as longs or doubles.
 
 License
 ===
-This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then simply contact me and we'll talk about this.
+This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then
+simply contact me and we'll talk about this.
