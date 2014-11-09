@@ -1,0 +1,32 @@
+The maven release plugin turned out to be too hard to handle. 
+So we do it manually.
+
+# Ensure all has been committed
+
+# Ensure it all works
+mvn package
+mvn clean
+
+
+RELEASEVERSION=1.3
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
+git commit -m"Version ${RELEASEVERSION}" -a
+git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
+
+# These two profiles are defined in ~/.m2/settings.xml
+mvn clean deploy -Prelease -Pdeploy-local 
+
+
+VERIFY If this all looks good 
+
+
+mvn clean deploy -Prelease -Pdeploy-sonatype
+
+NEXTVERSION=1.4
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
+git commit -m"Start development for ${NEXTVERSION}" -a
+
+
+git push
+git push origin v${RELEASEVERSION}
+
