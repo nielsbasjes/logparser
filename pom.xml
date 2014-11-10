@@ -25,6 +25,9 @@
   <version>1.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parser (group)</name>
+  <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
+  <url>https://github.com/nielsbasjes/logparser</url>
+
   <properties>
     <jdkLevel>1.7</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -192,8 +195,8 @@
 
   <scm>
     <developerConnection>scm:git:.</developerConnection>
-    <url>https://github.com/nielsbasjes/logparser.git</url>
-    <tag>HEAD</tag>
+    <connection>https://github.com/nielsbasjes/logparser.git</connection>
+    <url>https://github.com/nielsbasjes/logparser</url>
   </scm>
 
 </project>
