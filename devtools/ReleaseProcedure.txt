@@ -10,6 +10,7 @@ mvn clean
 
 RELEASEVERSION=1.3
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
+git status
 git commit -m"Version ${RELEASEVERSION}" -a
 git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
 

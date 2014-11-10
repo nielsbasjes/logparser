@@ -21,7 +21,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
   </parent>
   <artifactId>httpdlog-inputformat-testclient</artifactId>
   <name>Parser - Apache HTTPD - Examples - Hadoop</name>
