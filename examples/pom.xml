@@ -47,6 +47,7 @@
   <modules>
     <module>hadoop-inputformat</module>
     <module>pojo</module>
+    <module>PojoGenerator</module>
   </modules>
 
 </project>
