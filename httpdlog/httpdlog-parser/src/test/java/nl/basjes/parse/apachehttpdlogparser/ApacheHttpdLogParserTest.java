@@ -205,7 +205,7 @@ public class ApacheHttpdLogParserTest {
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDisectorsException e) {
-            assertEquals("HEADER:response.header.Etag.ThisShouldBeMissing ", e.getMessage());
+            assertEquals("HEADER:response.header.etag.thisshouldbemissing ", e.getMessage());
         }
     }
 
@@ -224,7 +224,7 @@ public class ApacheHttpdLogParserTest {
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDisectorsException e) {
-            assertEquals("BLURP:request.firstline.uri.query.ThisShouldBeMissing ", e.getMessage());
+            assertEquals("BLURP:request.firstline.uri.query.thisshouldbemissing ", e.getMessage());
         }
     }
 

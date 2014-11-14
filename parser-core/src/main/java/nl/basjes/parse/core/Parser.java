@@ -371,13 +371,18 @@ public class Parser<RECORD> {
                 ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == Double.class))
         ) {
             for (final String fieldValue : fieldValues) {
+                String cleanedFieldValue = cleanupFieldValue(fieldValue);
+                if (!fieldValue.equals(cleanedFieldValue)) {
+                    LOG.warn("The requested \"" + fieldValue + "\" was converted into \"" + cleanedFieldValue + "\" ");
+                }
+
                 // We have 1 real target
-                Set<Method> fieldTargets = targets.get(fieldValue);
+                Set<Method> fieldTargets = targets.get(cleanedFieldValue);
                 if (fieldTargets == null) {
                     fieldTargets = new HashSet<>();
                 }
                 fieldTargets.add(method);
-                targets.put(fieldValue, fieldTargets);
+                targets.put(cleanedFieldValue, fieldTargets);
             }
         } else {
             throw new InvalidFieldMethodSignature(method);
@@ -387,6 +392,17 @@ public class Parser<RECORD> {
     }
 
     // --------------------------------------------
+
+    private String cleanupFieldValue(String fieldValue) {
+        final int colonPos = fieldValue.indexOf(':');
+        final String fieldType = fieldValue.substring(0, colonPos);
+        final String fieldName = fieldValue.substring(colonPos + 1);
+
+        return fieldType.toUpperCase(Locale.ENGLISH)+':'+ fieldName.toLowerCase(Locale.ENGLISH);
+    }
+
+    // --------------------------------------------
+
 
     /**
      * Parse the value and return a new instance of RECORD.
