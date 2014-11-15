@@ -430,7 +430,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // %m The request method
         parsers.add(new TokenParser("%m",
                 "request.method", "HTTP.METHOD",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %{Foobar}n The contents of note Foobar from another module.
@@ -493,13 +493,15 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // otherwise an empty string)
         parsers.add(new TokenParser("%q",
                 "request.querystring", "HTTP.QUERYSTRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %r First line of request
         parsers.add(new TokenParser("%r",
                 "request.firstline", "HTTP.FIRSTLINE",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " + 
+                                   TokenParser.FORMAT_NO_SPACE_STRING + " " + 
+                                   TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %R The handler generating the response (if any).
@@ -553,7 +555,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // %U The URL path requested, not including any query string.
         parsers.add(new TokenParser("%U",
                 "request.urlpath", "URI",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %v The canonical ServerName of the server serving the request.
@@ -606,7 +608,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("%{referer}i",
                 "request.referer",    "HTTP.URI",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, 1));
 
         return parsers;
     }
