@@ -162,7 +162,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {
-            if (TokenParser.FIXED_STRING.equals(token.getType())) {
+            if (FIXED_STRING_TYPE.equals(token.getType())) {
                 // Only insert the fixed part
                 regex.append(Pattern.quote(token.getRegex()));
             } else if (requestedFields.contains(token.getName())) {
