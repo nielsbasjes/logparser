@@ -66,10 +66,11 @@ public class RequestCookieListDisector extends Disector {
     }
 
     // --------------------------------------------
+    private boolean wantAllCookies = false;
 
     @Override
     public void prepareForRun() {
-        // We do not do anything extra here
+        wantAllCookies = requestedCookies.contains("*");
     }
 
     // --------------------------------------------
@@ -92,13 +93,13 @@ public class RequestCookieListDisector extends Disector {
             if (equalPos == -1) {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
-                    if (requestedCookies.contains(theName)) {
+                    if (wantAllCookies || requestedCookies.contains(theName)) {
                         parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
                     }
                 }
             } else {
                 String theName = value.substring(0, equalPos).trim().toLowerCase();
-                if (requestedCookies.contains(theName)) {
+                if (wantAllCookies || requestedCookies.contains(theName)) {
                     String theValue = value.substring(equalPos + 1, value.length()).trim();
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,

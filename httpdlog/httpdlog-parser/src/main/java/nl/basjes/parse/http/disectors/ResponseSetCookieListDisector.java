@@ -64,9 +64,11 @@ public class ResponseSetCookieListDisector extends Disector {
 
     // --------------------------------------------
 
+    private boolean wantAllCookies = false;
+
     @Override
     public void prepareForRun() {
-        // We do not do anything extra here
+        wantAllCookies = requestedCookies.contains("*");
     }
 
     // --------------------------------------------
@@ -111,7 +113,7 @@ public class ResponseSetCookieListDisector extends Disector {
             for (HttpCookie cookie : cookies) {
                 cookie.setVersion(1);
                 String cookieName = cookie.getName().toLowerCase();
-                if (requestedCookies.contains(cookieName)) {
+                if (wantAllCookies || requestedCookies.contains(cookieName)) {
                     parsable.addDisection(inputname,
                             getDisectionType(inputname, cookieName),
                             cookieName,

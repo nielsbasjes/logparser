@@ -67,9 +67,11 @@ public class QueryStringFieldDisector extends Disector {
 
     // --------------------------------------------
 
+    private boolean wantAllFields = false;
+
     @Override
     public void prepareForRun() {
-        // We do not do anything extra here
+        wantAllFields = requestedParameters.contains("*");
     }
 
     // --------------------------------------------
@@ -90,13 +92,13 @@ public class QueryStringFieldDisector extends Disector {
             if (equalPos == -1) {
                 if (!"".equals(value)) {
                     String name = value.toLowerCase();
-                    if (requestedParameters.contains(name)) {
+                    if (wantAllFields || requestedParameters.contains(name)) {
                         parsable.addDisection(inputname, getDisectionType(inputname, value), name, "");
                     }
                 }
             } else {
                 String name = value.substring(0, equalPos).toLowerCase();
-                if (requestedParameters.contains(name)) {
+                if (wantAllFields || requestedParameters.contains(name)) {
                     try {
                         parsable.addDisection(inputname, getDisectionType(inputname, name), name,
                                 resilientUrlDecode(value.substring(equalPos + 1, value.length())));

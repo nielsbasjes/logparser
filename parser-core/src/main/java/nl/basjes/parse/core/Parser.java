@@ -470,7 +470,7 @@ public class Parser<RECORD> {
 
     RECORD store(final RECORD record, final String key, final String name, final String value) {
         final Set<Method> methods = targets.get(key);
-        final EnumSet<Casts> castsTo = castsOfTargets.get(name);
+        final EnumSet<Casts> castsTo = castsOfTargets.get(key);
         boolean calledASetter = true;
         if (methods == null) {
             LOG.error("NO methods for \""+key+"\"");

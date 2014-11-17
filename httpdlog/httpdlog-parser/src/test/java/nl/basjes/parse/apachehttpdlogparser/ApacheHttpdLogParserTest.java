@@ -42,8 +42,7 @@ public class ApacheHttpdLogParserTest {
         private final Map<String, String> results = new HashMap<>(32);
 
         @Field({
-            "STRING:request.firstline.uri.query.aap",
-            "STRING:request.firstline.uri.query.noot",
+            "STRING:request.firstline.uri.query.*",
             "STRING:request.querystring.aap",
             "IP:connection.client.ip",
             "NUMBER:connection.client.logname",
