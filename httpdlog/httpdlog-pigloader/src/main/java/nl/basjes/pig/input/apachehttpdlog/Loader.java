@@ -28,6 +28,7 @@ import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Parser;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -71,7 +72,7 @@ public class Loader
             if (logformat == null) {
                 logformat = param;
             } else {
-                requestedFields.add(param);
+                requestedFields.add(Parser.cleanupFieldValue(param));
                 isBuildingFields = isBuildingFields || "fields".equals(param.toLowerCase());
             }
         }

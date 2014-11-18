@@ -393,7 +393,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    private String cleanupFieldValue(String fieldValue) {
+    public static String cleanupFieldValue(String fieldValue) {
         final int colonPos = fieldValue.indexOf(':');
         final String fieldType = fieldValue.substring(0, colonPos);
         final String fieldName = fieldValue.substring(colonPos + 1);
