@@ -151,20 +151,7 @@
                   <Class-Path>/</Class-Path>
                 </manifestEntries>
               </archive>
-              <appendAssemblyId>false</appendAssemblyId>
-              <!-- <archive> <addMavenDescriptor>true</addMavenDescriptor> <manifest> <mainClass>${mainClass}</mainClass> </manifest> </archive> -->
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <executions>
-          <execution>
-            <id>default-jar</id>
-            <!-- put the default-jar in the none phase to skip it from being created -->
-            <phase>none</phase>
           </execution>
         </executions>
       </plugin>
