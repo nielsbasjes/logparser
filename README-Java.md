@@ -9,6 +9,15 @@ Usage (Java)
 ===
 For the Java API there is an annotation based parser.
 
+First you put something like this in your pom.xml file:
+
+    <dependency>
+        <groupId>nl.basjes.parse.httpdlog</groupId>
+        <artifactId>httpdlog-parser</artifactId>
+        <version>1.4</version>
+    </dependency>
+
+
 I assume we have a logformat variable that looks something like this:
 
     String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
