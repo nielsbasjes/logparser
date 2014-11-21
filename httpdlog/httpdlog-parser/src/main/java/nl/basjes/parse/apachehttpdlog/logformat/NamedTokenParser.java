@@ -36,7 +36,16 @@ public class NamedTokenParser extends TokenParser {
             final String nValueType,
             final EnumSet<Casts> nCasts,
             final String nRegex) {
-        super(nLogFormatToken, nValueName, nValueType, nCasts, nRegex);
+        this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 0);
+    }
+
+    public NamedTokenParser(final String nLogFormatToken,
+            final String nValueName,
+            final String nValueType,
+            final EnumSet<Casts> nCasts,
+            final String nRegex,
+            final int prio) {
+        super(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, prio);
 
         // Compile the regular expression
         pattern = Pattern.compile(getLogFormatToken());
@@ -64,7 +73,8 @@ public class NamedTokenParser extends TokenParser {
                 getValueType(),
                 getCasts(),
                 getRegex(),
-                startOffset + start, end - start);
+                startOffset + start, end - start,
+                getPrio());
     }
 
     // --------------------------------------------

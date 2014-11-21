@@ -346,6 +346,11 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 "connection.client.ip", "IP",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
 
+        // %{c}a Underlying peer IP address of the connection (see the mod_remoteip module).
+        parsers.add(new TokenParser("%{c}a",
+                "connection.client.peerip", "IP",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+
         // -------
         // %A Local IP-address
         parsers.add(new TokenParser("%A",
@@ -425,6 +430,13 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         parsers.add(new TokenParser("%l",
                 "connection.client.logname", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
+
+        // -------
+        // %L The request log ID from the error log (or '-' if nothing has been logged to the error log for this request).
+        // Look for the matching error log line to see what request caused what error.
+        parsers.add(new TokenParser("%L",
+                "request.errorlogid", "STRING",
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %m The request method
@@ -529,15 +541,73 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // %{format}t The time, in the form given by format, which should be in
         // strftime(3) format. (potentially localized)
         // FIXME: Implement %{format}t "should be in strftime(3) format. (potentially localized)"
+        // If the format starts with begin: (default) the time is taken at the beginning of the request processing.
+        // If it starts with end: it is the time when the log entry gets written, close to the end of the request processing.
+        // In addition to the formats supported by strftime(3), the following format tokens are supported:
+        // sec number of seconds since the Epoch
+        // msec number of milliseconds since the Epoch
+        // usec number of microseconds since the Epoch
+        // msec_frac millisecond fraction
+        // usec_frac microsecond fraction
+        // These tokens can not be combined with each other or strftime(3) formatting in the same format string.
+        // You can use multiple %{format}t tokens instead.
+
+        // msec
+        parsers.add(new TokenParser("%{msec}t",
+                "request.receive.time.begin.msec", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{begin:msec}t",
+                "request.receive.time.begin.msec", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{end:msec}t",
+                "request.receive.time.end.msec", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // usec
+        parsers.add(new TokenParser("%{usec}t",
+                "request.receive.time.begin.usec", "TIME.EPOCH.USEC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{begin:usec}t",
+                "request.receive.time.begin.usec", "TIME.EPOCH.USEC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{end:usec}t",
+                "request.receive.time.end.usec", "TIME.EPOCH.USEC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // msec_frac
+        parsers.add(new TokenParser("%{msec_frac}t",
+                "request.receive.time.begin.msec_frac", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{begin:msec_frac}t",
+                "request.receive.time.begin.msec_frac", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{end:msec_frac}t",
+                "request.receive.time.end.msec_frac", "TIME.EPOCH",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // usec_frac
+        parsers.add(new TokenParser("%{usec_frac}t",
+                "request.receive.time.begin.usec_frac", "TIME.EPOCH.USEC_FRAC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{begin:usec_frac}t",
+                "request.receive.time.begin.usec_frac", "TIME.EPOCH.USEC_FRAC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{end:usec_frac}t",
+                "request.receive.time.end.usec_frac", "TIME.EPOCH.USEC_FRAC",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
         // This next parser is created to deliberately cause an error when it is used !!!
-        parsers.add(new NamedTokenParser("\\%\\{([^\\}]*)\\}t", "", "", null, "") {
-            public Token getNextToken(final String logformat, final int startOffset) {
-                if (super.getNextToken(logformat, startOffset) != null) {
-                    throw new UnsupportedOperationException("%{format}t has not been implemented yet");
-                }
-                return null;
-            }
-        });
+        parsers.add(new NamedTokenParser("\\%\\{([^\\}]*)\\}t", "", "", null,
+                " ])========== %{format}t is not fully supported ==========[( ", -1)
+        );
 
         // -------
         // %T The time taken to serve the request, in seconds.
@@ -593,7 +663,22 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         parsers.add(new TokenParser("%O",
                 "response.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
+
         // -------
+        // %S Bytes transferred (received and sent), including request and headers, cannot be zero.
+        // This is the combination of %I and %O. You need to enable mod_logio to use this.
+        // TODO: Implement %S. I have not been able to test this one yet.
+//        parsers.add(new TokenParser("%S",
+//                "total.bytes", "BYTES",
+//                Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
+
+        // -------
+        // %{VARNAME}^ti The contents of VARNAME: trailer line(s) in the request sent to the server.
+        // TODO: Implement %{VARNAME}^ti
+
+        // -------
+        // %{VARNAME}^to The contents of VARNAME: trailer line(s) in the response sent from the server.
+        // TODO: Implement %{VARNAME}^to
 
         // Some explicit type overrides.
         // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).

@@ -108,6 +108,10 @@ public class TokenParser {
         return regex;
     }
 
+    public int getPrio() {
+        return prio;
+    }
+
     // --------------------------------------------
 
     public Token getNextToken(final String logFormat, final int startOffset) {
