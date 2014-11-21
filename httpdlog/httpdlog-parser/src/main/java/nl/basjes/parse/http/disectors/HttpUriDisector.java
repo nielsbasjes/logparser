@@ -24,8 +24,10 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -115,18 +117,32 @@ public class HttpUriDisector extends Disector {
     public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
-        final String fieldValue = field.getValue();
+        String fieldValue = field.getValue();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }
 
-        int questionMark = fieldValue.indexOf('?');
-        int firstAmpersand = fieldValue.indexOf('&');
+        boolean isUrl = true;
+        URL url;
+        try {
+            if (fieldValue.startsWith("/")) {
+                url = new URL("http://xxx" + fieldValue);
+                isUrl = false; // I.e. we do not return the values we just faked.
+            } else {
+                url = new URL(fieldValue);
+            }
+        } catch (MalformedURLException e) {
+            throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
+        }
 
         if (wantQuery || wantPath || wantRef) {
+            String rawPath = url.getFile();
             String pathValue;
             String queryValue;
             String refValue;
+
+            int questionMark = rawPath.indexOf('?');
+            int firstAmpersand = rawPath.indexOf('&');
             // Now we can have one of 3 situations:
             // 1) No query string
             // 2) Query string starts with a ? (and optionally followed by one or
@@ -134,29 +150,21 @@ public class HttpUriDisector extends Disector {
             // 3) Query string starts with a &. This is invalid but does occur!
             if (questionMark == -1) {
                 if (firstAmpersand == -1) {
-                    pathValue = fieldValue;
+                    pathValue = rawPath;
                     queryValue = ""; // We do not have anything.
                 } else {
-                    pathValue = fieldValue.substring(0, firstAmpersand);
-                    queryValue = fieldValue.substring(firstAmpersand, fieldValue.length());
+                    pathValue = rawPath.substring(0, firstAmpersand);
+                    queryValue = rawPath.substring(firstAmpersand, rawPath.length());
                 }
             } else if (firstAmpersand == -1) {
                 // Replace the ? with a & to make parsing later easier
-                pathValue = fieldValue.substring(0, questionMark);
-                queryValue = "&" + fieldValue.substring(questionMark + 1, fieldValue.length());
+                pathValue = rawPath.substring(0, questionMark);
+                queryValue = "&" + rawPath.substring(questionMark + 1, rawPath.length());
             } else {
                 // We have both. So we take the first one.
                 int usedOffset = Math.min(questionMark, firstAmpersand);
-                pathValue = fieldValue.substring(0, usedOffset);
-                queryValue = "&" + fieldValue.substring(usedOffset + 1, fieldValue.length()).replaceAll("\\?", "&");
-            }
-
-            int hashMark = queryValue.indexOf('#');
-            if (hashMark != -1) {
-                refValue = queryValue.substring(hashMark + 1);
-                queryValue = queryValue.substring(0, hashMark);
-            } else {
-                refValue = "";
+                pathValue = rawPath.substring(0, usedOffset);
+                queryValue = "&" + rawPath.substring(usedOffset + 1, rawPath.length()).replaceAll("\\?", "&");
             }
 
             if (wantQuery) {
@@ -166,28 +174,23 @@ public class HttpUriDisector extends Disector {
                 parsable.addDisection(inputname, "HTTP.PATH", "path", pathValue);
             }
             if (wantRef) {
-                parsable.addDisection(inputname, "HTTP.REF", "ref", refValue);
+                parsable.addDisection(inputname, "HTTP.REF", "ref", url.getRef());
             }
         }
-        if (wantProtocol || wantUserinfo || wantHost || wantPort) {
-            URI uri;
-            try {
-                uri = new URI(fieldValue);
-            } catch (URISyntaxException e) {
-                throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
-            }
+
+        if (isUrl) {
             if (wantProtocol) {
-                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", uri.getRawSchemeSpecificPart());
+                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", url.getProtocol());
             }
             if (wantUserinfo) {
-                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
+                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", url.getUserInfo());
             }
             if (wantHost) {
-                parsable.addDisection(inputname, "HTTP.HOST", "host", uri.getHost());
+                parsable.addDisection(inputname, "HTTP.HOST", "host", url.getHost());
             }
             if (wantPort) {
-                if (uri.getPort() != -1) {
-                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(uri.getPort()));
+                if (url.getPort() != -1) {
+                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(url.getPort()));
                 }
             }
         }
