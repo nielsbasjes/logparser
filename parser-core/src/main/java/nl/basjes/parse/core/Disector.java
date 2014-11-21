@@ -56,7 +56,7 @@ import java.util.List;
  * <li>In the {@link #disect(Parsable, String)} the actual value to be worked on must be retrieved using
  * {@link nl.basjes.parse.core.Parsable#getParsableField(String, String)}</li>
  * <li>The result(s) of the disection must be put back using
- * {@link nl.basjes.parse.core.Parsable#addDisection(String, String, String, String, java.util.EnumSet)}</li>
+ * {@link nl.basjes.parse.core.Parsable#addDisection(String, String, String, String)}</li>
  * </ul>
  */
 public abstract class Disector {
