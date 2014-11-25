@@ -23,7 +23,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-testclient</artifactId>
   <name>Parser - Apache HTTPD - Examples - Java</name>
