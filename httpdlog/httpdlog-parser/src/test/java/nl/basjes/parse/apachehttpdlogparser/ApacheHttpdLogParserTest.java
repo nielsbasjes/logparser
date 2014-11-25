@@ -290,7 +290,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
-        assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
+        assertEquals(null, record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
         parser.parse(record, "GET /index.html?foo HTTP/1.1");
@@ -298,7 +298,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("&foo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
-        assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
+        assertEquals(null, record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
         parser.parse(record, "GET /index.html&foo HTTP/1.1");
@@ -306,10 +306,10 @@ public class ApacheHttpdLogParserTest {
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("&foo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
-        assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
+        assertEquals(null, record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
-        parser.parse(record, "GET /index.html?foo=foofoo HTTP/1.1");
+        parser.parse(record, "GET /index.html?foo=foofoo# HTTP/1.1");
         assertEquals("foofoo", record.get("STRING:request.firstline.uri.query.foo"));
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
@@ -322,6 +322,14 @@ public class ApacheHttpdLogParserTest {
         assertEquals(null, record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("&foo=foofoo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
+        assertEquals(null, record.get("HTTP.REF:request.firstline.uri.ref"));
+
+        record.clear();
+        parser.parse(record, "GET /index.html?bar&foo=foofoo# HTTP/1.1");
+        assertEquals("foofoo", record.get("STRING:request.firstline.uri.query.foo"));
+        assertEquals("", record.get("STRING:request.firstline.uri.query.bar"));
+        assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
+        assertEquals("&bar&foo=foofoo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
         assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
@@ -341,12 +349,12 @@ public class ApacheHttpdLogParserTest {
         assertEquals("bookmark", record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
-        parser.parse(record, "GET /index.html&bar=barbar&foo=foofoo HTTP/1.1");
+        parser.parse(record, "GET /index.html&bar=barbar&foo=foofoo#bla HTTP/1.1");
         assertEquals("foofoo", record.get("STRING:request.firstline.uri.query.foo"));
         assertEquals("barbar", record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("&bar=barbar&foo=foofoo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
-        assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
+        assertEquals("bla", record.get("HTTP.REF:request.firstline.uri.ref"));
 
         record.clear();
         parser.parse(record, "GET /index.html&bar=barbar?foo=foofoo HTTP/1.1");
@@ -354,16 +362,10 @@ public class ApacheHttpdLogParserTest {
         assertEquals("barbar", record.get("STRING:request.firstline.uri.query.bar"));
         assertEquals("/index.html", record.get("HTTP.PATH:request.firstline.uri.path"));
         assertEquals("&bar=barbar&foo=foofoo", record.get("HTTP.QUERYSTRING:request.firstline.uri.query"));
-        assertEquals("", record.get("HTTP.REF:request.firstline.uri.ref"));
+        assertEquals(null, record.get("HTTP.REF:request.firstline.uri.ref"));
 
     }
 
     // ------------------------------------------
-
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void ensureNotYetImplementedFailure() throws Exception {
-        new ApacheHttpdLogFormatDisector("%{format}t");
-    }
 
 }
