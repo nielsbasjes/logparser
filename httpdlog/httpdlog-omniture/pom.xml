@@ -34,6 +34,7 @@
       <groupId>org.apache.pig</groupId>
       <artifactId>pig</artifactId>
       <version>${pig.version}</version>
+      <classifier>h2</classifier>
       <scope>provided</scope>
     </dependency>
 

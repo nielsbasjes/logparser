@@ -1,0 +1,1 @@
+172.21.13.88 - - [07/Apr/2013:04:04:49 +0200] "GET /1-500e-KWh?FoO=bAr%20BaR HTTP/1.0" 200 3 "-" "Mozilla/5.0 Dummy UserAgent"
