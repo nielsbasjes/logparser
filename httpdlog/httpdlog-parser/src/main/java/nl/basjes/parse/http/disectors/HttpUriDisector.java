@@ -25,8 +25,6 @@ import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -139,7 +137,6 @@ public class HttpUriDisector extends Disector {
             String rawPath = url.getFile();
             String pathValue;
             String queryValue;
-            String refValue;
 
             int questionMark = rawPath.indexOf('?');
             int firstAmpersand = rawPath.indexOf('&');

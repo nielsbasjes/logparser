@@ -75,7 +75,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         super();
         this.logformat = logformat;
         this.fieldName = fieldName;
-        this.requestedFields = new ArrayList<>(10);
+        this.requestedFields = new ArrayList<>();
     }
 
     private ParsedRecord getRecord() {
@@ -97,8 +97,8 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
 
                 List<String> fields = new ArrayList<>(requestedFields.size());
 
-                for (int i = 0; i < requestedFields.size(); i++) {
-                    fields.add(requestedFields.get(i).getField());
+                for (RequestedField requestedField : requestedFields) {
+                    fields.add(requestedField.getField());
                 }
                 parser.addParseTarget(setterMethod, fields);
 

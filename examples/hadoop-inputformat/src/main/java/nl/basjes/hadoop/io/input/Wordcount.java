@@ -44,7 +44,7 @@ public class Wordcount extends Configured implements Tool {
 
     // ----------------------------------------------------------------------
 
-    private String logFormat;
+    private final String logFormat;
     public Wordcount(String logFormat) {
         this.logFormat = logFormat;
     }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=1.4
+VERSION=1.5
 
 if [ ! -f httpdlog-pigloader-${VERSION}.jar ];
 then

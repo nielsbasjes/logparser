@@ -18,12 +18,10 @@
 
 package nl.basjes.pig.input.apachehttpdlog;
 
-import nl.basjes.parse.core.Casts;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;

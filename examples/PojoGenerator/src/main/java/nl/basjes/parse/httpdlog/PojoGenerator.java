@@ -29,15 +29,13 @@ import org.kohsuke.args4j.Option;
 
 import java.text.ParseException;
 
-import static org.apache.commons.lang.StringUtils.join;
-
 public class PojoGenerator {
   @Option(name="-logformat", usage="<Apache HTTPD Logformat>", required = true)
-  public String logformat = "common";
+  public static final String logformat = "common";
 
   class MyRecord {
     public void setter(String name, String value) {
-      System.out.println("SETTER CALLED FOR \""+name+"\" = \""+name+"\"");
+      System.out.println("SETTER CALLED FOR \""+name+"\" = \""+value+"\"");
     }
   }
 
@@ -55,7 +53,7 @@ public class PojoGenerator {
   }
 
   public void run() throws ParseException, InvalidDisectorException, MissingDisectorsException, NoSuchMethodException {
-    ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
+    ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
 
     List<String> allPossiblePaths = parser.getPossiblePaths();
     parser.addParseTarget(MyRecord.class.getMethod("setter", String.class, String.class), allPossiblePaths);
@@ -73,7 +71,7 @@ public class PojoGenerator {
     }
     System.out.println("}\n");
   }
-  
+
   private String castToJavaType(Casts casts) {
     switch (casts){
       case STRING: return "String";

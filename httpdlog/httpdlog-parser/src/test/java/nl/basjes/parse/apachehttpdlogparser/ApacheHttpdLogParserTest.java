@@ -41,6 +41,7 @@ public class ApacheHttpdLogParserTest {
     public static class TestRecord {
         private final Map<String, String> results = new HashMap<>(32);
 
+        @SuppressWarnings("UnusedDeclaration")
         @Field({
             "STRING:request.firstline.uri.query.*",
             "STRING:request.querystring.aap",
@@ -192,6 +193,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecordMissing {
+        @SuppressWarnings("UnusedDeclaration")
         @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing" })
         public void dummy(final String name, final String value) {
         }
@@ -211,6 +213,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecordMissing2 {
+        @SuppressWarnings("UnusedDeclaration")
         @Field({ "BLURP:request.firstline.uri.query.ThisShouldBeMissing", "HTTP.HEADER:response.header.etag" })
         public void dummy(final String name, final String value) {
         }

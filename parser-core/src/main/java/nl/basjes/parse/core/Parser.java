@@ -304,6 +304,8 @@ public class Parser<RECORD> {
         if (mappings != null) {
             for (String mappedType : mappings) {
                 if (!compiledDisectors.containsKey(mappedType + ':' + subRootName)) {
+                    // Retyped targets are ALWAYS String ONLY.
+                    castsOfTargets.put(mappedType + ':' + subRootName, Casts.STRING_ONLY);
                     findUsefulDisectorsFromField(possibleTargets, mappedType, subRootName, false);
                 }
             }
@@ -406,7 +408,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    Map<String,Set<String>> typeRemappings = new HashMap<>(16);
+    private Map<String,Set<String>> typeRemappings = new HashMap<>(16);
 
     public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
         if (typeRemappings == null) {
@@ -419,8 +421,9 @@ public class Parser<RECORD> {
     public void addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
         for (Map.Entry<String,Set<String>> entry: additionalTypeRemappings.entrySet()){
             String input = entry.getKey();
-            for (String newType: entry.getValue() )
-            addTypeRemapping(input, newType, Casts.STRING_ONLY);
+            for (String newType: entry.getValue() ) {
+                addTypeRemapping(input, newType, Casts.STRING_ONLY);
+            }
         }
     }
 
@@ -665,10 +668,8 @@ public class Parser<RECORD> {
      * the possible paths that may be extracted.
      * @param maxDepth The maximum recursion depth
      * @return A list of all possible paths that could be determined automatically.
-     * @throws InvalidDisectorException
-     * @throws MissingDisectorsException
      */
-    public List<String> getPossiblePaths(int maxDepth) throws MissingDisectorsException, InvalidDisectorException {
+    public List<String> getPossiblePaths(int maxDepth) {
         if (allDisectors.isEmpty()) {
             return null; // nothing to do.
         }

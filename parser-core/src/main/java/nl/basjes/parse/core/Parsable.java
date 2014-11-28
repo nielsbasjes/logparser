@@ -46,7 +46,7 @@ public final class Parsable<RECORD> {
     private final Set<ParsedField>         toBeParsed = new HashSet<>();
 
     private final Map<String,Set<String>>  typeRemappings;
-    
+
     private String                         rootname   = null;
 
     // --------------------------------------------
@@ -80,7 +80,7 @@ public final class Parsable<RECORD> {
         LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
         addDisection(base, type, name, value, false);
     }
-    
+
     private void addDisection(final String base, final String type, final String name, final String value, final boolean recursion) throws DisectionFailure {
         String completeName;
         String neededWildCardName;

@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class TestHttpUriDisector {
   public static class MyRecord {
 
-    private Map<String, String> results = new HashMap<String, String>(32);
+    private final Map<String, String> results = new HashMap<>(32);
 
     @Field({
             "HTTP.URI:request.referer",

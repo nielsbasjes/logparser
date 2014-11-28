@@ -7,22 +7,42 @@
   <artifactId>PojoGenerator</artifactId>
   <version>1.6-SNAPSHOT</version>
 
-<dependencies>
-  <dependency>
-    <groupId>args4j</groupId>
-    <artifactId>args4j</artifactId>
-    <version>2.0.29</version>
-  </dependency>
-  <dependency>
-    <groupId>nl.basjes.parse.httpdlog</groupId>
-    <artifactId>httpdlog-parser</artifactId>
-    <version>1.6-SNAPSHOT</version>
-  </dependency>
-  <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>1.6.4</version>
-  </dependency>
+  <properties>
+    <jdkLevel>1.7</jdkLevel>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+  </properties>
 
-</dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+      <version>2.0.29</version>
+    </dependency>
+    <dependency>
+      <groupId>nl.basjes.parse.httpdlog</groupId>
+      <artifactId>httpdlog-parser</artifactId>
+      <version>1.6-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.6.4</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source>${jdkLevel}</source>
+          <target>${jdkLevel}</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

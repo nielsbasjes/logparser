@@ -69,7 +69,6 @@ public final class Main {
                 + "Version/5.0.1 Safari/533.17.8\"";
 
         Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
-
         parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
         parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
             

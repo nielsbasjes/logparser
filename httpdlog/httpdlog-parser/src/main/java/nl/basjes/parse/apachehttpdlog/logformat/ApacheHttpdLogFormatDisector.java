@@ -18,7 +18,6 @@
 
 package nl.basjes.parse.apachehttpdlog.logformat;
 
-import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +56,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
     // --------------------------------------------
 
-    public ApacheHttpdLogFormatDisector(final String logFormat) throws ParseException {
+    public ApacheHttpdLogFormatDisector(final String logFormat) {
         setLogFormat(logFormat);
     }
 
@@ -111,7 +110,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // Now we disassemble the format into parts
         logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
 
-        outputTypes = new ArrayList<>(20);
+        outputTypes = new ArrayList<>();
 
         for (final Token token : logFormatTokens) {
             String type = token.getType();
@@ -157,8 +156,8 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
         // Allocated buffer is a bit bigger than needed
         final StringBuilder regex = new StringBuilder(logFormatTokens.size() * 16);
 
-        logFormatNames = new ArrayList<>(20);
-        logFormatTypes = new ArrayList<>(20);
+        logFormatNames = new ArrayList<>();
+        logFormatTypes = new ArrayList<>();
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {

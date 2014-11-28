@@ -17,7 +17,6 @@
  */
 package nl.basjes.hadoop.input;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 

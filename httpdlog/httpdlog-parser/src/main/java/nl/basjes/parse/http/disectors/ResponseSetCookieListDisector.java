@@ -20,7 +20,6 @@ package nl.basjes.parse.http.disectors;
 
 import java.net.HttpCookie;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
@@ -77,7 +76,7 @@ public class ResponseSetCookieListDisector extends Disector {
     private final int minimalExpiresLength = "expires=XXXXXXX".length();
 
     // Cache the compiled pattern
-    private static final String splitBy = ", ";
+    private static final String SPLIT_BY = ", ";
 
     @Override
     public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
@@ -91,7 +90,7 @@ public class ResponseSetCookieListDisector extends Disector {
         // This input is a ', ' separated list.
         // But the expires field can contain a ','
         // and HttpCookie.parse(...) doesn't always work :(
-        String[] parts = fieldValue.split(splitBy);
+        String[] parts = fieldValue.split(SPLIT_BY);
 
         String previous="";
         for (String part:parts) {
@@ -104,7 +103,7 @@ public class ResponseSetCookieListDisector extends Disector {
             }
             String value = part;
             if (!previous.isEmpty()) {
-                value = previous+splitBy+part;
+                value = previous+ SPLIT_BY +part;
                 previous="";
             }
 

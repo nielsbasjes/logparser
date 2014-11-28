@@ -19,24 +19,20 @@
 package nl.basjes.parse.apachehttpdlogparser;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BasicOverallTest {
   public static class MyRecord {
 
-    private List<String> results = new ArrayList<>();
+    private final List<String> results = new ArrayList<>();
 
     public void setValue(final String name, final String value) {
       results.add(name + '=' + value);
@@ -59,9 +55,9 @@ public class BasicOverallTest {
 
   }
 
-  String logformat = "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" \"%l\" \"%L\" \"%m\" \"%p\" \"%{canonical}p\" \"%{local}p\" \"%{remote}p\" \"%P\" \"%{pid}P\" \"%{tid}P\" \"%{hextid}P\" \"%q\" \"%r\" \"%R\" \"%s\" \"%>s\" \"%t\" \"%{msec}t\" \"%{begin:msec}t\" \"%{end:msec}t\" \"%{usec}t\" \"%{begin:usec}t\" \"%{end:usec}t\" \"%{msec_frac}t\" \"%{begin:msec_frac}t\" \"%{end:msec_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
+  final String logformat = "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" \"%l\" \"%L\" \"%m\" \"%p\" \"%{canonical}p\" \"%{local}p\" \"%{remote}p\" \"%P\" \"%{pid}P\" \"%{tid}P\" \"%{hextid}P\" \"%q\" \"%r\" \"%R\" \"%s\" \"%>s\" \"%t\" \"%{msec}t\" \"%{begin:msec}t\" \"%{end:msec}t\" \"%{usec}t\" \"%{begin:usec}t\" \"%{end:usec}t\" \"%{msec_frac}t\" \"%{begin:msec_frac}t\" \"%{end:msec_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
 
-  String[] loglines = {
+  final String[] loglines = {
           "\"%\" \"172.17.42.1\" \"172.17.42.1\" \"172.17.0.2\" \"4880\" \"4880\" \"652\" \"/usr/share/httpd/noindex/index.html\" \"172.17.42.1\" \"HTTP/1.1\" \"0\" \"-\" \"VG9exZ0MX@uqta4OldejvQAAAAA\" \"GET\" \"80\" \"80\" \"80\" \"43417\" \"126\" \"126\" \"140597540726848\" \"140597540726848\" \"\" \"GET / HTTP/1.1\" \"httpd/unix-directory\" \"403\" \"403\" \"[21/Nov/2014:15:48:21 +0000]\" \"1416584901018\" \"1416584901018\" \"1416584901018\" \"1416584901018010\" \"1416584901018010\" \"1416584901018670\" \"018\" \"018\" \"018\" \"018010\" \"018010\" \"018670\" \"0\" \"-\" \"/\" \"172.17.0.2\" \"172.17.0.2\" \"+\" \"367\" \"5188\" \"-\" \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36\" \"-\"",
           "\"%\" \"172.17.42.1\" \"172.17.42.1\" \"172.17.0.2\" \"0\" \"-\" \"302\" \"/usr/share/httpd/noindex/css/bootstrap.min.css\" \"172.17.42.1\" \"HTTP/1.1\" \"1\" \"-\" \"-\" \"GET\" \"80\" \"80\" \"80\" \"43417\" \"126\" \"126\" \"140597540726848\" \"140597540726848\" \"\" \"GET /css/bootstrap.min.css HTTP/1.1\" \"-\" \"304\" \"304\" \"[21/Nov/2014:15:48:21 +0000]\" \"1416584901087\" \"1416584901087\" \"1416584901087\" \"1416584901087115\" \"1416584901087115\" \"1416584901087417\" \"087\" \"087\" \"087\" \"087115\" \"087115\" \"087417\" \"0\" \"-\" \"/css/bootstrap.min.css\" \"172.17.0.2\" \"172.17.0.2\" \"+\" \"448\" \"180\" \"-\" \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36\" \"http://172.17.0.2/\"",
           "\"%\" \"172.17.42.1\" \"172.17.42.1\" \"172.17.0.2\" \"0\" \"-\" \"373\" \"/usr/share/httpd/noindex/css/open-sans.css\" \"172.17.42.1\" \"HTTP/1.1\" \"0\" \"-\" \"-\" \"GET\" \"80\" \"80\" \"80\" \"43418\" \"127\" \"127\" \"140597540726848\" \"140597540726848\" \"\" \"GET /css/open-sans.css HTTP/1.1\" \"-\" \"304\" \"304\" \"[21/Nov/2014:15:48:21 +0000]\" \"1416584901087\" \"1416584901087\" \"1416584901087\" \"1416584901087430\" \"1416584901087430\" \"1416584901087803\" \"087\" \"087\" \"087\" \"087430\" \"087430\" \"087803\" \"0\" \"-\" \"/css/open-sans.css\" \"172.17.0.2\" \"172.17.0.2\" \"+\" \"444\" \"181\" \"-\" \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36\" \"http://172.17.0.2/\"",
@@ -74,7 +70,7 @@ public class BasicOverallTest {
   @Test
   public void testBasicParsing() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure, NoSuchMethodException {
     Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
-    MyRecord         record = new MyRecord();;
+    MyRecord         record = new MyRecord();
 
     List<String> paths = parser.getPossiblePaths();
 

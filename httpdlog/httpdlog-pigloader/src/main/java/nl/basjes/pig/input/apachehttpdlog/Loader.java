@@ -21,8 +21,12 @@ package nl.basjes.pig.input.apachehttpdlog;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 
@@ -52,12 +56,11 @@ public class Loader
         extends LoadFunc
         implements LoadMetadata {
 
-    Logger LOG = LoggerFactory.getLogger(Loader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     
     @SuppressWarnings("rawtypes")
     private ApacheHttpdLogfileRecordReader  reader;
 
-    private boolean                         isBuildingFields;
     private boolean                         isBuildingExample;
     private String                          logformat;
     private final List<String>              requestedFields = new ArrayList<>();
@@ -99,7 +102,6 @@ public class Loader
             }
 
             if (ApacheHttpdLogfileRecordReader.FIELDS.equals(param.toLowerCase(Locale.ENGLISH))) {
-                isBuildingFields = true;
                 requestedFields.add(ApacheHttpdLogfileRecordReader.FIELDS);
                 LOG.debug("Requested ONLY the possible field values");
                 continue;
@@ -136,11 +138,11 @@ public class Loader
 
     // ------------------------------------------
 
-    public String getLogformat() {
+    public final String getLogformat() {
         return logformat;
     }
 
-    public List<String> getRequestedFields() {
+    public final List<String> getRequestedFields() {
         return requestedFields;
     }
 
@@ -341,7 +343,7 @@ public class Loader
     public void setPartitionFilter(Expression partitionFilter) throws IOException {
     }
 
-    public Map<String,Set<String>> getTypeRemappings() {
+    public final Map<String,Set<String>> getTypeRemappings() {
         return typeRemappings;
     }
 

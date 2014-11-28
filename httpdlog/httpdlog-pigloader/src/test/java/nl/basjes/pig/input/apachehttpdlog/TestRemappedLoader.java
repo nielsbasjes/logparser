@@ -23,23 +23,17 @@ import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.URL;
 import java.util.List;
 
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TestRemappedLoader {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TestRemappedLoader.class);
-  String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
-  String logfile = getClass().getResource("/omniture-access.log").toString();
+  final String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
+  final String logfile = getClass().getResource("/omniture-access.log").toString();
 
   @Test
   public void RemappedLoaderTest() throws Exception {
@@ -91,47 +85,6 @@ public class TestRemappedLoader {
 
             ),
             out.get(0));
-  }
-
-  
-  
-  @Test
-  public void RemappedLoaderFieldsTest() throws Exception {
-    PigServer pigServer = new PigServer(ExecType.LOCAL);
-    Storage.Data data = resetData(pigServer);
-
-    pigServer.registerQuery(
-      "Fields = " +
-              "    LOAD '" + logfile + "' " +
-              "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
-              "          '" + logformat + "', " +
-              "          'Fields'," +
-              "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
-              "          '-map:request.firstline.uri.query.r:HTTP.URI'" +
-              "           ) AS ( " +
-              "          Fields );"
-    );
-
-    pigServer.registerQuery("STORE Fields INTO 'Fields' USING mock.Storage();");
-
-    List<Tuple> out = data.get("Fields");
-
-    // Check the basics
-    assertTrue("Missing Base URI",out.contains(tuple("HTTP.URI:request.firstline.uri")));
-    assertTrue("Missing Base QueryString",out.contains(tuple("HTTP.QUERYSTRING:request.firstline.uri.query")));
-    assertTrue("Missing Base Query Parameters",out.contains(tuple("STRING:request.firstline.uri.query.*")));
-
-    // Check the the remapped possibilities
-    assertTrue("Missing Remapped URI G",out.contains(tuple("HTTP.URI:request.firstline.uri.query.g")));
-    assertTrue("Missing Remapped URI G QueryString",out.contains(tuple("HTTP.QUERYSTRING:request.firstline.uri.query.g.query")));
-    assertTrue("Missing Remapped URI G Query Parameters",out.contains(tuple("STRING:request.firstline.uri.query.g.query.*")));
-    assertTrue("Missing Remapped URI R",out.contains(tuple("HTTP.URI:request.firstline.uri.query.r")));
-    assertTrue("Missing Remapped URI R QueryString",out.contains(tuple("HTTP.QUERYSTRING:request.firstline.uri.query.r.query")));
-    assertTrue("Missing Remapped URI R Query Parameters",out.contains(tuple("STRING:request.firstline.uri.query.r.query.*")));
-
-    for (Tuple tuple:out){
-      LOG.info(tuple.toString());
-    }
   }
 
 

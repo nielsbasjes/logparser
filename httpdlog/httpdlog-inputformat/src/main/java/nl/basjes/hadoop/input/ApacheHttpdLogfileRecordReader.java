@@ -46,8 +46,6 @@ import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.commons.lang.StringUtils.join;
-
 @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize" })
 public class ApacheHttpdLogfileRecordReader extends
         RecordReader<LongWritable, MapWritable> {
@@ -90,7 +88,7 @@ public class ApacheHttpdLogfileRecordReader extends
         setupFields();
     }
 
-    Map<String,Set<String>> typeRemappings = new HashMap<>(16);
+    private Map<String,Set<String>> typeRemappings = new HashMap<>(16);
 
     public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
         this.typeRemappings = typeRemappings;

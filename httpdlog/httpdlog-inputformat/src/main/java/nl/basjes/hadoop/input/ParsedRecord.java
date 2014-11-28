@@ -22,32 +22,31 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
 
 public class ParsedRecord extends MapWritable {
 
-    private MapWritable LongValues;
-    private MapWritable DoubleValues;
+    private final MapWritable longValues;
+    private final MapWritable doubleValues;
 
     public static final Text STRING = new Text("String");
     public static final Text LONG = new Text("Long");
     public static final Text DOUBLE = new Text("Double");
 
     public ParsedRecord() {
-        LongValues = new MapWritable();
-        DoubleValues = new MapWritable();
+        longValues = new MapWritable();
+        doubleValues = new MapWritable();
 
         // All names we put in here must contain a ':'.
         // So these two are safe to put in there like this.
-        super.put(LONG, LongValues);
-        super.put(DOUBLE, DoubleValues);
+        super.put(LONG, longValues);
+        super.put(DOUBLE, doubleValues);
     }
 
     @Override
     public void clear() {
         super.clear();
-        LongValues.clear();
-        DoubleValues.clear();
+        longValues.clear();
+        doubleValues.clear();
     }
 
     public void set(String name, String value) {
@@ -58,17 +57,17 @@ public class ParsedRecord extends MapWritable {
 
     public void set(String name, Long value) {
         if (value != null) {
-            LongValues.put(new Text(name), new LongWritable(value));
+            longValues.put(new Text(name), new LongWritable(value));
         }
     }
 
     public void set(String name, Double value) {
         if (value != null) {
-            DoubleValues.put(new Text(name), new DoubleWritable(value));
+            doubleValues.put(new Text(name), new DoubleWritable(value));
         }
     }
 
-    private Text nameText = new Text();
+    private final Text nameText = new Text();
 
     public String getString(String name) {
         nameText.set(name);
@@ -81,7 +80,7 @@ public class ParsedRecord extends MapWritable {
 
     public Long getLong(String name) {
         nameText.set(name);
-        LongWritable value = (LongWritable) LongValues.get(nameText);
+        LongWritable value = (LongWritable) longValues.get(nameText);
         if (value == null) {
             return null;
         }
@@ -90,7 +89,7 @@ public class ParsedRecord extends MapWritable {
 
     public Double getDouble(String name) {
         nameText.set(name);
-        DoubleWritable value = (DoubleWritable) DoubleValues.get(nameText);
+        DoubleWritable value = (DoubleWritable) doubleValues.get(nameText);
         if (value == null) {
             return null;
         }
