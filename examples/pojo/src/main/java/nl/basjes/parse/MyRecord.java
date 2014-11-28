@@ -1,20 +1,20 @@
 /*
- * Apache HTTPD logparsing made easy
- * Copyright (C) 2013 Niels Basjes
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+* Apache HTTPD logparsing made easy
+* Copyright (C) 2013 Niels Basjes
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package nl.basjes.parse;
 
 import java.util.HashMap;
@@ -48,14 +48,13 @@ public class MyRecord {
         "STRING:connection.client.user",
         "TIME.STAMP:request.receive.time",
         "HTTP.URI:request.firstline.uri",
-        "STRING:request.status.last",
         "BYTES:response.body.bytesclf",
         "HTTP.URI:request.referer",
         "HTTP.USERAGENT:request.user-agent",
         "TIME.DAY:request.receive.time.day",
         "TIME.HOUR:request.receive.time.hour",
-        "TIME.MONTHNAME:request.receive.time.monthname",
-        "STRING:request.status.last"})
+        "TIME.MONTHNAME:request.receive.time.monthname"
+    })
     public void setValue(final String name, final String value) {
         results.put(name, value);
     }
