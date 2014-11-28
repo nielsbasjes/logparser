@@ -12,7 +12,7 @@
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
       <artifactId>httpdlog-pigloader</artifactId>
-      <version>1.5</version>
+      <version>1.6</version>
 
       <!-- These dependencies are excluded because PIG already has these built in -->
       <exclusions>

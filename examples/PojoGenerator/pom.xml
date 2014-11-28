@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse.httpdlog</groupId>
   <artifactId>PojoGenerator</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
 
   <properties>
     <jdkLevel>1.7</jdkLevel>
@@ -22,7 +22,7 @@
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
       <artifactId>httpdlog-parser</artifactId>
-      <version>1.6-SNAPSHOT</version>
+      <version>1.6</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
