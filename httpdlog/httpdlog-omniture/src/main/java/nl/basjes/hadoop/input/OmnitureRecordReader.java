@@ -19,6 +19,7 @@
 package nl.basjes.hadoop.input;
 
 import java.text.ParseException;
+import java.util.Map;
 import java.util.Set;
 
 import nl.basjes.parse.OmnitureLogLineParser;
@@ -27,8 +28,8 @@ import nl.basjes.parse.core.Parser;
 public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
 
     public OmnitureRecordReader(String newLogformat,
-            Set<String> newRequestedFields) {
-        super(newLogformat, newRequestedFields);
+            Set<String> newRequestedFields, Map<String,Set<String>> typeRemappings) {
+        super(newLogformat, newRequestedFields, typeRemappings);
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {

@@ -41,7 +41,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     private String logformat = "";
     private String fieldName = "apachelogline";
 
-    private class RequestedField implements Serializable {
+    private static class RequestedField implements Serializable {
         public RequestedField(String field, String name) {
             this.field=field;
             this.name=name;

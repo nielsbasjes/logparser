@@ -104,20 +104,6 @@ public class Parser<RECORD> {
             throw new CannotChangeDisectorsAfterConstructionException();
         }
 
-        final String inputType = disector.getInputType();
-        final List<String> outputs = disector.getPossibleOutput();
-
-        if (outputs == null || outputs.size() == 0){
-            return; // If a disector cannot produce any output we are not adding it.
-        }
-
-        for (final String output : outputs) {
-            final int colonPos = output.indexOf(':');
-            final String outputType = output.substring(0, colonPos);
-            final String name = output.substring(colonPos + 1);
-            availableDisectors.add(new DisectorPhase(inputType, outputType, name, disector));
-        }
-
         allDisectors.add(disector);
     }
 
@@ -127,14 +113,6 @@ public class Parser<RECORD> {
         if (compiledDisectors != null) {
             throw new CannotChangeDisectorsAfterConstructionException();
         }
-
-        Set<DisectorPhase> removePhase = new HashSet<>();
-        for (final DisectorPhase disectorPhase : availableDisectors) {
-            if (disectorPhase.instance.getClass().equals(disectorClassToDrop)) {
-                removePhase.add(disectorPhase);
-            }
-        }
-        availableDisectors.removeAll(removePhase);
 
         Set<Disector> removeDisector = new HashSet<>();
         for (final Disector disector : allDisectors) {
@@ -155,6 +133,29 @@ public class Parser<RECORD> {
     }
 
     // --------------------------------------------
+    private void assembleDisectorPhases() throws InvalidDisectorException {
+        if (compiledDisectors != null) {
+            return; // nothing to do.
+        }
+
+        for (final Disector disector : allDisectors) {
+            final String inputType = disector.getInputType();
+            final List<String> outputs = disector.getPossibleOutput();
+
+            if (outputs == null || outputs.size() == 0) {
+                throw new InvalidDisectorException("Disector cannot create any outputs: ["+disector.getClass().getCanonicalName()+"]");
+            }
+
+            // Create all disector phases
+            for (final String output : outputs) {
+                final int colonPos = output.indexOf(':');
+                final String outputType = output.substring(0, colonPos);
+                final String name = output.substring(colonPos + 1);
+                availableDisectors.add(new DisectorPhase(inputType, outputType, name, disector));
+            }
+        }
+    }
+    // --------------------------------------------
 
     private void assembleDisectors() throws MissingDisectorsException, InvalidDisectorException {
         if (compiledDisectors != null) {
@@ -167,6 +168,8 @@ public class Parser<RECORD> {
         // - we know where to start from
         // - we need to know how to proceed
 
+        assembleDisectorPhases();
+        
         // Step 1: Acquire all potentially useful subtargets
         // We first build a set of all possible subtargets that may be useful
         // this way we can skip anything we know not to be useful
@@ -296,6 +299,16 @@ public class Parser<RECORD> {
                 }
             }
         }
+
+        Set<String> mappings = typeRemappings.get(subRootName);
+        if (mappings != null) {
+            for (String mappedType : mappings) {
+                if (!compiledDisectors.containsKey(mappedType + ':' + subRootName)) {
+                    findUsefulDisectorsFromField(possibleTargets, mappedType, subRootName, false);
+                }
+            }
+        }
+
     }
 
     private DisectorPhase findDisectorInstance(Set<DisectorPhase> disectorPhases,
@@ -393,8 +406,56 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
+    Map<String,Set<String>> typeRemappings = new HashMap<>(16);
+
+    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
+        if (typeRemappings == null) {
+            this.typeRemappings.clear();
+        } else {
+            this.typeRemappings = typeRemappings;
+        }
+    }
+
+    public void addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
+        for (Map.Entry<String,Set<String>> entry: additionalTypeRemappings.entrySet()){
+            String input = entry.getKey();
+            for (String newType: entry.getValue() )
+            addTypeRemapping(input, newType, Casts.STRING_ONLY);
+        }
+    }
+
+    public void addTypeRemapping(String input, String newType) {
+        addTypeRemapping(input, newType, Casts.STRING_ONLY);
+    }
+
+    public void addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
+        if (compiledDisectors != null) {
+            throw new CannotChangeDisectorsAfterConstructionException();
+        }
+
+        String theInput = input.trim().toLowerCase(Locale.ENGLISH);
+        String theType = newType.trim().toUpperCase(Locale.ENGLISH);
+        
+        Set<String> mappingsForInput = typeRemappings.get(theInput); 
+        if (mappingsForInput == null) {
+            mappingsForInput = new HashSet<>();
+            typeRemappings.put(theInput,mappingsForInput);
+        }
+
+        if (!mappingsForInput.contains(theType)) {
+            mappingsForInput.add(theType);
+            castsOfTargets.put(theType+':'+theInput,newCasts);
+        }
+    }
+    
+    // --------------------------------------------
+
     public static String cleanupFieldValue(String fieldValue) {
         final int colonPos = fieldValue.indexOf(':');
+        if (colonPos == -1) {
+            return fieldValue.toLowerCase(Locale.ENGLISH);    
+        }
+
         final String fieldType = fieldValue.substring(0, colonPos);
         final String fieldName = fieldValue.substring(colonPos + 1);
 
@@ -468,85 +529,109 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    RECORD store(final RECORD record, final String key, final String name, final String value) {
+    void store(final RECORD record, final String key, final String name, final String value) {
+        boolean calledASetter = false;
+        
         final Set<Method> methods = targets.get(key);
-        final EnumSet<Casts> castsTo = castsOfTargets.get(key);
-        boolean calledASetter = true;
         if (methods == null) {
-            LOG.error("NO methods for \""+key+"\"");
-        } else {
-            for (Method method : methods) {
-                if (method != null) {
-                    try {
-                        Class<?>[] parameters = method.getParameterTypes();
-                        Class<?> valueClass = parameters[parameters.length - 1]; // Always the last one
+            LOG.error("NO methods for \"" + key + "\"");
+            return;
+        }
 
-                        if (valueClass == String.class) {
-                            if (castsTo.contains(Casts.STRING)) {
-                                if (parameters.length == 2) {
-                                    method.invoke(record, name, value);
-                                } else {
-                                    method.invoke(record, value);
-                                }
+        EnumSet<Casts> castsTo = castsOfTargets.get(key);
+        if (castsTo == null) {
+            castsTo = castsOfTargets.get(name);
+            if (castsTo == null) {
+                LOG.error("NO casts for \"" + name + "\"");
+                return;
+            }
+        }
+
+        for (Method method : methods) {
+            if (method != null) {
+                try {
+                    Class<?>[] parameters = method.getParameterTypes();
+                    Class<?> valueClass = parameters[parameters.length - 1]; // Always the last one
+
+                    if (valueClass == String.class) {
+                        if (castsTo.contains(Casts.STRING)) {
+                            if (parameters.length == 2) {
+                                method.invoke(record, name, value);
+                            } else {
+                                method.invoke(record, value);
                             }
-                        } else
-                        if (valueClass == Long.class) {
-                            if (castsTo.contains(Casts.LONG)) {
-                                Long longValue;
-                                try {
-                                    longValue = (value == null ? null : Long.parseLong(value));
-                                } catch (NumberFormatException e) {
-                                    longValue = null;
-                                }
-                                if (parameters.length == 2) {
-                                    method.invoke(record, name, longValue);
-                                } else {
-                                    method.invoke(record, longValue);
-                                }
-                            }
-                        } else
-                        if (valueClass == Double.class) {
-                            if (castsTo.contains(Casts.DOUBLE)) {
-                                Double doubleValue;
-                                try {
-                                    doubleValue = (value == null ? null : Double.parseDouble(value));
-                                } catch (NumberFormatException e) {
-                                    doubleValue = null;
-                                }
-                                if (parameters.length == 2) {
-                                    method.invoke(record, name, doubleValue);
-                                } else {
-                                    method.invoke(record, doubleValue);
-                                }
-                            }
-                        } else {
-                            calledASetter = false;
+                            calledASetter = true;
                         }
-                    } catch (final Exception e) {
-                        throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
-                                                                     e.getCause() + "\" when calling \"" +
-                                                                     method.toGenericString() + "\" for " +
-                                                                     " key = \"" + key + "\" " +
-                                                                     " name = \"" + name + "\" " +
-                                                                     " value = \"" + value + "\"" +
-                                                                     " castsTo = \""  + castsTo + "\"" );
+                        continue;
+                    } 
+                    
+                    if (valueClass == Long.class) {
+                        if (castsTo.contains(Casts.LONG)) {
+                            Long longValue;
+                            try {
+                                longValue = (value == null ? null : Long.parseLong(value));
+                            } catch (NumberFormatException e) {
+                                longValue = null;
+                            }
+                            if (parameters.length == 2) {
+                                method.invoke(record, name, longValue);
+                            } else {
+                                method.invoke(record, longValue);
+                            }
+                            calledASetter = true;
+                        }
+                        continue;
+                    } 
+                    
+                    if (valueClass == Double.class) {
+                        if (castsTo.contains(Casts.DOUBLE)) {
+                            Double doubleValue;
+                            try {
+                                doubleValue = (value == null ? null : Double.parseDouble(value));
+                            } catch (NumberFormatException e) {
+                                doubleValue = null;
+                            }
+                            if (parameters.length == 2) {
+                                method.invoke(record, name, doubleValue);
+                            } else {
+                                method.invoke(record, doubleValue);
+                            }
+                            calledASetter = true;
+                        }
+                        continue;
                     }
+                    
+                    throw new FatalErrorDuringCallOfSetterMethod(
+                            "Tried to call setter with unsupported class :" +
+                            " key = \"" + key + "\" " +
+                            " name = \"" + name + "\" " +
+                            " value = \"" + value + "\"" +
+                            " castsTo = \"" + castsTo + "\"");
+                    
+                } catch (final Exception e) {
+                    throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
+                            e.getCause() + "\" when calling \"" +
+                            method.toGenericString() + "\" for " +
+                            " key = \"" + key + "\" " +
+                            " name = \"" + name + "\" " +
+                            " value = \"" + value + "\"" +
+                            " castsTo = \"" + castsTo + "\"");
                 }
             }
         }
+
         if (!calledASetter) {
             throw new FatalErrorDuringCallOfSetterMethod("No setter called for " +
                     " key = \"" + key + "\" " +
                     " name = \"" + name + "\" " +
                     " value = \"" + value + "\"");
         }
-        return record;
     }
 
     // --------------------------------------------
 
     private Parsable<RECORD> createParsable(RECORD record) {
-        return new Parsable<>(this, record);
+        return new Parsable<>(this, record, typeRemappings);
     }
 
     public Parsable<RECORD> createParsable() {
@@ -584,8 +669,6 @@ public class Parser<RECORD> {
      * @throws MissingDisectorsException
      */
     public List<String> getPossiblePaths(int maxDepth) throws MissingDisectorsException, InvalidDisectorException {
-//        assembleDisectors();
-
         if (allDisectors.isEmpty()) {
             return null; // nothing to do.
         }
@@ -601,6 +684,16 @@ public class Parser<RECORD> {
         }
 
         findAdditionalPossiblePaths(pathNodes, paths, "", rootType, maxDepth);
+
+        for (Map.Entry<String,Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
+            for (String typeRemapping: typeRemappingSet.getValue()) {
+
+                String remappedPath = typeRemapping + ':' + typeRemappingSet.getKey();
+                LOG.debug("Adding remapped path: {}", remappedPath);
+                paths.add(remappedPath);
+                findAdditionalPossiblePaths(pathNodes, paths, typeRemappingSet.getKey(), typeRemapping, maxDepth - 1);
+            }
+        }
 
         return paths;
     }
@@ -630,6 +723,7 @@ public class Parser<RECORD> {
                 paths.add(childType+':'+childBase);
 
                 findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1);
+
             }
         }
     }

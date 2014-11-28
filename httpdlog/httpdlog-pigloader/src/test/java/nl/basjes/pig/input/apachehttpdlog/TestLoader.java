@@ -45,6 +45,7 @@ public class TestLoader {
       "            'IP:connection.client.host'," +
       "            'HTTP.FIRSTLINE:request.firstline'," +
       "            'HTTP.METHOD:request.firstline.method'," +
+      "    '-map:request.firstline.uri.query.g:HTTP.URI'," +
       "            'HTTP.URI:request.firstline.uri'," +
       "            'HTTP.QUERYSTRING:request.firstline.uri.query'," +
       "            'STRING:request.firstline.uri.query.FOO'," +

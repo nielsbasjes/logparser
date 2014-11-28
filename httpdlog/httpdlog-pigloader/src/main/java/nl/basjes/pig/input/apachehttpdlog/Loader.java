@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 
@@ -44,19 +45,25 @@ import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Loader
         extends LoadFunc
         implements LoadMetadata {
 
+    Logger LOG = LoggerFactory.getLogger(Loader.class);
+    
     @SuppressWarnings("rawtypes")
-    private ApacheHttpdLogfileRecordReader reader;
+    private ApacheHttpdLogfileRecordReader  reader;
 
-    private boolean isBuildingFields;
-    private String logformat;
-    private final List<String> requestedFields = new ArrayList<>();
-    private final TupleFactory tupleFactory;
-    private ApacheHttpdLogfileInputFormat theInputFormat;
+    private boolean                         isBuildingFields;
+    private boolean                         isBuildingExample;
+    private String                          logformat;
+    private final List<String>              requestedFields = new ArrayList<>();
+    private final Map<String,Set<String>>   typeRemappings  = new HashMap<>();
+    private final TupleFactory              tupleFactory;
+    private ApacheHttpdLogfileInputFormat   theInputFormat;
 
     // ------------------------------------------
 
@@ -71,17 +78,50 @@ public class Loader
         for (String param : parameters) {
             if (logformat == null) {
                 logformat = param;
-            } else {
-                requestedFields.add(Parser.cleanupFieldValue(param));
-                isBuildingFields = isBuildingFields || "fields".equals(param.toLowerCase());
+                LOG.debug("Using logformat: {}", logformat);
+                continue;
             }
+
+            if (param.startsWith("-map:")) {
+                String[] mapParams = param.split(":");
+                if (mapParams.length != 3) {
+                    throw new IllegalArgumentException("Found map with wrong number of parameters:" + param);
+                }
+
+                Set<String> remapping = typeRemappings.get(mapParams[1]);
+                if (remapping == null) {
+                    remapping = new HashSet<>();
+                    typeRemappings.put(mapParams[1], remapping);
+                }
+                remapping.add(mapParams[2]);
+                LOG.debug("Add Mapping: {} --> {}", mapParams[1], mapParams[2]);
+                continue;
+            }
+
+            if (ApacheHttpdLogfileRecordReader.FIELDS.equals(param.toLowerCase(Locale.ENGLISH))) {
+                isBuildingFields = true;
+                requestedFields.add(ApacheHttpdLogfileRecordReader.FIELDS);
+                LOG.debug("Requested ONLY the possible field values");
+                continue;
+            }
+
+            if ("example".equals(param.toLowerCase(Locale.ENGLISH))) {
+                isBuildingExample = true;
+                requestedFields.add(ApacheHttpdLogfileRecordReader.FIELDS);
+                LOG.debug("Requested ONLY the possible field values in EXAMPLE format");
+                continue;
+            }
+
+            String cleanedFieldValue = Parser.cleanupFieldValue(param);
+            LOG.debug("Add Requested field: {} ", cleanedFieldValue);
+            requestedFields.add(cleanedFieldValue);
         }
 
         if (logformat == null) {
             throw new IllegalArgumentException("Must specify the logformat");
         }
 
-        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields());
+        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings());
         reader = theInputFormat.getRecordReader();
         tupleFactory = TupleFactory.getInstance();
     }
@@ -111,8 +151,8 @@ public class Loader
             throws IOException {
         Tuple tuple = null;
 
-        if (isBuildingFields) {
-            isBuildingFields = false; // Terminate on the next iteration
+        if (isBuildingExample) {
+            isBuildingExample = false; // Terminate on the next iteration
             return tupleFactory.newTuple(createPigExample());
         }
 
@@ -126,17 +166,20 @@ public class Loader
         if (value != null) {
             List<Object> values = new ArrayList<>();
             for (String fieldName : requestedFields) {
-                EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
+                
+                if (!ApacheHttpdLogfileRecordReader.FIELDS.equals(fieldName)) {
+                    EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
 
-                if (casts != null) {
-                    if (casts.contains(Casts.LONG)) {
-                        values.add(value.getLong(fieldName));
-                        continue;
-                    }
+                    if (casts != null) {
+                        if (casts.contains(Casts.LONG)) {
+                            values.add(value.getLong(fieldName));
+                            continue;
+                        }
 
-                    if (casts.contains(Casts.DOUBLE)) {
-                        values.add(value.getDouble(fieldName));
-                        continue;
+                        if (casts.contains(Casts.DOUBLE)) {
+                            values.add(value.getDouble(fieldName));
+                            continue;
+                        }
                     }
                 }
 
@@ -296,6 +339,10 @@ public class Loader
 
     @Override
     public void setPartitionFilter(Expression partitionFilter) throws IOException {
+    }
+
+    public Map<String,Set<String>> getTypeRemappings() {
+        return typeRemappings;
     }
 
     // ------------------------------------------

@@ -21,20 +21,15 @@ package nl.basjes.parse;
 import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.http.disectors.QueryStringFieldDisector;
+import nl.basjes.parse.core.Casts;
 
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
         throws ParseException {
         super(clazz, logformat);
-    }
 
-    @Override
-    public void addDisectors() {
-        super.addDisectors();
-        // We must drop this one or we will have conflicts
-        dropDisector(QueryStringFieldDisector.class);
-        addDisector(new OmnitureQueryStringFieldDisector());
+        addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
+        addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
     }
 }

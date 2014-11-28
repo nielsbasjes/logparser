@@ -22,6 +22,7 @@ import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 import java.net.HttpCookie;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();

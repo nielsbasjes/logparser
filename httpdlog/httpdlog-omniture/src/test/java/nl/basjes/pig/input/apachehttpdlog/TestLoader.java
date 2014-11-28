@@ -18,10 +18,12 @@
 
 package nl.basjes.pig.input.apachehttpdlog;
 
+import nl.basjes.parse.core.Casts;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -37,13 +39,13 @@ public class TestLoader {
     PigServer pigServer = new PigServer(ExecType.LOCAL);
     Storage.Data data = resetData(pigServer);
 
-    String logformat = "'%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" %T'";
+    String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" %T";
 
     pigServer.registerQuery(
       "Clicks = " +
       "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
       "    USING nl.basjes.pig.input.apachehttpdlog.omniture.OmnitureLoader(" +
-      "            " + logformat + "," +
+      "            '" + logformat + "'," +
       "            'IP:connection.client.host'," +
       "            'TIME.STAMP:request.receive.time'," +
       "            'STRING:request.firstline.uri.query.g.query.referrer'," +

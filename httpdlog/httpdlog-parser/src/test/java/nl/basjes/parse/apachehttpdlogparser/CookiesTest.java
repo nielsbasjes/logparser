@@ -61,8 +61,9 @@ public class CookiesTest {
 
             // Cookies
             "HTTP.COOKIES:request.cookies" ,
-            "HTTP.COOKIE:request.cookies.apache" ,
-            "HTTP.COOKIE:request.cookies.jquery-ui-theme",
+//            "HTTP.COOKIE:request.cookies.apache" ,
+//            "HTTP.COOKIE:request.cookies.jquery-ui-theme",
+            "HTTP.COOKIE:request.cookies.*",
             "HTTP.SETCOOKIES:response.cookies" ,
             "HTTP.SETCOOKIE:response.cookies.nba-4",
             "STRING:response.cookies.nba-4.value",

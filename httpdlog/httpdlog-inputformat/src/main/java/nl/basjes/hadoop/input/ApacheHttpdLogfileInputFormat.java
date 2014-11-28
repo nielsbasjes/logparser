@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
@@ -45,11 +46,19 @@ public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, MapWritable> {
 
     private ApacheHttpdLogfileRecordReader theRecordReader;
+    private Map<String, Set<String>> typeRemappings;
     // --------------------------------------------
 
-    public static List<String> listPossibleFields(String logformat)
+    public List<String> listPossibleFields(String logformat)
         throws MissingDisectorsException, InvalidDisectorException, ParseException {
-        return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat).getPossiblePaths();
+        return listPossibleFields(logformat, typeRemappings);
+    }
+
+    public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings )
+            throws MissingDisectorsException, InvalidDisectorException, ParseException {
+        ApacheHttpdLoglineParser parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        parser.setTypeRemappings(typeRemappings);
+        return parser.getPossiblePaths();
     }
 
     private String logFormat = null;
@@ -62,22 +71,27 @@ public class ApacheHttpdLogfileInputFormat extends
         return requestedFields;
     }
 
+    public Map<String,Set<String>> getTypeRemappings() {
+        return typeRemappings;
+    }
+
     private final Set<String> requestedFields = new HashSet<>();
 
     public ApacheHttpdLogfileInputFormat() {
         super();
     }
 
-    public ApacheHttpdLogfileInputFormat(String newLogformat, Collection<String> newRequestedFields) {
+    public ApacheHttpdLogfileInputFormat(String logformat, Collection<String> requestedFields, Map<String, Set<String>> typeRemappings) {
         super();
-        logFormat = newLogformat;
-        requestedFields.addAll(newRequestedFields);
+        this.logFormat = logformat;
+        this.requestedFields.addAll(requestedFields);
+        this.typeRemappings = typeRemappings;
     }
 
     // --------------------------------------------
 
     public ApacheHttpdLogfileRecordReader createRecordReader() {
-        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields());
+        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings());
     }
 
     public ApacheHttpdLogfileRecordReader getRecordReader() {
@@ -98,5 +112,9 @@ public class ApacheHttpdLogfileInputFormat extends
         final CompressionCodec codec =
             new CompressionCodecFactory(context.getConfiguration()).getCodec(file);
         return (null == codec) || codec instanceof SplittableCompressionCodec;
+    }
+
+    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
+        this.typeRemappings = typeRemappings;
     }
 }

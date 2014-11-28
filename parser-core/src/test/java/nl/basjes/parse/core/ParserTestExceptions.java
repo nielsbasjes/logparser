@@ -292,7 +292,7 @@ public class ParserTestExceptions {
     @Test(expected=CannotChangeDisectorsAfterConstructionException.class)
     public void testChangeAfterStart() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
-        parser.getPossiblePaths(3);
+        parser.parse("Something");
         parser.addDisector(new BrokenTestDisector());
     }
 
@@ -302,7 +302,7 @@ public class ParserTestExceptions {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.dropDisector(TestDisectorOne.class);
-        parser.getPossiblePaths();
+        parser.parse("Something");
     }
 
     @Test
@@ -320,7 +320,7 @@ public class ParserTestExceptions {
         // setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
-        parser.getPossiblePaths(0);
+        parser.parse("Something");
         parser.dropDisector(TestDisectorOne.class);
     }
 

@@ -20,6 +20,8 @@ package nl.basjes.parse;
 
 import java.util.List;
 
+import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parser;
 
 public final class Main {
@@ -38,15 +40,6 @@ public final class Main {
     public static void main(final String[] args) throws Exception {
 
         String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
-//        String logline = "84.105.31.162 - - [05/Sep/2010:11:27:50 +0200] "
-//                + "\"GET /fotos/index.html?img=geboorte-kaartje&foo=foofoo&bar=barbar HTTP/1.1\" 200 23617 "
-//                + "\"http://www.google.nl/imgres?imgurl=http://daniel_en_sander.basjes.nl/fotos/geboorte-kaartje/"
-//                + "geboortekaartje-binnenkant.jpg&imgrefurl=http://daniel_en_sander.basjes.nl/fotos/geboorte-kaartje"
-//                + "&usg=__LDxRMkacRs6yLluLcIrwoFsXY6o=&h=521&w=1024&sz=41&hl=nl&start=13&zoom=1&um=1&itbs=1&"
-//                + "tbnid=Sqml3uGbjoyBYM:&tbnh=76&tbnw=150&prev=/images%3Fq%3Dbinnenkant%2Bgeboortekaartje%26um%3D1%26hl%3D"
-//                + "nl%26sa%3DN%26biw%3D1882%26bih%3D1014%26tbs%3Disch:1\" "
-//                + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
-//                + "Version/5.0.1 Safari/533.17.8\"";
 
         String logline = "2001:980:91c0:1:8d31:a232:25e5:85d - - [05/Sep/2010:11:27:50 +0200] "
                 + "\"GET /b/ss/advbolprod2/1/H.22.1/s73176445413647?AQB=1&pccr=true"
@@ -75,8 +68,11 @@ public final class Main {
                 + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
                 + "Version/5.0.1 Safari/533.17.8\"";
 
-        Parser<MyRecord> parser = new OmnitureLogLineParser<>(MyRecord.class, logformat);
+        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
 
+        parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
+        parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
+            
         System.out.println("==================================");
         List<String> possiblePaths = parser.getPossiblePaths();
         for (String path: possiblePaths) {
@@ -89,18 +85,6 @@ public final class Main {
         if (record != null) {
             System.out.println("================= \n" + record.toString() + "================= \n");
         }
-
-        String logline2 = "2001:980:91c0:1:8d31:a232:25e5:85d - - [11/Jun/2012:21:34:49 +0200] "
-                + "\"GET /portal_javascripts/Plone%20Default/event-registration-cachekey2064.js "
-                + "HTTP/1.1\" 200 53614 \"http://niels.basj.es/\" "
-                + "\"Mozilla/5.0 (Linux; Android 4.0.3; GT-I9100 Build/IML74K) AppleWebKit/535.19 (KHTML, like Gecko) "
-                + "Chrome/18.0.1025.166 Mobile Safari/535.19\"";
-        MyRecord record2 = parser.parse(logline2);
-        System.out.println("INPUT = "+ logline2);
-        if (record != null) {
-            System.out.println("RECORD2 = \n" + record2.toString());
-        }
-
     }
 
 }

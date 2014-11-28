@@ -23,4 +23,9 @@ public class InvalidDisectorException extends Exception {
     public InvalidDisectorException() {
         super("Something went very wrong in constructing the disector.");
     }
+
+    public InvalidDisectorException(String message) {
+        super(message);
+    }
+
 }

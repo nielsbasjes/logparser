@@ -22,6 +22,7 @@ import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -57,7 +58,7 @@ public class HttpFirstLineDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(HTTP_FIRSTLINE, inputname);
 
         final String fieldValue = field.getValue();
@@ -79,7 +80,7 @@ public class HttpFirstLineDisector extends Disector {
         }
     }
 
-    private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) {
+    private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) throws DisectionFailure {
         if (requestedParameters.contains(name)) {
             parsable.addDisection(inputname, type, name, matcher.group(offset));
         }

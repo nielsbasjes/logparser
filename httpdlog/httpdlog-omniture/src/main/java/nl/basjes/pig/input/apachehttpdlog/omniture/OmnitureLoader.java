@@ -41,6 +41,6 @@ public class OmnitureLoader extends Loader {
     @Override
     public InputFormat<?, ?> getInputFormat()
         throws IOException {
-        return new OmnitureInputFormat(getLogformat(), getRequestedFields());
+        return new OmnitureInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings());
     }
 }

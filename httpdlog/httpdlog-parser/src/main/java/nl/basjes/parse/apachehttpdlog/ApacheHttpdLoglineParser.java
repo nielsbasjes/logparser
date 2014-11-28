@@ -46,22 +46,8 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         addDisector(new ResponseSetCookieListDisector());
         addDisector(new ResponseSetCookieDisector());
 
-        // Additional pieces
-        addDisectors();
-
         // And we define the input for this parser
         setRootType("APACHELOGLINE");
-    }
-
-    // --------------------------------------------
-
-    /**
-     * Adds some additional Disectors for disecting apache loglines
-     * This can be overridden in a subclass.
-     * It is recommended to do a super.addDisectors() in such cases.
-     */
-    public void addDisectors(){
-        // To be overridden
     }
 
     // --------------------------------------------

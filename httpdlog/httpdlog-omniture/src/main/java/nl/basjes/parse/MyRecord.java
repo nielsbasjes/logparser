@@ -34,29 +34,17 @@ public class MyRecord {
 //   }
 
     @Field({
-        "HTTP.QUERYSTRING:request.firstline.uri.query",
-        "STRING:request.firstline.uri.query.pageName",
-        "STRING:request.firstline.uri.query.products",
-        "PRODUCTS:request.firstline.uri.query.products",
-        "HTTP.URI:request.firstline.uri.query.g",
-        "HTTP.QUERYSTRING:request.firstline.uri.query.g.query",
-        "STRING:request.firstline.uri.query.g.query.bltg.slt_nm",
-        "HTTP.URI:request.firstline.uri.query.g",
-        "HTTP.QUERYSTRING:request.firstline.uri.query.g.query",
-        "HTTP.URI:request.firstline.uri.query.r",
-        "IP:connection.client.ip",
-        "NUMBER:connection.client.logname",
-        "STRING:connection.client.user",
+        "IP:connection.client.host",
         "TIME.STAMP:request.receive.time",
-        "HTTP.URI:request.firstline.uri",
-        "STRING:request.status.last",
-        "BYTES:response.body.bytesclf",
-        "HTTP.HEADER:request.header.Referer",
-        "HTTP.HEADER:request.header.User-Agent",
-        "TIME.DAY:request.receive.time.day",
-        "TIME.HOUR:request.receive.time.hour",
-        "TIME.MONTHNAME:request.receive.time.monthname",
-        "STRING:request.status.last"})
+        "STRING:request.firstline.uri.query.g.query.referrer",
+        "STRING:request.firstline.uri.query.g.query.promo",
+        "STRING:request.firstline.uri.query.g.query.*",
+        "STRING:request.firstline.uri.query.s",
+        "STRING:request.firstline.uri.query.r.query.q",
+        "HTTP.USERAGENT:request.user-agent",
+        "STRING:request.firstline.uri.query.g",
+        "HTTP.URI:request.firstline.uri.query.g"
+    })
     public void setValue(final String name, final String value) {
         results.put(name, value);
     }

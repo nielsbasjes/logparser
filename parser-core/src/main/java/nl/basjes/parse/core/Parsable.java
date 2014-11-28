@@ -19,6 +19,7 @@ package nl.basjes.parse.core;
 
 import java.util.*;
 
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,13 +45,16 @@ public final class Parsable<RECORD> {
     // The set of ParsedFields that need to be parsed further
     private final Set<ParsedField>         toBeParsed = new HashSet<>();
 
+    private final Map<String,Set<String>>  typeRemappings;
+    
     private String                         rootname   = null;
 
     // --------------------------------------------
 
-    public Parsable(final Parser<RECORD> parser, final RECORD record) {
+    public Parsable(final Parser<RECORD> parser, final RECORD record, Map<String, Set<String>> typeRemappings) {
         this.parser = parser;
         this.record = record;
+        this.typeRemappings = typeRemappings;
         needed = parser.getNeeded();
         usefulIntermediates = parser.getUsefulIntermediateFields();
     }
@@ -72,9 +76,12 @@ public final class Parsable<RECORD> {
     // --------------------------------------------
 
     /** Store a newly parsed value in the result set */
-    public void addDisection(final String base, final String type, final String name, final String value) {
+    public void addDisection(final String base, final String type, final String name, final String value) throws DisectionFailure {
         LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
-
+        addDisection(base, type, name, value, false);
+    }
+    
+    private void addDisection(final String base, final String type, final String name, final String value, final boolean recursion) throws DisectionFailure {
         String completeName;
         String neededWildCardName;
         if (base.equals(rootname)) {
@@ -85,6 +92,20 @@ public final class Parsable<RECORD> {
             neededWildCardName = type + ':' + base + ".*";
         }
         String neededName = type + ':' + completeName;
+
+        if (!recursion) {
+            if (typeRemappings.containsKey(completeName)) {
+                Set<String> typeRemappingSet = typeRemappings.get(completeName);
+                for (String typeRemapping : typeRemappingSet) {
+                    if (type.equals(typeRemapping)) {
+                        throw new DisectionFailure(
+                                "[Type Remapping] Trying to map to the same type (mapping definition bug!): " +
+                                        " base=" + base + " type=" + type + " name=" + name);
+                    }
+                    addDisection(base, typeRemapping, name, value, true);
+                }
+            }
+        }
 
         final ParsedField parsedfield = new ParsedField(type, completeName, value);
 

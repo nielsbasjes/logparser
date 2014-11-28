@@ -26,6 +26,7 @@ import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.exceptions.DisectionFailure;
 
 public class ResponseSetCookieListDisector extends Disector {
     // --------------------------------------------
@@ -76,11 +77,10 @@ public class ResponseSetCookieListDisector extends Disector {
     private final int minimalExpiresLength = "expires=XXXXXXX".length();
 
     // Cache the compiled pattern
-    private final String splitBy = ", ";
-    private final Pattern fieldSeparatorPattern = Pattern.compile(splitBy);
+    private static final String splitBy = ", ";
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) {
+    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();
@@ -91,7 +91,7 @@ public class ResponseSetCookieListDisector extends Disector {
         // This input is a ', ' separated list.
         // But the expires field can contain a ','
         // and HttpCookie.parse(...) doesn't always work :(
-        String[] parts = fieldSeparatorPattern.split(fieldValue);
+        String[] parts = fieldValue.split(splitBy);
 
         String previous="";
         for (String part:parts) {

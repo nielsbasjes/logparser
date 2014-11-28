@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,16 +75,25 @@ public class ApacheHttpdLogfileRecordReader extends
         // Nothing to do here
     }
 
-    public ApacheHttpdLogfileRecordReader(String newLogformat,
-            Set<String> newRequestedFields) {
-        setLogFormat(newLogformat);
-        addRequestedFields(newRequestedFields);
+    public ApacheHttpdLogfileRecordReader(String logformat,
+            Set<String> requestedFields,
+            Map<String, Set<String>> typeRemappings
+            ) {
+        setLogFormat(logformat);
+        setTypeRemappings(typeRemappings);
+        addRequestedFields(requestedFields);
     }
 
     private void addRequestedFields(Set<String> newRequestedFields) {
         requestedFields.addAll(newRequestedFields);
         fieldList = new ArrayList<>(requestedFields);
         setupFields();
+    }
+
+    Map<String,Set<String>> typeRemappings = new HashMap<>(16);
+
+    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
+        this.typeRemappings = typeRemappings;
     }
 
     private void setLogFormat(String newLogformat) {
@@ -134,7 +144,9 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
-        return new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        ApacheHttpdLoglineParser<ParsedRecord> newParser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        newParser.setTypeRemappings(typeRemappings);
+        return newParser;
     }
 
     private Map<String, EnumSet<Casts>> allCasts;
@@ -149,6 +161,7 @@ public class ApacheHttpdLogfileRecordReader extends
                 Parser<ParsedRecord> newParser = instantiateParser(logformat);
                 newParser.addParseTarget(ParsedRecord.class.getMethod("set",
                         String.class, String.class), allPossiblePaths);
+                newParser.addTypeRemappings(typeRemappings);
                 allCasts = newParser.getAllCasts();
             }
         } catch (MissingDisectorsException | InvalidDisectorException | NoSuchMethodException | IOException | ParseException e) {
