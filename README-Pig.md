@@ -7,9 +7,9 @@ The framework needs two things:
 
 Usage (Pig)
 ===
-You simply register the httpdlog-pigloader-1.3.jar
+You simply register the httpdlog-pigloader-1.6.jar
 
-    REGISTER httpdlog-pigloader-1.3.jar
+    REGISTER httpdlog-pigloader-1.6.jar
 
 **Step 1: What CAN we get from this line?**
 
@@ -19,12 +19,23 @@ Call the loader with a dummy file (must exist, won't be read) and the parameter 
       LOAD 'test.pig' -- Any file as long as it exists 
       USING nl.basjes.pig.input.apachehttpdlog.Loader(
         '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
-        'Fields' ) AS (fields);
+        'Fields' );
     
     DUMP Fields;
 
-This will return a list of all possible fields in a format that is almost a copy-paste away from
+This will return a list of all possible fields in a format that is simply all the possible fields.
+In version 1.6 an option was added to get this output in a copy-paste step away from (almost)
 working code.
+
+
+    Example = 
+      LOAD 'test.pig' -- Any file as long as it exists 
+      USING nl.basjes.pig.input.apachehttpdlog.Loader(
+        '%h %l %u %t "%r" %>s %b "%{Referer}i" "%{User-Agent}i"',
+        'Example' );
+    
+    DUMP Example;
+
 The output of this command looks like this:
 
     Clicks =
