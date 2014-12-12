@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
 import nl.basjes.parse.core.exceptions.MissingDisectorsException;
 
@@ -43,23 +44,26 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, MapWritable> {
 
-    private ApacheHttpdLogfileRecordReader theRecordReader;
+    private String logFormat = null;
+    private final Set<String> requestedFields = new HashSet<>();
     private Map<String, Set<String>> typeRemappings;
+    private List<Disector> additionalDisectors;
+    private ApacheHttpdLogfileRecordReader theRecordReader;
     // --------------------------------------------
 
     public List<String> listPossibleFields(String logformat)
-        throws MissingDisectorsException, InvalidDisectorException, ParseException {
-        return listPossibleFields(logformat, typeRemappings);
+            throws MissingDisectorsException, InvalidDisectorException, ParseException {
+        return listPossibleFields(logformat, typeRemappings, additionalDisectors);
     }
 
-    public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings )
+    public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings, List<Disector> additionalDisectors)
             throws MissingDisectorsException, InvalidDisectorException, ParseException {
         ApacheHttpdLoglineParser parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
         parser.setTypeRemappings(typeRemappings);
+        parser.addDisectors(additionalDisectors);
         return parser.getPossiblePaths();
     }
 
-    private String logFormat = null;
 
     public String getLogFormat() {
         return logFormat;
@@ -73,23 +77,26 @@ public class ApacheHttpdLogfileInputFormat extends
         return typeRemappings;
     }
 
-    private final Set<String> requestedFields = new HashSet<>();
+    public List<Disector> getAdditionalDisectors() {
+        return additionalDisectors;
+    }
 
     public ApacheHttpdLogfileInputFormat() {
         super();
     }
 
-    public ApacheHttpdLogfileInputFormat(String logformat, Collection<String> requestedFields, Map<String, Set<String>> typeRemappings) {
+    public ApacheHttpdLogfileInputFormat(String logformat, Collection<String> requestedFields, Map<String, Set<String>> typeRemappings, List<Disector> additionalDisectors) {
         super();
         this.logFormat = logformat;
         this.requestedFields.addAll(requestedFields);
         this.typeRemappings = typeRemappings;
+        this.additionalDisectors = additionalDisectors;
     }
 
     // --------------------------------------------
 
     public ApacheHttpdLogfileRecordReader createRecordReader() {
-        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings());
+        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings(), getAdditionalDisectors());
     }
 
     public ApacheHttpdLogfileRecordReader getRecordReader() {

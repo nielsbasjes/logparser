@@ -18,7 +18,10 @@
 
 package nl.basjes.hadoop.input;
 
+import nl.basjes.parse.core.Disector;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,13 +33,15 @@ public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     public OmnitureInputFormat(
             String logformat,
             Collection<String> requestedFields,
-            Map<String, Set<String>> typeRemappings) {
-        super(logformat, requestedFields, typeRemappings);
+            Map<String, Set<String>> typeRemappings,
+            List<Disector> additionalDisectors
+            ) {
+        super(logformat, requestedFields, typeRemappings, additionalDisectors);
     }
 
     @Override
     public ApacheHttpdLogfileRecordReader createRecordReader() {
-        return new OmnitureRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings());
+        return new OmnitureRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings(), getAdditionalDisectors());
     }
 
 }

@@ -121,7 +121,7 @@ public class Wordcount extends Configured implements Tool {
         // Developer suggestion:
         // This is what you do to find out what the possible fields are:
         List<String> possibleFields = ApacheHttpdLogfileInputFormat
-                .listPossibleFields(logFormat, null);
+                .listPossibleFields(logFormat, null, null);
         System.out.println("----------------------------------------");
         System.out.println("All possible fields are:");
         for (String field : possibleFields) {

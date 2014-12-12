@@ -99,12 +99,28 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
+    public final void addDisectors(final List<Disector> disectors) {
+        if (compiledDisectors != null) {
+            throw new CannotChangeDisectorsAfterConstructionException();
+        }
+
+        if (disectors != null) {
+            for (Disector disector : disectors) {
+                allDisectors.add(disector);
+            }
+        }
+    }
+
+    // --------------------------------------------
+
     public final void addDisector(final Disector disector) {
         if (compiledDisectors != null) {
             throw new CannotChangeDisectorsAfterConstructionException();
         }
 
-        allDisectors.add(disector);
+        if (disector != null) {
+            allDisectors.add(disector);
+        }
     }
 
     // --------------------------------------------

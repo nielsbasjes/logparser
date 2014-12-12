@@ -50,7 +50,9 @@ public class TestFields {
                     "          '" + logformat + "', " +
                     "          'Fields'," +
                     "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
-                    "          '-map:request.firstline.uri.query.r:HTTP.URI'" +
+                    "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
+                    "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
+                    "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDisector(x)'" +
                     "           ) AS ( " +
                     "          Fields );"
     );
@@ -71,6 +73,12 @@ public class TestFields {
     assertTrue("Missing Remapped URI R",out.contains(tuple("HTTP.URI:request.firstline.uri.query.r")));
     assertTrue("Missing Remapped URI R QueryString",out.contains(tuple("HTTP.QUERYSTRING:request.firstline.uri.query.r.query")));
     assertTrue("Missing Remapped URI R Query Parameters",out.contains(tuple("STRING:request.firstline.uri.query.r.query.*")));
+
+    // Check the the remapped possibilities from the additional disector
+    assertTrue("Missing Remapped Extraloaded SCREENRESOLUTION",out.contains(tuple("SCREENRESOLUTION:request.firstline.uri.query.s")));
+    assertTrue("Missing Remapped Extraloaded Width",out.contains(tuple("SCREENWIDTH:request.firstline.uri.query.s.width")));
+    assertTrue("Missing Remapped Extraloaded Height",out.contains(tuple("SCREENHEIGHT:request.firstline.uri.query.s.height")));
+
   }
 
   @Test

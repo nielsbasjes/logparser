@@ -30,6 +30,7 @@ import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DisectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDisectorException;
@@ -65,6 +66,8 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private String                                 logformat       = null;
     private final Set<String>                      requestedFields = new HashSet<>();
+    private Map<String,Set<String>>                typeRemappings  = new HashMap<>(16);
+    private List<Disector>                         additionalDisectors;
 
     // --------------------------------------------
 
@@ -75,10 +78,13 @@ public class ApacheHttpdLogfileRecordReader extends
 
     public ApacheHttpdLogfileRecordReader(String logformat,
             Set<String> requestedFields,
-            Map<String, Set<String>> typeRemappings
+            Map<String, Set<String>> typeRemappings,
+            List<Disector> additionalDisectors
             ) {
         setLogFormat(logformat);
-        setTypeRemappings(typeRemappings);
+        // Mappings and additional parsers MUST come before the requested fields
+        this.typeRemappings = typeRemappings;
+        this.additionalDisectors = additionalDisectors;
         addRequestedFields(requestedFields);
     }
 
@@ -86,12 +92,6 @@ public class ApacheHttpdLogfileRecordReader extends
         requestedFields.addAll(newRequestedFields);
         fieldList = new ArrayList<>(requestedFields);
         setupFields();
-    }
-
-    private Map<String,Set<String>> typeRemappings = new HashMap<>(16);
-
-    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
-        this.typeRemappings = typeRemappings;
     }
 
     private void setLogFormat(String newLogformat) {
@@ -144,6 +144,7 @@ public class ApacheHttpdLogfileRecordReader extends
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
         ApacheHttpdLoglineParser<ParsedRecord> newParser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
         newParser.setTypeRemappings(typeRemappings);
+        newParser.addDisectors(additionalDisectors);
         return newParser;
     }
 

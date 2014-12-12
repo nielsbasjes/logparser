@@ -19,6 +19,8 @@
 package nl.basjes.pig.input.apachehttpdlog;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Disector;
 import nl.basjes.parse.core.Parser;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -65,6 +68,7 @@ public class Loader
     private String                          logformat;
     private final List<String>              requestedFields = new ArrayList<>();
     private final Map<String,Set<String>>   typeRemappings  = new HashMap<>();
+    private final List<Disector>            additionalDisectors = new ArrayList<>();
     private final TupleFactory              tupleFactory;
     private ApacheHttpdLogfileInputFormat   theInputFormat;
 
@@ -77,6 +81,7 @@ public class Loader
      * @param parameters specified from the call within the pig code
      */
     public Loader(String... parameters) {
+
 
         for (String param : parameters) {
             if (logformat == null) {
@@ -98,6 +103,44 @@ public class Loader
                 }
                 remapping.add(mapParams[2]);
                 LOG.debug("Add Mapping: {} --> {}", mapParams[1], mapParams[2]);
+                continue;
+            }
+
+            if (param.startsWith("-load:")) {
+                String[] loadParams = param.split(":");
+                if (loadParams.length != 2) {
+                    throw new IllegalArgumentException("Found load with wrong number of parameters:" + param);
+                }
+
+                String dissectorSpec = loadParams[1];
+                int firstOpenBrace = dissectorSpec.indexOf('(');
+                int lastCloseBrace = dissectorSpec.lastIndexOf(')');
+
+                if (firstOpenBrace == -1 || lastCloseBrace == -1) {
+                    throw new IllegalArgumentException("Found load with bad specification: MUST have one parameter list:" + param);
+                }
+
+                String dissectorClassName = dissectorSpec.substring(0, firstOpenBrace);
+                String dissectorParamList = dissectorSpec.substring(firstOpenBrace + 1, lastCloseBrace);
+
+                // TODO: Multiple arguments
+                try {
+                    Class<?> clazz = Class.forName(dissectorClassName);
+                    Constructor<?> constructor = clazz.getConstructor(String.class);
+                    Disector instance = (Disector) constructor.newInstance(dissectorParamList);
+                    additionalDisectors.add(instance);
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalArgumentException("Found load with bad specification: Class does not have the required constructor");
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public");
+                }
+                LOG.debug("Loaded additional disector: {}", dissectorSpec);
                 continue;
             }
 
@@ -123,7 +166,7 @@ public class Loader
             throw new IllegalArgumentException("Must specify the logformat");
         }
 
-        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings());
+        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings(), getAdditionalDisectors());
         reader = theInputFormat.getRecordReader();
         tupleFactory = TupleFactory.getInstance();
     }
@@ -345,6 +388,10 @@ public class Loader
 
     public final Map<String,Set<String>> getTypeRemappings() {
         return typeRemappings;
+    }
+
+    public List<Disector> getAdditionalDisectors() {
+        return additionalDisectors;
     }
 
     // ------------------------------------------
