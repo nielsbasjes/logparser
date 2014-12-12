@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.disectors;
+package nl.basjes.parse.http.dissectors;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class HttpUriDisector extends Disector {
+public class HttpUriDissector extends Dissector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.URI";
@@ -58,7 +58,7 @@ public class HttpUriDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    protected void initializeNewInstance(Disector newInstance) {
+    protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
 
@@ -71,7 +71,7 @@ public class HttpUriDisector extends Disector {
     private boolean wantRef = false;
 
     @Override
-    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = outputname.substring(inputname.length() + 1);
         if ("protocol".equals(name)) {
             wantProtocol = true;
@@ -112,7 +112,7 @@ public class HttpUriDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
+    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         String fieldValue = field.getValue();
@@ -130,7 +130,7 @@ public class HttpUriDisector extends Disector {
                 url = new URL(fieldValue);
             }
         } catch (MalformedURLException e) {
-            throw new DisectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
+            throw new DissectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
         }
 
         if (wantQuery || wantPath || wantRef) {
@@ -165,29 +165,29 @@ public class HttpUriDisector extends Disector {
             }
 
             if (wantQuery) {
-                parsable.addDisection(inputname, "HTTP.QUERYSTRING", "query", queryValue);
+                parsable.addDissection(inputname, "HTTP.QUERYSTRING", "query", queryValue);
             }
             if (wantPath) {
-                parsable.addDisection(inputname, "HTTP.PATH", "path", pathValue);
+                parsable.addDissection(inputname, "HTTP.PATH", "path", pathValue);
             }
             if (wantRef) {
-                parsable.addDisection(inputname, "HTTP.REF", "ref", url.getRef());
+                parsable.addDissection(inputname, "HTTP.REF", "ref", url.getRef());
             }
         }
 
         if (isUrl) {
             if (wantProtocol) {
-                parsable.addDisection(inputname, "HTTP.PROTOCOL", "protocol", url.getProtocol());
+                parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", url.getProtocol());
             }
             if (wantUserinfo) {
-                parsable.addDisection(inputname, "HTTP.USERINFO", "userinfo", url.getUserInfo());
+                parsable.addDissection(inputname, "HTTP.USERINFO", "userinfo", url.getUserInfo());
             }
             if (wantHost) {
-                parsable.addDisection(inputname, "HTTP.HOST", "host", url.getHost());
+                parsable.addDissection(inputname, "HTTP.HOST", "host", url.getHost());
             }
             if (wantPort) {
                 if (url.getPort() != -1) {
-                    parsable.addDisection(inputname, "HTTP.PORT", "port", String.valueOf(url.getPort()));
+                    parsable.addDissection(inputname, "HTTP.PORT", "port", String.valueOf(url.getPort()));
                 }
             }
         }

@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package http.disectors;
+package http.dissectors;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static org.junit.Assert.*;
 
-public class TestHttpUriDisector {
+public class TestHttpUriDissector {
   public static class MyRecord {
 
     private final Map<String, String> results = new HashMap<>(32);
@@ -72,7 +72,7 @@ public class TestHttpUriDisector {
   }
 
   @Test
-  public void testFullUrl1() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure {
+  public void testFullUrl1() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
     parser.parse(record,"http://www.example.com/some/thing/else/index.html?foofoo=barbar");
 
     assertEquals("Full input","http://www.example.com/some/thing/else/index.html?foofoo=barbar", record.getValue("HTTP.URI:request.referer"));
@@ -86,7 +86,7 @@ public class TestHttpUriDisector {
   }
 
   @Test
-  public void testFullUrl2() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure {
+  public void testFullUrl2() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
     record.clear();
     parser.parse(record, "http://www.example.com/some/thing/else/index.html&aap=noot?foofoo=barbar&");
 
@@ -101,7 +101,7 @@ public class TestHttpUriDisector {
   }
 
   @Test
-  public void testFullUrl3() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure {
+  public void testFullUrl3() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
     record.clear();
     parser.parse(record, "http://www.example.com:8080/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla");
 
@@ -116,7 +116,7 @@ public class TestHttpUriDisector {
   }
 
   @Test
-  public void testFullUrl4() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure {
+  public void testFullUrl4() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
     record.clear();
     parser.parse(record,"/some/thing/else/index.html?foofoo=barbar#blabla");
 
@@ -131,7 +131,7 @@ public class TestHttpUriDisector {
   }
 
   @Test
-  public void testFullUrl5() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure {
+  public void testFullUrl5() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
     record.clear();
     parser.parse(record, "/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla");
 

@@ -17,8 +17,8 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
 
 import java.util.*;
@@ -27,13 +27,13 @@ import static org.junit.Assert.assertEquals;
 
 public class ParserTestNormal {
 
-    public static class TestDisector extends Disector {
+    public static class TestDissector extends Dissector {
         private String      inputType;
         private String      outputType;
         private String      outputName;
         private final Set<String> outputNames = new HashSet<>();
 
-        public TestDisector(String inputType, String outputType, String outputName) {
+        public TestDissector(String inputType, String outputType, String outputName) {
             this.inputType = inputType;
             this.outputType = outputType;
             this.outputName = outputName;
@@ -47,15 +47,15 @@ public class ParserTestNormal {
             this.outputNames.add(outputname);
         }
 
-        protected void initializeNewInstance(Disector newInstance) {
-            ((TestDisector)newInstance).init(inputType, outputType, outputName);
+        protected void initializeNewInstance(Dissector newInstance) {
+            ((TestDissector)newInstance).init(inputType, outputType, outputName);
         }
 
         @Override
-        public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
+        public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
             for (String outputname : outputNames) {
-                parsable.addDisection(inputname, outputType, outputname, field.getValue());
+                parsable.addDissection(inputname, outputType, outputname, field.getValue());
             }
         }
 
@@ -72,7 +72,7 @@ public class ParserTestNormal {
         }
 
         @Override
-        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             String name = outputname;
             String prefix = inputname + '.';
             if (outputname.startsWith(prefix)) {
@@ -87,32 +87,32 @@ public class ParserTestNormal {
         }
     }
 
-    public static class TestDisectorOne extends TestDisector {
-        public TestDisectorOne() {
+    public static class TestDissectorOne extends TestDissector {
+        public TestDissectorOne() {
             super("INPUTTYPE", "SOMETYPE", "output1");
         }
     }
 
-    public static class TestDisectorTwo extends TestDisector {
-        public TestDisectorTwo() {
+    public static class TestDissectorTwo extends TestDissector {
+        public TestDissectorTwo() {
             super("INPUTTYPE", "OTHERTYPE", "output2");
         }
     }
 
-    public static class TestDisectorThree extends TestDisector {
-        public TestDisectorThree() {
+    public static class TestDissectorThree extends TestDissector {
+        public TestDissectorThree() {
             super("SOMETYPE", "FOO", "foo");
         }
     }
 
-    public static class TestDisectorFour extends TestDisector {
-        public TestDisectorFour() {
+    public static class TestDissectorFour extends TestDissector {
+        public TestDissectorFour() {
             super("SOMETYPE", "BAR", "bar");
         }
     }
 
-    public static class TestDisectorWildCard extends TestDisector {
-        public TestDisectorWildCard() {
+    public static class TestDissectorWildCard extends TestDissector {
+        public TestDissectorWildCard() {
             super("SOMETYPE", "WILD", "*");
         }
 
@@ -121,11 +121,11 @@ public class ParserTestNormal {
     public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) {
             super(clazz);
-            addDisector(new TestDisectorOne());
-            addDisector(new TestDisectorTwo());
-            addDisector(new TestDisectorThree());
-            addDisector(new TestDisectorFour());
-            addDisector(new TestDisectorWildCard());
+            addDissector(new TestDissectorOne());
+            addDissector(new TestDissectorTwo());
+            addDissector(new TestDissectorThree());
+            addDissector(new TestDissectorFour());
+            addDissector(new TestDissectorWildCard());
             setRootType("INPUTTYPE");
         }
     }
@@ -138,8 +138,8 @@ public class ParserTestNormal {
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
-        parser.dropDisector(TestDisectorWildCard.class);
-        parser.addDisector(new TestDisectorWildCard());
+        parser.dropDissector(TestDissectorWildCard.class);
+        parser.addDissector(new TestDissectorWildCard());
 
         ParserTestNormalTestRecord output = new ParserTestNormalTestRecord();
         parser.parse(output, "Something");
@@ -182,13 +182,13 @@ public class ParserTestNormal {
 
     // ---------------------------------------------
 
-    @Test(expected = MissingDisectorsException.class)
-    public void testMissingDisector() throws Exception {
+    @Test(expected = MissingDissectorsException.class)
+    public void testMissingDissector() throws Exception {
         // setLoggingLevel(Level.ALL);
         Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
 
         // Cripple the parser
-        parser.dropDisector(TestDisectorTwo.class);
+        parser.dropDissector(TestDissectorTwo.class);
 
         ParserTestNormalTestRecord output = new ParserTestNormalTestRecord();
         parser.parse(output, "Something"); // Should fail.

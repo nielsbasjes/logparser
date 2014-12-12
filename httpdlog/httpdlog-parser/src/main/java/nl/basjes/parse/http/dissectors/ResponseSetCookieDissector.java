@@ -16,20 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.disectors;
+package nl.basjes.parse.http.dissectors;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ResponseSetCookieDisector extends Disector {
+public class ResponseSetCookieDissector extends Dissector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.SETCOOKIE";
@@ -55,13 +55,13 @@ public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    protected void initializeNewInstance(Disector newInstance) {
+    protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
 
 
     @Override
-    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         // We do not do anything extra here
         return Casts.STRING_ONLY;
     }
@@ -76,7 +76,7 @@ public class ResponseSetCookieDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
+    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();
@@ -88,12 +88,12 @@ public class ResponseSetCookieDisector extends Disector {
         List<HttpCookie> cookies = HttpCookie.parse(fieldValue);
 
         for (HttpCookie cookie : cookies) {
-            parsable.addDisection(inputname, getDisectionType(inputname, "value"),   "value",   cookie.getValue());
-            parsable.addDisection(inputname, getDisectionType(inputname, "expires"), "expires",
-                    Long.toString(nowSeconds+cookie.getMaxAge()));
-            parsable.addDisection(inputname, getDisectionType(inputname, "path"),    "path",    cookie.getPath());
-            parsable.addDisection(inputname, getDisectionType(inputname, "domain"),  "domain",  cookie.getDomain());
-            parsable.addDisection(inputname, getDisectionType(inputname, "comment"), "comment", cookie.getComment());
+            parsable.addDissection(inputname, getDissectionType(inputname, "value"), "value", cookie.getValue());
+            parsable.addDissection(inputname, getDissectionType(inputname, "expires"), "expires",
+                    Long.toString(nowSeconds + cookie.getMaxAge()));
+            parsable.addDissection(inputname, getDissectionType(inputname, "path"), "path", cookie.getPath());
+            parsable.addDissection(inputname, getDissectionType(inputname, "domain"), "domain", cookie.getDomain());
+            parsable.addDissection(inputname, getDissectionType(inputname, "comment"), "comment", cookie.getComment());
         }
     }
 
@@ -103,7 +103,7 @@ public class ResponseSetCookieDisector extends Disector {
      * This determines the type of the value that was just found.
      * This method is intended to be overruled by a subclass
      */
-    public String getDisectionType(final String basename, final String name) {
+    public String getDissectionType(final String basename, final String name) {
         return "STRING"; // Possible outputs are of the same type.
     }
 

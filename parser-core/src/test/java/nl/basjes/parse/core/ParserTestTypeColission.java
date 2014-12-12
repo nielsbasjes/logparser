@@ -18,7 +18,7 @@
 package nl.basjes.parse.core;
 
 import ch.qos.logback.classic.Level;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -35,13 +35,13 @@ public class ParserTestTypeColission {
         root.setLevel(level);
     }
 
-    public static class TestDisector extends Disector {
+    public static class TestDissector extends Dissector {
         private String inputType;
         private String outputType;
         private String outputName;
         private String salt; // Each value that comes in is appended with this "salt"
 
-        public TestDisector(String inputType, String outputType, String outputName, String salt) {
+        public TestDissector(String inputType, String outputType, String outputName, String salt) {
             this.inputType = inputType;
             this.outputType = outputType;
             this.outputName = outputName;
@@ -54,16 +54,16 @@ public class ParserTestTypeColission {
             this.outputName = outputname;
             this.salt = saltt;
         }
-        protected void initializeNewInstance(Disector newInstance) {
-            ((TestDisector)newInstance).init(inputType, outputType, outputName, salt);
+        protected void initializeNewInstance(Dissector newInstance) {
+            ((TestDissector)newInstance).init(inputType, outputType, outputName, salt);
         }
 
 
         @Override
-        public void disect(Parsable<?> parsable, String inputname)
-            throws DisectionFailure {
+        public void dissect(Parsable<?> parsable, String inputname)
+            throws DissectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDisection(inputname, outputType, outputName, field.getValue()+salt);
+            parsable.addDissection(inputname, outputType, outputName, field.getValue() + salt);
         }
 
         @Override
@@ -79,7 +79,7 @@ public class ParserTestTypeColission {
         }
 
         @Override
-        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
         }
 
@@ -88,38 +88,38 @@ public class ParserTestTypeColission {
         }
     }
 
-    public static class TestDisectorOne extends TestDisector {
-        public TestDisectorOne() {
+    public static class TestDissectorOne extends TestDissector {
+        public TestDissectorOne() {
             super("INPUTTYPE", "SOMETYPE", "output", "+1");
         }
     }
 
-    public static class TestDisectorTwo extends TestDisector {
-        public TestDisectorTwo() {
+    public static class TestDissectorTwo extends TestDissector {
+        public TestDissectorTwo() {
             super("INPUTTYPE", "OTHERTYPE", "output", "+2");
         }
     }
 
-    public static class TestDisectorSubOne extends TestDisector {
-        public TestDisectorSubOne() {
+    public static class TestDissectorSubOne extends TestDissector {
+        public TestDissectorSubOne() {
             super("SOMETYPE", "SOMESUBTYPE", "output", "+S1");
         }
     }
 
-    public static class TestDisectorSubTwo extends TestDisector {
-        public TestDisectorSubTwo() {
+    public static class TestDissectorSubTwo extends TestDissector {
+        public TestDissectorSubTwo() {
             super("OTHERTYPE", "OTHERSUBTYPE", "output", "+S2");
         }
     }
 
-    public static class TestDisectorSubSubOne extends TestDisector {
-        public TestDisectorSubSubOne() {
+    public static class TestDissectorSubSubOne extends TestDissector {
+        public TestDissectorSubSubOne() {
             super("SOMESUBTYPE", "SOMESUBSUBTYPE", "output", "+SS1");
         }
     }
 
-    public static class TestDisectorSubSubTwo extends TestDisector {
-        public TestDisectorSubSubTwo() {
+    public static class TestDissectorSubSubTwo extends TestDissector {
+        public TestDissectorSubSubTwo() {
             super("OTHERSUBTYPE", "OTHERSUBSUBTYPE", "output", "+SS2");
         }
     }
@@ -127,12 +127,12 @@ public class ParserTestTypeColission {
     public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) {
             super(clazz);
-            addDisector(new TestDisectorOne());
-            addDisector(new TestDisectorTwo());
-            addDisector(new TestDisectorSubOne());
-            addDisector(new TestDisectorSubTwo());
-            addDisector(new TestDisectorSubSubOne());
-            addDisector(new TestDisectorSubSubTwo());
+            addDissector(new TestDissectorOne());
+            addDissector(new TestDissectorTwo());
+            addDissector(new TestDissectorSubOne());
+            addDissector(new TestDissectorSubTwo());
+            addDissector(new TestDissectorSubSubOne());
+            addDissector(new TestDissectorSubSubTwo());
             setRootType("INPUTTYPE");
         }
     }

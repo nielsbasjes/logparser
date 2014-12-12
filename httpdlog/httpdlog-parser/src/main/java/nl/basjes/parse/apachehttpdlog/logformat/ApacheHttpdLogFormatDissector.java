@@ -23,11 +23,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
     "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
     })
-public final class ApacheHttpdLogFormatDisector extends Disector {
+public final class ApacheHttpdLogFormatDissector extends Dissector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDisector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDissector.class);
 
     private String       logFormat          = null;
     private List<String> logFormatNames     = null;
@@ -56,17 +56,17 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
 
     // --------------------------------------------
 
-    public ApacheHttpdLogFormatDisector(final String logFormat) {
+    public ApacheHttpdLogFormatDissector(final String logFormat) {
         setLogFormat(logFormat);
     }
 
-    public ApacheHttpdLogFormatDisector() {
+    public ApacheHttpdLogFormatDissector() {
     }
 
     @Override
-    protected void initializeNewInstance(Disector newInstance) {
-        if (newInstance instanceof ApacheHttpdLogFormatDisector) {
-            ((ApacheHttpdLogFormatDisector)newInstance).setLogFormat(logFormat);
+    protected void initializeNewInstance(Dissector newInstance) {
+        if (newInstance instanceof ApacheHttpdLogFormatDissector) {
+            ((ApacheHttpdLogFormatDissector)newInstance).setLogFormat(logFormat);
         } else {
             LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
         }
@@ -135,7 +135,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     private final Set<String> requestedFields = new HashSet<>(16);
 
     @Override
-    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedFields.add(outputname);
         for (Token token: logFormatTokens) {
             if (outputname.equals(token.getName())) {
@@ -148,7 +148,7 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void prepareForRun() throws InvalidDisectorException {
+    public void prepareForRun() throws InvalidDissectorException {
         // At this point we have all the tokens and now we construct the
         // complete regex and the list to use when extracting
         // We build the regexp so that it only extracts the needed parts.
@@ -199,9 +199,9 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
     }
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
+    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         if (!isUsable) {
-            throw new DisectionFailure("Disector in unusable state");
+            throw new DissectionFailure("Dissector in unusable state");
         }
 
         final ParsedField line = parsable.getParsableField(INPUT_TYPE, inputname);
@@ -222,10 +222,10 @@ public final class ApacheHttpdLogFormatDisector extends Disector {
                 if (matchedStr.equals("-")){
                     matchedStr=null;
                 }
-                parsable.addDisection(inputname, matchedType, matchedName, matchedStr);
+                parsable.addDissection(inputname, matchedType, matchedName, matchedStr);
             }
         } else {
-            throw new DisectionFailure("The input line :\n"+line.getValue()+"\n" +
+            throw new DissectionFailure("The input line :\n"+line.getValue()+"\n" +
                                        "does not match the specified apache log format RegEx:\n" + logFormatRegEx);
         }
 

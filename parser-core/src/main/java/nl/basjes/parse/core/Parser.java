@@ -27,8 +27,8 @@ import java.util.*;
 
 public class Parser<RECORD> {
 
-    private static class DisectorPhase {
-        public DisectorPhase(final String inputType, final String outputType, final String name, final Disector instance) {
+    private static class DissectorPhase {
+        public DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
             this.inputType  = inputType;
             this.outputType = outputType;
             this.name       = name;
@@ -38,7 +38,7 @@ public class Parser<RECORD> {
         private final String   inputType;
         private final String   outputType;
         private final String   name;
-        private final Disector instance;
+        private final Dissector instance;
     }
 
     // --------------------------------------------
@@ -47,12 +47,12 @@ public class Parser<RECORD> {
 
     private final Class<RECORD> recordClass;
 
-    private final Set<DisectorPhase> availableDisectors = new HashSet<>();
-    private final Set<Disector> allDisectors = new HashSet<>();
+    private final Set<DissectorPhase> availableDissectors = new HashSet<>();
+    private final Set<Dissector> allDissectors = new HashSet<>();
 
     // Key = "request.time.hour"
-    // Value = the set of disectors that must all be started once we have this value
-    private Map<String, Set<DisectorPhase>> compiledDisectors = null;
+    // Value = the set of dissectors that must all be started once we have this value
+    private Map<String, Set<DissectorPhase>> compiledDissectors = null;
     private Set<String> usefulIntermediateFields = null;
     private String rootType;
     private String rootName;
@@ -73,9 +73,9 @@ public class Parser<RECORD> {
 
     public EnumSet<Casts> getCasts(String name) {
         try {
-            assembleDisectors();
-        } catch (MissingDisectorsException
-                |InvalidDisectorException e) {
+            assembleDissectors();
+        } catch (MissingDissectorsException
+                |InvalidDissectorException e) {
             e.printStackTrace();
         }
         return castsOfTargets.get(name);
@@ -83,9 +83,9 @@ public class Parser<RECORD> {
 
     public Map<String, EnumSet<Casts>> getAllCasts() {
         try {
-            assembleDisectors();
-        } catch (MissingDisectorsException
-                |InvalidDisectorException e) {
+            assembleDissectors();
+        } catch (MissingDissectorsException
+                |InvalidDissectorException e) {
             e.printStackTrace();
         }
         return castsOfTargets;
@@ -99,92 +99,92 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    public final void addDisectors(final List<Disector> disectors) {
-        if (compiledDisectors != null) {
-            throw new CannotChangeDisectorsAfterConstructionException();
+    public final void addDissectors(final List<Dissector> dissectors) {
+        if (compiledDissectors != null) {
+            throw new CannotChangeDissectorsAfterConstructionException();
         }
 
-        if (disectors != null) {
-            for (Disector disector : disectors) {
-                allDisectors.add(disector);
+        if (dissectors != null) {
+            for (Dissector dissector : dissectors) {
+                allDissectors.add(dissector);
             }
         }
     }
 
     // --------------------------------------------
 
-    public final void addDisector(final Disector disector) {
-        if (compiledDisectors != null) {
-            throw new CannotChangeDisectorsAfterConstructionException();
+    public final void addDissector(final Dissector dissector) {
+        if (compiledDissectors != null) {
+            throw new CannotChangeDissectorsAfterConstructionException();
         }
 
-        if (disector != null) {
-            allDisectors.add(disector);
+        if (dissector != null) {
+            allDissectors.add(dissector);
         }
     }
 
     // --------------------------------------------
 
-    public final void dropDisector(Class<? extends Disector> disectorClassToDrop) {
-        if (compiledDisectors != null) {
-            throw new CannotChangeDisectorsAfterConstructionException();
+    public final void dropDissector(Class<? extends Dissector> dissectorClassToDrop) {
+        if (compiledDissectors != null) {
+            throw new CannotChangeDissectorsAfterConstructionException();
         }
 
-        Set<Disector> removeDisector = new HashSet<>();
-        for (final Disector disector : allDisectors) {
-            if (disector.getClass().equals(disectorClassToDrop)) {
-                removeDisector.add(disector);
+        Set<Dissector> removeDissector = new HashSet<>();
+        for (final Dissector dissector : allDissectors) {
+            if (dissector.getClass().equals(dissectorClassToDrop)) {
+                removeDissector.add(dissector);
             }
         }
-        allDisectors.removeAll(removeDisector);
+        allDissectors.removeAll(removeDissector);
     }
 
     // --------------------------------------------
 
     protected void setRootType(final String newRootType) {
-        compiledDisectors = null;
+        compiledDissectors = null;
 
         rootType = newRootType;
         rootName = "rootinputline";
     }
 
     // --------------------------------------------
-    private void assembleDisectorPhases() throws InvalidDisectorException {
-        if (compiledDisectors != null) {
+    private void assembleDissectorPhases() throws InvalidDissectorException {
+        if (compiledDissectors != null) {
             return; // nothing to do.
         }
 
-        for (final Disector disector : allDisectors) {
-            final String inputType = disector.getInputType();
-            final List<String> outputs = disector.getPossibleOutput();
+        for (final Dissector dissector : allDissectors) {
+            final String inputType = dissector.getInputType();
+            final List<String> outputs = dissector.getPossibleOutput();
 
             if (outputs == null || outputs.size() == 0) {
-                throw new InvalidDisectorException("Disector cannot create any outputs: ["+disector.getClass().getCanonicalName()+"]");
+                throw new InvalidDissectorException("Dissector cannot create any outputs: ["+ dissector.getClass().getCanonicalName()+"]");
             }
 
-            // Create all disector phases
+            // Create all dissector phases
             for (final String output : outputs) {
                 final int colonPos = output.indexOf(':');
                 final String outputType = output.substring(0, colonPos);
                 final String name = output.substring(colonPos + 1);
-                availableDisectors.add(new DisectorPhase(inputType, outputType, name, disector));
+                availableDissectors.add(new DissectorPhase(inputType, outputType, name, dissector));
             }
         }
     }
     // --------------------------------------------
 
-    private void assembleDisectors() throws MissingDisectorsException, InvalidDisectorException {
-        if (compiledDisectors != null) {
+    private void assembleDissectors() throws MissingDissectorsException, InvalidDissectorException {
+        if (compiledDissectors != null) {
             return; // nothing to do.
         }
 
         // So
         // - we have a set of needed values (targets)
-        // - we have a set of disectors that can pick apart some input
+        // - we have a set of dissectors that can pick apart some input
         // - we know where to start from
         // - we need to know how to proceed
 
-        assembleDisectorPhases();
+        assembleDissectorPhases();
         
         // Step 1: Acquire all potentially useful subtargets
         // We first build a set of all possible subtargets that may be useful
@@ -212,24 +212,24 @@ public class Parser<RECORD> {
         }
 
         // Step 2: From the root we explore all possibly useful trees (recursively)
-        compiledDisectors        = new HashMap<>();
+        compiledDissectors = new HashMap<>();
         usefulIntermediateFields = new HashSet<>();
-        findUsefulDisectorsFromField(allPossibleSubtargets, rootType, rootName, true);
+        findUsefulDissectorsFromField(allPossibleSubtargets, rootType, rootName, true);
 
-        // Step 3: Inform all disectors to prepare for the run
-        for (Set<DisectorPhase> disectorPhases : compiledDisectors.values()) {
-            for (DisectorPhase disectorPhase : disectorPhases) {
-                disectorPhase.instance.prepareForRun();
+        // Step 3: Inform all dissectors to prepare for the run
+        for (Set<DissectorPhase> dissectorPhases : compiledDissectors.values()) {
+            for (DissectorPhase dissectorPhase : dissectorPhases) {
+                dissectorPhase.instance.prepareForRun();
             }
         }
         // Step 4: As a final step we verify that every required input can be found
-        Set<String> missingDisectors = getTheMissingFields();
-        if (missingDisectors != null && !missingDisectors.isEmpty()) {
-            StringBuilder allMissing = new StringBuilder(missingDisectors.size()*64);
-            for (String missing:missingDisectors){
+        Set<String> missingDissectors = getTheMissingFields();
+        if (missingDissectors != null && !missingDissectors.isEmpty()) {
+            StringBuilder allMissing = new StringBuilder(missingDissectors.size()*64);
+            for (String missing:missingDissectors){
                 allMissing.append(missing).append(' ');
             }
-            throw new MissingDisectorsException(allMissing.toString());
+            throw new MissingDissectorsException(allMissing.toString());
         }
 
         usable = true;
@@ -237,22 +237,22 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    private void findUsefulDisectorsFromField(
+    private void findUsefulDissectorsFromField(
             final Set<String> possibleTargets,
             final String subRootType, final String subRootName,
             final boolean thisIsTheRoot) {
 
         String subRootId = subRootType + ':' + subRootName;
 
-        LOG.debug("findUsefulDisectors:\"" + subRootType + "\" \"" + subRootName + "\"");
+        LOG.debug("findUsefulDissectors:\"" + subRootType + "\" \"" + subRootName + "\"");
 
-        // When we reach this point we have disectors to get here.
+        // When we reach this point we have dissectors to get here.
         // So we store this to later validate if we have everything.
         locatedTargets.add(subRootId);
 
-        for (DisectorPhase disector: availableDisectors) {
+        for (DissectorPhase dissector: availableDissectors) {
 
-            if (!(disector.inputType.equals(subRootType))) {
+            if (!(dissector.inputType.equals(subRootType))) {
                 continue; // Wrong type
             }
 
@@ -260,10 +260,10 @@ public class Parser<RECORD> {
             // If it doesn't then it starts at the beginning
             Set<String> checkFields = new HashSet<>();
 
-            // If true then this disector can output any name instead of just one
-            boolean isWildCardDisector = disector.name.equals("*");
+            // If true then this dissector can output any name instead of just one
+            boolean isWildCardDissector = dissector.name.equals("*");
 
-            if (isWildCardDisector) {
+            if (isWildCardDissector) {
                 // Ok, this is special
                 // We need to see if any of the wanted types start with the
                 // subRootName (it may have a '.' in the rest of the line !)
@@ -274,44 +274,44 @@ public class Parser<RECORD> {
                     }
                 }
             } else if (thisIsTheRoot) {
-                checkFields.add(disector.name);
+                checkFields.add(dissector.name);
             } else {
-                checkFields.add(subRootName + '.' + disector.name);
+                checkFields.add(subRootName + '.' + dissector.name);
             }
 
             for (String checkField: checkFields) {
                 if (possibleTargets.contains(checkField)
-                    && !compiledDisectors.containsKey(disector.outputType + ":" + checkField)) {
+                    && !compiledDissectors.containsKey(dissector.outputType + ":" + checkField)) {
 
-                    Set<DisectorPhase> subRootPhases = compiledDisectors.get(subRootId);
+                    Set<DissectorPhase> subRootPhases = compiledDissectors.get(subRootId);
                     if (subRootPhases == null) {
                         // New so we can simply add it.
                         subRootPhases = new HashSet<>();
-                        compiledDisectors.put(subRootId, subRootPhases);
+                        compiledDissectors.put(subRootId, subRootPhases);
                         usefulIntermediateFields.add(subRootName);
                     }
 
-                    Class<? extends Disector> clazz = disector.instance.getClass();
-                    DisectorPhase disectorPhaseInstance = findDisectorInstance(subRootPhases, clazz);
+                    Class<? extends Dissector> clazz = dissector.instance.getClass();
+                    DissectorPhase dissectorPhaseInstance = findDissectorInstance(subRootPhases, clazz);
 
-                    if (disectorPhaseInstance == null) {
-                        disectorPhaseInstance =
-                                new DisectorPhase(disector.inputType, disector.outputType,
-                                        checkField, disector.instance.getNewInstance());
-                        subRootPhases.add(disectorPhaseInstance);
+                    if (dissectorPhaseInstance == null) {
+                        dissectorPhaseInstance =
+                                new DissectorPhase(dissector.inputType, dissector.outputType,
+                                        checkField, dissector.instance.getNewInstance());
+                        subRootPhases.add(dissectorPhaseInstance);
                     }
 
-                    // Tell the disector instance what to expect
+                    // Tell the dissector instance what to expect
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Informing : (" + disector.inputType + ")" + subRootName
-                                + " --> " + disector.instance.getClass().getName()
-                                + " --> (" + disector.outputType + ")" + checkField);
+                        LOG.debug("Informing : (" + dissector.inputType + ")" + subRootName
+                                + " --> " + dissector.instance.getClass().getName()
+                                + " --> (" + dissector.outputType + ")" + checkField);
                     }
-                    castsOfTargets.put(disector.outputType + ':' + checkField,
-                            disectorPhaseInstance.instance.prepareForDisect(subRootName, checkField));
+                    castsOfTargets.put(dissector.outputType + ':' + checkField,
+                            dissectorPhaseInstance.instance.prepareForDissect(subRootName, checkField));
 
                     // Recurse from this point down
-                    findUsefulDisectorsFromField(possibleTargets, disector.outputType, checkField, false);
+                    findUsefulDissectorsFromField(possibleTargets, dissector.outputType, checkField, false);
                 }
             }
         }
@@ -319,19 +319,19 @@ public class Parser<RECORD> {
         Set<String> mappings = typeRemappings.get(subRootName);
         if (mappings != null) {
             for (String mappedType : mappings) {
-                if (!compiledDisectors.containsKey(mappedType + ':' + subRootName)) {
+                if (!compiledDissectors.containsKey(mappedType + ':' + subRootName)) {
                     // Retyped targets are ALWAYS String ONLY.
                     castsOfTargets.put(mappedType + ':' + subRootName, Casts.STRING_ONLY);
-                    findUsefulDisectorsFromField(possibleTargets, mappedType, subRootName, false);
+                    findUsefulDissectorsFromField(possibleTargets, mappedType, subRootName, false);
                 }
             }
         }
 
     }
 
-    private DisectorPhase findDisectorInstance(Set<DisectorPhase> disectorPhases,
-                                               Class<? extends Disector> clazz) {
-        for (DisectorPhase phase : disectorPhases) {
+    private DissectorPhase findDissectorInstance(Set<DissectorPhase> dissectorPhases,
+                                                 Class<? extends Dissector> clazz) {
+        for (DissectorPhase phase : dissectorPhases) {
             if (phase.instance.getClass() == clazz) {
                 return phase;
             }
@@ -419,7 +419,7 @@ public class Parser<RECORD> {
             throw new InvalidFieldMethodSignature(method);
         }
 
-        compiledDisectors = null;
+        compiledDissectors = null;
     }
 
     // --------------------------------------------
@@ -448,8 +448,8 @@ public class Parser<RECORD> {
     }
 
     public void addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
-        if (compiledDisectors != null) {
-            throw new CannotChangeDisectorsAfterConstructionException();
+        if (compiledDissectors != null) {
+            throw new CannotChangeDissectorsAfterConstructionException();
         }
 
         String theInput = input.trim().toLowerCase(Locale.ENGLISH);
@@ -489,13 +489,13 @@ public class Parser<RECORD> {
      * For this method to work the RECORD class may NOT be an inner class.
      */
     public RECORD parse(final String value)
-        throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
-        assembleDisectors();
+        throws DissectionFailure, InvalidDissectorException, MissingDissectorsException {
+        assembleDissectors();
         final Parsable<RECORD> parsable = createParsable();
         if (parsable == null) {
             return null;
         }
-        parsable.setRootDisection(rootType, rootName, value);
+        parsable.setRootDissection(rootType, rootName, value);
         return parse(parsable).getRecord();
     }
 
@@ -505,18 +505,18 @@ public class Parser<RECORD> {
      * Parse the value and call all configured setters in the provided instance of RECORD.
      */
     public RECORD parse(final RECORD record, final String value)
-        throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
-        assembleDisectors();
+        throws DissectionFailure, InvalidDissectorException, MissingDissectorsException {
+        assembleDissectors();
         final Parsable<RECORD> parsable = createParsable(record);
-        parsable.setRootDisection(rootType, rootName, value);
+        parsable.setRootDissection(rootType, rootName, value);
         return parse(parsable).getRecord();
     }
 
     // --------------------------------------------
 
     Parsable<RECORD> parse(final Parsable<RECORD> parsable)
-        throws DisectionFailure, InvalidDisectorException, MissingDisectorsException {
-        assembleDisectors();
+        throws DissectionFailure, InvalidDissectorException, MissingDissectorsException {
+        assembleDissectors();
 
         if (!usable) {
             return null;
@@ -528,16 +528,16 @@ public class Parser<RECORD> {
         while (toBeParsed.size() > 0) {
             for (ParsedField fieldThatNeedsToBeParsed : toBeParsed) {
                 parsable.setAsParsed(fieldThatNeedsToBeParsed);
-                Set<DisectorPhase> disectorSet = compiledDisectors.get(fieldThatNeedsToBeParsed.getId());
-                if (disectorSet != null) {
-                    for (DisectorPhase disector : disectorSet) {
+                Set<DissectorPhase> dissectorSet = compiledDissectors.get(fieldThatNeedsToBeParsed.getId());
+                if (dissectorSet != null) {
+                    for (DissectorPhase dissector : dissectorSet) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Disect " + fieldThatNeedsToBeParsed + " with " + disector.instance.getClass().getName());
+                            LOG.debug("Dissect " + fieldThatNeedsToBeParsed + " with " + dissector.instance.getClass().getName());
                         }
-                        disector.instance.disect(parsable, fieldThatNeedsToBeParsed.getName());
+                        dissector.instance.dissect(parsable, fieldThatNeedsToBeParsed.getName());
                     }
                 } else {
-                    LOG.trace("NO DISECTORS FOR \"{}\"", fieldThatNeedsToBeParsed);
+                    LOG.trace("NO DISSECTORS FOR \"{}\"", fieldThatNeedsToBeParsed);
                 }
             }
             toBeParsed.clear();
@@ -672,10 +672,10 @@ public class Parser<RECORD> {
      * This method is for use by the developer to query the parser about
      * the possible paths that may be extracted.
      * @return A list of all possible paths that could be determined automatically.
-     * @throws InvalidDisectorException
-     * @throws MissingDisectorsException
+     * @throws nl.basjes.parse.core.exceptions.InvalidDissectorException
+     * @throws nl.basjes.parse.core.exceptions.MissingDissectorsException
      */
-    public List<String> getPossiblePaths() throws MissingDisectorsException, InvalidDisectorException {
+    public List<String> getPossiblePaths() throws MissingDissectorsException, InvalidDissectorException {
         return getPossiblePaths(15);
     }
 
@@ -686,7 +686,7 @@ public class Parser<RECORD> {
      * @return A list of all possible paths that could be determined automatically.
      */
     public List<String> getPossiblePaths(int maxDepth) {
-        if (allDisectors.isEmpty()) {
+        if (allDissectors.isEmpty()) {
             return null; // nothing to do.
         }
 
@@ -694,9 +694,9 @@ public class Parser<RECORD> {
 
         Map<String, List<String>> pathNodes = new HashMap<>();
 
-        for (Disector disector : allDisectors) {
-            final String inputType = disector.getInputType();
-            final List<String> outputs = disector.getPossibleOutput();
+        for (Dissector dissector : allDissectors) {
+            final String inputType = dissector.getInputType();
+            final List<String> outputs = dissector.getPossibleOutput();
             pathNodes.put(inputType, outputs);
         }
 

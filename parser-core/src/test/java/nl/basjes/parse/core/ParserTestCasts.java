@@ -29,35 +29,35 @@ import static org.junit.Assert.fail;
 
 public class ParserTestCasts {
 
-    public static class TestDisector extends Disector {
+    public static class TestDissector extends Dissector {
 
-        public TestDisector() {
+        public TestDissector() {
             // Empty
         }
 
-        protected void initializeNewInstance(Disector newInstance) {
+        protected void initializeNewInstance(Dissector newInstance) {
             // Empty
         }
 
         @Override
-        public void disect(Parsable<?> parsable, final String inputname) throws DisectionFailure {
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_null", null       );
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_good", "123"      );
+        public void dissect(Parsable<?> parsable, final String inputname) throws DissectionFailure {
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_good", "123");
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_null"  , null       );
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_bad"   , "Something");
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "long_good"  , "123"      );
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "long_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "long_bad", "Something");
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "long_good", "123");
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_null", null       );
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_bad" , "Something");
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "double_good", "123"      );
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "double_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "double_bad", "Something");
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "double_good", "123");
 
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_null"  , null);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_null", null);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_null"        , null);
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_long_good"  , "123");
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "string_double_good", "123");
-            parsable.addDisection(inputname, "OUTPUT_TYPE", "multi_good"        , "123");
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_long_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_double_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "multi_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_long_good", "123");
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_double_good", "123");
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "multi_good", "123");
 
         }
 
@@ -87,7 +87,7 @@ public class ParserTestCasts {
         }
 
         @Override
-        public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+        public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             if (outputname.equals("string_null")) return Casts.STRING_ONLY;
             if (outputname.equals("string_good")) return Casts.STRING_ONLY;
 
@@ -116,7 +116,7 @@ public class ParserTestCasts {
     public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) {
             super(clazz);
-            addDisector(new TestDisector());
+            addDissector(new TestDissector());
             setRootType("INPUT_TYPE");
         }
     }

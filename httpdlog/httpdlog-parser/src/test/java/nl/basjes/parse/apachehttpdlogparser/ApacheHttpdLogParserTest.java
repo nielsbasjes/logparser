@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
+import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDissector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
 import org.junit.Test;
 
@@ -205,7 +205,7 @@ public class ApacheHttpdLogParserTest {
             Parser<TestRecordMissing> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing.class, logFormat);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
-        } catch (MissingDisectorsException e) {
+        } catch (MissingDissectorsException e) {
             assertEquals("HEADER:response.header.etag.thisshouldbemissing ", e.getMessage());
         }
     }
@@ -225,7 +225,7 @@ public class ApacheHttpdLogParserTest {
             Parser<TestRecordMissing2> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing2.class, logFormat);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
-        } catch (MissingDisectorsException e) {
+        } catch (MissingDissectorsException e) {
             assertEquals("BLURP:request.firstline.uri.query.thisshouldbemissing ", e.getMessage());
         }
     }
@@ -253,13 +253,13 @@ public class ApacheHttpdLogParserTest {
 
     @Test
     public void testMakeHeaderNamesLowercaseInLogFormat(){
-        assertEquals(expectedLogFormat, ApacheHttpdLogFormatDisector.makeHeaderNamesLowercaseInLogFormat(logFormat));
+        assertEquals(expectedLogFormat, ApacheHttpdLogFormatDissector.makeHeaderNamesLowercaseInLogFormat(logFormat));
     }
 
     @Test
     public void verifyCommonFormatNamesMapping() throws Exception {
-        ApacheHttpdLogFormatDisector disector = new ApacheHttpdLogFormatDisector("combined");
-        assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", disector.getLogFormat());
+        ApacheHttpdLogFormatDissector dissector = new ApacheHttpdLogFormatDissector("combined");
+        assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", dissector.getLogFormat());
     }
 
     // ------------------------------------------
@@ -273,7 +273,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void testQueryStringDisector() throws Exception {
+    public void testQueryStringDissector() throws Exception {
         String logformat = "%r";
 
         Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);

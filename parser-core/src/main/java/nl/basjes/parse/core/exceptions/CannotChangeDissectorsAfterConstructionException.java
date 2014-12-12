@@ -17,10 +17,9 @@
  */
 package nl.basjes.parse.core.exceptions;
 
-public class MissingDisectorsException extends Exception {
-    private static final long serialVersionUID = 1L;
-
-    public MissingDisectorsException(String message) {
-        super(message);
+public class CannotChangeDissectorsAfterConstructionException extends RuntimeException {
+    public CannotChangeDissectorsAfterConstructionException(){
+        super("Cannot add additional dissectors after the first parse has been started.");
     }
+    private static final long serialVersionUID = 1L;
 }

@@ -17,15 +17,10 @@
  */
 package nl.basjes.parse.core.exceptions;
 
-public class InvalidDisectorException extends Exception {
+public class DissectionFailure extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public InvalidDisectorException() {
-        super("Something went very wrong in constructing the disector.");
-    }
-
-    public InvalidDisectorException(String message) {
+    public DissectionFailure(String message) {
         super(message);
     }
-
 }

@@ -19,7 +19,7 @@ package nl.basjes.parse.core;
 
 import java.util.*;
 
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +61,9 @@ public final class Parsable<RECORD> {
 
     // --------------------------------------------
     /** Store a newly parsed value in the result set */
-    public void setRootDisection(final String type, final String name,
-            final String value) {
-        LOG.debug("Got root disection: type={}; name=\"{}\"", type, name);
+    public void setRootDissection(final String type, final String name,
+                                  final String value) {
+        LOG.debug("Got root dissection: type={}; name=\"{}\"", type, name);
 
         rootname = name;
 
@@ -76,12 +76,12 @@ public final class Parsable<RECORD> {
     // --------------------------------------------
 
     /** Store a newly parsed value in the result set */
-    public void addDisection(final String base, final String type, final String name, final String value) throws DisectionFailure {
-        LOG.debug("Got new disection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
-        addDisection(base, type, name, value, false);
+    public void addDissection(final String base, final String type, final String name, final String value) throws DissectionFailure {
+        LOG.debug("Got new dissection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+        addDissection(base, type, name, value, false);
     }
 
-    private void addDisection(final String base, final String type, final String name, final String value, final boolean recursion) throws DisectionFailure {
+    private void addDissection(final String base, final String type, final String name, final String value, final boolean recursion) throws DissectionFailure {
         String completeName;
         String neededWildCardName;
         if (base.equals(rootname)) {
@@ -98,11 +98,11 @@ public final class Parsable<RECORD> {
                 Set<String> typeRemappingSet = typeRemappings.get(completeName);
                 for (String typeRemapping : typeRemappingSet) {
                     if (type.equals(typeRemapping)) {
-                        throw new DisectionFailure(
+                        throw new DissectionFailure(
                                 "[Type Remapping] Trying to map to the same type (mapping definition bug!): " +
                                         " base=" + base + " type=" + type + " name=" + name);
                     }
-                    addDisection(base, typeRemapping, name, value, true);
+                    addDissection(base, typeRemapping, name, value, true);
                 }
             }
         }

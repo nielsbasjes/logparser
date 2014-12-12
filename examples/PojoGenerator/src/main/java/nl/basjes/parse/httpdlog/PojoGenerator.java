@@ -21,8 +21,8 @@ package nl.basjes.parse.httpdlog;
 import java.util.List;
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -39,7 +39,7 @@ public class PojoGenerator {
     }
   }
 
-  public static void main( String[] args ) throws ParseException, InvalidDisectorException, MissingDisectorsException, NoSuchMethodException {
+  public static void main( String[] args ) throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
     PojoGenerator generator = new PojoGenerator();
     CmdLineParser parser = new CmdLineParser(generator);
     try {
@@ -52,7 +52,7 @@ public class PojoGenerator {
     }
   }
 
-  public void run() throws ParseException, InvalidDisectorException, MissingDisectorsException, NoSuchMethodException {
+  public void run() throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
     ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
 
     List<String> allPossiblePaths = parser.getPossiblePaths();

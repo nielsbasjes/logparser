@@ -30,11 +30,11 @@ import java.util.Set;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
@@ -67,7 +67,7 @@ public class ApacheHttpdLogfileRecordReader extends
     private String                                 logformat       = null;
     private final Set<String>                      requestedFields = new HashSet<>();
     private Map<String,Set<String>>                typeRemappings  = new HashMap<>(16);
-    private List<Disector>                         additionalDisectors;
+    private List<Dissector> additionalDissectors;
 
     // --------------------------------------------
 
@@ -79,12 +79,12 @@ public class ApacheHttpdLogfileRecordReader extends
     public ApacheHttpdLogfileRecordReader(String logformat,
             Set<String> requestedFields,
             Map<String, Set<String>> typeRemappings,
-            List<Disector> additionalDisectors
+            List<Dissector> additionalDissectors
             ) {
         setLogFormat(logformat);
         // Mappings and additional parsers MUST come before the requested fields
         this.typeRemappings = typeRemappings;
-        this.additionalDisectors = additionalDisectors;
+        this.additionalDissectors = additionalDissectors;
         addRequestedFields(requestedFields);
     }
 
@@ -144,7 +144,7 @@ public class ApacheHttpdLogfileRecordReader extends
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
         ApacheHttpdLoglineParser<ParsedRecord> newParser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
         newParser.setTypeRemappings(typeRemappings);
-        newParser.addDisectors(additionalDisectors);
+        newParser.addDissectors(additionalDissectors);
         return newParser;
     }
 
@@ -163,7 +163,7 @@ public class ApacheHttpdLogfileRecordReader extends
                 newParser.addTypeRemappings(typeRemappings);
                 allCasts = newParser.getAllCasts();
             }
-        } catch (MissingDisectorsException | InvalidDisectorException | NoSuchMethodException | IOException | ParseException e) {
+        } catch (MissingDissectorsException | InvalidDissectorException | NoSuchMethodException | IOException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -240,7 +240,7 @@ public class ApacheHttpdLogfileRecordReader extends
                     getParser().parse(currentValue, lineReader.getCurrentValue().toString());
                     counterGoodLines.increment(1L);
                     haveValue = true;
-                } catch (DisectionFailure e) {
+                } catch (DissectionFailure e) {
                     counterBadLines.increment(1L);
                     if (errorLinesLogged < MAX_ERROR_LINES_LOGGED) {
                         LOG.error("Parse error >>>{}<<< in line: >>>{}<<<", e.getMessage(), inputLine);
@@ -250,11 +250,11 @@ public class ApacheHttpdLogfileRecordReader extends
                         }
                     }
                     // Ignore bad lines and simply continue
-                } catch (InvalidDisectorException e) {
-                    LOG.error("InvalidDisectorException >>>{}<<<", e.getMessage());
+                } catch (InvalidDissectorException e) {
+                    LOG.error("InvalidDissectorException >>>{}<<<", e.getMessage());
                     return false;
-                } catch (MissingDisectorsException e) {
-                    LOG.error("MissingDisectorsException >>>{}<<<", e.getMessage());
+                } catch (MissingDissectorsException e) {
+                    LOG.error("MissingDissectorsException >>>{}<<<", e.getMessage());
                     return false;
                 }
             }

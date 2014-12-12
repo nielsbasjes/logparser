@@ -35,7 +35,7 @@ import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -68,7 +68,7 @@ public class Loader
     private String                          logformat;
     private final List<String>              requestedFields = new ArrayList<>();
     private final Map<String,Set<String>>   typeRemappings  = new HashMap<>();
-    private final List<Disector>            additionalDisectors = new ArrayList<>();
+    private final List<Dissector> additionalDissectors = new ArrayList<>();
     private final TupleFactory              tupleFactory;
     private ApacheHttpdLogfileInputFormat   theInputFormat;
 
@@ -127,8 +127,8 @@ public class Loader
                 try {
                     Class<?> clazz = Class.forName(dissectorClassName);
                     Constructor<?> constructor = clazz.getConstructor(String.class);
-                    Disector instance = (Disector) constructor.newInstance(dissectorParamList);
-                    additionalDisectors.add(instance);
+                    Dissector instance = (Dissector) constructor.newInstance(dissectorParamList);
+                    additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
                     throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);
                 } catch (NoSuchMethodException e) {
@@ -140,7 +140,7 @@ public class Loader
                 } catch (IllegalAccessException e) {
                     throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public");
                 }
-                LOG.debug("Loaded additional disector: {}", dissectorSpec);
+                LOG.debug("Loaded additional dissector: {}", dissectorSpec);
                 continue;
             }
 
@@ -166,7 +166,7 @@ public class Loader
             throw new IllegalArgumentException("Must specify the logformat");
         }
 
-        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings(), getAdditionalDisectors());
+        theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings(), getAdditionalDissectors());
         reader = theInputFormat.getRecordReader();
         tupleFactory = TupleFactory.getInstance();
     }
@@ -390,8 +390,8 @@ public class Loader
         return typeRemappings;
     }
 
-    public List<Disector> getAdditionalDisectors() {
-        return additionalDisectors;
+    public List<Dissector> getAdditionalDissectors() {
+        return additionalDissectors;
     }
 
     // ------------------------------------------

@@ -20,9 +20,9 @@ package nl.basjes.parse.apachehttpdlogparser;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -68,7 +68,7 @@ public class BasicOverallTest {
 
 
   @Test
-  public void testBasicParsing() throws ParseException, InvalidDisectorException, MissingDisectorsException, DisectionFailure, NoSuchMethodException {
+  public void testBasicParsing() throws ParseException, InvalidDissectorException, MissingDissectorsException, DissectionFailure, NoSuchMethodException {
     Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
     MyRecord         record = new MyRecord();
 

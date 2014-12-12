@@ -26,9 +26,9 @@ import java.util.List;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseBasicBolt;
@@ -116,9 +116,9 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
         try {
             record.clear();
             getParser().parse(record, apacheLogLine);
-        } catch (MissingDisectorsException
-                |InvalidDisectorException
-                |DisectionFailure e) {
+        } catch (MissingDissectorsException
+                |InvalidDissectorException
+                |DissectionFailure e) {
             e.printStackTrace();
         }
 

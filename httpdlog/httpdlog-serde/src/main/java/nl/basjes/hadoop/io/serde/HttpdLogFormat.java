@@ -26,8 +26,8 @@ import java.util.Properties;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,10 +92,10 @@ public class HttpdLogFormat implements SerDe {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (MissingDisectorsException e) {
+        } catch (MissingDissectorsException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (InvalidDisectorException e) {
+        } catch (InvalidDissectorException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

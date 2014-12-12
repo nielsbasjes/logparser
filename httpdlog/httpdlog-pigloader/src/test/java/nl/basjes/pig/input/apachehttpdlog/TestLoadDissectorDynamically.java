@@ -30,7 +30,7 @@ import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
 
-public class TestLoadDisectorDynamically {
+public class TestLoadDissectorDynamically {
 
   final String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
   final String logfile = getClass().getResource("/omniture-access.log").toString();
@@ -51,7 +51,7 @@ public class TestLoadDisectorDynamically {
                     "            'STRING:request.firstline.uri.query.g.query.promo'," +
                     "            'STRING:request.firstline.uri.query.s'," +
                     "    '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-                    "    '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDisector(x)'," +
+                    "    '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector(x)'," +
                     "            'SCREENWIDTH:request.firstline.uri.query.s.width'," +
                     "            'SCREENHEIGHT:request.firstline.uri.query.s.height'," +
                     "    '-map:request.firstline.uri.query.r:HTTP.URI'," +

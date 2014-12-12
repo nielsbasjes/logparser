@@ -1,33 +1,33 @@
 package nl.basjes.pig.input.apachehttpdlog;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ScreenResolutionDisector extends Disector {
+public class ScreenResolutionDissector extends Dissector {
 
   public static final String SCREENRESOLUTION = "SCREENRESOLUTION";
   private String separator;
   private boolean wantWidth = false;
   private boolean wantHeight = false;
 
-  public ScreenResolutionDisector() {
+  public ScreenResolutionDissector() {
     this("x");
   }
 
-  public ScreenResolutionDisector(String separator) {
+  public ScreenResolutionDissector(String separator) {
     this.separator = separator;
   }
 
   @Override
-  public void disect(Parsable<?> parsable, String inputname) throws DisectionFailure {
+  public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
     final ParsedField field = parsable.getParsableField(SCREENRESOLUTION, inputname);
 
     final String fieldValue = field.getValue();
@@ -38,10 +38,10 @@ public class ScreenResolutionDisector extends Disector {
     if (fieldValue.contains("x")) {
       String[] parts = fieldValue.split("x");
       if (wantWidth) {
-        parsable.addDisection(inputname, "SCREENWIDTH", "width", parts[0]);
+        parsable.addDissection(inputname, "SCREENWIDTH", "width", parts[0]);
       }
       if (wantHeight) {
-        parsable.addDisection(inputname, "SCREENHEIGHT", "height", parts[1]);
+        parsable.addDissection(inputname, "SCREENHEIGHT", "height", parts[1]);
       }
     }
   }
@@ -60,7 +60,7 @@ public class ScreenResolutionDisector extends Disector {
   }
 
   @Override
-  public EnumSet<Casts> prepareForDisect(String inputname, String outputname) {
+  public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
     String name = outputname.substring(inputname.length() + 1);
     if ("width".equals(name)) {
       wantWidth = true;
@@ -74,12 +74,12 @@ public class ScreenResolutionDisector extends Disector {
   }
 
   @Override
-  public void prepareForRun() throws InvalidDisectorException {
+  public void prepareForRun() throws InvalidDissectorException {
     // Nothing to do
   }
 
   @Override
-  protected void initializeNewInstance(Disector newInstance) {
+  protected void initializeNewInstance(Dissector newInstance) {
     // Nothing to do
   }
 }

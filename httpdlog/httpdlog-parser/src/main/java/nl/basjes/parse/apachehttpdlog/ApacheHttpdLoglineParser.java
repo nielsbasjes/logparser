@@ -20,9 +20,9 @@ package nl.basjes.parse.apachehttpdlog;
 
 import java.text.ParseException;
 
-import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDisector;
+import nl.basjes.parse.apachehttpdlog.logformat.ApacheHttpdLogFormatDissector;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.http.disectors.*;
+import nl.basjes.parse.http.dissectors.*;
 
 public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
@@ -35,16 +35,16 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         super(clazz);
 
         // The pieces we have to get there
-        addDisector(new ApacheHttpdLogFormatDisector(logformat));
+        addDissector(new ApacheHttpdLogFormatDissector(logformat));
         // We set the default parser to what we find in the Apache httpd Logfiles
         //                                 [05/Sep/2010:11:27:50 +0200]
-        addDisector(new TimeStampDisector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
-        addDisector(new HttpFirstLineDisector());
-        addDisector(new HttpUriDisector());
-        addDisector(new QueryStringFieldDisector());
-        addDisector(new RequestCookieListDisector());
-        addDisector(new ResponseSetCookieListDisector());
-        addDisector(new ResponseSetCookieDisector());
+        addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
+        addDissector(new HttpFirstLineDissector());
+        addDissector(new HttpUriDissector());
+        addDissector(new QueryStringFieldDissector());
+        addDissector(new RequestCookieListDissector());
+        addDissector(new ResponseSetCookieListDissector());
+        addDissector(new ResponseSetCookieDissector());
 
         // And we define the input for this parser
         setRootType("APACHELOGLINE");

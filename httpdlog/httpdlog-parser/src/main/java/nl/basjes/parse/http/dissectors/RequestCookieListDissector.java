@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.disectors;
+package nl.basjes.parse.http.dissectors;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 
-public class RequestCookieListDisector extends Disector {
+public class RequestCookieListDissector extends Dissector {
     // --------------------------------------------
 
     private static final String INPUT_TYPE = "HTTP.COOKIES";
@@ -51,7 +51,7 @@ public class RequestCookieListDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    protected void initializeNewInstance(Disector newInstance) {
+    protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
 
@@ -60,7 +60,7 @@ public class RequestCookieListDisector extends Disector {
     private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
-    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedCookies.add(outputname.substring(inputname.length() + 1));
         return Casts.STRING_ONLY;
     }
@@ -79,7 +79,7 @@ public class RequestCookieListDisector extends Disector {
     private final Pattern fieldSeparatorPattern = Pattern.compile("; ");
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
+    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
         final String fieldValue = field.getValue();
@@ -94,7 +94,7 @@ public class RequestCookieListDisector extends Disector {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
                     if (wantAllCookies || requestedCookies.contains(theName)) {
-                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName, "");
+                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName, "");
                     }
                 }
             } else {
@@ -102,11 +102,11 @@ public class RequestCookieListDisector extends Disector {
                 if (wantAllCookies || requestedCookies.contains(theName)) {
                     String theValue = value.substring(equalPos + 1, value.length()).trim();
                     try {
-                        parsable.addDisection(inputname, getDisectionType(inputname, theName), theName,
+                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName,
                                 Utils.resilientUrlDecode(theValue));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
-                        throw new DisectionFailure(e.getMessage());
+                        throw new DissectionFailure(e.getMessage());
                     }
                 }
             }
@@ -119,7 +119,7 @@ public class RequestCookieListDisector extends Disector {
      * This determines the type of the value that was just found.
      * This method is intended to be overruled by a subclass
      */
-    public String getDisectionType(final String basename, final String name) {
+    public String getDissectionType(final String basename, final String name) {
         return "HTTP.COOKIE";
     }
 

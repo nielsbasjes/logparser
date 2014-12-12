@@ -21,11 +21,10 @@ import java.text.ParseException;
 import java.util.List;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDisectorException;
-import nl.basjes.parse.core.exceptions.MissingDisectorsException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,7 @@ public final class Main {
     List<String> possiblePaths;
     try {
       possiblePaths = dummyParser.getPossiblePaths();
-    } catch (MissingDisectorsException | InvalidDisectorException e) {
+    } catch (MissingDissectorsException | InvalidDissectorException e) {
       e.printStackTrace();
       return;
     }
@@ -57,7 +56,7 @@ public final class Main {
     LOG.info("==================================");
   }
 
-  private void run() throws InvalidDisectorException, MissingDisectorsException, ParseException {
+  private void run() throws InvalidDissectorException, MissingDissectorsException, ParseException {
 
     // This format and logline originate from here:
     // http://stackoverflow.com/questions/20349184/java-parse-log-file
@@ -74,8 +73,8 @@ public final class Main {
       parser.parse(record, logline);
       LOG.info(record.toString());
 
-    } catch (DisectionFailure disectionFailure) {
-      disectionFailure.printStackTrace();
+    } catch (DissectionFailure dissectionFailure) {
+      dissectionFailure.printStackTrace();
     }
     LOG.info("==================================================================================");
   }

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import nl.basjes.parse.OmnitureLogLineParser;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 
 public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
@@ -33,8 +33,8 @@ public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
             String newLogformat,
             Set<String> newRequestedFields,
             Map<String,Set<String>> typeRemappings,
-            List<Disector> additionalDisectors) {
-        super(newLogformat, newRequestedFields, typeRemappings, additionalDisectors);
+            List<Dissector> additionalDissectors) {
+        super(newLogformat, newRequestedFields, typeRemappings, additionalDissectors);
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {

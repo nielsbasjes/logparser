@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.disectors;
+package nl.basjes.parse.http.dissectors;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Disector;
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DisectionFailure;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HttpFirstLineDisector extends Disector {
+public class HttpFirstLineDissector extends Dissector {
     // --------------------------------------------
     // The "first line" of a request can be split up a bit further
     // The format of the first line of an HTTP/1.x request looks like this:
@@ -58,7 +58,7 @@ public class HttpFirstLineDisector extends Disector {
     // --------------------------------------------
 
     @Override
-    public void disect(final Parsable<?> parsable, final String inputname) throws DisectionFailure {
+    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(HTTP_FIRSTLINE, inputname);
 
         final String fieldValue = field.getValue();
@@ -73,23 +73,23 @@ public class HttpFirstLineDisector extends Disector {
         final boolean matches = matcher.find();
 
         if (matches && matcher.groupCount() == 4) {
-            outputDisection(parsable, inputname, "HTTP.METHOD",           "method",           matcher, 1);
-            outputDisection(parsable, inputname, "HTTP.URI",              "uri",              matcher, 2);
-            outputDisection(parsable, inputname, "HTTP.PROTOCOL",         "protocol",         matcher, 3);
-            outputDisection(parsable, inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher, 4);
+            outputDissection(parsable, inputname, "HTTP.METHOD", "method", matcher, 1);
+            outputDissection(parsable, inputname, "HTTP.URI", "uri", matcher, 2);
+            outputDissection(parsable, inputname, "HTTP.PROTOCOL", "protocol", matcher, 3);
+            outputDissection(parsable, inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher, 4);
         }
     }
 
-    private void outputDisection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) throws DisectionFailure {
+    private void outputDissection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) throws DissectionFailure {
         if (requestedParameters.contains(name)) {
-            parsable.addDisection(inputname, type, name, matcher.group(offset));
+            parsable.addDissection(inputname, type, name, matcher.group(offset));
         }
     }
 
     // --------------------------------------------
 
     @Override
-    protected void initializeNewInstance(Disector newInstance) {
+    protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
 
@@ -98,7 +98,7 @@ public class HttpFirstLineDisector extends Disector {
     private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
-    public EnumSet<Casts> prepareForDisect(final String inputname, final String outputname) {
+    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedParameters.add(outputname.substring(inputname.length() + 1));
         return Casts.STRING_ONLY;
     }
