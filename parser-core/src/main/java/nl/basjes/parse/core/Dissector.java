@@ -66,6 +66,17 @@ public abstract class Dissector {
     // --------------------------------------------
 
     /**
+     * If a Dissector is loaded through an external language then this is the 
+     * method that is called to set all the parameters.
+     * There is exactly one String as input so it is up to the specific
+     * Dissector implementation to parse and handle this input.
+     * @return true if everything went right. false otherwise.
+     */
+    public abstract boolean initializeFromSettingsParameter(String settings);
+
+    // --------------------------------------------
+
+    /**
      * This method must dissect the provided field from the parsable into 'smaller' pieces.
      */
     public abstract void dissect(final Parsable<?> parsable, final String inputname)

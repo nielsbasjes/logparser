@@ -52,7 +52,7 @@ public class TestFields {
                     "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
                     "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
                     "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-                    "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector(x)'" +
+                    "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'" +
                     "           ) AS ( " +
                     "          Fields );"
     );

@@ -167,6 +167,14 @@ As you can see in the next example the order of the requested fields is irreleva
 From here you can do as you want with the resulting tuples. Note that almost everything is output
 as a chararray, yet things that are numerical are output as longs or doubles.
 
+Loading custom dissectors
+===
+If you have written a custom dissector it is now possible to load this from pig and use it to it's full capabilities.
+There is only one extra requirement: You MUST create a constructor that receives exactly one 
+                    "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
+                    "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'" +
+
+
 License
 ===
 This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then

@@ -44,6 +44,10 @@ public class ParserTestExceptions {
             this.outputName = outputname;
         }
 
+        public boolean initializeFromSettingsParameter(String settings) {
+            return true; // Everything went right
+        }
+
         protected void initializeNewInstance(Dissector newInstance) {
             ((TestDissector)newInstance).init(inputType, outputType, outputName);
         }
@@ -248,6 +252,11 @@ public class ParserTestExceptions {
     public class BrokenTestDissector extends Dissector {
 
         public BrokenTestDissector() {
+        }
+
+        @Override
+        public boolean initializeFromSettingsParameter(String settings) {
+            return true; // Everything went right
         }
 
         @Override

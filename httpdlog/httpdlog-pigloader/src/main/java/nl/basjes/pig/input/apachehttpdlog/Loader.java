@@ -86,7 +86,7 @@ public class Loader
         for (String param : parameters) {
             if (logformat == null) {
                 logformat = param;
-                LOG.debug("Using logformat: {}", logformat);
+                LOG.info("Using logformat: {}", logformat);
                 continue;
             }
 
@@ -96,38 +96,34 @@ public class Loader
                     throw new IllegalArgumentException("Found map with wrong number of parameters:" + param);
                 }
 
+                String mapField = mapParams[1];
+                String mapType = mapParams[2];
+
                 Set<String> remapping = typeRemappings.get(mapParams[1]);
                 if (remapping == null) {
                     remapping = new HashSet<>();
                     typeRemappings.put(mapParams[1], remapping);
                 }
-                remapping.add(mapParams[2]);
-                LOG.debug("Add Mapping: {} --> {}", mapParams[1], mapParams[2]);
+                remapping.add(mapType);
+                LOG.info("Add mapping for field \"{}\" to type \"{}\"", mapField, mapType);
                 continue;
             }
 
             if (param.startsWith("-load:")) {
-                String[] loadParams = param.split(":");
-                if (loadParams.length != 2) {
+                String[] loadParams = param.split(":", 3);
+                if (loadParams.length != 3) {
                     throw new IllegalArgumentException("Found load with wrong number of parameters:" + param);
                 }
 
-                String dissectorSpec = loadParams[1];
-                int firstOpenBrace = dissectorSpec.indexOf('(');
-                int lastCloseBrace = dissectorSpec.lastIndexOf(')');
-
-                if (firstOpenBrace == -1 || lastCloseBrace == -1) {
-                    throw new IllegalArgumentException("Found load with bad specification: MUST have one parameter list:" + param);
-                }
-
-                String dissectorClassName = dissectorSpec.substring(0, firstOpenBrace);
-                String dissectorParamList = dissectorSpec.substring(firstOpenBrace + 1, lastCloseBrace);
+                String dissectorClassName = loadParams[1];
+                String dissectorParam = loadParams[2];
 
                 // TODO: Multiple arguments
                 try {
                     Class<?> clazz = Class.forName(dissectorClassName);
-                    Constructor<?> constructor = clazz.getConstructor(String.class);
-                    Dissector instance = (Dissector) constructor.newInstance(dissectorParamList);
+                    Constructor<?> constructor = clazz.getConstructor();
+                    Dissector instance = (Dissector) constructor.newInstance();
+                    instance.initializeFromSettingsParameter(dissectorParam);
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
                     throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);
@@ -140,7 +136,7 @@ public class Loader
                 } catch (IllegalAccessException e) {
                     throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public");
                 }
-                LOG.debug("Loaded additional dissector: {}", dissectorSpec);
+                LOG.debug("Loaded additional dissector: {}(\"{}\")", dissectorClassName, dissectorParam);
                 continue;
             }
 

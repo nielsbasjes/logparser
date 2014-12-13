@@ -54,10 +54,16 @@ public class ParserTestTypeColission {
             this.outputName = outputname;
             this.salt = saltt;
         }
+
+        @Override
+        public boolean initializeFromSettingsParameter(String settings) {
+            return true; // Everything went right
+        }
+
+        @Override
         protected void initializeNewInstance(Dissector newInstance) {
             ((TestDissector)newInstance).init(inputType, outputType, outputName, salt);
         }
-
 
         @Override
         public void dissect(Parsable<?> parsable, String inputname)

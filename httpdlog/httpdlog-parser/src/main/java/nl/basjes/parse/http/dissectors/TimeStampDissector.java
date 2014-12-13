@@ -50,6 +50,17 @@ public class TimeStampDissector extends Dissector {
         setDateTimePattern(newDateTimePattern);
     }
 
+    // --------------------------------------------
+
+    @Override
+    public boolean initializeFromSettingsParameter(String settings) {
+        // There is only one setting for this disector
+        setDateTimePattern(settings);
+        return true; // Everything went right.
+    }
+
+    // --------------------------------------------
+
     public void setDateTimePattern(String newDateTimePattern) {
         dateTimePattern = newDateTimePattern;
         formatter = DateTimeFormat.forPattern(dateTimePattern);

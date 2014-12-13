@@ -35,6 +35,11 @@ public class ParserTestCasts {
             // Empty
         }
 
+        @Override
+        public boolean initializeFromSettingsParameter(String settings) {
+            return true; // Everything went right
+        }
+
         protected void initializeNewInstance(Dissector newInstance) {
             // Empty
         }

@@ -49,6 +49,13 @@ public class ResponseSetCookieListDissector extends Dissector {
 
     // --------------------------------------------
 
+    @Override
+    public boolean initializeFromSettingsParameter(String settings) {
+        return true; // Everything went right.
+    }
+
+    // --------------------------------------------
+
     protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }

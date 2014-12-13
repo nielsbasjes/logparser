@@ -64,6 +64,12 @@ public final class ApacheHttpdLogFormatDissector extends Dissector {
     }
 
     @Override
+    public boolean initializeFromSettingsParameter(String settings) {
+        setLogFormat(logFormat);
+        return true; // Everything went right
+    }
+
+    @Override
     protected void initializeNewInstance(Dissector newInstance) {
         if (newInstance instanceof ApacheHttpdLogFormatDissector) {
             ((ApacheHttpdLogFormatDissector)newInstance).setLogFormat(logFormat);

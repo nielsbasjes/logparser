@@ -18,12 +18,10 @@ public class ScreenResolutionDissector extends Dissector {
   private boolean wantWidth = false;
   private boolean wantHeight = false;
 
-  public ScreenResolutionDissector() {
-    this("x");
-  }
-
-  public ScreenResolutionDissector(String separator) {
-    this.separator = separator;
+  @Override
+  public boolean initializeFromSettingsParameter(String settings) {
+    this.separator = settings;
+    return true;
   }
 
   @Override

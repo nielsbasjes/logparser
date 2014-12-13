@@ -51,6 +51,13 @@ public class QueryStringFieldDissector extends Dissector {
     // --------------------------------------------
 
     @Override
+    public boolean initializeFromSettingsParameter(String settings) {
+        return true; // Everything went right.
+    }
+
+    // --------------------------------------------
+
+    @Override
     protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
