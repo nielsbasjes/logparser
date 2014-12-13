@@ -170,10 +170,41 @@ as a chararray, yet things that are numerical are output as longs or doubles.
 Loading custom dissectors
 ===
 If you have written a custom dissector it is now possible to load this from pig and use it to it's full capabilities.
-There is only one extra requirement: You MUST create a constructor that receives exactly one 
-                    "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-                    "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'" +
+The extra dissector is specified by adding an extra parameter like this:
 
+   -load:<name of the class>:<parameter string>
+
+You must REGISTER the jar file that contains the class. The <parameter string> is used to call the initializeFromSettingsParameter(String settings) method.
+
+Example:
+Assume we have the Dissector com.example.fooSplitter then we may so something like this:
+
+    REGISTER foosplitter-1.0.jar
+
+    Clicks =
+      LOAD 'access_log.gz'
+      USING nl.basjes.pig.input.apachehttpdlog.Loader(
+        'common',
+        '-map:request.firstline.uri.query.foo:FOO',
+        '-load:com.example.fooSplitter:Some:settings:for:the:foo:Splitter',
+        'FOO.SPLIT:request.firstline.uri.query.foo.split'
+        )
+        AS ( fooSplitValue:chararray )
+
+Some explanation:
+
+We're parsing the common logformat. Which may give us the foo query parameter as
+
+    STRING:request.firstline.uri.query.foo
+
+so we map this field to the type name the new dissector can pick apart.
+
+    '-map:request.firstline.uri.query.foo:FOO',
+    '-load:com.example.fooSplitter:Some:settings:for:the:foo:Splitter',
+
+and we ask for the end result (which is found by asking for the special 'Fields' value)
+
+    'FOO.SPLIT:request.firstline.uri.query.foo.split'
 
 License
 ===
