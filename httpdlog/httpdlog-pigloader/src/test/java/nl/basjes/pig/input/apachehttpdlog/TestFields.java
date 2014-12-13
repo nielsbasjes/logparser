@@ -93,7 +93,9 @@ public class TestFields {
       "          '" + logformat + "', " +
       "          'Example'," +
       "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
-      "          '-map:request.firstline.uri.query.r:HTTP.URI'" +
+      "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
+      "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
+      "          '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'" +
       "           ) AS ( " +
       "          Fields );"
     );
@@ -114,7 +116,11 @@ public class TestFields {
     assertTrue("Missing Base QueryString",theValue.contains("HTTP.QUERYSTRING:request.firstline.uri.query"));
     assertTrue("Missing Base Query Parameters",theValue.contains("STRING:request.firstline.uri.query.*"));
 
-    // Check the the remapped possibilities
+    // Check the special parameters
+    assertTrue("Missing MAP parameter",theValue.contains("'-map:request.firstline.uri.query.s:SCREENRESOLUTION'"));
+    assertTrue("Missing LOAD parameter",theValue.contains("'-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'"));
+
+    // Check the remapped possibilities
     assertTrue("Missing Remapped URI G",theValue.contains("HTTP.URI:request.firstline.uri.query.g"));
     assertTrue("Missing Remapped URI G QueryString",theValue.contains("HTTP.QUERYSTRING:request.firstline.uri.query.g.query"));
     assertTrue("Missing Remapped URI G Query Parameters",theValue.contains("STRING:request.firstline.uri.query.g.query.*"));

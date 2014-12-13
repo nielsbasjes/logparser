@@ -14,13 +14,15 @@ import java.util.List;
 public class ScreenResolutionDissector extends Dissector {
 
   public static final String SCREENRESOLUTION = "SCREENRESOLUTION";
-  private String separator;
-  private boolean wantWidth = false;
+  private String separator   = "x";
+  private boolean wantWidth  = false;
   private boolean wantHeight = false;
 
   @Override
   public boolean initializeFromSettingsParameter(String settings) {
-    this.separator = settings;
+    if (settings.length() > 0) {
+      this.separator = settings;
+    }
     return true;
   }
 

@@ -72,6 +72,9 @@ public class Loader
     private final TupleFactory              tupleFactory;
     private ApacheHttpdLogfileInputFormat   theInputFormat;
 
+    // These are purely retained to make it possible to create a working example
+    private final ArrayList<String>         specialParameters = new ArrayList<>();
+
     // ------------------------------------------
 
     /**
@@ -91,6 +94,7 @@ public class Loader
             }
 
             if (param.startsWith("-map:")) {
+                specialParameters.add(param);
                 String[] mapParams = param.split(":");
                 if (mapParams.length != 3) {
                     throw new IllegalArgumentException("Found map with wrong number of parameters:" + param);
@@ -110,6 +114,7 @@ public class Loader
             }
 
             if (param.startsWith("-load:")) {
+                specialParameters.add(param);
                 String[] loadParams = param.split(":", 3);
                 if (loadParams.length != 3) {
                     throw new IllegalArgumentException("Found load with wrong number of parameters:" + param);
@@ -297,6 +302,7 @@ public class Loader
                 .append("    USING ").append(this.getClass().getCanonicalName()).append("(\n")
                 .append("    '").append(logformat).append("',\n")
                 .append('\n')
+                .append("        '").append(join(specialParameters, "',\n        '")).append("',\n")
                 .append("        '").append(join(fields, "',\n        '")).append("')\n")
                 .append("    AS (\n")
                 .append("        ").append(join(names, ",\n        ")).append(");\n")
