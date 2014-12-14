@@ -26,10 +26,10 @@
     <version>1.7-SNAPSHOT</version>
   </parent>
 
-  <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-  <artifactId>httpdlog-examples</artifactId>
+  <groupId>nl.basjes.parse</groupId>
+  <artifactId>parse-utils</artifactId>
   <packaging>pom</packaging>
-  <name>Parser - Apache HTTPD - Examples (group)</name>
+  <name>Parser - Utils (group)</name>
 
   <build>
     <plugins>
@@ -45,9 +45,7 @@
   </build>
 
   <modules>
-    <module>pojo</module>
-    <module>pig</module>
-    <module>hadoop-inputformat</module>
+    <module>PojoGenerator</module>
   </modules>
 
 </project>

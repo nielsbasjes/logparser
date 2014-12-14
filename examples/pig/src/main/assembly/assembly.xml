@@ -29,6 +29,15 @@
       <filtered>false</filtered>
     </fileSet>
     <fileSet>
+      <directory>demolog</directory>
+      <outputDirectory>PigDemo-${project.version}/demolog</outputDirectory>
+      <includes>
+        <include>*.gz</include>
+      </includes>
+      <fileMode>0644</fileMode>
+      <filtered>false</filtered>
+    </fileSet>
+    <fileSet>
       <directory>src/main/resources</directory>
       <outputDirectory>PigDemo-${project.version}/etc</outputDirectory>
       <includes>
@@ -41,7 +50,7 @@
   </fileSets>
   <dependencySets>
     <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
+      <useProjectArtifact>true</useProjectArtifact>
       <useProjectAttachments>true</useProjectAttachments>
       <outputDirectory>PigDemo-${project.version}/lib</outputDirectory>
     </dependencySet>

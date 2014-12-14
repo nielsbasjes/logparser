@@ -1,6 +1,6 @@
 REGISTER lib/*.jar;
 
-%declare LOGFILE   '${ACCESS_LOGPATH}/access-2014-11-11.log.gz'
+%declare LOGFILE   '${ACCESS_LOGPATH}/access*.gz'
 %declare LOGFORMAT '${ACCESS_LOGFORMAT}'
 
 UserAgents =

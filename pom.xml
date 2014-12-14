@@ -158,6 +158,7 @@
     <module>parser-core</module>
     <module>httpdlog</module>
     <module>examples</module>
+    <module>utils</module>
   </modules>
 
   <licenses>
