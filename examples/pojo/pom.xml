@@ -22,7 +22,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>httpdlog-examples</artifactId>
-    <groupId>nl.basjes.parse.httpdlog</groupId>
+    <groupId>nl.basjes.parse.httpdlog.examples</groupId>
     <version>1.7-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-testclient</artifactId>
@@ -30,7 +30,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>nl.basjes.parse.httpdlog</groupId>
       <artifactId>httpdlog-parser</artifactId>
       <version>${project.version}</version>
     </dependency>

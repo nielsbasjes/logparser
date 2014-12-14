@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>nl.basjes.parse</groupId>
+    <groupId>nl.basjes.parse.utils</groupId>
     <artifactId>parse-utils</artifactId>
     <version>1.7-SNAPSHOT</version>
   </parent>
