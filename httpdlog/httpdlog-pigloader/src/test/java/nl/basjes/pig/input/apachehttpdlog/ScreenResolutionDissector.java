@@ -35,8 +35,8 @@ public class ScreenResolutionDissector extends Dissector {
       return; // Nothing to do here
     }
 
-    if (fieldValue.contains("x")) {
-      String[] parts = fieldValue.split("x");
+    if (fieldValue.contains(separator)) {
+      String[] parts = fieldValue.split(separator);
       if (wantWidth) {
         parsable.addDissection(inputname, "SCREENWIDTH", "width", parts[0]);
       }
