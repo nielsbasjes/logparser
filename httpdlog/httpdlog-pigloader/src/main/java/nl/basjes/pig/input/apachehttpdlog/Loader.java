@@ -85,7 +85,6 @@ public class Loader
      */
     public Loader(String... parameters) {
 
-
         for (String param : parameters) {
             if (logformat == null) {
                 logformat = param;
@@ -103,10 +102,10 @@ public class Loader
                 String mapField = mapParams[1];
                 String mapType = mapParams[2];
 
-                Set<String> remapping = typeRemappings.get(mapParams[1]);
+                Set<String> remapping = typeRemappings.get(mapField);
                 if (remapping == null) {
                     remapping = new HashSet<>();
-                    typeRemappings.put(mapParams[1], remapping);
+                    typeRemappings.put(mapField, remapping);
                 }
                 remapping.add(mapType);
                 LOG.info("Add mapping for field \"{}\" to type \"{}\"", mapField, mapType);
@@ -123,7 +122,6 @@ public class Loader
                 String dissectorClassName = loadParams[1];
                 String dissectorParam = loadParams[2];
 
-                // TODO: Multiple arguments
                 try {
                     Class<?> clazz = Class.forName(dissectorClassName);
                     Constructor<?> constructor = clazz.getConstructor();
