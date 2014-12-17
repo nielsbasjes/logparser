@@ -1,4 +1,4 @@
-package nl.basjes.pig.input.apachehttpdlog;
+package nl.basjes.parse.http.dissectors;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;

@@ -51,7 +51,7 @@ public class TestLoadDissectorDynamically {
                     "            'STRING:request.firstline.uri.query.g.query.promo'," +
                     "            'STRING:request.firstline.uri.query.s'," +
                     "    '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-                    "    '-load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector:x'," +
+                    "    '-load:nl.basjes.parse.http.dissectors.ScreenResolutionDissector:x'," +
                     "            'SCREENWIDTH:request.firstline.uri.query.s.width'," +
                     "            'SCREENHEIGHT:request.firstline.uri.query.s.height'," +
                     "    '-map:request.firstline.uri.query.r:HTTP.URI'," +

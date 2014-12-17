@@ -26,7 +26,7 @@
   <parent>
     <artifactId>httpdlog</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-serde</artifactId>
   <name>Parser - Apache HTTPD - HCatalog SerDe</name>
@@ -62,4 +62,31 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-super-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/job.xml</descriptor>
+              </descriptors>
+              <archive>
+                <addMavenDescriptor>true</addMavenDescriptor>
+                <manifestEntries>
+                  <Class-Path>/</Class-Path>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

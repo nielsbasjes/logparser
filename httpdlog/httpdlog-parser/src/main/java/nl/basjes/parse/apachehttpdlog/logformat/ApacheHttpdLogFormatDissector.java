@@ -231,8 +231,10 @@ public final class ApacheHttpdLogFormatDissector extends Dissector {
                 parsable.addDissection(inputname, matchedType, matchedName, matchedStr);
             }
         } else {
-            throw new DissectionFailure("The input line :\n"+line.getValue()+"\n" +
-                                       "does not match the specified apache log format RegEx:\n" + logFormatRegEx);
+            throw new DissectionFailure("The input line does not match the specified apache log format." +
+                                        "Line     : " + line.getValue() + "\n" +
+                                        "LogFormat: " + logFormat       + "\n" +
+                                        "RegEx    : " + logFormatRegEx);
         }
 
     }

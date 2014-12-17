@@ -30,7 +30,7 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     public ApacheHttpdLoglineParser(
             final Class<RECORD> clazz,
-            final String logformat) throws ParseException {
+            final String logformat) {
         // This indicates what we need
         super(clazz);
 
