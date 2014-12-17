@@ -79,7 +79,7 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
  *      ,"field:referrer"  = "STRING:request.firstline.uri.query.g.query.referrer"
  *      ,"field:bui"       = "HTTP.COOKIE:request.cookies.bui"
  *
- *      ,"load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector" = "x"
+ *      ,"load:nl.basjes.parse.http.dissectors.ScreenResolutionDissector" = "x"
  *      ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
  *      ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
  *      ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"
@@ -164,7 +164,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                     instance.initializeFromSettingsParameter(dissectorParam);
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
-                    throw new SerDeException("Found load with bad specification: No such class:" + key,e);
+                    throw new SerDeException("Found load with bad specification: No such class:" + dissectorClassName, e);
                 } catch (NoSuchMethodException e) {
                     throw new SerDeException("Found load with bad specification: Class does not have the required constructor",e);
                 } catch (InvocationTargetException e) {

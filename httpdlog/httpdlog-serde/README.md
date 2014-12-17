@@ -27,7 +27,7 @@ This is a quick example on how you could make the logfiles directly accessible t
         ,"field:referrer"  = "STRING:request.firstline.uri.query.g.query.referrer"
         ,"field:bui"       = "HTTP.COOKIE:request.cookies.bui"
 
-        ,"load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector" = "x"
+        ,"load:nl.basjes.parse.http.dissectors.ScreenResolutionDissector" = "x"
         ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
         ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
         ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"
