@@ -25,10 +25,10 @@ Building
 Simply type : mvn package
 and the whole thing should build.
 
-Java, Hadoop & PIG
+Java, Hadoop, PIG & Hive
 ===
 I'm a big user of bigdata tools like pig and Hadoop.
-So in here are also a Hadoop inputformat and a Pig Loader that are wrappers around this library.
+So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
 
 Usage (Overview)
 ===
@@ -46,6 +46,7 @@ The languages that are supported in this version:
 
 * [Java](README-Java.md)
 * [Apache Pig](README-Pig.md)
+* [Apache Hive](README-Hive.md)
 
 Internal structure and type remapping
 ===
@@ -74,6 +75,10 @@ Pig: Add these to the list of requested fields
         '-map:request.firstline.uri.query.g:HTTP.URI',
         '-map:request.firstline.uri.query.r:HTTP.URI',
 
+Hive: Add these to the SERDEPROPERTIES
+
+        "map:request.firstline.uri.query.g"="HTTP.URI",
+        "map:request.firstline.uri.query.r"="HTTP.URI",
 
 License
 ===
