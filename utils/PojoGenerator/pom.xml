@@ -10,7 +10,6 @@
     <version>1.7-SNAPSHOT</version>
   </parent>
 
-  <groupId>nl.basjes.parse.utils</groupId>
   <artifactId>PojoGenerator</artifactId>
 
   <name>Parser - Utils - Pojo Generator</name>
