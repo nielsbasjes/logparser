@@ -29,7 +29,7 @@
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
       <artifactId>httpdlog-parser</artifactId>
-      <version>1.7-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
