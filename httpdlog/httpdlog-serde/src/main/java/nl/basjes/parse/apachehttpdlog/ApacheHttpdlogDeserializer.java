@@ -18,18 +18,13 @@
 package nl.basjes.parse.apachehttpdlog;
 
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.*;
 
-import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
-import nl.basjes.parse.core.Field;
-import nl.basjes.parse.core.Parser;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
@@ -60,27 +55,37 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
  * An example DDL statement
  * would be:
  * <pre>
- * CREATE EXTERNAL TABLE clicks (
- *     ip           STRING,
- *     timestamp    LONG,
- *     useragent    STRING,
- *     screenWidth  LONG,
- *     screenHeight LONG,
- * )
- * PARTITIONED BY(logdate STRING)
- * ROW FORMAT SERDE 'nl.basjes.parse.apachehttpdlog.HTTPDAccesslogHCatalogSerde'
+ *
+ * ADD JAR target/httpdlog-serde-1.7-SNAPSHOT-job.jar;
+ * CREATE EXTERNAL TABLE nbasjes.clicks (
+ *       ip           STRING
+ *      ,timestamp    BIGINT
+ *      ,useragent    STRING
+ *      ,referrer     STRING
+ *      ,bui          STRING
+ *      ,screenHeight BIGINT
+ *      ,screenWidth  BIGINT
+ *      )
+ * ROW FORMAT SERDE 'nl.basjes.parse.apachehttpdlog.ApacheHttpdlogDeserializer'
  * WITH SERDEPROPERTIES (
- *     "logformat"       = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"",
- *     "field:timestamp" = "TIME.EPOCH:request.receive.time.epoch",
- *     "field:ip"        = "IP:connection.client.host",
- *     "field:useragent" = "HTTP.USERAGENT:request.user-agent",
- *     "load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector" = "x",
- *     "map:request.firstline.uri.query.s" = "SCREENRESOLUTION",
- *     "field:screenWidth" = "SCREENWIDTH:request.firstline.uri.query.s.width",
- *     "field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height",
- * )
+ *       "logformat"       = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" %T %V"
+ *      ,"map:request.firstline.uri.query.g" = "HTTP.URI"
+ *      ,"map:request.firstline.uri.query.r" = "HTTP.URI"
+ *
+ *      ,"field:timestamp" = "TIME.EPOCH:request.receive.time.epoch"
+ *      ,"field:ip"        = "IP:connection.client.host"
+ *      ,"field:useragent" = "HTTP.USERAGENT:request.user-agent"
+ *
+ *      ,"field:referrer"  = "STRING:request.firstline.uri.query.g.query.referrer"
+ *      ,"field:bui"       = "HTTP.COOKIE:request.cookies.bui"
+ *
+ *      ,"load:nl.basjes.pig.input.apachehttpdlog.ScreenResolutionDissector" = "x"
+ *      ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
+ *      ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
+ *      ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"
+ *      )
  * STORED AS TEXTFILE
- * LOCATION "hdfs://hdfs.server/path/to/access.log.gz";
+ * LOCATION "/user/nbasjes/clicks";
  * </pre>
 */
 
@@ -89,8 +94,8 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
 //    RegexSerDe.INPUT_REGEX, RegexSerDe.OUTPUT_FORMAT_STRING,
 //    RegexSerDe.INPUT_REGEX_CASE_SENSITIVE
 //})
-public class HTTPDAccesslogHCatalogSerde extends AbstractDeserializer {
-    public static final Logger      LOG = LoggerFactory.getLogger(HTTPDAccesslogHCatalogSerde.class);
+public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
+    public static final Logger      LOG = LoggerFactory.getLogger(ApacheHttpdlogDeserializer.class);
     public static final String      FIELD = "field:";
     public static final int         FIELD_LENGTH = FIELD.length();
 
@@ -159,15 +164,15 @@ public class HTTPDAccesslogHCatalogSerde extends AbstractDeserializer {
                     instance.initializeFromSettingsParameter(dissectorParam);
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
-                    throw new SerDeException("Found load with bad specification: No such class:" + key);
+                    throw new SerDeException("Found load with bad specification: No such class:" + key,e);
                 } catch (NoSuchMethodException e) {
-                    throw new SerDeException("Found load with bad specification: Class does not have the required constructor");
+                    throw new SerDeException("Found load with bad specification: Class does not have the required constructor",e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    throw new SerDeException("Got an InvocationTargetException",e);
                 } catch (InstantiationException e) {
-                    e.printStackTrace();
+                    throw new SerDeException("Got an InstantiationException",e);
                 } catch (IllegalAccessException e) {
-                    throw new SerDeException("Found load with bad specification: Required constructor is not public");
+                    throw new SerDeException("Found load with bad specification: Required constructor is not public",e);
                 }
                 LOG.debug("Loaded additional dissector: {}(\"{}\")", dissectorClassName, dissectorParam);
                 continue;

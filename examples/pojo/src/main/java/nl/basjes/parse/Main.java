@@ -36,12 +36,7 @@ public final class Main {
     // To figure out what values we CAN get from this line we instantiate the parser with a dummy class
     // that does not have ANY @Field annotations.
     Parser<Object> dummyParser;
-    try {
-      dummyParser = new ApacheHttpdLoglineParser<>(Object.class, logformat);
-    } catch (ParseException e) {
-      e.printStackTrace();
-      return;
-    }
+    dummyParser = new ApacheHttpdLoglineParser<>(Object.class, logformat);
     LOG.info("==================================");
     List<String> possiblePaths;
     try {

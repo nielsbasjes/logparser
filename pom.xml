@@ -34,7 +34,7 @@
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
     <hadoop.version>2.3.0</hadoop.version>
-    <hive.version>0.14.0</hive.version>
+    <hive.version>0.13.0</hive.version>
     <pig.version>0.13.0</pig.version>
   </properties>
 
