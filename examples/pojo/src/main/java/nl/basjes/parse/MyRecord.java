@@ -1,6 +1,6 @@
 /*
 * Apache HTTPD logparsing made easy
-* Copyright (C) 2013 Niels Basjes
+* Copyright (C) 2011-2015 Niels Basjes
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
