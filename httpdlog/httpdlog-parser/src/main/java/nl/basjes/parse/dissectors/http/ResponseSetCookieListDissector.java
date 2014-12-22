@@ -16,22 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.dissectors;
+package nl.basjes.parse.dissectors.http;
 
+import java.net.HttpCookie;
 import java.util.*;
-import java.util.regex.Pattern;
 
-import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
-public class RequestCookieListDissector extends Dissector {
+public class ResponseSetCookieListDissector extends Dissector {
     // --------------------------------------------
 
-    private static final String INPUT_TYPE = "HTTP.COOKIES";
+    private static final String INPUT_TYPE = "HTTP.SETCOOKIES";
 
     @Override
     public String getInputType() {
@@ -44,7 +43,7 @@ public class RequestCookieListDissector extends Dissector {
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = new ArrayList<>();
-        result.add("HTTP.COOKIE:*");
+        result.add("HTTP.SETCOOKIE:*");
         return result;
     }
 
@@ -57,13 +56,11 @@ public class RequestCookieListDissector extends Dissector {
 
     // --------------------------------------------
 
-    @Override
     protected void initializeNewInstance(Dissector newInstance) {
         // Nothing to do
     }
 
     // --------------------------------------------
-
     private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override
@@ -73,6 +70,7 @@ public class RequestCookieListDissector extends Dissector {
     }
 
     // --------------------------------------------
+
     private boolean wantAllCookies = false;
 
     @Override
@@ -82,8 +80,10 @@ public class RequestCookieListDissector extends Dissector {
 
     // --------------------------------------------
 
+    private final int minimalExpiresLength = "expires=XXXXXXX".length();
+
     // Cache the compiled pattern
-    private final Pattern fieldSeparatorPattern = Pattern.compile("; ");
+    private static final String SPLIT_BY = ", ";
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
@@ -94,30 +94,40 @@ public class RequestCookieListDissector extends Dissector {
             return; // Nothing to do here
         }
 
-        String[] allValues = fieldSeparatorPattern.split(fieldValue);
-        for (String value : allValues) {
-            int equalPos = value.indexOf('=');
-            if (equalPos == -1) {
-                if (!"".equals(value)) {
-                    String theName = value.trim().toLowerCase(); // Just a name, no value
-                    if (wantAllCookies || requestedCookies.contains(theName)) {
-                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName, "");
-                    }
+        // This input is a ', ' separated list.
+        // But the expires field can contain a ','
+        // and HttpCookie.parse(...) doesn't always work :(
+        String[] parts = fieldValue.split(SPLIT_BY);
+
+        String previous="";
+        for (String part:parts) {
+            int expiresIndex = part.toLowerCase().indexOf("expires=");
+            if (expiresIndex != -1) {
+                if (part.length() - minimalExpiresLength < expiresIndex) {
+                    previous = part;
+                    continue;
                 }
-            } else {
-                String theName = value.substring(0, equalPos).trim().toLowerCase();
-                if (wantAllCookies || requestedCookies.contains(theName)) {
-                    String theValue = value.substring(equalPos + 1, value.length()).trim();
-                    try {
-                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName,
-                                Utils.resilientUrlDecode(theValue));
-                    } catch (IllegalArgumentException e) {
-                        // This usually means that there was invalid encoding in the line
-                        throw new DissectionFailure(e.getMessage());
-                    }
+            }
+            String value = part;
+            if (!previous.isEmpty()) {
+                value = previous+ SPLIT_BY +part;
+                previous="";
+            }
+
+            List<HttpCookie> cookies = HttpCookie.parse(value);
+
+            for (HttpCookie cookie : cookies) {
+                cookie.setVersion(1);
+                String cookieName = cookie.getName().toLowerCase();
+                if (wantAllCookies || requestedCookies.contains(cookieName)) {
+                    parsable.addDissection(inputname,
+                            getDissectionType(inputname, cookieName),
+                            cookieName,
+                            value);
                 }
             }
         }
+
     }
 
     // --------------------------------------------
@@ -127,7 +137,7 @@ public class RequestCookieListDissector extends Dissector {
      * This method is intended to be overruled by a subclass
      */
     public String getDissectionType(final String basename, final String name) {
-        return "HTTP.COOKIE";
+        return "HTTP.SETCOOKIE";
     }
 
     // --------------------------------------------

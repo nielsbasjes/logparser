@@ -16,20 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlog.logformat;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package nl.basjes.parse.apachehttpdlog;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Dissector;
-import nl.basjes.parse.core.Parsable;
-import nl.basjes.parse.core.ParsedField;
-import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.dissectors.tokenformat.NamedTokenParser;
+import nl.basjes.parse.dissectors.tokenformat.TokenFormatDissector;
+import nl.basjes.parse.dissectors.tokenformat.TokenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings({
     "PMD.LongVariable", // I like my variable names this way
@@ -37,50 +35,28 @@ import org.slf4j.LoggerFactory;
     "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
     })
-public final class ApacheHttpdLogFormatDissector extends Dissector {
+public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDissector.class);
 
-    private String       logFormat          = null;
-    private List<String> logFormatNames     = null;
-    private List<String> logFormatTypes     = null;
-    private String       logFormatRegEx     = null;
-    private Pattern      logFormatPattern   = null;
-    private boolean      isUsable           = false;
-
-    private List<Token>  logFormatTokens;
-
-    private List<String> outputTypes;
-
-    private static final String FIXED_STRING_TYPE = "NONE";
-
-    // --------------------------------------------
+    public static final String INPUT_TYPE = "APACHELOGLINE";
 
     public ApacheHttpdLogFormatDissector(final String logFormat) {
         setLogFormat(logFormat);
+        setInputType(INPUT_TYPE);
     }
 
     public ApacheHttpdLogFormatDissector() {
+        setInputType(INPUT_TYPE);
+    }
+
+    private void overrideLogFormat(String originalLogformat, String logformat){
+        LOG.debug("Specified logformat \"" + originalLogformat + "\" was mapped to " + logformat);
+        super.setLogFormat(logformat);
     }
 
     @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        setLogFormat(logFormat);
-        return true; // Everything went right
-    }
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        if (newInstance instanceof ApacheHttpdLogFormatDissector) {
-            ((ApacheHttpdLogFormatDissector)newInstance).setLogFormat(logFormat);
-        } else {
-            LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
-        }
-    }
-
     public void setLogFormat(final String logformat) {
-        this.logFormat = logformat;
-
         // Commonly used logformats as documented in the manuals of the Apache Httpd
         // LogFormat "%h %l %u %t \"%r\" %>s %b" common
         // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
@@ -90,252 +66,32 @@ public final class ApacheHttpdLogFormatDissector extends Dissector {
 
         switch (logformat.toLowerCase(Locale.getDefault())) {
         case "common":
-            this.logFormat = "%h %l %u %t \"%r\" %>s %b";
+            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b");
             break;
         case "combined":
-            this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
             break;
         case "combinedio":
-            this.logFormat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O";
+            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O");
             break;
         case "referer":
-            this.logFormat = "%{Referer}i -> %U";
+            overrideLogFormat(logformat, "%{Referer}i -> %U");
             break;
         case "agent":
-            this.logFormat = "%{User-agent}i";
+            overrideLogFormat(logformat, "%{User-agent}i");
             break;
         default:
-            this.logFormat = logformat;
+            super.setLogFormat(logformat);
             break;
         }
-
-        if (!this.logFormat.equals(logformat)) {
-            LOG.debug("Specified logformat \"" + logformat + "\" was mapped to " + this.logFormat);
-        }
-
-        // Now we disassemble the format into parts
-        logFormatTokens = parseApacheLogFileDefinition(this.logFormat);
-
-        outputTypes = new ArrayList<>();
-
-        for (final Token token : logFormatTokens) {
-            String type = token.getType();
-            if (FIXED_STRING_TYPE.equals(type)) {
-                continue;
-            }
-
-            outputTypes.add(token.getType() + ':' + token.getName());
-        }
-    }
-
-    public String getLogFormat() {
-        return logFormat;
-    }
-
-    public String getLogFormatRegEx() {
-        return logFormatRegEx;
     }
 
     // --------------------------------------------
 
-    private final Set<String> requestedFields = new HashSet<>(16);
-
+    
+    // --------------------------------------------
     @Override
-    public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        requestedFields.add(outputname);
-        for (Token token: logFormatTokens) {
-            if (outputname.equals(token.getName())) {
-                return token.getCasts();
-            }
-        }
-        return Casts.STRING_ONLY;
-    }
-
-    // --------------------------------------------
-
-    @Override
-    public void prepareForRun() throws InvalidDissectorException {
-        // At this point we have all the tokens and now we construct the
-        // complete regex and the list to use when extracting
-        // We build the regexp so that it only extracts the needed parts.
-
-        // Allocated buffer is a bit bigger than needed
-        final StringBuilder regex = new StringBuilder(logFormatTokens.size() * 16);
-
-        logFormatNames = new ArrayList<>();
-        logFormatTypes = new ArrayList<>();
-
-        regex.append('^'); // Link to start of the line
-        for (final Token token : logFormatTokens) {
-            if (FIXED_STRING_TYPE.equals(token.getType())) {
-                // Only insert the fixed part
-                regex.append(Pattern.quote(token.getRegex()));
-            } else if (requestedFields.contains(token.getName())) {
-                logFormatNames.add(token.getName());
-                logFormatTypes.add(token.getType());
-                regex.append("(").append(token.getRegex()).append(")");
-            } else {
-                regex.append("(?:").append(token.getRegex()).append(")");
-            }
-
-        }
-        regex.append('$'); // Link to end of the line
-
-        logFormatRegEx = regex.toString();
-        LOG.debug("Source logformat : " + logFormat);
-        LOG.debug("Used regex       : " + logFormatRegEx);
-
-        // Now we compile this expression ONLY ONCE!
-        logFormatPattern = Pattern.compile(logFormatRegEx);
-
-        isUsable = true; // Ready!
-    }
-
-    // --------------------------------------------
-
-    private static final String INPUT_TYPE = "APACHELOGLINE";
-    @Override
-    public String getInputType() {
-        return INPUT_TYPE;
-    }
-
-    @Override
-    public List<String> getPossibleOutput() {
-        return outputTypes;
-    }
-
-    @Override
-    public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
-        if (!isUsable) {
-            throw new DissectionFailure("Dissector in unusable state");
-        }
-
-        final ParsedField line = parsable.getParsableField(INPUT_TYPE, inputname);
-
-        // Now we create a matcher for this line
-        final Matcher matcher = logFormatPattern.matcher(line.getValue());
-
-        // Is it all as expected?
-        final boolean matches = matcher.find();
-
-        if (matches) {
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                String matchedStr = matcher.group(i);
-                final String matchedName            = logFormatNames.get(i - 1);
-                final String matchedType            = logFormatTypes.get(i - 1);
-
-                // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
-                if (matchedStr.equals("-")){
-                    matchedStr=null;
-                }
-                parsable.addDissection(inputname, matchedType, matchedName, matchedStr);
-            }
-        } else {
-            throw new DissectionFailure("The input line does not match the specified apache log format." +
-                                        "Line     : " + line.getValue() + "\n" +
-                                        "LogFormat: " + logFormat       + "\n" +
-                                        "RegEx    : " + logFormatRegEx);
-        }
-
-    }
-
-    // --------------------------------------------
-
-    public static String makeHeaderNamesLowercaseInLogFormat(String logformat) {
-        // In vim I would simply do: %s@{\([^}]*\)}@{\L\1\E@g
-        // But such an expression is not (yet) possible in Java
-        StringBuffer sb = new StringBuffer(logformat.length());
-        Pattern p = Pattern.compile("\\{([^\\}]*)\\}");
-        Matcher m = p.matcher(logformat);
-        while (m.find()) {
-            m.appendReplacement(sb, '{'+m.group(1).toLowerCase()+'}');
-        }
-        m.appendTail(sb);
-
-        return sb.toString();
-    }
-
-    // --------------------------------------------
-    @SuppressWarnings({ "PMD.AvoidInstantiatingObjectsInLoops",
-            "PMD.LongVariable", "PMD.ExcessiveMethodLength",
-            "PMD.DataflowAnomalyAnalysis", "PMD.NcssMethodCount",
-            "PMD.NPathComplexity" })
-    private List<Token> parseApacheLogFileDefinition(final String apacheLogFormat) {
-
-        // Add all available parsers
-        final List<TokenParser> tokenParsers = createAllTokenParsers();
-        final List<Token> tokens = new ArrayList<>(50);
-
-        // We first change all the references to headers to lowercase
-        // because we must handle these as "case insensitive"
-        String cleanedApacheLogFormat = makeHeaderNamesLowercaseInLogFormat(apacheLogFormat);
-
-        // Now we let all tokens figure out if they are present in here
-        for (TokenParser tokenParser : tokenParsers) {
-            List<Token> newTokens = tokenParser.getTokens(cleanedApacheLogFormat);
-            if (newTokens != null) {
-                tokens.addAll(newTokens);
-            }
-        }
-
-        // We now have a full list of all matched tokens
-        // ---------------------------------------
-        // We sort them by position of the token in the format specifier
-        Collections.sort(tokens, new TokenSorterByStartPos());
-
-        // First we take out the duplicates with a lower prio(=relevance score)
-        final List<Token> kickTokens = new ArrayList<>(50);
-        Token prevToken = null;
-        for (Token token : tokens) {
-            if (prevToken==null){
-                prevToken=token;
-                continue;
-            }
-
-            if (prevToken.getStartPos() == token.getStartPos()) {
-                if (prevToken.getPrio() < token.getPrio()) {
-                    kickTokens.add(prevToken);
-                } else {
-                    kickTokens.add(token);
-                    continue;
-                }
-            }
-            prevToken=token;
-
-        }
-
-        tokens.removeAll(kickTokens);
-
-        final List<Token> allTokens = new ArrayList<>(50);
-        // We now look for the holes and add "FIXED STRING" tokens
-        int tokenBegin;
-        int tokenEnd = 0;
-        for (Token token : tokens) {
-            tokenBegin = token.getStartPos();
-            // Space between the begin of the next token and the end of the previous token?
-            if (tokenBegin - tokenEnd > 0) {
-                String separator = cleanedApacheLogFormat.substring(tokenEnd, tokenBegin);
-                Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                        separator, tokenBegin, tokenBegin - tokenEnd);
-                allTokens.add(fixedStringToken);
-            }
-            allTokens.add(token);
-            tokenEnd = tokenBegin + token.getLength();
-        }
-
-        int apacheLogFormatLength = cleanedApacheLogFormat.length();
-        if (tokenEnd < apacheLogFormatLength) {
-            String separator = cleanedApacheLogFormat.substring(tokenEnd);
-            Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                    separator, tokenEnd, cleanedApacheLogFormat.length() - tokenEnd);
-            allTokens.add(fixedStringToken);
-        }
-
-        return allTokens;
-    }
-
-    // --------------------------------------------
-    private List<TokenParser> createAllTokenParsers() {
+    protected List<TokenParser> createAllTokenParsers() {
         List<TokenParser> parsers = new ArrayList<>(60);
 
         // Quote from

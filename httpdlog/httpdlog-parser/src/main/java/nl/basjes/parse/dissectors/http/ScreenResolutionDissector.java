@@ -1,4 +1,4 @@
-package nl.basjes.parse.http.dissectors;
+package nl.basjes.parse.dissectors.http;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;

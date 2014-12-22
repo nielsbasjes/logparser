@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.http.dissectors;
+package nl.basjes.parse.dissectors.http;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
@@ -24,15 +24,14 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
-import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
-public class ResponseSetCookieDissector extends Dissector {
+import static nl.basjes.parse.Utils.resilientUrlDecode;
+
+public class QueryStringFieldDissector extends Dissector {
     // --------------------------------------------
 
-    private static final String INPUT_TYPE = "HTTP.SETCOOKIE";
+    private static final String INPUT_TYPE = "HTTP.QUERYSTRING";
 
     @Override
     public String getInputType() {
@@ -45,10 +44,7 @@ public class ResponseSetCookieDissector extends Dissector {
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = new ArrayList<>();
-        result.add("STRING:value");
-        result.add("STRING:expires");
-        result.add("STRING:path");
-        result.add("STRING:domain");
+        result.add("STRING:*");
         return result;
     }
 
@@ -66,18 +62,23 @@ public class ResponseSetCookieDissector extends Dissector {
         // Nothing to do
     }
 
+    // --------------------------------------------
+
+    private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        // We do not do anything extra here
+        requestedParameters.add(outputname.substring(inputname.length() + 1));
         return Casts.STRING_ONLY;
     }
 
     // --------------------------------------------
 
+    private boolean wantAllFields = false;
+
     @Override
     public void prepareForRun() {
-        // We do not do anything extra here
+        wantAllFields = requestedParameters.contains("*");
     }
 
     // --------------------------------------------
@@ -86,21 +87,34 @@ public class ResponseSetCookieDissector extends Dissector {
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
-        final String fieldValue = field.getValue();
-        if (fieldValue == null || fieldValue.isEmpty()){
+        String fieldValue = field.getValue();
+        if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }
 
-        Long nowSeconds = System.currentTimeMillis()/1000;
-        List<HttpCookie> cookies = HttpCookie.parse(fieldValue);
+        String[] allValues = fieldValue.split("&");
 
-        for (HttpCookie cookie : cookies) {
-            parsable.addDissection(inputname, getDissectionType(inputname, "value"), "value", cookie.getValue());
-            parsable.addDissection(inputname, getDissectionType(inputname, "expires"), "expires",
-                    Long.toString(nowSeconds + cookie.getMaxAge()));
-            parsable.addDissection(inputname, getDissectionType(inputname, "path"), "path", cookie.getPath());
-            parsable.addDissection(inputname, getDissectionType(inputname, "domain"), "domain", cookie.getDomain());
-            parsable.addDissection(inputname, getDissectionType(inputname, "comment"), "comment", cookie.getComment());
+        for (String value : allValues) {
+            int equalPos = value.indexOf('=');
+            if (equalPos == -1) {
+                if (!"".equals(value)) {
+                    String name = value.toLowerCase();
+                    if (wantAllFields || requestedParameters.contains(name)) {
+                        parsable.addDissection(inputname, getDissectionType(inputname, value), name, "");
+                    }
+                }
+            } else {
+                String name = value.substring(0, equalPos).toLowerCase();
+                if (wantAllFields || requestedParameters.contains(name)) {
+                    try {
+                        parsable.addDissection(inputname, getDissectionType(inputname, name), name,
+                                resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                    } catch (IllegalArgumentException e) {
+                        // This usually means that there was invalid encoding in the line
+                        throw new DissectionFailure(e.getMessage());
+                    }
+                }
+            }
         }
     }
 
@@ -111,7 +125,7 @@ public class ResponseSetCookieDissector extends Dissector {
      * This method is intended to be overruled by a subclass
      */
     public String getDissectionType(final String basename, final String name) {
-        return "STRING"; // Possible outputs are of the same type.
+        return "STRING";
     }
 
     // --------------------------------------------

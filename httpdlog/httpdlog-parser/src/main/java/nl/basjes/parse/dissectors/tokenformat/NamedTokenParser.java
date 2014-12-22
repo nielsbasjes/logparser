@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlog.logformat;
+package nl.basjes.parse.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
 
@@ -61,7 +61,7 @@ public class NamedTokenParser extends TokenParser {
         }
 
         // Retrieve the name
-        final String fieldname = matcher.group(1);
+        final String fieldName = matcher.group(1);
 
         // Retrieve indices of matching string
         final int start = matcher.start();
@@ -69,7 +69,7 @@ public class NamedTokenParser extends TokenParser {
         // the end is index of the last matching character + 1
 
         return new Token(
-                getValueName() + fieldname,
+                getValueName() + fieldName,
                 getValueType(),
                 getCasts(),
                 getRegex(),

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlog.logformat;
+package nl.basjes.parse.dissectors.tokenformat;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -49,7 +49,7 @@ public class TokenParser {
     public static final String FORMAT_NO_SPACE_STRING = "[^\\s]*";
     public static final String FIXED_STRING = "FIXED_STRING";
 
-    // This expression "forces" a year at most 2099 :).
+    // This expression "forces" a year at most 2999 :).
     public static final String FORMAT_STANDARD_TIME_US =
             "\\[[0-3][0-9]/(?:[A-Z][a-z][a-z])/2[0-9][0-9][0-9]:[0-9][0-9]:[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9]0\\]";
 //    public static final String FORMAT_STANDARD_TIME =

@@ -31,6 +31,12 @@ public final class Utils {
     private static final Pattern VALID_NON_STANDARD     = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
     private static final Pattern CHOPPED_NON_STANDARD   = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 
+    /**
+     * The main goal of the resilientUrlDecode is to have a UrlDecode that keeps working
+     * even if the input is seriously flawed or even uses a rejected standard.
+     * @param input
+     * @return
+     */
     public static String resilientUrlDecode(String input) {
         String cookedInput = input;
 

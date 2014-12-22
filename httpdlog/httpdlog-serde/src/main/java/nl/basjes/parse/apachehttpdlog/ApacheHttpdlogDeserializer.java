@@ -79,7 +79,7 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
  *      ,"field:referrer"  = "STRING:request.firstline.uri.query.g.query.referrer"
  *      ,"field:bui"       = "HTTP.COOKIE:request.cookies.bui"
  *
- *      ,"load:nl.basjes.parse.http.dissectors.ScreenResolutionDissector" = "x"
+ *      ,"load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector" = "x"
  *      ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
  *      ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
  *      ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"

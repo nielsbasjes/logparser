@@ -63,7 +63,7 @@ public class TestApacheHttpdlogDeserializer {
     schema.setProperty("field:timestamp",     "TIME.EPOCH:request.receive.time.epoch");
     schema.setProperty("field:ip",            "IP:connection.client.host");
     schema.setProperty("field:useragent",     "HTTP.USERAGENT:request.user-agent");
-    schema.setProperty("load:nl.basjes.parse.http.dissectors.ScreenResolutionDissector", "x");
+    schema.setProperty("load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector", "x");
     schema.setProperty("map:request.firstline.uri.query.s", "SCREENRESOLUTION");
     schema.setProperty("field:screenWidth",   "SCREENWIDTH:request.firstline.uri.query.s.width");
     schema.setProperty("field:screenHeight",  "SCREENHEIGHT:request.firstline.uri.query.s.height");

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package http.dissectors;
+package dissectors.http;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Field;

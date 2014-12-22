@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlog.logformat;
+package nl.basjes.parse.dissectors.tokenformat;
 
 public class TokenSorterByStartPos implements java.util.Comparator<Token> {
     @Override
