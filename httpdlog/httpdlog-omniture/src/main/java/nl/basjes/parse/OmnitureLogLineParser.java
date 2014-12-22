@@ -22,12 +22,25 @@ import java.text.ParseException;
 
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
+
+    Logger LOG = LoggerFactory.getLogger(OmnitureLogLineParser.class);
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
         throws ParseException {
         super(clazz, logformat);
+
+        String deprecation = " ---------- [DEPRECATED] ";
+        LOG.warn("\n" +
+                deprecation + "\n" +
+                deprecation + "The Omniture specific parser has been deprecated.\n" +
+                deprecation + "Use the normal Apache parser in conjunction with these two mappings:\n" +
+                deprecation + "    request.firstline.uri.query.g ==> HTTP.URI\n"+
+                deprecation + "    request.firstline.uri.query.r ==> HTTP.URI\n"+
+                deprecation );
 
         addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
         addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
