@@ -42,11 +42,12 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
     public static final String INPUT_TYPE = "APACHELOGLINE";
 
     public ApacheHttpdLogFormatDissector(final String logFormat) {
-        setLogFormat(logFormat);
+        super(logFormat);
         setInputType(INPUT_TYPE);
     }
 
     public ApacheHttpdLogFormatDissector() {
+        super();
         setInputType(INPUT_TYPE);
     }
 

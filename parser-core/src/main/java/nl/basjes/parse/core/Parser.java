@@ -156,14 +156,17 @@ public class Parser<RECORD> {
 
         for (final Dissector dissector : allDissectors) {
             final String inputType = dissector.getInputType();
-            final List<String> outputs = dissector.getPossibleOutput();
+            if (inputType == null) {
+                throw new InvalidDissectorException("Dissector returns null on getInputType(): ["+ dissector.getClass().getCanonicalName()+"]");
+            }
 
+            final List<String> outputs = dissector.getPossibleOutput();
             if (outputs == null || outputs.size() == 0) {
                 throw new InvalidDissectorException("Dissector cannot create any outputs: ["+ dissector.getClass().getCanonicalName()+"]");
             }
 
             // Create all dissector phases
-            for (final String output : outputs) {
+            for (final String output: outputs) {
                 final int colonPos = output.indexOf(':');
                 final String outputType = output.substring(0, colonPos);
                 final String name = output.substring(colonPos + 1);
@@ -696,6 +699,11 @@ public class Parser<RECORD> {
 
         for (Dissector dissector : allDissectors) {
             final String inputType = dissector.getInputType();
+            if (inputType == null) {
+                LOG.error("Dissector returns null on getInputType(): ["+ dissector.getClass().getCanonicalName()+"]");
+                return null;
+            }
+
             final List<String> outputs = dissector.getPossibleOutput();
             pathNodes.put(inputType, outputs);
         }
