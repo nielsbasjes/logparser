@@ -34,8 +34,8 @@ public final class Utils {
     /**
      * The main goal of the resilientUrlDecode is to have a UrlDecode that keeps working
      * even if the input is seriously flawed or even uses a rejected standard.
-     * @param input
-     * @return
+     * @param input the UrlEncoded input string
+     * @return Url decoded result string
      */
     public static String resilientUrlDecode(String input) {
         String cookedInput = input;
