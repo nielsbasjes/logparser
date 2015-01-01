@@ -30,18 +30,11 @@
   <artifactId>httpdlog-stormbolt</artifactId>
   <name>Parser - Apache HTTPD - Storm Bolt</name>
 
-  <repositories>
-    <repository>
-      <id>clojars</id>
-      <url>http://clojars.org/repo/</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
-      <groupId>storm</groupId>
-      <artifactId>storm</artifactId>
-      <version>0.8.2</version>
+      <groupId>org.apache.storm</groupId>
+      <artifactId>storm-core</artifactId>
+      <version>0.9.3</version>
       <scope>provided</scope> <!-- keep storm out of the jar-with-dependencies!!! -->
     </dependency>
 
