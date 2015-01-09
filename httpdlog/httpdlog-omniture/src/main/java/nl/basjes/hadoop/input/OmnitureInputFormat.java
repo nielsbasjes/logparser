@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
     public OmnitureInputFormat() {
         super();

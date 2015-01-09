@@ -25,9 +25,10 @@ import nl.basjes.parse.core.Casts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
 
-    Logger LOG = LoggerFactory.getLogger(OmnitureLogLineParser.class);
+    private Logger LOG = LoggerFactory.getLogger(OmnitureLogLineParser.class);
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
         throws ParseException {

@@ -27,6 +27,7 @@ import nl.basjes.parse.OmnitureLogLineParser;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 
+@Deprecated
 public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
 
     public OmnitureRecordReader(

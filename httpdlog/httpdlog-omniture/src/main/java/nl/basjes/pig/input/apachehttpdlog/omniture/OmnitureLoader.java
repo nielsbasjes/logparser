@@ -25,6 +25,7 @@ import nl.basjes.pig.input.apachehttpdlog.Loader;
 
 import org.apache.hadoop.mapreduce.InputFormat;
 
+@Deprecated
 public class OmnitureLoader extends Loader {
 
     /**
