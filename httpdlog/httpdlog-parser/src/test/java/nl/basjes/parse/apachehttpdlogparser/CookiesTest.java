@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CookiesTest {
 
-    public class EmptyTestRecord {
+    private class EmptyTestRecord {
     }
 
     public class TestRecord {

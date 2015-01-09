@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public final class Parsable<RECORD> {
 
-    static final Logger LOG = LoggerFactory.getLogger(Parsable.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Parsable.class);
 
     private final Parser<RECORD>           parser;
 
