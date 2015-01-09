@@ -63,7 +63,7 @@ So the parser will have a different structure depending on the requested output.
 These dynamic properties also allow 'mapping a field to a different type'. Lets illustrate what this is by looking at the most common usecase.
 Assume you are trying to parse the logline for a pixel that was written by a webanalytics product. In that scenario it is common that the URL is that of a pixel and one of the query string parameters contains the actual URL. Now by default a querystring parameter gets the type STRING (which really means that is is arbitrary and cannot be dissected any further). Using this remapping (see API details per language) we can now say that a specific query string parameter really has the type HTTP.URL. As a consequence the system can now continue dissecting this specific query string parameter into things like the host, port and query string parameters.
 
-All that is needed to map the 'g' and 'r' parameters so they are dissected futher is this:
+All that is needed to map the 'g' and 'r' parameters so they are dissected further is this:
 
 Java: Call these against the parser instance right after construction
 
