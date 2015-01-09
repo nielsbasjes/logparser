@@ -192,7 +192,7 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    private static class TestRecordMissing {
+    public static class TestRecordMissing {
         @SuppressWarnings("UnusedDeclaration")
         @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing" })
         public void dummy(final String name, final String value) {
@@ -212,7 +212,7 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    private static class TestRecordMissing2 {
+    public static class TestRecordMissing2 {
         @SuppressWarnings("UnusedDeclaration")
         @Field({ "BLURP:request.firstline.uri.query.ThisShouldBeMissing", "HTTP.HEADER:response.header.etag" })
         public void dummy(final String name, final String value) {
@@ -264,7 +264,7 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
-    private class EmptyTestRecord extends HashMap<String, String> {
+    public class EmptyTestRecord extends HashMap<String, String> {
         @Override
         public String put(String key, String value) {
             return super.put(key, value);
