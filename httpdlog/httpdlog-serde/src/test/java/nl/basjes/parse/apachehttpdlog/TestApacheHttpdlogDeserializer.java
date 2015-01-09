@@ -2,8 +2,8 @@ package nl.basjes.parse.apachehttpdlog;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
-import org.apache.hadoop.hive.serde2.*;
-import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+import org.apache.hadoop.hive.serde2.AbstractDeserializer;
+import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.io.Text;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,21 +12,20 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestApacheHttpdlogDeserializer {
 
-  Logger LOG = LoggerFactory.getLogger(TestApacheHttpdlogDeserializer.class);
+  private final Logger LOG = LoggerFactory.getLogger(TestApacheHttpdlogDeserializer.class);
 
   /**
    * Returns the union of table and partition properties,
    * with partition properties taking precedence.
-   * @param tblProps
-   * @param partProps
+   * @param tblProps table properties
+   * @param partProps partitioning properties
    * @return the overlayed properties
    */
-  public static Properties createOverlayedProperties(Properties tblProps, Properties partProps) {
+  private static Properties createOverlayedProperties(Properties tblProps, Properties partProps) {
     Properties props = new Properties();
     props.putAll(tblProps);
     if (partProps != null) {
@@ -53,7 +52,63 @@ public class TestApacheHttpdlogDeserializer {
                   "\" \"-\" \"-\"";
 
   @Test
-  public void testHTTPDAccesslogHCatalogSerde() throws Throwable {
+  public void testBasicParse() throws Throwable {
+    // Create the SerDe
+    AbstractDeserializer serDe = getTestSerDe();
+
+    // Data
+    Text t = new Text(testLogLine);
+
+    // Deserialize
+    Object row = serDe.deserialize(t);
+//    ObjectInspector rowOI = serDe.getObjectInspector();
+
+    assertTrue(row instanceof List);
+
+    List<Object> rowArray = (List<Object>)row;
+    LOG.debug("Deserialized row: " + row);
+    assertEquals("127.0.0.1",     rowArray.get(0));
+    assertEquals(1351112444000L,  rowArray.get(1));
+    assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0", rowArray.get(2));
+    assertEquals(800L,            rowArray.get(3));
+    assertEquals(600L,            rowArray.get(4));
+  }
+
+
+  @Test (expected = SerDeException.class)
+  public void testHighFailRatio1() throws Throwable {
+    AbstractDeserializer serDe = getTestSerDe();
+
+    // Data
+    Text goodLine = new Text(testLogLine);
+    Text badLine = new Text("A really bad line");
+    Object row;
+
+    // Deserialize good line
+    row = serDe.deserialize(goodLine);
+    assertNotNull(row);
+
+    // Deserialize bad line
+    row = serDe.deserialize(badLine);
+    assertNull(row);
+
+    for (int i = 0; i < 999; i ++) {
+      // Deserialize good line
+      row = serDe.deserialize(goodLine);
+      assertNotNull(row);
+    }
+    for (int i = 0; i < 99; i ++) {
+      // Deserialize bad line
+      row = serDe.deserialize(badLine);
+      assertNull(row);
+
+      // Deserialize good line
+      row = serDe.deserialize(goodLine);
+      assertNotNull(row);
+    }
+  }
+
+  private AbstractDeserializer getTestSerDe() throws SerDeException {
     // Create the SerDe
     Properties schema = new Properties();
     schema.setProperty(serdeConstants.LIST_COLUMNS, "ip,timestamp,useragent,screenWidth,screenHeight");
@@ -70,23 +125,8 @@ public class TestApacheHttpdlogDeserializer {
 
     AbstractDeserializer serDe = new ApacheHttpdlogDeserializer();
     serDe.initialize(new Configuration(), createOverlayedProperties(schema, null));
-
-    // Data
-    Text t = new Text(testLogLine);
-
-    // Deserialize
-    Object row = serDe.deserialize(t);
-    ObjectInspector rowOI = serDe.getObjectInspector();
-
-    assertTrue(row instanceof List);
-
-    List<Object> rowArray = (List<Object>)row;
-    LOG.debug("Deserialized row: " + row);
-    assertEquals("127.0.0.1",     rowArray.get(0));
-    assertEquals(1351112444000L,  rowArray.get(1));
-    assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0", rowArray.get(2));
-    assertEquals(800L,            rowArray.get(3));
-    assertEquals(600L,            rowArray.get(4));
+    return serDe;
   }
+
 
 }

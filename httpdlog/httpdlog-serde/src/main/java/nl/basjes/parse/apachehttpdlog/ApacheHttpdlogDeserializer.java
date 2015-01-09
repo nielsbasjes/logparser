@@ -20,7 +20,14 @@ package nl.basjes.parse.apachehttpdlog;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
@@ -44,7 +51,8 @@ import org.apache.hadoop.io.Writable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static nl.basjes.parse.core.Casts.*;
+import static nl.basjes.parse.core.Casts.DOUBLE;
+import static nl.basjes.parse.core.Casts.LONG;
 import static nl.basjes.parse.core.Casts.STRING;
 import static org.apache.hadoop.hive.serde.serdeConstants.BIGINT_TYPE_NAME;
 import static org.apache.hadoop.hive.serde.serdeConstants.DOUBLE_TYPE_NAME;
@@ -95,25 +103,29 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
 //    RegexSerDe.INPUT_REGEX_CASE_SENSITIVE
 //})
 public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
-    public static final Logger      LOG = LoggerFactory.getLogger(ApacheHttpdlogDeserializer.class);
-    public static final String      FIELD = "field:";
-    public static final int         FIELD_LENGTH = FIELD.length();
+    private static final Logger      LOG = LoggerFactory.getLogger(ApacheHttpdlogDeserializer.class);
+    private static final String      FIELD = "field:";
 
-    public static final String      MAP_FIELD = "map:";
-    public static final int         MAP_FIELD_LENGTH = MAP_FIELD.length();
-    public static final String      LOAD_DISSECTOR = "load:";
-    public static final int         LOAD_DISSECTOR_LENGTH = LOAD_DISSECTOR.length();
+    private static final String      MAP_FIELD = "map:";
+    private static final int         MAP_FIELD_LENGTH = MAP_FIELD.length();
+    private static final String      LOAD_DISSECTOR = "load:";
+    private static final int         LOAD_DISSECTOR_LENGTH = LOAD_DISSECTOR.length();
 
     private StructObjectInspector   rowOI;
     private ArrayList<Object>       row;
 
-    private List<String>            columnNames;
-    private List<TypeInfo>          columnTypes;
-    private List<String>            fieldList;
-    private int                     numColumns;
-
     private ApacheHttpdLoglineParser<ParsedRecord> parser;
     private ParsedRecord            currentValue;
+
+
+    // We do not want the parsing to fail immediately when we hit a single 'bad' line.
+    // So we count the good and bad lines.
+    // If we see more than 1% bad lines we abort (after we have seen 1000 lines)
+    private static final long    MINIMAL_FAIL_LINES      = 1000;
+    private static final int     MINIMAL_FAIL_PERCENTAGE =    1;
+    private long    bytesInput  = 0;
+    private long    linesInput  = 0;
+    private long    linesBad    = 0;
 
     class ColumnToGetterMapping {
         int    index;
@@ -128,20 +140,21 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
         throws SerDeException {
 
         boolean usable = true;
+        bytesInput = 0;
+        linesInput = 0;
+        linesBad   = 0;
 
         String logformat = props.getProperty("logformat");
 
-        Set<String> requestedFields = new HashSet<>();
         Map<String, Set<String>> typeRemappings = new HashMap<>();
         List<Dissector> additionalDissectors = new ArrayList<>();
 
         for (Map.Entry<Object, Object> property: props.entrySet()){
             String key = (String)property.getKey();
-            String value = (String)property.getValue();
 
             if (key.startsWith(MAP_FIELD)) {
                 String mapField = key.substring(MAP_FIELD_LENGTH);
-                String mapType  = value;
+                String mapType  = (String)property.getValue();
 
                 Set<String> remapping = typeRemappings.get(mapField);
                 if (remapping == null) {
@@ -155,7 +168,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
 
             if (key.startsWith(LOAD_DISSECTOR)) {
                 String dissectorClassName = key.substring(LOAD_DISSECTOR_LENGTH);
-                String dissectorParam = value;
+                String dissectorParam = (String)property.getValue();
 
                 try {
                     Class<?> clazz = Class.forName(dissectorClassName);
@@ -175,26 +188,27 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                     throw new SerDeException("Found load with bad specification: Required constructor is not public",e);
                 }
                 LOG.debug("Loaded additional dissector: {}(\"{}\")", dissectorClassName, dissectorParam);
-                continue;
             }
         }
 
         currentValue = new ParsedRecord();
 
-        String columnNameProperty = props.getProperty(serdeConstants.LIST_COLUMNS);
-        String columnTypeProperty = props.getProperty(serdeConstants.LIST_COLUMN_TYPES);
-        columnNames = Arrays.asList(columnNameProperty.split(","));
-        columnTypes = TypeInfoUtils.getTypeInfosFromTypeString(columnTypeProperty);
+
+//        List<String>            fieldList;
+        int                     numColumns;
+
+        String columnNameProperty  = props.getProperty(serdeConstants.LIST_COLUMNS);
+        String columnTypeProperty  = props.getProperty(serdeConstants.LIST_COLUMN_TYPES);
+        List<String> columnNames   = Arrays.asList(columnNameProperty.split(","));
+        List<TypeInfo> columnTypes = TypeInfoUtils.getTypeInfosFromTypeString(columnTypeProperty);
         assert columnNames.size() == columnTypes.size();
         numColumns = columnNames.size();
-
 
         parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
         parser.setTypeRemappings(typeRemappings);
         parser.addDissectors(additionalDissectors);
 
-        List<ObjectInspector> columnOIs = new ArrayList<ObjectInspector>(columnNames.size());
-        fieldList = new ArrayList<String>(columnNames.size());
+        List<ObjectInspector> columnOIs = new ArrayList<>(columnNames.size());
 
         try {
             for (int columnNr = 0; columnNr < numColumns; columnNr++) {
@@ -209,8 +223,6 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                     usable = false;
                     continue;
                 }
-
-                fieldList.add(fieldValue);
 
                 ColumnToGetterMapping ctgm = new ColumnToGetterMapping();
                 ctgm.index      = columnNr;
@@ -247,7 +259,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
         rowOI = ObjectInspectorFactory.getStandardStructObjectInspector(columnNames, columnOIs);
 
         // Constructing the row object, etc, which will be reused for all rows.
-        row = new ArrayList<Object>(numColumns);
+        row = new ArrayList<>(numColumns);
         for (int c = 0; c < numColumns; c++) {
             row.add(null);
         }
@@ -266,18 +278,25 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     @Override
     public Object deserialize(Writable writable) throws SerDeException {
         if (!(writable instanceof Text)) {
-            return null; // FIXME: Report the error.
+            throw new SerDeException("The input MUST be a Text line.");
         }
+
+        bytesInput += ((Text) writable).getLength();
+        linesInput ++;
 
         try {
             currentValue.clear();
             parser.parse(currentValue, writable.toString());
         } catch (DissectionFailure dissectionFailure) {
-            return null; // FIXME: Handle better
-        } catch (InvalidDissectorException e) {
-            return null; // FIXME: Handle better
-        } catch (MissingDissectorsException e) {
-            return null; // FIXME: Handle better
+            linesBad ++;
+            if (linesInput >= MINIMAL_FAIL_LINES) {
+                if (100* linesBad > MINIMAL_FAIL_PERCENTAGE * linesInput){
+                    throw new SerDeException("To many bad lines: " + linesBad + " of " + linesInput + " are bad.");
+                }
+            }
+            return null; // Just return that this line is nothing.
+        } catch (InvalidDissectorException |MissingDissectorsException e) {
+            throw new SerDeException("Cannot continue; Fix the Dissectors before retrying",e);
         }
 
         for (ColumnToGetterMapping ctgm: columnToGetterMappings) {
