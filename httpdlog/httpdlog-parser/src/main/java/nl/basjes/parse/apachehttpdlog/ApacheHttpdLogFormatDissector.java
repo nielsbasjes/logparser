@@ -116,16 +116,16 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %!200,304,302{Referer}i   Logs Referer on all requests that do not return one of the three
         //                           specified codes, "-" otherwise.
 
-        return tokenLogFormat.replaceAll("%!?[0-9][0-9][0-9](?:,[0-9][0-9][0-9])*","%");
+        return tokenLogFormat.replaceAll("%!?[0-9]{3}(?:,[0-9]{3})*","%");
     }
 
     @Override
     protected String cleanupLogFormat(String tokenLogFormat) {
         return  makeHeaderNamesLowercaseInLogFormat(
-                    removeModifiersFromLogformat(
+                removeModifiersFromLogformat(
                         tokenLogFormat
-                    )
-                );
+                )
+        );
     }
 
     // --------------------------------------------
