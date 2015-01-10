@@ -219,18 +219,14 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
 
-    public static String makeHeaderNamesLowercaseInLogFormat(String logformat) {
-        // In vim I would simply do: %s@{\([^}]*\)}@{\L\1\E@g
-        // But such an expression is not (yet) possible in Java
-        StringBuffer sb = new StringBuffer(logformat.length());
-        Pattern p = Pattern.compile("\\{([^\\}]*)\\}");
-        Matcher m = p.matcher(logformat);
-        while (m.find()) {
-            m.appendReplacement(sb, '{'+m.group(1).toLowerCase()+'}');
-        }
-        m.appendTail(sb);
-
-        return sb.toString();
+    /**
+     * This should be overridden if there is a need to cleanup the
+     * actual logformat before parsing.
+     * @param tokenLogFormat the 'dirty' logformat
+     * @return the cleaned version of the tokenLogFormat.
+     */
+    protected String cleanupLogFormat(String tokenLogFormat){
+        return tokenLogFormat;
     }
 
     // --------------------------------------------
@@ -246,7 +242,7 @@ public abstract class TokenFormatDissector extends Dissector {
 
         // We first change all the references to headers to lowercase
         // because we must handle these as "case insensitive"
-        String cleanedTokenLogFormat = makeHeaderNamesLowercaseInLogFormat(tokenLogFormat);
+        String cleanedTokenLogFormat = cleanupLogFormat(tokenLogFormat);
 
         // Now we let all tokens figure out if they are present in here
         for (TokenParser tokenParser : tokenParsers) {

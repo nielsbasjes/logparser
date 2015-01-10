@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlogparser;
+package nl.basjes.parse.apachehttpdlog;
 
 import nl.basjes.parse.Utils;
 import static org.junit.Assert.*;

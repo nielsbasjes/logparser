@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.basjes.parse.apachehttpdlogparser;
+package nl.basjes.parse.apachehttpdlog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLogFormatDissector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
@@ -87,10 +85,11 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" "
+    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D \"%200{User-agent}i\" \"%{Cookie}i\" "
                              + "\"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
+    // The modifiers ( like '!200,304,302') are to be removed.
     // This next value is what should be used internally
     private final String expectedLogFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
             + "\"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
@@ -252,8 +251,13 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void testMakeHeaderNamesLowercaseInLogFormat(){
-        assertEquals(expectedLogFormat, ApacheHttpdLogFormatDissector.makeHeaderNamesLowercaseInLogFormat(logFormat));
+    public void testLogFormatCleanup(){
+        ApacheHttpdLogFormatDissector d = new ApacheHttpdLogFormatDissector();
+
+        assertEquals("foo", d.cleanupLogFormat("foo"));
+        assertEquals(expectedLogFormat, d.cleanupLogFormat(logFormat));
+        assertEquals("%{user-agent}i %% %{referer}i %s %{user-agent}i %% %{referer}i",
+                d.cleanupLogFormat("%400,501{User-agent}i %% %!200,304,302{Referer}i %s %{User-agent}i %% %{Referer}i"));
     }
 
     @Test
