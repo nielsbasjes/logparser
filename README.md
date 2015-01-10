@@ -17,7 +17,6 @@ In addition to the config options specified in the Apache HTTPD manual under
 
 Currently *not yet supported features*:
 
-* Modifiers: "%400,501{User-agent}i"
 * %{format}t : The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
 
 Building
