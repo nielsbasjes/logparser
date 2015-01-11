@@ -18,6 +18,7 @@
 
 package nl.basjes.parse.apachehttpdlog;
 
+import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.dissectors.tokenformat.NamedTokenParser;
 import nl.basjes.parse.dissectors.tokenformat.TokenFormatDissector;
@@ -126,6 +127,36 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                         tokenLogFormat
                 )
         );
+    }
+
+
+    @Override
+    public String decodeExtractedValue(String tokenName, String value) {
+        if (value == null || value.equals("")) {
+            return value;
+        }
+
+        // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
+        if (value.equals("-")){
+            return null;
+        }
+
+        // http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats
+        // Format Notes
+        // For security reasons, starting with version 2.0.46, non-printable and other special characters
+        // in %r, %i and %o are escaped using \xhh sequences, where hh stands for the hexadecimal representation of
+        // the raw byte. Exceptions from this rule are " and \, which are escaped by prepending a backslash, and
+        // all whitespace characters, which are written in their C-style notation (\n, \t, etc).
+        // In versions prior to 2.0.46, no escaping was performed on these strings so you had to be quite careful
+        // when dealing with raw log files.
+
+        if (value.equals("request.firstline")   ||  // %r         First line of request.
+            value.startsWith("request.header.") ||  // %{Foobar}i The contents of Foobar: request header line(s).
+            value.startsWith("response.header.")) { // %{Foobar}o The contents of Foobar: response header line(s).
+            return Utils.decodeApacheHTTPDLogValue(value);
+        }
+
+        return value;
     }
 
     // --------------------------------------------

@@ -182,6 +182,14 @@ public abstract class TokenFormatDissector extends Dissector {
         return outputTypes;
     }
 
+    /**
+     *
+     * @param tokenName Name of the token that was found
+     * @param value The actual value as it is present in the logline
+     * @return The cleaned/decoded/interpreted version of the value.
+     */
+    public abstract String decodeExtractedValue(String tokenName, String value);
+
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         if (!isUsable) {
@@ -202,11 +210,8 @@ public abstract class TokenFormatDissector extends Dissector {
                 final String matchedName            = logFormatNames.get(i - 1);
                 final String matchedType            = logFormatTypes.get(i - 1);
 
-                // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
-                if (matchedStr.equals("-")){
-                    matchedStr=null;
-                }
-                parsable.addDissection(inputname, matchedType, matchedName, matchedStr);
+                parsable.addDissection(inputname, matchedType, matchedName,
+                        decodeExtractedValue(matchedName, matchedStr));
             }
         } else {
             throw new DissectionFailure("The input line does not match the specified log format." +

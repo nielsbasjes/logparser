@@ -25,7 +25,7 @@ import org.junit.Test;
 public class UtilsTest {
 
     @Test
-    public void testUrlDecoder(){
+    public void testUrlDecoder() {
         // Normal cases
         assertEquals("  ", Utils.resilientUrlDecode("  "));
         assertEquals("  ", Utils.resilientUrlDecode(" %20"));
@@ -34,7 +34,6 @@ public class UtilsTest {
         assertEquals("  ", Utils.resilientUrlDecode("%u0020%u0020"));
         assertEquals("  ", Utils.resilientUrlDecode("%20%u0020"));
         assertEquals("  ", Utils.resilientUrlDecode("%u0020%20"));
-
 
         // Deformed characters at the end of the line (desired is they are discarded)
         assertEquals("x ", Utils.resilientUrlDecode("x %2"));
@@ -47,5 +46,22 @@ public class UtilsTest {
 
         // Combined test case (7 spaces and a chopped one)
         assertEquals("       ", Utils.resilientUrlDecode("%20 %20%u0020%20 %20%2"));
+    }
+
+    @Test
+    public void testApacheLogDecoder() {
+        // Test basic character decoder
+        assertEquals((byte)0x00,Utils.hexCharsToByte('0','0'));
+        assertEquals((byte)0x20,Utils.hexCharsToByte('2','0'));
+        assertEquals((byte)0x43,Utils.hexCharsToByte('4','3'));
+        assertEquals((byte)0x88,Utils.hexCharsToByte('8','8'));
+        assertEquals((byte)0xde,Utils.hexCharsToByte('d','E'));
+        assertEquals((byte)0xff,Utils.hexCharsToByte('F','f'));
+
+        // Decoding a value
+        assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla bla bla"));
+        assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla\\x20bla bla"));
+        assertEquals("bla\bbla\nbla\tbla", Utils.decodeApacheHTTPDLogValue("bla\\bbla\\nbla\\tbla"));
+        assertEquals("bla\"bla\nbla\tbla", Utils.decodeApacheHTTPDLogValue("bla\\\"bla\\nbla\\tbla"));
     }
 }

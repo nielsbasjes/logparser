@@ -31,7 +31,8 @@ public class NamedTokenParser extends TokenParser {
 
     // --------------------------------------------
 
-    public NamedTokenParser(final String nLogFormatToken,
+    public NamedTokenParser(
+            final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
             final EnumSet<Casts> nCasts,
@@ -39,7 +40,8 @@ public class NamedTokenParser extends TokenParser {
         this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 0);
     }
 
-    public NamedTokenParser(final String nLogFormatToken,
+    public NamedTokenParser(
+            final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
             final EnumSet<Casts> nCasts,
