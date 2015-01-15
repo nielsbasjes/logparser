@@ -2,7 +2,7 @@
 
 OS=centos7
 PROJECTNAME=logparser
-CONTAINER_NAME=${PROJECTNAME}-${OS}-${USER}
+CONTAINER_NAME=${PROJECTNAME}-${OS}-${USER}-$$
 
 docker build -t ${PROJECTNAME}-${OS} docker/${OS}
 
