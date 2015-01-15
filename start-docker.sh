@@ -27,14 +27,14 @@ UserSpecificDocker
 [ -d ${PWD}/docker/_m2    ] || mkdir ${PWD}/docker/_m2
 [ -d ${PWD}/docker/_gnupg ] || mkdir ${PWD}/docker/_gnupg
 
-docker run --rm=true -t -i                          \
+docker run --rm=true -t -i                               \
            -u ${USER_NAME}                               \
-           -v ${PWD}:/home/${USER}/${PROJECTNAME}       \
-           -v ${PWD}/docker/_m2:/home/${USER}/.m2   \
-           -v ${PWD}/docker/_gnupg:/home/${USER}/.gnupg    \
-           -w /home/${USER}/${PROJECTNAME}              \
-           --name "${CONTAINER_NAME}"               \
-           ${PROJECTNAME}-${OS}-${USER}                 \
+           -v ${PWD}:/home/${USER}/${PROJECTNAME}        \
+           -v ${PWD}/docker/_m2:/home/${USER}/.m2        \
+           -v ${PWD}/docker/_gnupg:/home/${USER}/.gnupg  \
+           -w /home/${USER}/${PROJECTNAME}               \
+           --name "${CONTAINER_NAME}"                    \
+           ${PROJECTNAME}-${OS}-${USER}                  \
            bash
 
 
