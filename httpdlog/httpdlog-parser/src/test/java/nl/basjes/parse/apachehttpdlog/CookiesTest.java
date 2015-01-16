@@ -51,6 +51,7 @@ public class CookiesTest {
             "BYTES:response.body.bytesclf",
             "HTTP.URI:request.referer",
             "HTTP.USERAGENT:request.user-agent",
+            "TIME.EPOCH:request.receive.time.epoch",
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
             "TIME.MONTHNAME:request.receive.time.monthname",
@@ -82,6 +83,7 @@ public class CookiesTest {
                 "BYTES:response.body.bytesclf",
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
+                "TIME.EPOCH:request.receive.time.epoch",
                })
         public void setValueLong(final String name, final Long value) {
             longResults.put(name, value);
@@ -100,7 +102,7 @@ public class CookiesTest {
             "\"%{If-None-Match}i\" \"%{Etag}o\"";
 
     private final String cookiesLine =
-            "127.0.0.1 127.0.0.1 127.0.0.1 - - [24/Oct/2012:23:00:44 +0200] \"GET /index.php HTTP/1.1\" " +
+            "127.0.0.1 127.0.0.1 127.0.0.1 - - [24/Oct/2012:23:00:44 -0200] \"GET /index.php HTTP/1.1\" " +
             "200 - 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
@@ -155,7 +157,9 @@ public class CookiesTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
         assertEquals(null, results.get("STRING:connection.client.user"));
-        assertEquals("[24/Oct/2012:23:00:44 +0200]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("[24/Oct/2012:23:00:44 -0200]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("1351126844000", results.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals(new Long(1351126844000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals("October", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
         assertEquals("24", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals(new Long(24), longResults.get("TIME.DAY:request.receive.time.day"));
