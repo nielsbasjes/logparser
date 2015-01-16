@@ -26,7 +26,7 @@
   <parent>
     <artifactId>httpdlog</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>1.7</version>
+    <version>1.8-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-serde</artifactId>
   <name>Parser - Apache HTTPD - HCatalog SerDe</name>
