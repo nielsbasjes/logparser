@@ -44,17 +44,25 @@ public class CookiesTest {
             "IP:connection.client.ip",
             "NUMBER:connection.client.logname",
             "STRING:connection.client.user",
-            "TIME.STAMP:request.receive.time",
-            "TIME.SECOND:request.receive.time.second",
             "HTTP.URI:request.firstline.uri",
             "STRING:request.status.last",
             "BYTES:response.body.bytesclf",
             "HTTP.URI:request.referer",
             "HTTP.USERAGENT:request.user-agent",
+            "TIME.STAMP:request.receive.time",
             "TIME.EPOCH:request.receive.time.epoch",
+            "TIME.SECOND:request.receive.time.second",
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
+            "TIME.MONTH:request.receive.time.month",
+            "TIME.YEAR:request.receive.time.year",
             "TIME.MONTHNAME:request.receive.time.monthname",
+            "TIME.SECOND:request.receive.time.second_gmt",
+            "TIME.DAY:request.receive.time.day_gmt",
+            "TIME.HOUR:request.receive.time.hour_gmt",
+            "TIME.MONTH:request.receive.time.month_gmt",
+            "TIME.YEAR:request.receive.time.year_gmt",
+            "TIME.MONTHNAME:request.receive.time.monthname_gmt",
             "MICROSECONDS:server.process.time",
             "STRING:request.status.last",
             "HTTP.HEADER:response.header.etag",
@@ -79,10 +87,13 @@ public class CookiesTest {
             return results;
         }
         @Field({
-                "TIME.SECOND:request.receive.time.second",
                 "BYTES:response.body.bytesclf",
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
+                "TIME.SECOND:request.receive.time.second",
+                "TIME.DAY:request.receive.time.day_gmt",
+                "TIME.HOUR:request.receive.time.hour_gmt",
+                "TIME.SECOND:request.receive.time.second_gmt",
                 "TIME.EPOCH:request.receive.time.epoch",
                })
         public void setValueLong(final String name, final Long value) {
@@ -102,7 +113,7 @@ public class CookiesTest {
             "\"%{If-None-Match}i\" \"%{Etag}o\"";
 
     private final String cookiesLine =
-            "127.0.0.1 127.0.0.1 127.0.0.1 - - [24/Oct/2012:23:00:44 -0200] \"GET /index.php HTTP/1.1\" " +
+            "127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:00:44 -0700] \"GET /index.php HTTP/1.1\" " +
             "200 - 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
@@ -157,16 +168,30 @@ public class CookiesTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
         assertEquals(null, results.get("STRING:connection.client.user"));
-        assertEquals("[24/Oct/2012:23:00:44 -0200]", results.get("TIME.STAMP:request.receive.time"));
-        assertEquals("1351126844000", results.get("TIME.EPOCH:request.receive.time.epoch"));
-        assertEquals(new Long(1351126844000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
-        assertEquals("October", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
-        assertEquals("24", results.get("TIME.DAY:request.receive.time.day"));
-        assertEquals(new Long(24), longResults.get("TIME.DAY:request.receive.time.day"));
+        assertEquals("[31/Dec/2012:23:00:44 -0700]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("1357020044000", results.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals(new Long(1357020044000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
+
+        assertEquals("2012", results.get("TIME.YEAR:request.receive.time.year"));
+        assertEquals("12", results.get("TIME.MONTH:request.receive.time.month"));
+        assertEquals("December", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
+        assertEquals("31", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals(new Long(31), longResults.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals(new Long(23), longResults.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second"));
+
+        assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_gmt"));
+        assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_gmt"));
+        assertEquals("January", results.get("TIME.MONTHNAME:request.receive.time.monthname_gmt"));
+        assertEquals("1", results.get("TIME.DAY:request.receive.time.day_gmt"));
+        assertEquals(new Long(1), longResults.get("TIME.DAY:request.receive.time.day_gmt"));
+        assertEquals("6", results.get("TIME.HOUR:request.receive.time.hour_gmt"));
+        assertEquals(new Long(6), longResults.get("TIME.HOUR:request.receive.time.hour_gmt"));
+        assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_gmt"));
+        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_gmt"));
+
 
         assertEquals("/index.php", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
