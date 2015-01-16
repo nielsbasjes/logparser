@@ -36,3 +36,6 @@ SecurityAuth-*.audit
 hadoop*.log
 *-audit.log
 rm-appsummary.log
+
+# Docker
+docker/_m2/repository/
