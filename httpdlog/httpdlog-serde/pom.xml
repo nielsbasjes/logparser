@@ -67,10 +67,11 @@
       <id>rpm</id>
       <build>
         <plugins>
+
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>rpm-maven-plugin</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
             <configuration>
               <license>GNU General Public License 3.0</license>
               <packager>Niels Basjes</packager>
@@ -96,12 +97,7 @@
                   </sources>
                 </mapping>
               </mappings>
-              <keyname>${gpg.keyname}</keyname>
-              <keyPassphrase>
-                <passphrase>${gpg.passphrase}</passphrase>
-              </keyPassphrase>
             </configuration>
-
             <executions>
               <execution>
                 <goals>
