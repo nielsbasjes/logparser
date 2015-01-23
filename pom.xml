@@ -22,7 +22,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse</groupId>
   <artifactId>parser-parent</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.8-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parser (group)</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
@@ -70,7 +70,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
