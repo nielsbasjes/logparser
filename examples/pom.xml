@@ -23,7 +23,7 @@
   <parent>
     <artifactId>parser-parent</artifactId>
     <groupId>nl.basjes.parse</groupId>
-    <version>1.8</version>
+    <version>1.9-SNAPSHOT</version>
   </parent>
 
   <groupId>nl.basjes.parse.httpdlog.examples</groupId>
