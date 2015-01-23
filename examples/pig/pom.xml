@@ -23,7 +23,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8</version>
   </parent>
   <artifactId>PigDemo</artifactId>
   <name>Parser - Apache HTTPD - Examples - Pig</name>
