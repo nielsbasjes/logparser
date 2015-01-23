@@ -105,17 +105,17 @@ public class TimeStampDissector extends Dissector {
         result.add("TIME.ZONE:timezone");
         result.add("TIME.EPOCH:epoch");
 
-        // In GMT timezone
-        result.add("TIME.DAY:day_gmt");
-        result.add("TIME.MONTHNAME:monthname_gmt");
-        result.add("TIME.MONTH:month_gmt");
-        result.add("TIME.WEEK:weekofweekyear_gmt");
-        result.add("TIME.YEAR:weekyear_gmt");
-        result.add("TIME.YEAR:year_gmt");
-        result.add("TIME.HOUR:hour_gmt");
-        result.add("TIME.MINUTE:minute_gmt");
-        result.add("TIME.SECOND:second_gmt");
-        result.add("TIME.MILLISECOND:millisecond_gmt");
+        // In UTC timezone
+        result.add("TIME.DAY:day_utc");
+        result.add("TIME.MONTHNAME:monthname_utc");
+        result.add("TIME.MONTH:month_utc");
+        result.add("TIME.WEEK:weekofweekyear_utc");
+        result.add("TIME.YEAR:weekyear_utc");
+        result.add("TIME.YEAR:year_utc");
+        result.add("TIME.HOUR:hour_utc");
+        result.add("TIME.MINUTE:minute_utc");
+        result.add("TIME.SECOND:second_utc");
+        result.add("TIME.MILLISECOND:millisecond_utc");
 
 
         return result;
@@ -124,7 +124,7 @@ public class TimeStampDissector extends Dissector {
     // --------------------------------------------
 
     private boolean wantAnyAsParsed       = false;
-    private boolean wantAnyGMT            = false;
+    private boolean wantAnyUTC            = false;
     private boolean wantAnyTZIndependent  = false;
 
     // As parsed
@@ -143,17 +143,17 @@ public class TimeStampDissector extends Dissector {
     private boolean wantTimezone          = false;
     private boolean wantEpoch             = false;
 
-    // In GMT timezone
-    private boolean wantDayGMT            = false;
-    private boolean wantMonthnameGMT      = false;
-    private boolean wantMonthGMT          = false;
-    private boolean wantWeekOfWeekYearGMT = false;
-    private boolean wantWeekYearGMT       = false;
-    private boolean wantYearGMT           = false;
-    private boolean wantHourGMT           = false;
-    private boolean wantMinuteGMT         = false;
-    private boolean wantSecondGMT         = false;
-    private boolean wantMillisecondGMT    = false;
+    // In UTC timezone
+    private boolean wantDayUTC            = false;
+    private boolean wantMonthnameUTC      = false;
+    private boolean wantMonthUTC          = false;
+    private boolean wantWeekOfWeekYearUTC = false;
+    private boolean wantWeekYearUTC       = false;
+    private boolean wantYearUTC           = false;
+    private boolean wantHourUTC           = false;
+    private boolean wantMinuteUTC         = false;
+    private boolean wantSecondUTC         = false;
+    private boolean wantMillisecondUTC    = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
@@ -210,45 +210,45 @@ public class TimeStampDissector extends Dissector {
                 wantEpoch = true;
                 return Casts.STRING_OR_LONG;
 
-            // In GMT timezone
-            case "day_gmt":
-                wantDayGMT = true;
+            // In UTC timezone
+            case "day_utc":
+                wantDayUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "monthname_gmt":
-                wantMonthnameGMT = true;
+            case "monthname_utc":
+                wantMonthnameUTC = true;
                 return Casts.STRING_ONLY;
 
-            case "month_gmt":
-                wantMonthGMT = true;
+            case "month_utc":
+                wantMonthUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "weekofweekyear_gmt":
-                wantWeekOfWeekYearGMT = true;
+            case "weekofweekyear_utc":
+                wantWeekOfWeekYearUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "weekyear_gmt":
-                wantWeekYearGMT = true;
+            case "weekyear_utc":
+                wantWeekYearUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "year_gmt":
-                wantYearGMT = true;
+            case "year_utc":
+                wantYearUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "hour_gmt":
-                wantHourGMT = true;
+            case "hour_utc":
+                wantHourUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "minute_gmt":
-                wantMinuteGMT = true;
+            case "minute_utc":
+                wantMinuteUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "second_gmt":
-                wantSecondGMT = true;
+            case "second_utc":
+                wantSecondUTC = true;
                 return Casts.STRING_OR_LONG;
 
-            case "millisecond_gmt":
-                wantMillisecondGMT = true;
+            case "millisecond_utc":
+                wantMillisecondUTC = true;
                 return Casts.STRING_OR_LONG;
         }
         return null;
@@ -276,18 +276,18 @@ public class TimeStampDissector extends Dissector {
                wantTimezone
             || wantEpoch;
 
-        // In GMT timezone
-        wantAnyGMT =
-               wantDayGMT
-            || wantMonthnameGMT
-            || wantMonthGMT
-            || wantWeekOfWeekYearGMT
-            || wantWeekYearGMT
-            || wantYearGMT
-            || wantHourGMT
-            || wantMinuteGMT
-            || wantSecondGMT
-            || wantMillisecondGMT;
+        // In UTC timezone
+        wantAnyUTC =
+               wantDayUTC
+            || wantMonthnameUTC
+            || wantMonthUTC
+            || wantWeekOfWeekYearUTC
+            || wantWeekYearUTC
+            || wantYearUTC
+            || wantHourUTC
+            || wantMinuteUTC
+            || wantSecondUTC
+            || wantMillisecondUTC;
     }
 
     // --------------------------------------------
@@ -301,12 +301,9 @@ public class TimeStampDissector extends Dissector {
         }
 
         if (wantAnyAsParsed || wantAnyTZIndependent) {
-
-            // YUCK !
+            // FIXME: YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
             DateTime dateTime = asParsedFormatter.parseDateTime(fieldValue);
             DateTimeZone zone = dateTime.getZone();
-//            LOG.error(dateTime.toString());
-//            LOG.error(zone.toString());
             DateTimeFormatter asParsedWithZoneFormatter = asParsedFormatter.withZone(zone);
             dateTime = asParsedWithZoneFormatter.parseDateTime(fieldValue);
 
@@ -363,48 +360,48 @@ public class TimeStampDissector extends Dissector {
             }
         }
 
-        if (wantAnyGMT) {
-            // In GMT timezone
+        if (wantAnyUTC) {
+            // In UTC timezone
             DateTime dateTime = formatter.parseDateTime(fieldValue);
 
-            if (wantDayGMT) {
-                parsable.addDissection(inputname, "TIME.DAY", "day_gmt",
+            if (wantDayUTC) {
+                parsable.addDissection(inputname, "TIME.DAY", "day_utc",
                         dateTime.dayOfMonth().getAsString());
             }
-            if (wantMonthnameGMT) {
-                parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_gmt",
+            if (wantMonthnameUTC) {
+                parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_utc",
                         dateTime.monthOfYear().getAsText(Locale.getDefault()));
             }
-            if (wantMonthGMT) {
-                parsable.addDissection(inputname, "TIME.MONTH", "month_gmt",
+            if (wantMonthUTC) {
+                parsable.addDissection(inputname, "TIME.MONTH", "month_utc",
                         dateTime.monthOfYear().getAsString());
             }
-            if (wantWeekOfWeekYearGMT) {
-                parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear_gmt",
+            if (wantWeekOfWeekYearUTC) {
+                parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear_utc",
                         dateTime.weekOfWeekyear().getAsString());
             }
-            if (wantWeekYearGMT) {
-                parsable.addDissection(inputname, "TIME.YEAR", "weekyear_gmt",
+            if (wantWeekYearUTC) {
+                parsable.addDissection(inputname, "TIME.YEAR", "weekyear_utc",
                         dateTime.weekyear().getAsString());
             }
-            if (wantYearGMT) {
-                parsable.addDissection(inputname, "TIME.YEAR", "year_gmt",
+            if (wantYearUTC) {
+                parsable.addDissection(inputname, "TIME.YEAR", "year_utc",
                         dateTime.year().getAsString());
             }
-            if (wantHourGMT) {
-                parsable.addDissection(inputname, "TIME.HOUR", "hour_gmt",
+            if (wantHourUTC) {
+                parsable.addDissection(inputname, "TIME.HOUR", "hour_utc",
                         dateTime.hourOfDay().getAsString());
             }
-            if (wantMinuteGMT) {
-                parsable.addDissection(inputname, "TIME.MINUTE", "minute_gmt",
+            if (wantMinuteUTC) {
+                parsable.addDissection(inputname, "TIME.MINUTE", "minute_utc",
                         dateTime.minuteOfHour().getAsString());
             }
-            if (wantSecondGMT) {
-                parsable.addDissection(inputname, "TIME.SECOND", "second_gmt",
+            if (wantSecondUTC) {
+                parsable.addDissection(inputname, "TIME.SECOND", "second_utc",
                         dateTime.secondOfMinute().getAsString());
             }
-            if (wantMillisecondGMT) {
-                parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond_gmt",
+            if (wantMillisecondUTC) {
+                parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond_utc",
                         dateTime.millisOfSecond().getAsString());
             }
         }

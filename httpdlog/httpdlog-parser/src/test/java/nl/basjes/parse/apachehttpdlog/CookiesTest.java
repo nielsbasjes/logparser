@@ -57,12 +57,12 @@ public class CookiesTest {
             "TIME.MONTH:request.receive.time.month",
             "TIME.YEAR:request.receive.time.year",
             "TIME.MONTHNAME:request.receive.time.monthname",
-            "TIME.SECOND:request.receive.time.second_gmt",
-            "TIME.DAY:request.receive.time.day_gmt",
-            "TIME.HOUR:request.receive.time.hour_gmt",
-            "TIME.MONTH:request.receive.time.month_gmt",
-            "TIME.YEAR:request.receive.time.year_gmt",
-            "TIME.MONTHNAME:request.receive.time.monthname_gmt",
+            "TIME.SECOND:request.receive.time.second_utc",
+            "TIME.DAY:request.receive.time.day_utc",
+            "TIME.HOUR:request.receive.time.hour_utc",
+            "TIME.MONTH:request.receive.time.month_utc",
+            "TIME.YEAR:request.receive.time.year_utc",
+            "TIME.MONTHNAME:request.receive.time.monthname_utc",
             "MICROSECONDS:server.process.time",
             "STRING:request.status.last",
             "HTTP.HEADER:response.header.etag",
@@ -91,9 +91,9 @@ public class CookiesTest {
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
                 "TIME.SECOND:request.receive.time.second",
-                "TIME.DAY:request.receive.time.day_gmt",
-                "TIME.HOUR:request.receive.time.hour_gmt",
-                "TIME.SECOND:request.receive.time.second_gmt",
+                "TIME.DAY:request.receive.time.day_utc",
+                "TIME.HOUR:request.receive.time.hour_utc",
+                "TIME.SECOND:request.receive.time.second_utc",
                 "TIME.EPOCH:request.receive.time.epoch",
                })
         public void setValueLong(final String name, final Long value) {
@@ -182,15 +182,15 @@ public class CookiesTest {
         assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second"));
 
-        assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_gmt"));
-        assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_gmt"));
-        assertEquals("January", results.get("TIME.MONTHNAME:request.receive.time.monthname_gmt"));
-        assertEquals("1", results.get("TIME.DAY:request.receive.time.day_gmt"));
-        assertEquals(new Long(1), longResults.get("TIME.DAY:request.receive.time.day_gmt"));
-        assertEquals("6", results.get("TIME.HOUR:request.receive.time.hour_gmt"));
-        assertEquals(new Long(6), longResults.get("TIME.HOUR:request.receive.time.hour_gmt"));
-        assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_gmt"));
-        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_gmt"));
+        assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_utc"));
+        assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_utc"));
+        assertEquals("January", results.get("TIME.MONTHNAME:request.receive.time.monthname_utc"));
+        assertEquals("1", results.get("TIME.DAY:request.receive.time.day_utc"));
+        assertEquals(new Long(1), longResults.get("TIME.DAY:request.receive.time.day_utc"));
+        assertEquals("6", results.get("TIME.HOUR:request.receive.time.hour_utc"));
+        assertEquals(new Long(6), longResults.get("TIME.HOUR:request.receive.time.hour_utc"));
+        assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_utc"));
+        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
 
 
         assertEquals("/index.php", results.get("HTTP.URI:request.firstline.uri"));
