@@ -85,7 +85,7 @@ public class ParserBoltTest implements Serializable {
             Assert.assertEquals("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) " +
                                 "AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 " +
                                 "Safari/533.17.8", tuple.getStringByField("useragent"));
-            System.out.println("Ok");
+            System.out.print("Ok ");
         }
 
         @Override
