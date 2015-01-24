@@ -42,7 +42,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
 public class ApacheHttpdLogfileInputFormat extends
-        FileInputFormat<LongWritable, MapWritable> {
+        FileInputFormat<LongWritable, ParsedRecord> {
 
     private String logFormat = null;
     private final Set<String> requestedFields = new HashSet<>();
@@ -107,7 +107,7 @@ public class ApacheHttpdLogfileInputFormat extends
     }
 
     @Override
-    public RecordReader<LongWritable, MapWritable> createRecordReader(
+    public RecordReader<LongWritable, ParsedRecord> createRecordReader(
             final InputSplit split, final TaskAttemptContext context) {
         return getRecordReader();
     }

@@ -21,14 +21,7 @@ package nl.basjes.pig.input.apachehttpdlog;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
 
@@ -42,22 +35,21 @@ import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.pig.Expression;
-import org.apache.pig.LoadFunc;
-import org.apache.pig.LoadMetadata;
-import org.apache.pig.ResourceSchema;
+import org.apache.pig.*;
 import org.apache.pig.ResourceSchema.ResourceFieldSchema;
-import org.apache.pig.ResourceStatistics;
 import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.impl.logicalLayer.FrontendException;
+import org.apache.pig.impl.util.UDFContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Loader
-        extends LoadFunc
-        implements LoadMetadata {
+        extends    LoadFunc
+        implements LoadMetadata ,
+                   LoadPushDown {
 
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     
@@ -66,14 +58,17 @@ public class Loader
 
     private boolean                         isBuildingExample;
     private String                          logformat;
-    private final List<String>              requestedFields = new ArrayList<>();
-    private final Map<String,Set<String>>   typeRemappings  = new HashMap<>();
-    private final List<Dissector> additionalDissectors = new ArrayList<>();
+    private List<String>                    requestedFields      = new ArrayList<>();
+    private RequiredFieldList               requiredFieldList    = null;
+    private final Map<String,Set<String>>   typeRemappings       = new HashMap<>();
+    private final List<Dissector>           additionalDissectors = new ArrayList<>();
     private final TupleFactory              tupleFactory;
     private ApacheHttpdLogfileInputFormat   theInputFormat;
 
     // These are purely retained to make it possible to create a working example
-    private final ArrayList<String>         specialParameters = new ArrayList<>();
+    private final ArrayList<String>         specialParameters    = new ArrayList<>();
+
+    private static final String             PRUNE_PROJECTION_INFO = "prune.projection.info";
 
     // ------------------------------------------
 
@@ -84,7 +79,6 @@ public class Loader
      * @param parameters specified from the call within the pig code
      */
     public Loader(String... parameters) {
-
         for (String param : parameters) {
             if (logformat == null) {
                 logformat = param;
@@ -210,7 +204,6 @@ public class Loader
         if (value != null) {
             List<Object> values = new ArrayList<>();
             for (String fieldName : requestedFields) {
-                
                 if (!ApacheHttpdLogfileRecordReader.FIELDS.equals(fieldName)) {
                     EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
 
@@ -245,32 +238,32 @@ public class Loader
 
     private String createPigExample() throws IOException {
         StringBuilder sb = new StringBuilder(1024);
-        Text fieldName = new Text(requestedFields.get(0));
+        String fieldName = requestedFields.get(0);
 
         ArrayList<String> fields = new ArrayList<>(128);
-        ArrayList<String> names = new ArrayList<>(128);
+        ArrayList<String> names  = new ArrayList<>(128);
 
         while (reader.nextKeyValue()) {
-            MapWritable currentValue = reader.getCurrentValue();
+            ParsedRecord currentValue = reader.getCurrentValue();
 
-            Writable value = currentValue.get(fieldName);
+            String value = currentValue.getString(fieldName);
             if (value == null) {
                 continue;
             }
 
-            if (value.toString().contains("*")){
-                fields.add(value.toString() + "', \t-- You cannot put a * here yet. You MUST specify a specific field.");
+            if (value.contains("*")){
+                fields.add(value + "', \t-- You cannot put a * here yet. You MUST specify a specific field.");
             } else {
-                fields.add(value.toString());
+                fields.add(value);
             }
 
-            String name = value.toString().split(":")[1].replace('.', '_');
+            String name = value.split(":")[1].replace('.', '_');
             String nameComment = "";
             if (name.contains("*")){
                 nameComment = ", \t-- You cannot put a * here yet. You MUST specify name.";
             }
 
-            EnumSet<Casts> casts = reader.getCasts(value.toString());
+            EnumSet<Casts> casts = reader.getCasts(value);
 
             String cast = "bytearray";
             if (casts != null) {
@@ -316,7 +309,6 @@ public class Loader
     public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit)
             throws IOException {
         // Note that for this Loader, we don't care about the PigSplit.
-
         if (newReader instanceof ApacheHttpdLogfileRecordReader) {
             this.reader = (ApacheHttpdLogfileRecordReader) newReader;
         } else {
@@ -331,6 +323,26 @@ public class Loader
             throws IOException {
         // The location is assumed to be comma separated paths.
         FileInputFormat.setInputPaths(job, location);
+
+        requiredFieldList = (RequiredFieldList) getFromUDFContext(PRUNE_PROJECTION_INFO);
+
+        // If we encounter a PushDown Projection we strip the requestedFields to only the needed ones
+        // This will very effectively push the projection down into the actual parser system.
+        if (requiredFieldList != null) {
+            Set<Integer> requestedFieldIndexes = new HashSet<>();
+            for(RequiredField requiredField: requiredFieldList.getFields()) {
+                requestedFieldIndexes.add(requiredField.getIndex());
+            }
+            List<String> prunedRequestedFields = new ArrayList<>(requestedFieldIndexes.size());
+            int index = 0;
+            for(String field: requestedFields) {
+                if (requestedFieldIndexes.contains(index)) {
+                    prunedRequestedFields.add(field);
+                }
+                ++index;
+            }
+            requestedFields = prunedRequestedFields;
+        }
     }
 
     // ------------------------------------------
@@ -392,6 +404,39 @@ public class Loader
 
     public List<Dissector> getAdditionalDissectors() {
         return additionalDissectors;
+    }
+
+    public List<OperatorSet> getFeatures() {
+        return Arrays.asList(OperatorSet.PROJECTION);
+    }
+
+    @Override
+    public RequiredFieldResponse pushProjection(RequiredFieldList requiredFieldList) throws FrontendException {
+        // Store the required fields information in the UDFContext.
+        storeInUDFContext(PRUNE_PROJECTION_INFO, requiredFieldList);
+        this.requiredFieldList = requiredFieldList;
+        return new RequiredFieldResponse(true);
+    }
+
+
+    private String theUDFContextSignature;
+    @Override
+    public void setUDFContextSignature(String signature) {
+        this.theUDFContextSignature = signature;
+    }
+
+    private void storeInUDFContext(String key, Object value) {
+        UDFContext udfContext = UDFContext.getUDFContext();
+        Properties props = udfContext.getUDFProperties(
+                this.getClass(), new String[]{theUDFContextSignature});
+        props.put(key, value);
+    }
+
+    private Object getFromUDFContext(String key) {
+        UDFContext udfContext = UDFContext.getUDFContext();
+        Properties udfProperties = udfContext.getUDFProperties(
+                this.getClass(), new String[]{theUDFContextSignature});
+        return udfProperties.get(key);
     }
 
     // ------------------------------------------

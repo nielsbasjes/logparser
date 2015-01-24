@@ -18,82 +18,184 @@
 package nl.basjes.hadoop.input;
 
 
-import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.*;
 
-public class ParsedRecord extends MapWritable {
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    private final MapWritable longValues;
-    private final MapWritable doubleValues;
+public class ParsedRecord implements Writable {
 
-    public static final Text STRING = new Text("String");
-    public static final Text LONG = new Text("Long");
-    public static final Text DOUBLE = new Text("Double");
+    private final Map<String,String> stringValues = new HashMap<>();
+    private final Map<String,Long> longValues = new HashMap<>();
+    private final Map<String,Double> doubleValues = new HashMap<>();
+    private final Map<String,List<String>> stringSetValues = new HashMap<>();
 
-    public ParsedRecord() {
-        longValues = new MapWritable();
-        doubleValues = new MapWritable();
+    // FIXME: This implementation ONLY allows for END STAR situations
+    private final List<String> requestedMultiValuePrefixes = new ArrayList<>();
 
-        // All names we put in here must contain a ':'.
-        // So these two are safe to put in there like this.
-        super.put(LONG, longValues);
-        super.put(DOUBLE, doubleValues);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ParsedRecord)) return false;
+
+        ParsedRecord that = (ParsedRecord) o;
+
+        if (!doubleValues.equals(that.doubleValues)) return false;
+        if (!longValues.equals(that.longValues)) return false;
+        if (!requestedMultiValuePrefixes.equals(that.requestedMultiValuePrefixes)) return false;
+        if (!stringSetValues.equals(that.stringSetValues)) return false;
+        if (!stringValues.equals(that.stringValues)) return false;
+
+        return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = stringValues.hashCode();
+        result = 31 * result + longValues.hashCode();
+        result = 31 * result + doubleValues.hashCode();
+        result = 31 * result + stringSetValues.hashCode();
+        result = 31 * result + requestedMultiValuePrefixes.hashCode();
+        return result;
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(stringValues.size());
+        for (Map.Entry<String, String> e: stringValues.entrySet()) {
+            out.writeUTF(e.getKey());
+            out.writeUTF(e.getValue());
+        }
+
+        out.writeInt(longValues.size());
+        for (Map.Entry<String, Long> e: longValues.entrySet()) {
+            out.writeUTF(e.getKey());
+            out.writeLong(e.getValue());
+        }
+
+        out.writeInt(doubleValues.size());
+        for (Map.Entry<String, Double> e: doubleValues.entrySet()) {
+            out.writeUTF(e.getKey());
+            out.writeDouble(e.getValue());
+        }
+
+        out.writeInt(stringSetValues.size());
+        for (Map.Entry<String, List<String>> e: stringSetValues.entrySet()) {
+            out.writeUTF(e.getKey());
+            out.writeInt(e.getValue().size());
+            for (String s: e.getValue()) {
+                out.writeUTF(s);
+            }
+        }
+
+    }
+
+    @Override
+    public void readFields(DataInput in) throws IOException {
+        // String
+        int nrOfValues = in.readInt();
+        for (int count = 0 ; count < nrOfValues ; count++) {
+            set(in.readUTF(), in.readUTF());
+        }
+
+        // Long
+        nrOfValues = in.readInt();
+        for (int count = 0 ; count < nrOfValues ; count++) {
+            set(in.readUTF(), in.readLong());
+        }
+
+        // Double
+        nrOfValues = in.readInt();
+        for (int count = 0 ; count < nrOfValues ; count++) {
+            set(in.readUTF(), in.readDouble());
+        }
+
+        // String Map
+        nrOfValues = in.readInt();
+        for (int count = 0 ; count < nrOfValues ; count++) {
+            String key = in.readUTF();
+            declareRequestedFieldname(key);
+            for (int valuesCount = 0 ; valuesCount < nrOfValues ; valuesCount++) {
+                setMultiValueString(in.readUTF(), in.readUTF());
+            }
+        }
+    }
+
+    public static final String STRING = "String";
+    public static final String LONG = "Long";
+    public static final String DOUBLE = "Double";
+    public static final String STRING_MAP = "StringMap";
+    public static final String REQUESTED_STRING_MAP = "RequestedStringMap";
+
+    public ParsedRecord() {
+    }
+
     public void clear() {
-        super.clear();
+        stringValues.clear();
         longValues.clear();
         doubleValues.clear();
+        stringSetValues.clear();
     }
 
     public void set(String name, String value) {
         if (value != null) {
-            put(new Text(name), new Text(value));
+            stringValues.put(name, value);
         }
     }
 
     public void set(String name, Long value) {
         if (value != null) {
-            longValues.put(new Text(name), new LongWritable(value));
+            longValues.put(name, value);
         }
     }
 
     public void set(String name, Double value) {
         if (value != null) {
-            doubleValues.put(new Text(name), new DoubleWritable(value));
+            doubleValues.put(name, value);
         }
     }
 
-    private final Text nameText = new Text();
+     /**
+     * For multivalue things we need to know what the name is we are expecting.
+     * For those patterns we match the values we get against
+     * @param name the name of the requested multivalue
+     */
+    public void declareRequestedFieldname(String name) {
+        if (name.endsWith(".*")) {
+            stringSetValues.put(name, new ArrayList<String>());
+        }
+    }
+
+    public void setMultiValueString(String name, String value) {
+        if (value != null) {
+            for (Map.Entry<String,List<String>> stringMap: stringSetValues.entrySet()) {
+                String key = stringMap.getKey();
+                if (name.startsWith(key, key.length()-2)) {
+                    stringMap.getValue().add(value);
+                }
+            }
+        }
+    }
 
     public String getString(String name) {
-        nameText.set(name);
-        Text value = (Text) get(nameText);
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
+        return stringValues.get(name);
     }
 
     public Long getLong(String name) {
-        nameText.set(name);
-        LongWritable value = (LongWritable) longValues.get(nameText);
-        if (value == null) {
-            return null;
-        }
-        return value.get();
+        return longValues.get(name);
     }
 
     public Double getDouble(String name) {
-        nameText.set(name);
-        DoubleWritable value = (DoubleWritable) doubleValues.get(nameText);
-        if (value == null) {
-            return null;
-        }
-        return value.get();
+        return doubleValues.get(name);
+    }
+
+    public List<String> getStringSet(String name) {
+        return stringSetValues.get(name);
     }
 
 }

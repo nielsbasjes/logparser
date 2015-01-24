@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize" })
 public class ApacheHttpdLogfileRecordReader extends
-        RecordReader<LongWritable, MapWritable> {
+        RecordReader<LongWritable, ParsedRecord> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogfileRecordReader.class);
 
@@ -67,7 +67,7 @@ public class ApacheHttpdLogfileRecordReader extends
     private String                                 logformat       = null;
     private final Set<String>                      requestedFields = new HashSet<>();
     private Map<String,Set<String>>                typeRemappings  = new HashMap<>(16);
-    private List<Dissector> additionalDissectors;
+    private List<Dissector>                        additionalDissectors;
 
     // --------------------------------------------
 
@@ -101,7 +101,7 @@ public class ApacheHttpdLogfileRecordReader extends
         logformat = newLogformat;
     }
 
-    private boolean outputAllPossibleFields = false;
+    private boolean                         outputAllPossibleFields = false;
     private String                          allPossiblePathsFieldName;
     private List<String>                    allPossiblePaths = null;
 
@@ -138,6 +138,10 @@ public class ApacheHttpdLogfileRecordReader extends
         if (logformat != null && fieldList != null && parser == null) {
             parser = createParser();
         }
+        for (String field: fieldList) {
+            currentValue.declareRequestedFieldname(field);
+        }
+
         setupFields();
     }
 
@@ -168,7 +172,6 @@ public class ApacheHttpdLogfileRecordReader extends
         }
     }
 
-
     public EnumSet<Casts> getCasts(String name) throws IOException {
         if (outputAllPossibleFields) {
             return allCasts.get(name);
@@ -191,6 +194,9 @@ public class ApacheHttpdLogfileRecordReader extends
         Parser<ParsedRecord> newParser;
         try {
             newParser = instantiateParser(logformat);
+
+//            HIER MOET IK DUS DE ANDER SETTER ERIN HANGEN
+
             // FIXME: So far I do not see a way to do this more efficiently yet
             newParser.addParseTarget(ParsedRecord.class.getMethod("set",
                     String.class, String.class), fieldList);
@@ -271,7 +277,7 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     @Override
-    public MapWritable getCurrentValue() {
+    public ParsedRecord getCurrentValue() {
         return currentValue;
     }
 
