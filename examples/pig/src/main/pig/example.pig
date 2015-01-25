@@ -6,7 +6,7 @@ REGISTER lib/*.jar;
 Fields =
   LOAD 'fields.sh'
   USING nl.basjes.pig.input.apachehttpdlog.Loader( '$LOGFORMAT',
-            'fields',
+            'example',
             '-map:request.firstline.uri.query.g:HTTP.URI',
             '-map:request.firstline.uri.query.r:HTTP.URI',
             '-load:nl.basjes.parse.UrlClassDissector:'

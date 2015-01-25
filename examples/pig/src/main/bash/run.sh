@@ -1,4 +1,4 @@
 #!/bin/bash
 
-pig -param_file etc/AccessLogs.properties pig/TopUserAgents.pig
+pig -x local -param_file etc/AccessLogs.properties pig/TopUserAgents.pig
 

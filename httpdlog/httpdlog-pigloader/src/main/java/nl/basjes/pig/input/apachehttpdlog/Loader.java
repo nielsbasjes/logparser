@@ -264,17 +264,12 @@ public class Loader
                 continue;
             }
 
-            if (value.contains("*")){
-                fields.add(value + "', \t-- You cannot put a * here yet. You MUST specify a specific field.");
-            } else {
-                fields.add(value);
-            }
+            fields.add(value);
 
-            String name = value.split(":")[1].replace('.', '_');
-            String nameComment = "";
-            if (name.contains("*")){
-                nameComment = ", \t-- You cannot put a * here yet. You MUST specify name.";
-            }
+            String name = value.split(":")[1]
+                            .replace('.', '_')
+                            .replace('-', '_')
+                            .replace('*', '_');
 
             EnumSet<Casts> casts = reader.getCasts(value);
 
@@ -288,13 +283,16 @@ public class Loader
                     } else {
                         if (casts.contains(Casts.STRING)) {
                             cast = "chararray";
+                            if (value.contains("*")) {
+                                cast = "map[]";
+                            }
                         }
                     }
                 }
 
-                names.add(name + ':' + cast + nameComment);
+                names.add(name + ':' + cast);
             } else {
-                names.add(name + nameComment);
+                names.add(name);
             }
         }
 
