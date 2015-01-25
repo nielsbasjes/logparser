@@ -33,6 +33,7 @@
       <outputDirectory>PigDemo-${project.version}/demolog</outputDirectory>
       <includes>
         <include>*.gz</include>
+        <include>*.log</include>
       </includes>
       <fileMode>0644</fileMode>
       <filtered>false</filtered>

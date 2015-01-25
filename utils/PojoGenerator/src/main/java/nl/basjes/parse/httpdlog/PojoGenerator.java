@@ -18,7 +18,6 @@
 
 package nl.basjes.parse.httpdlog;
 
-import java.util.List;
 import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
@@ -28,58 +27,62 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.text.ParseException;
+import java.util.List;
 
 public class PojoGenerator {
-  @Option(name="-logformat", usage="<Apache HTTPD Logformat>", required = true)
-  public static final String logformat = "common";
+    @Option(name = "-logformat", usage = "<Apache HTTPD Logformat>", required = true)
+    public static final String logformat = "common";
 
-  class MyRecord {
-    public void setter(String name, String value) {
-      System.out.println("SETTER CALLED FOR \""+name+"\" = \""+value+"\"");
+    class MyRecord {
+        public void setter(String name, String value) {
+            System.out.println("SETTER CALLED FOR \"" + name + "\" = \"" + value + "\"");
+        }
     }
-  }
 
-  public static void main( String[] args ) throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
-    PojoGenerator generator = new PojoGenerator();
-    CmdLineParser parser = new CmdLineParser(generator);
-    try {
-      parser.parseArgument(args);
-      generator.run();
-    } catch (CmdLineException e) {
-      // handling of wrong arguments
-      System.err.println(e.getMessage());
-      parser.printUsage(System.err);
+    public static void main(String[] args) throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
+        PojoGenerator generator = new PojoGenerator();
+        CmdLineParser parser = new CmdLineParser(generator);
+        try {
+            parser.parseArgument(args);
+            generator.run();
+        } catch (CmdLineException e) {
+            // handling of wrong arguments
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
+        }
     }
-  }
 
-  public void run() throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
-    ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
+    public void run() throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
+        ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
 
-    List<String> allPossiblePaths = parser.getPossiblePaths();
-    parser.addParseTarget(MyRecord.class.getMethod("setter", String.class, String.class), allPossiblePaths);
+        List<String> allPossiblePaths = parser.getPossiblePaths();
+        parser.addParseTarget(MyRecord.class.getMethod("setter", String.class, String.class), allPossiblePaths);
 
-    System.out.println("class MyRecord {\n");
+        System.out.println("class MyRecord {\n");
 
-    for (String field: parser.getPossiblePaths()) {
-      for( Casts cast: parser.getCasts(field))
-      {
-        System.out.println("    @Field{\"" + field + "\"}\n"+
-                "    public void setter(String name, "+castToJavaType(cast)+" value) {\n" +
-                "        System.out.println(\"SETTER CALLED FOR \\\"\" + name + \"\\\" = \\\"\" + value + \"\\\"\");\n" +
-                "    }\n");
-      }
+        for (String field : parser.getPossiblePaths()) {
+            for (Casts cast : parser.getCasts(field)) {
+                System.out.println("    @Field{\"" + field + "\"}\n" +
+                        "    public void setter(String name, " + castToJavaType(cast) + " value) {\n" +
+                        "        System.out.println(\"SETTER CALLED FOR \\\"\" + name + \"\\\" = \\\"\" + value + \"\\\"\");\n" +
+                        "    }\n");
+            }
+        }
+        System.out.println("}\n");
     }
-    System.out.println("}\n");
-  }
 
-  private String castToJavaType(Casts casts) {
-    switch (casts){
-      case STRING: return "String";
-      case LONG:   return "Long";
-      case DOUBLE: return "Double";
+    private String castToJavaType(Casts casts) {
+        switch (casts) {
+            case STRING:
+                return "String";
+            case LONG:
+                return "Long";
+            case DOUBLE:
+                return "Double";
+            default:
+                return null;
+        }
     }
-    return null;
-  }
 
 }
 

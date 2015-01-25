@@ -31,7 +31,6 @@ import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.apache.hadoop.io.compress.SplittableCompressionCodec;
@@ -73,7 +72,7 @@ public class ApacheHttpdLogfileInputFormat extends
         return requestedFields;
     }
 
-    public Map<String,Set<String>> getTypeRemappings() {
+    public Map<String, Set<String>> getTypeRemappings() {
         return typeRemappings;
     }
 
@@ -85,7 +84,11 @@ public class ApacheHttpdLogfileInputFormat extends
         super();
     }
 
-    public ApacheHttpdLogfileInputFormat(String logformat, Collection<String> requestedFields, Map<String, Set<String>> typeRemappings, List<Dissector> additionalDissectors) {
+    public ApacheHttpdLogfileInputFormat(
+            String logformat,
+            Collection<String> requestedFields,
+            Map<String, Set<String>> typeRemappings,
+            List<Dissector> additionalDissectors) {
         super();
         this.logFormat = logformat;
         this.requestedFields.addAll(requestedFields);

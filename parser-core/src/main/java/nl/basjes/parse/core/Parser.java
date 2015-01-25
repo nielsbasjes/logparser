@@ -385,6 +385,12 @@ public class Parser<RECORD> {
 
     /*
      * When there is a need to add a target callback manually use this method. */
+    public void addParseTarget(final Method method, final String fieldValue) {
+        addParseTarget(method, Arrays.asList(new String[]{fieldValue}));
+    }
+
+    /*
+     * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final List<String> fieldValues) {
         if (method == null || fieldValues == null) {
             return; // Nothing to do here
@@ -427,20 +433,20 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    private Map<String,Set<String>> typeRemappings = new HashMap<>(16);
+    private Map<String, Set<String>> typeRemappings = new HashMap<>(16);
 
-    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
-        if (typeRemappings == null) {
+    public void setTypeRemappings(Map<String, Set<String>> pTypeRemappings) {
+        if (pTypeRemappings == null) {
             this.typeRemappings.clear();
         } else {
-            this.typeRemappings = typeRemappings;
+            this.typeRemappings = pTypeRemappings;
         }
     }
 
     public void addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
-        for (Map.Entry<String,Set<String>> entry: additionalTypeRemappings.entrySet()){
+        for (Map.Entry<String, Set<String>> entry: additionalTypeRemappings.entrySet()){
             String input = entry.getKey();
-            for (String newType: entry.getValue() ) {
+            for (String newType: entry.getValue()) {
                 addTypeRemapping(input, newType, Casts.STRING_ONLY);
             }
         }
@@ -461,12 +467,12 @@ public class Parser<RECORD> {
         Set<String> mappingsForInput = typeRemappings.get(theInput); 
         if (mappingsForInput == null) {
             mappingsForInput = new HashSet<>();
-            typeRemappings.put(theInput,mappingsForInput);
+            typeRemappings.put(theInput, mappingsForInput);
         }
 
         if (!mappingsForInput.contains(theType)) {
             mappingsForInput.add(theType);
-            castsOfTargets.put(theType+':'+theInput,newCasts);
+            castsOfTargets.put(theType+':'+theInput, newCasts);
         }
     }
     
@@ -589,9 +595,11 @@ public class Parser<RECORD> {
                     
                     if (valueClass == Long.class) {
                         if (castsTo.contains(Casts.LONG)) {
-                            Long longValue;
+                            Long longValue = null;
                             try {
-                                longValue = (value == null ? null : Long.parseLong(value));
+                                if (value != null) {
+                                    longValue = Long.parseLong(value);
+                                }
                             } catch (NumberFormatException e) {
                                 longValue = null;
                             }
@@ -607,9 +615,11 @@ public class Parser<RECORD> {
                     
                     if (valueClass == Double.class) {
                         if (castsTo.contains(Casts.DOUBLE)) {
-                            Double doubleValue;
+                            Double doubleValue = null;
                             try {
-                                doubleValue = (value == null ? null : Double.parseDouble(value));
+                                if (value != null) {
+                                    doubleValue = Double.parseDouble(value);
+                                }
                             } catch (NumberFormatException e) {
                                 doubleValue = null;
                             }
@@ -710,7 +720,7 @@ public class Parser<RECORD> {
 
         findAdditionalPossiblePaths(pathNodes, paths, "", rootType, maxDepth);
 
-        for (Map.Entry<String,Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
+        for (Map.Entry<String, Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
             for (String typeRemapping: typeRemappingSet.getValue()) {
 
                 String remappedPath = typeRemapping + ':' + typeRemappingSet.getKey();

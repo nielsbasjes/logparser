@@ -195,15 +195,21 @@ public class ApacheHttpdLogfileRecordReader extends
         try {
             newParser = instantiateParser(logformat);
 
-//            HIER MOET IK DUS DE ANDER SETTER ERIN HANGEN
+            for (String field: fieldList) {
+                if (field.endsWith(".*")) {
+                    newParser.addParseTarget(ParsedRecord.class.getMethod("setMultiValueString",
+                            String.class, String.class), field);
+                } else {
+                    // FIXME: So far I do not see a way to do this more efficiently yet
+                    newParser.addParseTarget(ParsedRecord.class.getMethod("set",
+                            String.class, String.class), field);
+                    newParser.addParseTarget(ParsedRecord.class.getMethod("set",
+                            String.class, Long.class), field);
+                    newParser.addParseTarget(ParsedRecord.class.getMethod("set",
+                            String.class, Double.class), field);
+                }
+            }
 
-            // FIXME: So far I do not see a way to do this more efficiently yet
-            newParser.addParseTarget(ParsedRecord.class.getMethod("set",
-                    String.class, String.class), fieldList);
-            newParser.addParseTarget(ParsedRecord.class.getMethod("set",
-                    String.class, Long.class), fieldList);
-            newParser.addParseTarget(ParsedRecord.class.getMethod("set",
-                    String.class, Double.class), fieldList);
         } catch (ParseException
                 |NoSuchMethodException
                 |SecurityException e) {

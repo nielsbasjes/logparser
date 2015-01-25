@@ -35,43 +35,43 @@ public class TestLoader {
     private PigServer createPigServerWithLoader() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         pigServer.registerQuery(
-        "Clicks = " +
-        "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
-        "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
-        "            '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"'," +
-        "            'IP:connection.client.host'," +
-        "            'TIME.HOUR:request.receive.time.hour'," +
-        "            'TIME.MINUTE:request.receive.time.minute'," +
-        "            'TIME.SECOND:request.receive.time.second',"+
-        "            'HTTP.FIRSTLINE:request.firstline'," +
-        "            'HTTP.METHOD:request.firstline.method'," +
-        "    '-map:request.firstline.uri.query.g:HTTP.URI'," +
-        "            'HTTP.URI:request.firstline.uri'," +
-        "            'HTTP.QUERYSTRING:request.firstline.uri.query'," +
-//      "            'STRING:request.firstline.uri.query.*'," +
-        "            'STRING:request.firstline.uri.query.FOO'," +
-        "            'HTTP.USERAGENT:request.user-agent'" +
-        "            )" +
-        "" +
-        "         AS (" +
-        "            ConnectionClientHost:chararray," +
-        "            Hour:long," +
-        "            Minute:long," +
-        "            Second:long," +
-        "            RequestFirstline:chararray," +
-        "            RequestFirstlineMethod:chararray," +
-        "            RequestFirstlineUri:chararray," +
-        "            RequestFirstlineUriQuery:chararray," +
-//      "            RequestFirstlineUriQueryAll:map[]," +
-        "            RequestFirstlineUriQueryFoo:chararray," +
-        "            RequestUseragent:chararray" +
-        "            );"
+            "Clicks = " +
+            "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
+            "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
+            "            '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"'," +
+            "            'IP:connection.client.host'," +
+            "            'TIME.HOUR:request.receive.time.hour'," +
+            "            'TIME.MINUTE:request.receive.time.minute'," +
+            "            'TIME.SECOND:request.receive.time.second',"+
+            "            'HTTP.FIRSTLINE:request.firstline'," +
+            "            'HTTP.METHOD:request.firstline.method'," +
+            "    '-map:request.firstline.uri.query.g:HTTP.URI'," +
+            "            'HTTP.URI:request.firstline.uri'," +
+            "            'HTTP.QUERYSTRING:request.firstline.uri.query'," +
+            "            'STRING:request.firstline.uri.query.*'," +
+            "            'STRING:request.firstline.uri.query.FOO'," +
+            "            'HTTP.USERAGENT:request.user-agent'" +
+            "            )" +
+            "" +
+            "         AS (" +
+            "            ConnectionClientHost:chararray," +
+            "            Hour:long," +
+            "            Minute:long," +
+            "            Second:long," +
+            "            RequestFirstline:chararray," +
+            "            RequestFirstlineMethod:chararray," +
+            "            RequestFirstlineUri:chararray," +
+            "            RequestFirstlineUriQuery:chararray," +
+            "            RequestFirstlineUriQueryAll:map[]," +
+            "            RequestFirstlineUriQueryFoo:chararray," +
+            "            RequestUseragent:chararray" +
+            "            );"
         );
         return pigServer;
     }
 
     @Test
-    public void BasicLoaderTest() throws Exception {
+    public void testBasicLoader() throws Exception {
         PigServer pigServer = createPigServerWithLoader();
         Storage.Data data = resetData(pigServer);
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
@@ -94,7 +94,7 @@ public class TestLoader {
     }
 
     @Test
-    public void BasicLoaderWithPushDownTest() throws Exception {
+    public void testBasicLoaderWithPushDown() throws Exception {
         PigServer pigServer = createPigServerWithLoader();
         Storage.Data data = resetData(pigServer);
 
@@ -105,7 +105,7 @@ public class TestLoader {
             "            Minute," +
             "            Second," +
             "            RequestFirstlineUriQuery," +
-//          "            RequestFirstlineUriQueryAll:map[]," +
+            "            RequestFirstlineUriQueryAll:map[]," +
             "            RequestFirstlineUriQueryFoo," +
             "            RequestUseragent ;");
 
