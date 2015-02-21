@@ -24,7 +24,11 @@ import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.pig.builtin.mock.Storage.bag;
 import static org.apache.pig.builtin.mock.Storage.resetData;
@@ -78,20 +82,39 @@ public class TestRemappedLoader {
 
         assertEquals(1, out.size());
         assertEquals(tuple(
-            "2001:980:91c0:1:8d31:a232:25e5:85d",
-            "[05/Sep/2010:11:27:50 +0200]",
-            "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
-            bag(
-                    tuple("bla"),
-                    tuple("blabla")
+                "2001:980:91c0:1:8d31:a232:25e5:85d",
+                "[05/Sep/2010:11:27:50 +0200]",
+                "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
+                map(
+                    "promo"       , "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
+                    "bltg.pg_nm"  , "koken-pannen",
+                    "bltg.slt_nm" , "hs-koken-pannen-afj-120601",
+                    "bltg.slt_id" , "303",
+                    "bltg.slt_p"  , ""
+                ),
+                "1280x800",
+                "blablawashere",
+                "SomeThing",
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
             ),
-            "1280x800",
-            "blablawashere",
-            "SomeThing",
-            "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
-                ).toDelimitedString("><#><"),
-                out.get(0).toDelimitedString("><#><"));
+            out.get(0));
     }
 
+    private Object map(Object... params) {
+        if (params.length % 2 != 0) {
+            throw new IllegalArgumentException("Number of arguments MUST be even");
+        }
+
+        Map<String, Object> result = new HashMap();
+        Iterator<Object> paramsIterator = Arrays.asList(params).iterator();
+        
+        while (paramsIterator.hasNext()) {
+            Object key = paramsIterator.next();
+            Object value = paramsIterator.next();
+            result.put(key.toString(), value);
+        }
+
+        return result;
+    }
 
 }
