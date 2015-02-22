@@ -249,6 +249,8 @@ public class Loader
 
     // ------------------------------------------
 
+    private static final String MULTI_COMMENT = "  -- If you only want a single field replace * with name and change type to chararray";
+
     private String createPigExample() throws IOException {
         StringBuilder sb = new StringBuilder(1024);
         String fieldName = requestedFields.get(0);
@@ -264,7 +266,11 @@ public class Loader
                 continue;
             }
 
-            fields.add(value);
+            if (value.contains("*")) {
+                fields.add(value + "'," + MULTI_COMMENT);
+            } else {
+                fields.add(value);
+            }
 
             String name = value.split(":")[1]
                             .replace('.', '_')
@@ -284,7 +290,7 @@ public class Loader
                         if (casts.contains(Casts.STRING)) {
                             cast = "chararray";
                             if (value.contains("*")) {
-                                cast = "map[], -- If you only want a single field replace * with name and change type to chararray";
+                                cast = "map[]," + MULTI_COMMENT;
                             }
                         }
                     }
