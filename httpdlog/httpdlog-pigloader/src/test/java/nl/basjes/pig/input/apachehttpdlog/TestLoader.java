@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static nl.basjes.pig.input.apachehttpdlog.TestRemappedLoader.map;
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
@@ -84,10 +85,12 @@ public class TestLoader {
                     3L,
                     4L,
                     49L,
-                    "GET /1-500e-KWh?FoO=bAr%20BaR HTTP/1.0",
+                    "GET /1-500e-KWh?FoO=bAr%20BaR&bAr=fOo%20FoO HTTP/1.0",
                     "GET",
-                    "/1-500e-KWh?FoO=bAr%20BaR",
-                    "&FoO=bAr%20BaR",
+                    "/1-500e-KWh?FoO=bAr%20BaR&bAr=fOo%20FoO",
+                    "&FoO=bAr%20BaR&bAr=fOo%20FoO",
+                    map("foo", "bAr BaR",
+                        "bar", "fOo FoO"),
                     "bAr BaR",
                     "Mozilla/5.0 Dummy UserAgent"),
             out.get(0));
@@ -105,7 +108,7 @@ public class TestLoader {
             "            Minute," +
             "            Second," +
             "            RequestFirstlineUriQuery," +
-            "            RequestFirstlineUriQueryAll:map[]," +
+            "            RequestFirstlineUriQueryAll," +
             "            RequestFirstlineUriQueryFoo," +
             "            RequestUseragent ;");
 
@@ -118,7 +121,9 @@ public class TestLoader {
                         3L,
                         4L,
                         49L,
-                        "&FoO=bAr%20BaR",
+                        "&FoO=bAr%20BaR&bAr=fOo%20FoO",
+                        map("foo", "bAr BaR",
+                            "bar", "fOo FoO"),
                         "bAr BaR",
                         "Mozilla/5.0 Dummy UserAgent"),
                 out.get(0));

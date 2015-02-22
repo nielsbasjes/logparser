@@ -275,6 +275,7 @@ public class Loader
 
             String cast = "bytearray";
             if (casts != null) {
+                String comment = null;
                 if (casts.contains(Casts.LONG)) {
                     cast = "long";
                 } else {
@@ -284,7 +285,7 @@ public class Loader
                         if (casts.contains(Casts.STRING)) {
                             cast = "chararray";
                             if (value.contains("*")) {
-                                cast = "map[]";
+                                cast = "map[], -- If you only want a single field replace * with name and change type to chararray";
                             }
                         }
                     }

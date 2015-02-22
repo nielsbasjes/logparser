@@ -131,15 +131,18 @@ public class TestFields {
     // Casts of values
     assertTrue("Missing Casts Base URI",theValue.contains("request_firstline_uri:chararray"));
     assertTrue("Missing Casts Base QueryString",theValue.contains("request_firstline_uri_query:chararray"));
-    assertTrue("Missing Casts Base Query Parameters",theValue.contains("request_firstline_uri_query_*:chararray"));
+//    assertTrue("Missing Casts Base Query Parameters",theValue.contains("request_firstline_uri_query_*:chararray"));
+    assertTrue("Missing Casts Base Query Parameters",theValue.contains("request_firstline_uri_query__:map[]"));
 
     // Check the Casts of remapped possibilities
     assertTrue("Missing Casts Remapped URI G",theValue.contains("request_firstline_uri_query_g:chararray"));
     assertTrue("Missing Casts Remapped URI G QueryString",theValue.contains("request_firstline_uri_query_g_query:chararray"));
-    assertTrue("Missing Casts Remapped URI G Query Parameters",theValue.contains("request_firstline_uri_query_g_query_*:chararray"));
+//    assertTrue("Missing Casts Remapped URI G Query Parameters",theValue.contains("request_firstline_uri_query_g_query_*:chararray"));
+    assertTrue("Missing Casts Remapped URI G Query Parameters",theValue.contains("request_firstline_uri_query_g_query__:map[]"));
     assertTrue("Missing Casts Remapped URI R",theValue.contains("request_firstline_uri_query_r:chararray"));
     assertTrue("Missing Casts Remapped URI R QueryString",theValue.contains("request_firstline_uri_query_r_query:chararray"));
-    assertTrue("Missing Casts Remapped URI R Query Parameters", theValue.contains("request_firstline_uri_query_r_query_*:chararray"));
+//    assertTrue("Missing Casts Remapped URI R Query Parameters", theValue.contains("request_firstline_uri_query_r_query_*:chararray"));
+    assertTrue("Missing Casts Remapped URI R Query Parameters", theValue.contains("request_firstline_uri_query_r_query__:map[]"));
 
   }
 }

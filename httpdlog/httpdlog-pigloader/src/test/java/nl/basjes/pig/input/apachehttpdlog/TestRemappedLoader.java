@@ -24,13 +24,10 @@ import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.pig.builtin.mock.Storage.bag;
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
@@ -95,26 +92,42 @@ public class TestRemappedLoader {
                 "1280x800",
                 "blablawashere",
                 "SomeThing",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
+                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 " +
+                        "(KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
             ),
             out.get(0));
     }
 
-    private Object map(Object... params) {
-        if (params.length % 2 != 0) {
-            throw new IllegalArgumentException("Number of arguments MUST be even");
+
+    // TODO: Migrate to use PIG-4405 once that is released
+    /**
+     * @param input These params are alternating "key", "value". So the number of params MUST be even !!
+     * Implementation is very similar to the TOMAP UDF.
+     * So map("A", B, "C", D) generates a map "A"->B, "C"->D
+     * @return a map containing the provided objects
+     */
+    public static Map<String, Object> map(Object... input) {
+        if (input == null || input.length < 2) {
+            return null;
         }
 
-        Map<String, Object> result = new HashMap();
-        Iterator<Object> paramsIterator = Arrays.asList(params).iterator();
-        
-        while (paramsIterator.hasNext()) {
-            Object key = paramsIterator.next();
-            Object value = paramsIterator.next();
-            result.put(key.toString(), value);
-        }
+        try {
+            Map<String, Object> output = new HashMap<String, Object>();
 
-        return result;
+            for (int i = 0; i < input.length; i=i+2) {
+                String key = (String)input[i];
+                Object val = input[i+1];
+                output.put(key, val);
+            }
+
+            return output;
+        } catch (ClassCastException e){
+            throw new IllegalArgumentException("Map key must be a String");
+        } catch (ArrayIndexOutOfBoundsException e){
+            throw new IllegalArgumentException("Function input must have even number of parameters");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating a map", e);
+        }
     }
 
 }
