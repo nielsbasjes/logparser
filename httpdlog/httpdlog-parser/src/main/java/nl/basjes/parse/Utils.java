@@ -154,7 +154,7 @@ public final class Utils {
         for (int i = 0; i < input.length(); i++) {
             char chr = input.charAt(i);
 
-            if ( chr == '\\' ) {
+            if (chr == '\\') {
                 chr = input.charAt(++i);
                 switch (chr){
                     case '"':

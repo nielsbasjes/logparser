@@ -22,7 +22,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -91,26 +93,30 @@ public class ParserTestCasts {
             return result;
         }
 
+
+        private static final Map<String, EnumSet<Casts>> PREPARE_FOR_DISSECT_MAP = new HashMap();
+        static {
+            PREPARE_FOR_DISSECT_MAP.put("string_null",          Casts.STRING_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("string_good",          Casts.STRING_ONLY);
+
+            PREPARE_FOR_DISSECT_MAP.put("long_null",            Casts.LONG_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("long_bad",             Casts.LONG_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("long_good",            Casts.LONG_ONLY);
+
+            PREPARE_FOR_DISSECT_MAP.put("double_null",          Casts.DOUBLE_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("double_bad",           Casts.DOUBLE_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("double_good",          Casts.DOUBLE_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("string_long_null",     Casts.STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("string_double_null",   Casts.STRING_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("multi_null",           Casts.STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("string_long_good",     Casts.STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("string_double_good",   Casts.STRING_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("multi_good",           Casts.STRING_OR_LONG_OR_DOUBLE);
+        }
+
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            if (outputname.equals("string_null")) return Casts.STRING_ONLY;
-            if (outputname.equals("string_good")) return Casts.STRING_ONLY;
-
-            if (outputname.equals("long_null"  )) return Casts.LONG_ONLY;
-            if (outputname.equals("long_bad"   )) return Casts.LONG_ONLY;
-            if (outputname.equals("long_good"  )) return Casts.LONG_ONLY;
-
-            if (outputname.equals("double_null")) return Casts.DOUBLE_ONLY;
-            if (outputname.equals("double_bad" )) return Casts.DOUBLE_ONLY;
-            if (outputname.equals("double_good")) return Casts.DOUBLE_ONLY;
-
-            if (outputname.equals("string_long_null"  )) return Casts.STRING_OR_LONG;
-            if (outputname.equals("string_double_null")) return Casts.STRING_OR_DOUBLE;
-            if (outputname.equals("multi_null"        )) return Casts.STRING_OR_LONG_OR_DOUBLE;
-            if (outputname.equals("string_long_good"  )) return Casts.STRING_OR_LONG;
-            if (outputname.equals("string_double_good")) return Casts.STRING_OR_DOUBLE;
-            if (outputname.equals("multi_good"        )) return Casts.STRING_OR_LONG_OR_DOUBLE;
-            return null;
+            return PREPARE_FOR_DISSECT_MAP.get(outputname);
         }
 
         @Override
@@ -131,8 +137,7 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:string_null",
                 "OUTPUT_TYPE:string_long_null",
                 "OUTPUT_TYPE:string_double_null",
-                "OUTPUT_TYPE:multi_null",
-        })
+                "OUTPUT_TYPE:multi_null"})
         public void setStringNull(String name, String value) {
             assertEquals(null, value);
             count++;
@@ -141,8 +146,7 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:string_good",
                 "OUTPUT_TYPE:string_long_good",
                 "OUTPUT_TYPE:string_double_good",
-                "OUTPUT_TYPE:multi_good",
-        })
+                "OUTPUT_TYPE:multi_good"})
         public void setStringGood(String name, String value) {
             assertEquals("123", value);
             count++;
@@ -151,8 +155,7 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:long_null",
                 "OUTPUT_TYPE:long_bad",
                 "OUTPUT_TYPE:string_long_null",
-                "OUTPUT_TYPE:multi_null",
-        })
+                "OUTPUT_TYPE:multi_null"})
         public void setLongNull(String name, Long value) {
             assertEquals(null, value);
             count++;
@@ -160,8 +163,7 @@ public class ParserTestCasts {
 
         @Field({"OUTPUT_TYPE:long_good",
                 "OUTPUT_TYPE:string_long_good",
-                "OUTPUT_TYPE:multi_good",
-        })
+                "OUTPUT_TYPE:multi_good"})
         public void setLongGood(String name, Long value) {
             assertEquals(new Long(123L), value);
             count++;
@@ -170,8 +172,7 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:double_null",
                 "OUTPUT_TYPE:double_bad",
                 "OUTPUT_TYPE:string_double_null",
-                "OUTPUT_TYPE:multi_null",
-        })
+                "OUTPUT_TYPE:multi_null"})
         public void setDoubleNull(String name, Double value) {
             assertEquals(null, value);
             count++;
@@ -179,8 +180,7 @@ public class ParserTestCasts {
 
         @Field({"OUTPUT_TYPE:double_good",
                 "OUTPUT_TYPE:string_double_good",
-                "OUTPUT_TYPE:multi_good",
-        })
+                "OUTPUT_TYPE:multi_good"})
         public void setDoubleGood(String name, Double value) {
             assertEquals(123D, value, 0.0001D);
             count++;
@@ -190,8 +190,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:long_bad",
                 "OUTPUT_TYPE:long_good",
                 "OUTPUT_TYPE:string_long_null",
-                "OUTPUT_TYPE:string_long_good",
-        })
+                "OUTPUT_TYPE:string_long_good"})
         public void setLongWrongSignature(String name, Double value) {
             fail("This setter uses Double but that is not allowed for \""+name+"\" ");
         }
@@ -200,8 +199,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:double_bad",
                 "OUTPUT_TYPE:double_good",
                 "OUTPUT_TYPE:string_double_null",
-                "OUTPUT_TYPE:string_double_good",
-        })
+                "OUTPUT_TYPE:string_double_good"})
         public void setDoubleWrongSignature(String name, Long value) {
             fail("This setter uses Long but that is not allowed for \""+name+"\" ");
         }

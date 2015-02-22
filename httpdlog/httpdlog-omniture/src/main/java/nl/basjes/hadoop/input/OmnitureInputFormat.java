@@ -35,8 +35,7 @@ public class OmnitureInputFormat extends ApacheHttpdLogfileInputFormat {
             String logformat,
             Collection<String> requestedFields,
             Map<String, Set<String>> typeRemappings,
-            List<Dissector> additionalDissectors
-            ) {
+            List<Dissector> additionalDissectors) {
         super(logformat, requestedFields, typeRemappings, additionalDissectors);
     }
 

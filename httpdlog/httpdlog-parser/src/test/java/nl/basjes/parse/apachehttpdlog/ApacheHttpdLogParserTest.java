@@ -85,14 +85,14 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D \"%200{User-agent}i\" \"%{Cookie}i\" "
-                             + "\"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
+    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D " +
+            "\"%200{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
     // The modifiers ( like '!200,304,302') are to be removed.
     // This next value is what should be used internally
-    private final String expectedLogFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D \"%{user-agent}i\" \"%{cookie}i\" "
-            + "\"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
+    private final String expectedLogFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
+            "\"%{user-agent}i\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
 

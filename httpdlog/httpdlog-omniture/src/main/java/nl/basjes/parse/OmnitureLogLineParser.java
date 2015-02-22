@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECORD> {
 
-    private Logger LOG = LoggerFactory.getLogger(OmnitureLogLineParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OmnitureLogLineParser.class);
 
     public OmnitureLogLineParser(Class<RECORD> clazz, String logformat)
         throws ParseException {
@@ -41,7 +41,7 @@ public class OmnitureLogLineParser<RECORD> extends ApacheHttpdLoglineParser<RECO
                 deprecation + "Use the normal Apache parser in conjunction with these two mappings:\n" +
                 deprecation + "    request.firstline.uri.query.g ==> HTTP.URI\n"+
                 deprecation + "    request.firstline.uri.query.r ==> HTTP.URI\n"+
-                deprecation );
+                deprecation);
 
         addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
         addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);

@@ -38,7 +38,6 @@ import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -66,7 +65,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private String                                 logformat       = null;
     private final Set<String>                      requestedFields = new HashSet<>();
-    private Map<String,Set<String>>                typeRemappings  = new HashMap<>(16);
+    private Map<String, Set<String>>               typeRemappings  = new HashMap<>(16);
     private List<Dissector>                        additionalDissectors;
 
     // --------------------------------------------
@@ -79,8 +78,7 @@ public class ApacheHttpdLogfileRecordReader extends
     public ApacheHttpdLogfileRecordReader(String logformat,
             Set<String> requestedFields,
             Map<String, Set<String>> typeRemappings,
-            List<Dissector> additionalDissectors
-            ) {
+            List<Dissector> additionalDissectors) {
         setLogFormat(logformat);
         // Mappings and additional parsers MUST come before the requested fields
         this.typeRemappings = typeRemappings;
@@ -135,11 +133,13 @@ public class ApacheHttpdLogfileRecordReader extends
             }
         }
 
-        if (logformat != null && fieldList != null && parser == null) {
-            parser = createParser();
-        }
-        for (String field: fieldList) {
-            currentValue.declareRequestedFieldname(field);
+        if (fieldList != null) {
+            if (logformat != null && parser == null) {
+                parser = createParser();
+            }
+            for (String field : fieldList) {
+                currentValue.declareRequestedFieldname(field);
+            }
         }
 
         setupFields();

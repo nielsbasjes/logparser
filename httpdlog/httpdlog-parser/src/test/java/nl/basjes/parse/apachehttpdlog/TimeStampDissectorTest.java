@@ -29,12 +29,12 @@ import static org.junit.Assert.assertEquals;
 
 public class TimeStampDissectorTest {
 
-  public class TestRecord {
+    public class TestRecord {
 
-    public final Map<String, String> results     = new HashMap<>(32);
-    public final Map<String, Long>   longResults = new HashMap<>(32);
+        private final Map<String, String> results     = new HashMap<>(32);
+        private final Map<String, Long>   longResults = new HashMap<>(32);
 
-    @Field({
+        @Field({
             "TIME.STAMP:request.receive.time",
             "TIME.EPOCH:request.receive.time.epoch",
             "TIME.SECOND:request.receive.time.second",
@@ -50,13 +50,12 @@ public class TimeStampDissectorTest {
             "TIME.DAY:request.receive.time.day_utc",
             "TIME.MONTH:request.receive.time.month_utc",
             "TIME.YEAR:request.receive.time.year_utc",
-            "TIME.MONTHNAME:request.receive.time.monthname_utc",
-    })
-    public void setValue(final String name, final String value) {
-      results.put(name, value);
-    }
+            "TIME.MONTHNAME:request.receive.time.monthname_utc"})
+        public void setValue(final String name, final String value) {
+            results.put(name, value);
+        }
 
-    @Field({
+        @Field({
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
             "TIME.MINUTE:request.receive.time.minute",
@@ -65,59 +64,58 @@ public class TimeStampDissectorTest {
             "TIME.HOUR:request.receive.time.hour_utc",
             "TIME.MINUTE:request.receive.time.minute_utc",
             "TIME.SECOND:request.receive.time.second_utc",
-            "TIME.EPOCH:request.receive.time.epoch",
-    })
-    public void setValueLong(final String name, final Long value) {
-      longResults.put(name, value);
+            "TIME.EPOCH:request.receive.time.epoch"})
+        public void setValueLong(final String name, final Long value) {
+            longResults.put(name, value);
+        }
+
     }
 
-  }
 
-
-  class TimeParser extends Parser<TestRecord> {
-    public TimeParser() {
-      super(TestRecord.class);
-      addDissector(new ApacheHttpdLogFormatDissector("%t"));
-      addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
-      setRootType("APACHELOGLINE");
+    class TimeParser extends Parser<TestRecord> {
+        public TimeParser() {
+            super(TestRecord.class);
+            addDissector(new ApacheHttpdLogFormatDissector("%t"));
+            addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
+            setRootType("APACHELOGLINE");
+        }
     }
-  }
 
-  public void testTimeStampDissector() throws Exception {
-    TimeParser timeParser = new TimeParser();
-    TestRecord record = new TestRecord();
-    timeParser.parse(record, "[31/Dec/2012:23:00:44 -0700]");
+    public void testTimeStampDissector() throws Exception {
+        TimeParser timeParser = new TimeParser();
+        TestRecord record = new TestRecord();
+        timeParser.parse(record, "[31/Dec/2012:23:00:44 -0700]");
 
-    Map<String, String> results = record.results;
-    Map<String, Long> longResults = record.longResults;
+        Map<String, String> results = record.results;
+        Map<String, Long> longResults = record.longResults;
 
-    assertEquals("[31/Dec/2012:23:00:44 -0700]", results.get("TIME.STAMP:request.receive.time"));
-    assertEquals("1357020044000", results.get("TIME.EPOCH:request.receive.time.epoch"));
-    assertEquals(new Long(1357020044000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals("[31/Dec/2012:23:00:44 -0700]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("1357020044000", results.get("TIME.EPOCH:request.receive.time.epoch"));
+        assertEquals(new Long(1357020044000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
 
-    assertEquals("2012", results.get("TIME.YEAR:request.receive.time.year"));
-    assertEquals("12", results.get("TIME.MONTH:request.receive.time.month"));
-    assertEquals("December", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
-    assertEquals("31", results.get("TIME.DAY:request.receive.time.day"));
-    assertEquals(new Long(31), longResults.get("TIME.DAY:request.receive.time.day"));
-    assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
-    assertEquals(new Long(23), longResults.get("TIME.HOUR:request.receive.time.hour"));
-    assertEquals("0", results.get("TIME.MINUTE:request.receive.time.minute"));
-    assertEquals(new Long(0), longResults.get("TIME.MINUTE:request.receive.time.minute"));
-    assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
-    assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second"));
+        assertEquals("2012", results.get("TIME.YEAR:request.receive.time.year"));
+        assertEquals("12", results.get("TIME.MONTH:request.receive.time.month"));
+        assertEquals("December", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
+        assertEquals("31", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals(new Long(31), longResults.get("TIME.DAY:request.receive.time.day"));
+        assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
+        assertEquals(new Long(23), longResults.get("TIME.HOUR:request.receive.time.hour"));
+        assertEquals("0", results.get("TIME.MINUTE:request.receive.time.minute"));
+        assertEquals(new Long(0), longResults.get("TIME.MINUTE:request.receive.time.minute"));
+        assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
+        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second"));
 
-    assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_utc"));
-    assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_utc"));
-    assertEquals("January", results.get("TIME.MONTHNAME:request.receive.time.monthname_utc"));
-    assertEquals("1", results.get("TIME.DAY:request.receive.time.day_utc"));
-    assertEquals(new Long(1), longResults.get("TIME.DAY:request.receive.time.day_utc"));
-    assertEquals("6", results.get("TIME.HOUR:request.receive.time.hour_utc"));
-    assertEquals(new Long(6), longResults.get("TIME.HOUR:request.receive.time.hour_utc"));
-    assertEquals("0", results.get("TIME.MINUTE:request.receive.time.minute_utc"));
-    assertEquals(new Long(0), longResults.get("TIME.MINUTE:request.receive.time.minute_utc"));
-    assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_utc"));
-    assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
-  }
+        assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_utc"));
+        assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_utc"));
+        assertEquals("January", results.get("TIME.MONTHNAME:request.receive.time.monthname_utc"));
+        assertEquals("1", results.get("TIME.DAY:request.receive.time.day_utc"));
+        assertEquals(new Long(1), longResults.get("TIME.DAY:request.receive.time.day_utc"));
+        assertEquals("6", results.get("TIME.HOUR:request.receive.time.hour_utc"));
+        assertEquals(new Long(6), longResults.get("TIME.HOUR:request.receive.time.hour_utc"));
+        assertEquals("0", results.get("TIME.MINUTE:request.receive.time.minute_utc"));
+        assertEquals(new Long(0), longResults.get("TIME.MINUTE:request.receive.time.minute_utc"));
+        assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_utc"));
+        assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
+    }
 
 }

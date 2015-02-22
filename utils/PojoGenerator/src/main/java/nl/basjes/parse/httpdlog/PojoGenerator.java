@@ -31,7 +31,7 @@ import java.util.List;
 
 public class PojoGenerator {
     @Option(name = "-logformat", usage = "<Apache HTTPD Logformat>", required = true)
-    public static final String logformat = "common";
+    private static String logFormat = "common";
 
     class MyRecord {
         public void setter(String name, String value) {
@@ -53,7 +53,7 @@ public class PojoGenerator {
     }
 
     public void run() throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
-        ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
+        ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logFormat);
 
         List<String> allPossiblePaths = parser.getPossiblePaths();
         parser.addParseTarget(MyRecord.class.getMethod("setter", String.class, String.class), allPossiblePaths);

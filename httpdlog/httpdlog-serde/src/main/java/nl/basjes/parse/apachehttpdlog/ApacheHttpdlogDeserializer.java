@@ -123,24 +123,22 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     // If we see more than 1% bad lines we abort (after we have seen 1000 lines)
     private static final long    MINIMAL_FAIL_LINES      = 1000;
     private static final int     MINIMAL_FAIL_PERCENTAGE =    1;
-    private long    bytesInput  = 0;
     private long    linesInput  = 0;
     private long    linesBad    = 0;
 
     class ColumnToGetterMapping {
-        int    index;
-        Casts  casts;
-        String fieldValue;
+        private int    index;
+        private Casts  casts;
+        private String fieldValue;
     }
 
-    private List<ColumnToGetterMapping> columnToGetterMappings = new ArrayList<>();
+    private final List<ColumnToGetterMapping> columnToGetterMappings = new ArrayList<>();
 
     @Override
     public void initialize(Configuration conf, Properties props)
         throws SerDeException {
 
         boolean usable = true;
-        bytesInput = 0;
         linesInput = 0;
         linesBad   = 0;
 
@@ -179,13 +177,13 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                 } catch (ClassNotFoundException e) {
                     throw new SerDeException("Found load with bad specification: No such class:" + dissectorClassName, e);
                 } catch (NoSuchMethodException e) {
-                    throw new SerDeException("Found load with bad specification: Class does not have the required constructor",e);
+                    throw new SerDeException("Found load with bad specification: Class does not have the required constructor", e);
                 } catch (InvocationTargetException e) {
-                    throw new SerDeException("Got an InvocationTargetException",e);
+                    throw new SerDeException("Got an InvocationTargetException", e);
                 } catch (InstantiationException e) {
-                    throw new SerDeException("Got an InstantiationException",e);
+                    throw new SerDeException("Got an InstantiationException", e);
                 } catch (IllegalAccessException e) {
-                    throw new SerDeException("Found load with bad specification: Required constructor is not public",e);
+                    throw new SerDeException("Found load with bad specification: Required constructor is not public", e);
                 }
                 LOG.debug("Loaded additional dissector: {}(\"{}\")", dissectorClassName, dissectorParam);
             }
@@ -281,14 +279,13 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
             throw new SerDeException("The input MUST be a Text line.");
         }
 
-        bytesInput += ((Text) writable).getLength();
-        linesInput ++;
+        linesInput++;
 
         try {
             currentValue.clear();
             parser.parse(currentValue, writable.toString());
         } catch (DissectionFailure dissectionFailure) {
-            linesBad ++;
+            linesBad++;
             if (linesInput >= MINIMAL_FAIL_LINES) {
                 if (100* linesBad > MINIMAL_FAIL_PERCENTAGE * linesInput){
                     throw new SerDeException("To many bad lines: " + linesBad + " of " + linesInput + " are bad.");
@@ -296,11 +293,11 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
             }
             return null; // Just return that this line is nothing.
         } catch (InvalidDissectorException |MissingDissectorsException e) {
-            throw new SerDeException("Cannot continue; Fix the Dissectors before retrying",e);
+            throw new SerDeException("Cannot continue; Fix the Dissectors before retrying", e);
         }
 
         for (ColumnToGetterMapping ctgm: columnToGetterMappings) {
-            switch (ctgm.casts) {
+            switch(ctgm.casts) {
                 case STRING:
                     String currentValueString = currentValue.getString(ctgm.fieldValue);
                     row.set(ctgm.index, currentValueString);
@@ -313,6 +310,8 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                     Double currentValueDouble = currentValue.getDouble(ctgm.fieldValue);
                     row.set(ctgm.index, currentValueDouble);
                     break;
+                default:
+                    // Do nothing
             }
         }
 

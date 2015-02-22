@@ -45,7 +45,7 @@ public final class Parsable<RECORD> {
     // The set of ParsedFields that need to be parsed further
     private final Set<ParsedField>         toBeParsed = new HashSet<>();
 
-    private final Map<String,Set<String>>  typeRemappings;
+    private final Map<String, Set<String>> typeRemappings;
 
     private String                         rootname   = null;
 
@@ -81,7 +81,13 @@ public final class Parsable<RECORD> {
         addDissection(base, type, name, value, false);
     }
 
-    private void addDissection(final String base, final String type, final String name, final String value, final boolean recursion) throws DissectionFailure {
+    private void addDissection(
+            final String base,
+            final String type,
+            final String name,
+            final String value,
+            final boolean recursion)
+            throws DissectionFailure {
         String completeName;
         String neededWildCardName;
         if (base.equals(rootname)) {

@@ -159,7 +159,6 @@ public class TimeStampDissector extends Dissector {
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = outputname.substring(inputname.length() + 1);
         switch (name) {
-
             // As parsed
             case "day":
                 wantDay = true;
@@ -250,8 +249,10 @@ public class TimeStampDissector extends Dissector {
             case "millisecond_utc":
                 wantMillisecondUTC = true;
                 return Casts.STRING_OR_LONG;
+
+            default:
+                return null;
         }
-        return null;
     }
 
     // --------------------------------------------

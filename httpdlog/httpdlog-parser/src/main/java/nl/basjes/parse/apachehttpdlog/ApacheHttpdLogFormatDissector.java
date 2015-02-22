@@ -69,24 +69,24 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // LogFormat "%{User-agent}i" agent
 
         switch (logformat.toLowerCase(Locale.getDefault())) {
-        case "common":
-            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b");
-            break;
-        case "combined":
-            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
-            break;
-        case "combinedio":
-            overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O");
-            break;
-        case "referer":
-            overrideLogFormat(logformat, "%{Referer}i -> %U");
-            break;
-        case "agent":
-            overrideLogFormat(logformat, "%{User-agent}i");
-            break;
-        default:
-            super.setLogFormat(logformat);
-            break;
+            case "common":
+                overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b");
+                break;
+            case "combined":
+                overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"");
+                break;
+            case "combinedio":
+                overrideLogFormat(logformat, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O");
+                break;
+            case "referer":
+                overrideLogFormat(logformat, "%{Referer}i -> %U");
+                break;
+            case "agent":
+                overrideLogFormat(logformat, "%{User-agent}i");
+                break;
+            default:
+                super.setLogFormat(logformat);
+                break;
         }
     }
 
@@ -117,7 +117,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %!200,304,302{Referer}i   Logs Referer on all requests that do not return one of the three
         //                           specified codes, "-" otherwise.
 
-        return tokenLogFormat.replaceAll("%!?[0-9]{3}(?:,[0-9]{3})*","%");
+        return tokenLogFormat.replaceAll("%!?[0-9]{3}(?:,[0-9]{3})*", "%");
     }
 
     @Override

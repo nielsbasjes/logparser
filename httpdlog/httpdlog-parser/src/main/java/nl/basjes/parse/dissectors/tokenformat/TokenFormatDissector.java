@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
         "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
         "PMD.BeanMembersShouldSerialize", // No beans here
         "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
-})
+    })
 public abstract class TokenFormatDissector extends Dissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenFormatDissector.class);
@@ -166,8 +166,8 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
 
-    protected void setInputType(String inputType) {
-        this.inputType = inputType;
+    protected void setInputType(String newInputType) {
+        this.inputType = newInputType;
     }
 
     private String inputType = null;

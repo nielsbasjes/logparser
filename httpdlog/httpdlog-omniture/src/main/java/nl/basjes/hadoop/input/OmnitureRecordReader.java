@@ -33,7 +33,7 @@ public class OmnitureRecordReader extends ApacheHttpdLogfileRecordReader {
     public OmnitureRecordReader(
             String newLogformat,
             Set<String> newRequestedFields,
-            Map<String,Set<String>> typeRemappings,
+            Map<String, Set<String>> typeRemappings,
             List<Dissector> additionalDissectors) {
         super(newLogformat, newRequestedFields, typeRemappings, additionalDissectors);
     }

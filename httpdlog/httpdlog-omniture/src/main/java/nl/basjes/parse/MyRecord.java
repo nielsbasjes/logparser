@@ -44,7 +44,7 @@ public class MyRecord {
         "HTTP.USERAGENT:request.user-agent",
         "STRING:request.firstline.uri.query.g",
         "HTTP.URI:request.firstline.uri.query.g"
-    })
+        })
     public void setValue(final String name, final String value) {
         results.put(name, value);
     }

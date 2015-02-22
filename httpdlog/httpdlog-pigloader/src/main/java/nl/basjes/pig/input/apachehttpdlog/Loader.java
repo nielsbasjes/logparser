@@ -275,7 +275,6 @@ public class Loader
 
             String cast = "bytearray";
             if (casts != null) {
-                String comment = null;
                 if (casts.contains(Casts.LONG)) {
                     cast = "long";
                 } else {

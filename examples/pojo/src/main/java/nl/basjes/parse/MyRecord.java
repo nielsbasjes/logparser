@@ -54,7 +54,7 @@ public class MyRecord {
         "TIME.DAY:request.receive.time.day",
         "TIME.HOUR:request.receive.time.hour",
         "TIME.MONTHNAME:request.receive.time.monthname"
-    })
+        })
     public void setValue(final String name, final String value) {
         results.put(name, value);
     }

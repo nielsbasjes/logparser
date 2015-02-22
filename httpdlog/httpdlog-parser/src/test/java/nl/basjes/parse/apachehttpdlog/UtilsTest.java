@@ -51,12 +51,12 @@ public class UtilsTest {
     @Test
     public void testApacheLogDecoder() {
         // Test basic character decoder
-        assertEquals((byte)0x00,Utils.hexCharsToByte('0','0'));
-        assertEquals((byte)0x20,Utils.hexCharsToByte('2','0'));
-        assertEquals((byte)0x43,Utils.hexCharsToByte('4','3'));
-        assertEquals((byte)0x88,Utils.hexCharsToByte('8','8'));
-        assertEquals((byte)0xde,Utils.hexCharsToByte('d','E'));
-        assertEquals((byte)0xff,Utils.hexCharsToByte('F','f'));
+        assertEquals((byte)0x00, Utils.hexCharsToByte('0', '0'));
+        assertEquals((byte)0x20, Utils.hexCharsToByte('2', '0'));
+        assertEquals((byte)0x43, Utils.hexCharsToByte('4', '3'));
+        assertEquals((byte)0x88, Utils.hexCharsToByte('8', '8'));
+        assertEquals((byte)0xde, Utils.hexCharsToByte('d', 'E'));
+        assertEquals((byte)0xff, Utils.hexCharsToByte('F', 'f'));
 
         // Decoding a value
         assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla bla bla"));

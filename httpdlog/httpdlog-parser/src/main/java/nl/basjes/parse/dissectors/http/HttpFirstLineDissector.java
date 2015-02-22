@@ -80,7 +80,13 @@ public class HttpFirstLineDissector extends Dissector {
         }
     }
 
-    private void outputDissection(Parsable<?> parsable, String inputname, String type, String name, Matcher matcher, int offset) throws DissectionFailure {
+    private void outputDissection(Parsable<?> parsable,
+                                  String inputname,
+                                  String type,
+                                  String name,
+                                  Matcher matcher,
+                                  int offset)
+            throws DissectionFailure {
         if (requestedParameters.contains(name)) {
             parsable.addDissection(inputname, type, name, matcher.group(offset));
         }

@@ -122,7 +122,7 @@ public class ApacheHttpdLogfileInputFormat extends
         return (null == codec) || codec instanceof SplittableCompressionCodec;
     }
 
-    public void setTypeRemappings(Map<String, Set<String>> typeRemappings) {
-        this.typeRemappings = typeRemappings;
+    public void setTypeRemappings(Map<String, Set<String>> newTypeRemappings) {
+        this.typeRemappings = newTypeRemappings;
     }
 }
