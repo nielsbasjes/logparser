@@ -7,9 +7,9 @@ The framework needs two things:
 
 Usage (Pig)
 ===
-You simply register the httpdlog-pigloader-1.6.jar
+You simply register the httpdlog-pigloader-1.8.jar
 
-    REGISTER httpdlog-pigloader-1.6.jar
+    REGISTER httpdlog-pigloader-*.jar
 
 **Step 1: What CAN we get from this line?**
 
@@ -52,13 +52,23 @@ The output of this command looks like this:
             'TIME.MONTH:request.receive.time.month',
             'TIME.WEEK:request.receive.time.weekofweekyear',
             'TIME.YEAR:request.receive.time.weekyear',
-            'TIME.YEAR:request.receive.time.year',          
+            'TIME.YEAR:request.receive.time.year',
             'TIME.HOUR:request.receive.time.hour',
             'TIME.MINUTE:request.receive.time.minute',
             'TIME.SECOND:request.receive.time.second',
             'TIME.MILLISECOND:request.receive.time.millisecond',
             'TIME.ZONE:request.receive.time.timezone',
             'TIME.EPOCH:request.receive.time.epoch',
+            'TIME.DAY:request.receive.time.day_utc',
+            'TIME.MONTHNAME:request.receive.time.monthname_utc',
+            'TIME.MONTH:request.receive.time.month_utc',
+            'TIME.WEEK:request.receive.time.weekofweekyear_utc',
+            'TIME.YEAR:request.receive.time.weekyear_utc',
+            'TIME.YEAR:request.receive.time.year_utc',
+            'TIME.HOUR:request.receive.time.hour_utc',
+            'TIME.MINUTE:request.receive.time.minute_utc',
+            'TIME.SECOND:request.receive.time.second_utc',
+            'TIME.MILLISECOND:request.receive.time.millisecond_utc',
             'HTTP.FIRSTLINE:request.firstline',
             'HTTP.METHOD:request.firstline.method',
             'HTTP.URI:request.firstline.uri',
@@ -68,7 +78,7 @@ The output of this command looks like this:
             'HTTP.PORT:request.firstline.uri.port',
             'HTTP.PATH:request.firstline.uri.path',
             'HTTP.QUERYSTRING:request.firstline.uri.query',
-            'STRING:request.firstline.uri.query.*',         -- You cannot put a * here yet. You MUST specify a specific field.
+            'STRING:request.firstline.uri.query.*',  -- If you only want a single field replace * with name and change type to chararray',
             'HTTP.REF:request.firstline.uri.ref',
             'HTTP.PROTOCOL:request.firstline.protocol',
             'HTTP.PROTOCOL.VERSION:request.firstline.protocol.version',
@@ -81,7 +91,7 @@ The output of this command looks like this:
             'HTTP.PORT:request.referer.port',
             'HTTP.PATH:request.referer.path',
             'HTTP.QUERYSTRING:request.referer.query',
-            'STRING:request.referer.query.*',       -- You cannot put a * here yet. You MUST specify a specific field.
+            'STRING:request.referer.query.*',  -- If you only want a single field replace * with name and change type to chararray',
             'HTTP.REF:request.referer.ref',
             'HTTP.USERAGENT:request.user-agent')
         AS (
@@ -101,6 +111,16 @@ The output of this command looks like this:
             request_receive_time_millisecond:long,
             request_receive_time_timezone:chararray,
             request_receive_time_epoch:long,
+            request_receive_time_day_utc:long,
+            request_receive_time_monthname_utc:chararray,
+            request_receive_time_month_utc:long,
+            request_receive_time_weekofweekyear_utc:long,
+            request_receive_time_weekyear_utc:long,
+            request_receive_time_year_utc:long,
+            request_receive_time_hour_utc:long,
+            request_receive_time_minute_utc:long,
+            request_receive_time_second_utc:long,
+            request_receive_time_millisecond_utc:long,
             request_firstline:chararray,
             request_firstline_method:chararray,
             request_firstline_uri:chararray,
@@ -110,7 +130,7 @@ The output of this command looks like this:
             request_firstline_uri_port:long,
             request_firstline_uri_path:chararray,
             request_firstline_uri_query:chararray,
-            request_firstline_uri_query_*:chararray,        -- You cannot put a * here yet. You MUST specify name.
+            request_firstline_uri_query__:map[],  -- If you only want a single field replace * with name and change type to chararray,
             request_firstline_uri_ref:chararray,
             request_firstline_protocol:chararray,
             request_firstline_protocol_version:chararray,
@@ -123,9 +143,9 @@ The output of this command looks like this:
             request_referer_port:long,
             request_referer_path:chararray,
             request_referer_query:chararray,
-            request_referer_query_*:chararray,      -- You cannot put a * here yet. You MUST specify name.
+            request_referer_query__:map[],  -- If you only want a single field replace * with name and change type to chararray,
             request_referer_ref:chararray,
-            request_user-agent:chararray);
+            request_user_agent:chararray);
 
 As you can see most values are 'chararray' but some are of type 'long' or 'double'.
 Note that where a '*' appears this means there are many possible values that can
