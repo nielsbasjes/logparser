@@ -8,7 +8,7 @@ This is an annotated example on how you could make the logfiles directly accessi
 First we must ensure that Hive has the right jar file available. This can be either using the ADD JAR option in the Hive Cli
  or by installing it on the cluster.
 
-    ADD JAR target/httpdlog-serde-1.8-job.jar;
+    ADD JAR target/httpdlog-serde-1.9-job.jar;
 
 We can now define an external table with column types are STRING, BIGINT and DOUBLE.
 
@@ -82,7 +82,7 @@ Finally we define that this is stored as a TEXTFILE and where the files are loca
 Complete example
 ====
 
-    ADD JAR target/httpdlog-serde-1.8-job.jar;
+    ADD JAR target/httpdlog-serde-1.9-job.jar;
 
     CREATE EXTERNAL TABLE nbasjes.clicks (
          ip           STRING
