@@ -37,7 +37,6 @@
     <module>httpdlog-pigloader</module>
     <module>httpdlog-stormbolt</module>
     <module>httpdlog-serde</module>
-    <module>httpdlog-omniture</module>
   </modules>
 
 </project>
