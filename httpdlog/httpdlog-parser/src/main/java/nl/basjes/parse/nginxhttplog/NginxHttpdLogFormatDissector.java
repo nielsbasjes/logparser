@@ -93,26 +93,11 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         return sb.toString();
     }
 
-    protected String removeModifiersFromLogformat(String tokenLogFormat) {
-        // Modifiers
-        // Particular items can be restricted to print only for responses with specific HTTP status codes
-        // by placing a comma-separated list of status codes immediately following the "%".
-        // The status code list may be preceded by a "!" to indicate negation.
-        //
-        // %400,501{User-agent}i     Logs User-agent on 400 errors and 501 errors only.
-        //                           For other status codes, the literal string "-" will be logged.
-        // %!200,304,302{Referer}i   Logs Referer on all requests that do not return one of the three
-        //                           specified codes, "-" otherwise.
-
-        return tokenLogFormat.replaceAll("%!?[0-9]{3}(?:,[0-9]{3})*", "%");
-    }
 
     @Override
     protected String cleanupLogFormat(String tokenLogFormat) {
         return  makeHeaderNamesLowercaseInLogFormat(
-                removeModifiersFromLogformat(
-                        tokenLogFormat
-                )
+                    tokenLogFormat
         );
     }
 
