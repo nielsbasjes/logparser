@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestFields {
-    private static final Logger LOG = LoggerFactory.getLogger(TestRemappedLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestFields.class);
 
     private static final String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
 
