@@ -31,9 +31,24 @@ import java.util.regex.Pattern;
 public class HttpFirstLineDissector extends Dissector {
     // --------------------------------------------
     // The "first line" of a request can be split up a bit further
-    // The format of the first line of an HTTP/1.x request looks like this:
+    // See for more details: http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
+    // In https://tools.ietf.org/html/rfc7230#section-3.1.1 it says:
+    //      Recipients typically parse the request-line into its component parts
+    //      by splitting on whitespace (see Section 3.5), since no whitespace is
+    //      allowed in the three components.  Unfortunately, some user agents
+    //      fail to properly encode or exclude whitespace found in hypertext
+    //      references, resulting in those disallowed characters being sent in a
+    //      request-target.
+
+    // So this means:
+    // - Method = Single Word
+    // - Request URI = String that can contain ANY letters
+    // - HTTP version = HTTP/[0-9]+\.[0-9]+
+    public static final String FIRSTLINE_REGEX =
+            "[a-zA-Z]+ .* HTTP/[0-9]+\\.[0-9]+";
+
     private final Pattern firstlineSplitter = Pattern
-            .compile("^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) (.*) (HTTP)/(.*)$");
+            .compile("^([a-zA-Z]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
 
     // --------------------------------------------
 

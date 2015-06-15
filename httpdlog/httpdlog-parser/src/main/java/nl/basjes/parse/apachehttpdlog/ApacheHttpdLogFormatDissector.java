@@ -20,6 +20,7 @@ package nl.basjes.parse.apachehttpdlog;
 
 import nl.basjes.parse.Utils;
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.dissectors.http.HttpFirstLineDissector;
 import nl.basjes.parse.dissectors.tokenformat.NamedTokenParser;
 import nl.basjes.parse.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.dissectors.tokenformat.TokenParser;
@@ -344,9 +345,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %r First line of request
         parsers.add(new TokenParser("%r",
                 "request.firstline", "HTTP.FIRSTLINE",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " + 
-                                   TokenParser.FORMAT_NO_SPACE_STRING + " " + 
-                                   TokenParser.FORMAT_NO_SPACE_STRING));
+                Casts.STRING_ONLY, HttpFirstLineDissector.FIRSTLINE_REGEX));
 
         // -------
         // %R The handler generating the response (if any).
@@ -526,7 +525,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("%{referer}i",
                 "request.referer",    "HTTP.URI",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, 1));
+                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
 
         return parsers;
     }
