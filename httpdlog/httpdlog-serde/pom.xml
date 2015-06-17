@@ -61,6 +61,13 @@
       <artifactId>httpdlog-inputformat</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>1.6</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <profiles>
@@ -88,12 +95,12 @@
               </requires>
               <mappings>
                 <mapping>
-                  <directory>/usr/lib/hive/lib</directory>
+                  <directory>/opt/${project.build.finalName}/hive/lib</directory>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>target/${project.build.finalName}.jar</location>
+                      <location>target/${project.build.finalName}-job.jar</location>
                     </source>
                   </sources>
                 </mapping>
