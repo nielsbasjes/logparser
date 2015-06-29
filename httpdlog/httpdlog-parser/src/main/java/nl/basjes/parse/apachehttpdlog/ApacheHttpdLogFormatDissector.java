@@ -170,9 +170,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // Format String Description
         // -------
         // %% The percent sign
-        parsers.add(new TokenParser("%%",
-                TokenParser.FIXED_STRING, FIXED_STRING_TYPE,
-                null, "%"));
+        parsers.add(new FixedStringTokenParser("%%", "%"));
 
         // -------
         // %a Remote IP-address

@@ -60,6 +60,15 @@ public abstract class TokenFormatDissector extends Dissector {
     public static final String FIXED_STRING_TYPE = "NONE";
 
     // --------------------------------------------
+    public class FixedStringTokenParser extends TokenParser {
+        public FixedStringTokenParser(final String nLogFormatToken, final String nRegEx) {
+            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nRegEx, 0);
+        }
+
+        public FixedStringTokenParser(final String nLogFormatToken) {
+            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, TokenParser.FORMAT_STRING, 0);
+        }
+    }
 
     public TokenFormatDissector(final String logFormat) {
         setLogFormat(logFormat);
