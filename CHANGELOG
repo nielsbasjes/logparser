@@ -1,0 +1,21 @@
+This is intended as an overview of the major changes
+
+v2.0
+===
+- Fixed reading logfiles from before 2000
+- Rearranged the Java packages to make the structure more logical.
+- Changed license from GPL to Apache v2.0
+
+v1.9.1
+===
+- Allow urls that have a space (which is incorrect but does happen).
+
+v1.9
+===
+- [PIG] Support for getting a map[] of values (useful for cookies and query string parameters)
+- [PIG] Output the possible values as a complete working Pig statement.
+
+Older
+===
+Just see the commit logs
+

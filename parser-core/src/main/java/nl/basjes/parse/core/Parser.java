@@ -2,18 +2,17 @@
  * Apache HTTPD logparsing made easy
  * Copyright (C) 2011-2015 Niels Basjes
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package nl.basjes.parse.core;
 
@@ -188,7 +187,7 @@ public class Parser<RECORD> {
         // - we need to know how to proceed
 
         assembleDissectorPhases();
-        
+
         // Step 1: Acquire all potentially useful subtargets
         // We first build a set of all possible subtargets that may be useful
         // this way we can skip anything we know not to be useful
@@ -463,8 +462,8 @@ public class Parser<RECORD> {
 
         String theInput = input.trim().toLowerCase(Locale.ENGLISH);
         String theType = newType.trim().toUpperCase(Locale.ENGLISH);
-        
-        Set<String> mappingsForInput = typeRemappings.get(theInput); 
+
+        Set<String> mappingsForInput = typeRemappings.get(theInput);
         if (mappingsForInput == null) {
             mappingsForInput = new HashSet<>();
             typeRemappings.put(theInput, mappingsForInput);
@@ -475,13 +474,13 @@ public class Parser<RECORD> {
             castsOfTargets.put(theType+':'+theInput, newCasts);
         }
     }
-    
+
     // --------------------------------------------
 
     public static String cleanupFieldValue(String fieldValue) {
         final int colonPos = fieldValue.indexOf(':');
         if (colonPos == -1) {
-            return fieldValue.toLowerCase(Locale.ENGLISH);    
+            return fieldValue.toLowerCase(Locale.ENGLISH);
         }
 
         final String fieldType = fieldValue.substring(0, colonPos);
@@ -559,7 +558,7 @@ public class Parser<RECORD> {
 
     void store(final RECORD record, final String key, final String name, final String value) {
         boolean calledASetter = false;
-        
+
         final Set<Method> methods = targets.get(key);
         if (methods == null) {
             LOG.error("NO methods for \"" + key + "\"");
@@ -591,8 +590,8 @@ public class Parser<RECORD> {
                             calledASetter = true;
                         }
                         continue;
-                    } 
-                    
+                    }
+
                     if (valueClass == Long.class) {
                         if (castsTo.contains(Casts.LONG)) {
                             Long longValue = null;
@@ -611,8 +610,8 @@ public class Parser<RECORD> {
                             calledASetter = true;
                         }
                         continue;
-                    } 
-                    
+                    }
+
                     if (valueClass == Double.class) {
                         if (castsTo.contains(Casts.DOUBLE)) {
                             Double doubleValue = null;
@@ -632,14 +631,14 @@ public class Parser<RECORD> {
                         }
                         continue;
                     }
-                    
+
                     throw new FatalErrorDuringCallOfSetterMethod(
                             "Tried to call setter with unsupported class :" +
                             " key = \"" + key + "\" " +
                             " name = \"" + name + "\" " +
                             " value = \"" + value + "\"" +
                             " castsTo = \"" + castsTo + "\"");
-                    
+
                 } catch (final Exception e) {
                     throw new FatalErrorDuringCallOfSetterMethod(e.getMessage() + " caused by \"" +
                             e.getCause() + "\" when calling \"" +

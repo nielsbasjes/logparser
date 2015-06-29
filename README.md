@@ -19,6 +19,18 @@ Currently *not yet supported features*:
 
 * %{format}t : The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
 
+Pre built versions
+===
+Prebuilt versions have been deployed to maven central so using it in a project is as simple as adding a dependency.
+
+So using it in a Java based project is as simple as adding this to your dependencies
+
+    <dependency>
+        <groupId>nl.basjes.parse.httpdlog</groupId>
+        <artifactId>httpdlog-parser</artifactId>
+        <version>2.0</version>
+    </dependency>
+
 Building
 ===
 Simply type : mvn package
@@ -66,20 +78,29 @@ All that is needed to map the 'g' and 'r' parameters so they are dissected furth
 
 Java: Call these against the parser instance right after construction
 
-        parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
-        parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
+    parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
+    parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
 
 Pig: Add these to the list of requested fields
 
-        '-map:request.firstline.uri.query.g:HTTP.URI',
-        '-map:request.firstline.uri.query.r:HTTP.URI',
+    '-map:request.firstline.uri.query.g:HTTP.URI',
+    '-map:request.firstline.uri.query.r:HTTP.URI',
 
 Hive: Add these to the SERDEPROPERTIES
 
-        "map:request.firstline.uri.query.g"="HTTP.URI",
-        "map:request.firstline.uri.query.r"="HTTP.URI",
+    "map:request.firstline.uri.query.g"="HTTP.URI",
+    "map:request.firstline.uri.query.r"="HTTP.URI",
 
 License
 ===
-This software is licenced under GPLv3. If you want to include this in a commercial (non-opensource) product then
-simply contact me and we'll talk about this.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

@@ -1,4 +1,4 @@
-The maven release plugin turned out to be too hard to handle. 
+The maven release plugin turned out to be too hard to handle.
 So we do it manually.
 
 # Ensure all has been committed
@@ -8,13 +8,13 @@ mvn package
 mvn clean
 
 # Creating and publishing the new Tagging
-RELEASEVERSION=1.3
+RELEASEVERSION=2.0
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
 git status
 git commit -m"Version ${RELEASEVERSION}" -a
 git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
 
-NEXTVERSION=1.4
+NEXTVERSION=2.1
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
 git commit -m"Start development for ${NEXTVERSION}" -a
 
@@ -24,8 +24,8 @@ git push origin v${RELEASEVERSION}
 
 # These two profiles are defined in ~/.m2/settings.xml
 git checkout v${RELEASEVERSION}
-mvn clean deploy -Prelease -Pdeploy-local 
+mvn clean deploy -Prelease -Pdeploy-local
 
-VERIFY If this all looks good 
+VERIFY If this all looks good
 
 mvn clean deploy -Prelease -Pdeploy-sonatype
