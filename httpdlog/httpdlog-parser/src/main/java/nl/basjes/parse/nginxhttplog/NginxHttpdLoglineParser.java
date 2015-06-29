@@ -46,9 +46,11 @@ public class NginxHttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
         // And we define the input for this parser
         setRootType(ApacheHttpdLogFormatDissector.INPUT_TYPE);
+
+        // FIXME: Remove this when it actually works.
+        throw new org.apache.commons.lang.NotImplementedException("The Nginx is not usable yet");
     }
 
     // --------------------------------------------
-
 
 }
