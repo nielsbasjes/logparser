@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;

@@ -18,7 +18,6 @@
 
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;

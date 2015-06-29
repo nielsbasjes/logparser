@@ -17,7 +17,7 @@
  */
 package nl.basjes.parse;
 
-import nl.basjes.parse.apachehttpdlog.ApacheHttpdLoglineParser;
+import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;

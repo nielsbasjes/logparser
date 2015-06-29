@@ -52,7 +52,7 @@ public class TestFields {
                         "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
                         "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
                         "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-                        "          '-load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector:x'" +
+                        "          '-load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector:x'" +
                         "           ) AS ( " +
                         "          Fields );"
         );
@@ -94,7 +94,7 @@ public class TestFields {
             "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
             "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
             "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
-            "          '-load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector:x'" +
+            "          '-load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector:x'" +
             "           ) AS ( " +
             "          Fields );"
         );
@@ -117,7 +117,7 @@ public class TestFields {
 
         // Check the special parameters
         assertTrue("Missing MAP parameter", theValue.contains("'-map:request.firstline.uri.query.s:SCREENRESOLUTION'"));
-        assertTrue("Missing LOAD parameter", theValue.contains("'-load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector:x'"));
+        assertTrue("Missing LOAD parameter", theValue.contains("'-load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector:x'"));
 
         // Check the remapped possibilities
         assertTrue("Missing Remapped URI G", theValue.contains("HTTP.URI:request.firstline.uri.query.g"));

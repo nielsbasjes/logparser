@@ -67,7 +67,7 @@ Only used when mapping a specific field to a different type.
 
 Only used when there is a custom Dissector implementation that needs to be loaded in addition to the regular Dissectors.
 
-        ,"load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector" = "x"
+        ,"load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector" = "x"
         ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
         ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
         ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"
@@ -110,7 +110,7 @@ Complete example
         ,"field:referrer"  = "STRING:request.firstline.uri.query.g.query.referrer"
         ,"field:bui"       = "HTTP.COOKIE:request.cookies.bui"
 
-        ,"load:nl.basjes.parse.dissectors.http.ScreenResolutionDissector" = "x"
+        ,"load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector" = "x"
         ,"map:request.firstline.uri.query.s" = "SCREENRESOLUTION"
         ,"field:screenHeight" = "SCREENHEIGHT:request.firstline.uri.query.s.height"
         ,"field:screenWidth"  = "SCREENWIDTH:request.firstline.uri.query.s.width"
