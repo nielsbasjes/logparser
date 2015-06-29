@@ -4,7 +4,7 @@ So we do it manually.
 # Ensure all has been committed
 
 # Ensure it all works
-mvn package
+mvn clean package
 mvn clean
 
 # Creating and publishing the new Tagging
