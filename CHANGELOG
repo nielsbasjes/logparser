@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.1 (currently SNAPSHOT)
+===
+- Dissect the unique ID from mod_unique_id.
+
 v2.0
 ===
 - Fixed reading logfiles from before 2000

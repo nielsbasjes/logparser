@@ -16,13 +16,7 @@
  */
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineDissector;
-import nl.basjes.parse.httpdlog.dissectors.HttpUriDissector;
-import nl.basjes.parse.httpdlog.dissectors.QueryStringFieldDissector;
-import nl.basjes.parse.httpdlog.dissectors.RequestCookieListDissector;
-import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieDissector;
-import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieListDissector;
-import nl.basjes.parse.httpdlog.dissectors.TimeStampDissector;
+import nl.basjes.parse.httpdlog.dissectors.*;
 import nl.basjes.parse.core.Parser;
 
 public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
@@ -46,6 +40,7 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         addDissector(new RequestCookieListDissector());
         addDissector(new ResponseSetCookieListDissector());
         addDissector(new ResponseSetCookieDissector());
+        addDissector(new ModUniqueIdDissector());
 
         // And we define the input for this parser
         setRootType(ApacheHttpdLogFormatDissector.INPUT_TYPE);

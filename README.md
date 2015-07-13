@@ -91,6 +91,22 @@ Hive: Add these to the SERDEPROPERTIES
     "map:request.firstline.uri.query.g"="HTTP.URI",
     "map:request.firstline.uri.query.r"="HTTP.URI",
 
+Special Dissectors
+===
+**mod_unique_id**
+
+If you have a log field / request header that gets filled using mod_unique_id you can now peek inside 
+the values that were used to construct this.
+
+**NOTE: http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html clearly states**
+    
+     it should be emphasized that applications should not dissect the encoding. 
+     Applications should treat the entire encoded UNIQUE_ID as an opaque token, 
+     which can be compared against other UNIQUE_IDs for equality only.
+
+When you choose to ignore the clear 'should not' statement then simply add 
+a type remapping to map the field to the type *MOD_UNIQUE_ID*
+
 License
 ===
     Licensed under the Apache License, Version 2.0 (the "License");
