@@ -100,8 +100,32 @@ public class TestFields {
 
         pigServer.registerQuery("STORE Fields INTO 'Fields' USING mock.Storage();");
 
-        List<Tuple> out = data.get("Fields");
+        validateExampleResult(data.get("Fields"));
+    }
 
+    @Test
+    public void fieldsBareExampleTest() throws Exception {
+        PigServer pigServer = new PigServer(ExecType.LOCAL);
+        Storage.Data data = resetData(pigServer);
+
+        pigServer.registerQuery(
+            "Fields = " +
+            "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
+            "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
+            "          '" + LOGFORMAT + "', " +
+            "          '-map:request.firstline.uri.query.g:HTTP.URI'," +
+            "          '-map:request.firstline.uri.query.r:HTTP.URI'," +
+            "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
+            "          '-load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector:x'" +
+            "           );"
+        );
+
+        pigServer.registerQuery("STORE Fields INTO 'Fields' USING mock.Storage();");
+
+        validateExampleResult(data.get("Fields"));
+    }
+
+    private void validateExampleResult(List<Tuple> out) throws Exception {
         assertEquals(1, out.size());
         assertEquals(1, out.get(0).size());
 

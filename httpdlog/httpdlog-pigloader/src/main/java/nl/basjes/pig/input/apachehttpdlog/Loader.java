@@ -172,6 +172,12 @@ public class Loader
             throw new IllegalArgumentException("Must specify the logformat");
         }
 
+        if (requestedFields.isEmpty()) {
+            isBuildingExample = true;
+            requestedFields.add(ApacheHttpdLogfileRecordReader.FIELDS);
+            LOG.debug("Requested ONLY the possible field values in EXAMPLE format");
+        }
+
         theInputFormat = new ApacheHttpdLogfileInputFormat(getLogformat(), getRequestedFields(), getTypeRemappings(), getAdditionalDissectors());
         reader = theInputFormat.getRecordReader();
         tupleFactory = TupleFactory.getInstance();
