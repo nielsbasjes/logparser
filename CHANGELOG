@@ -1,8 +1,9 @@
 This is intended as an overview of the major changes
 
-v2.1 (currently SNAPSHOT)
+v2.1
 ===
 - Dissect the unique ID from mod_unique_id.
+- [PIG] Make getting the example code for PIG a bit easier
 
 v2.0
 ===
