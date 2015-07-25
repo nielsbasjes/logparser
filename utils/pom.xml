@@ -22,7 +22,7 @@
   <parent>
     <artifactId>parser-parent</artifactId>
     <groupId>nl.basjes.parse</groupId>
-    <version>-SNAPSHOT</version>
+    <version>2.2-SNAPSHOT</version>
   </parent>
 
   <groupId>nl.basjes.parse.utils</groupId>
