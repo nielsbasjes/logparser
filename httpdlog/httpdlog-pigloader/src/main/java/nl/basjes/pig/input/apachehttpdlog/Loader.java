@@ -307,22 +307,27 @@ public class Loader
             }
         }
 
-        return sb.append("\n")
-                .append("\n")
-                .append("\n")
-                .append("Clicks =\n")
-                .append("    LOAD 'access.log'\n")
-                .append("    USING ").append(this.getClass().getCanonicalName()).append("(\n")
-                .append("    '").append(logformat).append("',\n")
-                .append('\n')
-                .append("        '").append(join(specialParameters, "',\n        '")).append("',\n")
-                .append("        '").append(join(fields, "',\n        '")).append("')\n")
-                .append("    AS (\n")
-                .append("        ").append(join(names, ",\n        ")).append(");\n")
-                .append("\n")
-                .append("\n")
-                .append("\n")
-                .toString();
+
+        sb  .append("\n")
+            .append("\n")
+            .append("\n")
+            .append("Clicks =\n")
+            .append("    LOAD 'access.log'\n")
+            .append("    USING ").append(this.getClass().getCanonicalName()).append("(\n")
+            .append("        '").append(logformat).append("',\n")
+            .append('\n');
+
+        if (!specialParameters.isEmpty()) {
+            sb.append("        '").append(join(specialParameters, "',\n        '")).append("',\n");
+        }
+
+        sb  .append("        '").append(join(fields, "',\n        '")).append("')\n")
+            .append("    AS (\n")
+            .append("        ").append(join(names, ",\n        ")).append(");\n")
+            .append("\n")
+            .append("\n")
+            .append("\n");
+        return sb.toString();
     }
 
     // ------------------------------------------

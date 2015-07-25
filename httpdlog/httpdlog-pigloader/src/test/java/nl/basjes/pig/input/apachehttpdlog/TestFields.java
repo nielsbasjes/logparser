@@ -85,7 +85,7 @@ public class TestFields {
         Storage.Data data = resetData(pigServer);
 
         pigServer.registerQuery(
-            "Fields = " +
+            "Example = " +
             "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
             "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
             "          '" + LOGFORMAT + "', " +
@@ -95,21 +95,21 @@ public class TestFields {
             "          '-map:request.firstline.uri.query.s:SCREENRESOLUTION'," +
             "          '-load:nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector:x'" +
             "           ) AS ( " +
-            "          Fields );"
+            "          Example );"
         );
 
-        pigServer.registerQuery("STORE Fields INTO 'Fields' USING mock.Storage();");
+        pigServer.registerQuery("STORE Example INTO 'Example' USING mock.Storage();");
 
-        validateExampleResult(data.get("Fields"));
+        validateExampleResult(data.get("Example"));
     }
 
     @Test
-    public void fieldsBareExampleTest() throws Exception {
+    public void fieldsFullBareExampleTest() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 
         pigServer.registerQuery(
-            "Fields = " +
+            "Example = " +
             "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
             "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
             "          '" + LOGFORMAT + "', " +
@@ -120,9 +120,9 @@ public class TestFields {
             "           );"
         );
 
-        pigServer.registerQuery("STORE Fields INTO 'Fields' USING mock.Storage();");
+        pigServer.registerQuery("STORE Example INTO 'Example' USING mock.Storage();");
 
-        validateExampleResult(data.get("Fields"));
+        validateExampleResult(data.get("Example"));
     }
 
     private void validateExampleResult(List<Tuple> out) throws Exception {
@@ -134,6 +134,7 @@ public class TestFields {
         LOG.info("Result is {}", theValue);
         assertTrue(theValue.contains("nl.basjes.pig.input.apachehttpdlog.Loader"));
 
+        assertTrue("Empty field", !theValue.contains("''"));
         assertTrue("Missing Base URI", theValue.contains("HTTP.URI:request.firstline.uri"));
         assertTrue("Missing Base QueryString", theValue.contains("HTTP.QUERYSTRING:request.firstline.uri.query"));
         assertTrue("Missing Base Query Parameters", theValue.contains("STRING:request.firstline.uri.query.*"));
@@ -153,17 +154,53 @@ public class TestFields {
         // Casts of values
         assertTrue("Missing Casts Base URI", theValue.contains("request_firstline_uri:chararray"));
         assertTrue("Missing Casts Base QueryString", theValue.contains("request_firstline_uri_query:chararray"));
-//        assertTrue("Missing Casts Base Query Parameters", theValue.contains("request_firstline_uri_query_*:chararray"));
         assertTrue("Missing Casts Base Query Parameters", theValue.contains("request_firstline_uri_query__:map[]"));
 
         // Check the Casts of remapped possibilities
         assertTrue("Missing Casts Remapped URI G", theValue.contains("request_firstline_uri_query_g:chararray"));
         assertTrue("Missing Casts Remapped URI G QueryString", theValue.contains("request_firstline_uri_query_g_query:chararray"));
-//        assertTrue("Missing Casts Remapped URI G Query Parameters", theValue.contains("request_firstline_uri_query_g_query_*:chararray"));
         assertTrue("Missing Casts Remapped URI G Query Parameters", theValue.contains("request_firstline_uri_query_g_query__:map[]"));
         assertTrue("Missing Casts Remapped URI R", theValue.contains("request_firstline_uri_query_r:chararray"));
         assertTrue("Missing Casts Remapped URI R QueryString", theValue.contains("request_firstline_uri_query_r_query:chararray"));
-//        assertTrue("Missing Casts Remapped URI R Query Parameters", theValue.contains("request_firstline_uri_query_r_query_*:chararray"));
         assertTrue("Missing Casts Remapped URI R Query Parameters", theValue.contains("request_firstline_uri_query_r_query__:map[]"));
     }
+
+    @Test
+    public void fieldsBareExampleTest() throws Exception {
+        PigServer pigServer = new PigServer(ExecType.LOCAL);
+        Storage.Data data = resetData(pigServer);
+
+        pigServer.registerQuery(
+            "Example = " +
+                "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
+                "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
+                "          '" + LOGFORMAT + "'" +
+                "    );"
+        );
+
+        pigServer.registerQuery("STORE Example INTO 'Example' USING mock.Storage();");
+
+        List<Tuple> out = data.get("Example");
+
+        // Check the basics
+        assertEquals(1, out.size());
+        assertEquals(1, out.get(0).size());
+
+        String theValue = out.get(0).get(0).toString();
+
+        LOG.info("Result is {}", theValue);
+        assertTrue(theValue.contains("nl.basjes.pig.input.apachehttpdlog.Loader"));
+
+        assertTrue("Empty field", !theValue.contains("''"));
+
+        assertTrue("Missing Base URI", theValue.contains("HTTP.URI:request.firstline.uri"));
+        assertTrue("Missing Base QueryString", theValue.contains("HTTP.QUERYSTRING:request.firstline.uri.query"));
+        assertTrue("Missing Base Query Parameters", theValue.contains("STRING:request.firstline.uri.query.*"));
+
+        // Casts of values
+        assertTrue("Missing Casts Base URI", theValue.contains("request_firstline_uri:chararray"));
+        assertTrue("Missing Casts Base QueryString", theValue.contains("request_firstline_uri_query:chararray"));
+        assertTrue("Missing Casts Base Query Parameters", theValue.contains("request_firstline_uri_query__:map[]"));
+    }
+
 }
