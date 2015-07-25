@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.1.1
+=== 
+- Fixed simple problem in the PIG example output
+
 v2.1
 ===
 - Dissect the unique ID from mod_unique_id.
