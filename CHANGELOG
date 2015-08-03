@@ -1,7 +1,11 @@
 This is intended as an overview of the major changes
 
+v2.2
+===
+- Accept multiple logformat lines as a single 'multiline' input string.
+
 v2.1.1
-=== 
+===
 - Fixed simple problem in the PIG example output
 
 v2.1

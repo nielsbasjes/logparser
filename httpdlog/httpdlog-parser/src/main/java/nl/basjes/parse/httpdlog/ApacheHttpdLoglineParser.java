@@ -30,7 +30,7 @@ public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         super(clazz);
 
         // The pieces we have to get there
-        addDissector(new ApacheHttpdLogFormatDissector(logformat));
+        addDissector(new HttpdLogFormatDissector(logformat));
         // We set the default parser to what we find in the Apache httpd Logfiles
         //                                   [05/Sep/2010:11:27:50 +0200]
         addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
