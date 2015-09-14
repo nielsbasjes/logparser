@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
@@ -35,6 +34,7 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
+import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Counter;
@@ -51,7 +51,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogfileRecordReader.class);
 
-    private static final String APACHE_HTTPD_LOGFILE_INPUT_FORMAT = "Apache HTTPD Logfile InputFormat";
+    private static final String HTTPD_LOGFILE_INPUT_FORMAT = "HTTPD (Nginx/Apache) Logfile InputFormat";
     public static final String FIELDS = "fields";
 
     // --------------------------------------------
@@ -112,9 +112,9 @@ public class ApacheHttpdLogfileRecordReader extends
         lineReader.initialize(split, context);
         final Configuration conf = context.getConfiguration();
 
-        counterLinesRead = context.getCounter(APACHE_HTTPD_LOGFILE_INPUT_FORMAT, "1:Lines read");
-        counterGoodLines = context.getCounter(APACHE_HTTPD_LOGFILE_INPUT_FORMAT, "2:Good lines");
-        counterBadLines  = context.getCounter(APACHE_HTTPD_LOGFILE_INPUT_FORMAT, "3:Bad lines");
+        counterLinesRead = context.getCounter(HTTPD_LOGFILE_INPUT_FORMAT, "1:Lines read");
+        counterGoodLines = context.getCounter(HTTPD_LOGFILE_INPUT_FORMAT, "2:Good lines");
+        counterBadLines  = context.getCounter(HTTPD_LOGFILE_INPUT_FORMAT, "3:Bad lines");
 
         if (logformat == null || requestedFields.isEmpty()) {
             if (logformat == null) {
@@ -145,7 +145,7 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
-        ApacheHttpdLoglineParser<ParsedRecord> newParser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        HttpdLoglineParser<ParsedRecord> newParser = new HttpdLoglineParser<>(ParsedRecord.class, logFormat);
         newParser.setTypeRemappings(typeRemappings);
         newParser.addDissectors(additionalDissectors);
         return newParser;

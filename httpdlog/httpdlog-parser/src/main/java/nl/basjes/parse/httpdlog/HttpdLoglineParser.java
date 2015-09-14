@@ -19,18 +19,18 @@ package nl.basjes.parse.httpdlog;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.dissectors.*;
 
-public class NginxHttpdLoglineParser<RECORD> extends Parser<RECORD> {
+public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     // --------------------------------------------
 
-    public NginxHttpdLoglineParser(
+    public HttpdLoglineParser(
             final Class<RECORD> clazz,
             final String logformat) {
         // This indicates what we need
         super(clazz);
 
         // The pieces we have to get there
-        addDissector(new NginxHttpdLogFormatDissector(logformat));
+        addDissector(new HttpdLogFormatDissector(logformat));
         // We set the default parser to what we find in the Apache httpd Logfiles
         //                                   [05/Sep/2010:11:27:50 +0200]
         addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
@@ -40,12 +40,10 @@ public class NginxHttpdLoglineParser<RECORD> extends Parser<RECORD> {
         addDissector(new RequestCookieListDissector());
         addDissector(new ResponseSetCookieListDissector());
         addDissector(new ResponseSetCookieDissector());
+        addDissector(new ModUniqueIdDissector());
 
         // And we define the input for this parser
-        setRootType(ApacheHttpdLogFormatDissector.INPUT_TYPE);
-
-        // FIXME: Remove this when it actually works.
-        throw new org.apache.commons.lang.NotImplementedException("The Nginx is not usable yet");
+        setRootType(HttpdLogFormatDissector.INPUT_TYPE);
     }
 
     // --------------------------------------------

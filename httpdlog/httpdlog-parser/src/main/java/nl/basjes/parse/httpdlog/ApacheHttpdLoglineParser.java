@@ -16,37 +16,17 @@
  */
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.httpdlog.dissectors.*;
-import nl.basjes.parse.core.Parser;
-
-public class ApacheHttpdLoglineParser<RECORD> extends Parser<RECORD> {
+public class ApacheHttpdLoglineParser<RECORD> extends HttpdLoglineParser<RECORD> {
 
     // --------------------------------------------
-
+    //  Dummy class for backwards compatibility
     public ApacheHttpdLoglineParser(
             final Class<RECORD> clazz,
             final String logformat) {
         // This indicates what we need
-        super(clazz);
-
-        // The pieces we have to get there
-        addDissector(new HttpdLogFormatDissector(logformat));
-        // We set the default parser to what we find in the Apache httpd Logfiles
-        //                                   [05/Sep/2010:11:27:50 +0200]
-        addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
-        addDissector(new HttpFirstLineDissector());
-        addDissector(new HttpUriDissector());
-        addDissector(new QueryStringFieldDissector());
-        addDissector(new RequestCookieListDissector());
-        addDissector(new ResponseSetCookieListDissector());
-        addDissector(new ResponseSetCookieDissector());
-        addDissector(new ModUniqueIdDissector());
-
-        // And we define the input for this parser
-        setRootType(ApacheHttpdLogFormatDissector.INPUT_TYPE);
+        super(clazz, logformat);
     }
 
     // --------------------------------------------
-
 
 }

@@ -40,16 +40,15 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDissector.class);
 
-    public static final String INPUT_TYPE = "APACHELOGLINE";
 
     public ApacheHttpdLogFormatDissector(final String logFormat) {
         super(logFormat);
-        setInputType(INPUT_TYPE);
+        setInputType(HttpdLogFormatDissector.INPUT_TYPE);
     }
 
     public ApacheHttpdLogFormatDissector() {
         super();
-        setInputType(INPUT_TYPE);
+        setInputType(HttpdLogFormatDissector.INPUT_TYPE);
     }
 
     private void overrideLogFormat(String originalLogformat, String logformat){

@@ -28,6 +28,7 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 
+import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -56,7 +57,7 @@ public class ApacheHttpdLogfileInputFormat extends
 
     public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings, List<Dissector> additionalDissectors)
             throws MissingDissectorsException, InvalidDissectorException, ParseException {
-        ApacheHttpdLoglineParser parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        HttpdLoglineParser parser = new HttpdLoglineParser<>(ParsedRecord.class, logformat);
         parser.setTypeRemappings(typeRemappings);
         parser.addDissectors(additionalDissectors);
         return parser.getPossiblePaths();
