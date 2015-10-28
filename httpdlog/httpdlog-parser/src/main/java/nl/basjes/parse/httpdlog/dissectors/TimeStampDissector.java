@@ -34,6 +34,10 @@ public class TimeStampDissector extends Dissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimeStampDissector.class);
 
+    // The default parser to what we find in the Apache httpd Logfiles
+    //                                                            [05/Sep/2010:11:27:50 +0200]
+    public static final String DEFAULT_APACHE_DATE_TIME_PATTERN = "dd/MMM/yyyy:HH:mm:ss ZZ";
+
     // --------------------------------------------
 
     private DateTimeFormatter formatter;
@@ -42,13 +46,16 @@ public class TimeStampDissector extends Dissector {
 
     @SuppressWarnings("UnusedDeclaration")
     public TimeStampDissector() {
-        // We set the default parser to what we find in the Apache httpd Logfiles
-        //                  [05/Sep/2010:11:27:50 +0200]
-        setDateTimePattern("dd/MMM/yyyy:HH:mm:ss ZZ");
+        setDateTimePattern(DEFAULT_APACHE_DATE_TIME_PATTERN);
     }
 
     public TimeStampDissector(String newDateTimePattern) {
-        setDateTimePattern(newDateTimePattern);
+        if (newDateTimePattern == null ||
+            newDateTimePattern.trim().isEmpty()) {
+            setDateTimePattern(DEFAULT_APACHE_DATE_TIME_PATTERN);
+        } else {
+            setDateTimePattern(newDateTimePattern);
+        }
     }
 
     // --------------------------------------------
@@ -63,11 +70,6 @@ public class TimeStampDissector extends Dissector {
     // --------------------------------------------
 
     public void setDateTimePattern(String newDateTimePattern) {
-        if (newDateTimePattern == null ||
-            newDateTimePattern.trim().isEmpty()) {
-            // Refusing empty newDateTimePattern
-            return;
-        }
         dateTimePattern = newDateTimePattern;
         formatter = DateTimeFormat.forPattern(dateTimePattern).withZone(DateTimeZone.UTC);
         asParsedFormatter = formatter.withOffsetParsed();
