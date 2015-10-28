@@ -84,7 +84,7 @@ public class Parser<RECORD> {
      *     LOG.info(path + "     " + dummyParser.getCasts(path));
      * }
      * }</pre>
-     * @param name
+     * @param name The name of the path for which you want the casts
      * @return The set of casts that are valid for this name. Null if this name is unknown.
      */
     public EnumSet<Casts> getCasts(String name) {

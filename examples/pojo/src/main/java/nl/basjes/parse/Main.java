@@ -46,6 +46,10 @@ public final class Main {
             return;
         }
 
+        // If you want to call 'getCasts' then the actual parser needs to be constructed.
+        // Simply calling getPossiblePaths does not build the actual parser.
+        // Because we want this for all possibilities yet we are never actually going to use this instance of the parser
+        // We simply give it a random method with the right signature and tell it we want all possible paths
         try {
             dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
         } catch (NoSuchMethodException e) {
