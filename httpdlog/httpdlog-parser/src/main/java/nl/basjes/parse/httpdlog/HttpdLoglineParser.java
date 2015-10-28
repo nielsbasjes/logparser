@@ -26,14 +26,24 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
     public HttpdLoglineParser(
             final Class<RECORD> clazz,
             final String logformat) {
-        // This indicates what we need
         super(clazz);
+        setupDissectors(logformat, null);
+    }
 
+    public HttpdLoglineParser(
+            final Class<RECORD> clazz,
+            final String logformat,
+            final String timestampFormat) {
+        super(clazz);
+        setupDissectors(logformat, timestampFormat);
+    }
+
+    private void setupDissectors(
+            final String logformat,
+            final String timestampFormat) {
         // The pieces we have to get there
         addDissector(new HttpdLogFormatDissector(logformat));
-        // We set the default parser to what we find in the Apache httpd Logfiles
-        //                                   [05/Sep/2010:11:27:50 +0200]
-        addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
+        addDissector(new TimeStampDissector(timestampFormat));
         addDissector(new HttpFirstLineDissector());
         addDissector(new HttpUriDissector());
         addDissector(new QueryStringFieldDissector());

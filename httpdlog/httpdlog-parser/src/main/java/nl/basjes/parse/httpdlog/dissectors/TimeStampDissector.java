@@ -63,6 +63,11 @@ public class TimeStampDissector extends Dissector {
     // --------------------------------------------
 
     public void setDateTimePattern(String newDateTimePattern) {
+        if (newDateTimePattern == null ||
+            newDateTimePattern.trim().isEmpty()) {
+            // Refusing empty newDateTimePattern
+            return;
+        }
         dateTimePattern = newDateTimePattern;
         formatter = DateTimeFormat.forPattern(dateTimePattern).withZone(DateTimeZone.UTC);
         asParsedFormatter = formatter.withOffsetParsed();
