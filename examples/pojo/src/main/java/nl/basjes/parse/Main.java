@@ -21,6 +21,7 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +36,8 @@ public final class Main {
     private void printAllPossibles(String logformat) {
         // To figure out what values we CAN get from this line we instantiate the parser with a dummy class
         // that does not have ANY @Field annotations.
-        Parser<Object> dummyParser;
-        dummyParser = new ApacheHttpdLoglineParser<>(Object.class, logformat);
-        LOG.info("==================================");
+        Parser<Object> dummyParser= new HttpdLoglineParser<>(Object.class, logformat);
+
         List<String> possiblePaths;
         try {
             possiblePaths = dummyParser.getPossiblePaths();
@@ -45,8 +45,18 @@ public final class Main {
             e.printStackTrace();
             return;
         }
+
+        try {
+            dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        LOG.info("==================================");
+        LOG.info("Possible output:");
         for (String path : possiblePaths) {
-            LOG.info(path);
+            LOG.info(path + "     " + dummyParser.getCasts(path));
         }
         LOG.info("==================================");
     }
