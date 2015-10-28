@@ -40,7 +40,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDissector.class);
 
-
     public ApacheHttpdLogFormatDissector(final String logFormat) {
         super(logFormat);
         setInputType(HttpdLogFormatDissector.INPUT_TYPE);
@@ -117,15 +116,22 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         return tokenLogFormat.replaceAll("%!?[0-9]{3}(?:,[0-9]{3})*", "%");
     }
 
-    @Override
-    protected String cleanupLogFormat(String tokenLogFormat) {
-        return  makeHeaderNamesLowercaseInLogFormat(
-                removeModifiersFromLogformat(
-                        tokenLogFormat
-                )
-        );
+    protected String fixTimestampFormat(String tokenLogFormat) {
+        // The %t is mapped to the actual time format surrounded by '[' ']'
+        // We generate the [] around it and in the rest of the parsing
+        // work with the clean format.
+        // This is mainly needed to ensure reuse in conjunction with Nginx parsing.
+        return tokenLogFormat.replaceAll("%t", "[%t]");
+
     }
 
+    @Override
+    protected String cleanupLogFormat(String tokenLogFormat) {
+        String result = removeModifiersFromLogformat(tokenLogFormat);
+        result =  makeHeaderNamesLowercaseInLogFormat(result);
+        result = fixTimestampFormat(result);
+        return result;
+    }
 
     @Override
     public String decodeExtractedValue(String tokenName, String value) {

@@ -80,7 +80,7 @@ public class TestLoadMultiFormat {
         assertEquals(2, out.size());
         assertEquals(tuple(
                         "2001:980:91c0:1:8d31:a232:25e5:85d",
-                        "[05/Sep/2010:11:27:50 +0200]",
+                        "05/Sep/2010:11:27:50 +0200",
                         "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
                         "1280x800",
                         "1280",
@@ -92,7 +92,7 @@ public class TestLoadMultiFormat {
                 out.get(0).toDelimitedString("><#><"));
         assertEquals(tuple(
                         "172.21.13.88",
-                        "[07/Apr/2013:03:04:49 +0200]",
+                        "07/Apr/2013:03:04:49 +0200",
                         "",
                         "",
                         "",

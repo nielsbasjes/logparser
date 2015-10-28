@@ -44,7 +44,7 @@ public class TimeStampDissector extends Dissector {
     public TimeStampDissector() {
         // We set the default parser to what we find in the Apache httpd Logfiles
         //                  [05/Sep/2010:11:27:50 +0200]
-        setDateTimePattern("[dd/MMM/yyyy:HH:mm:ss ZZ]");
+        setDateTimePattern("dd/MMM/yyyy:HH:mm:ss ZZ");
     }
 
     public TimeStampDissector(String newDateTimePattern) {

@@ -49,7 +49,7 @@ public class TokenParser {
 
     // This expression "forces" a year in the range [1000-9999] :).
     public static final String FORMAT_STANDARD_TIME_US =
-            "\\[[0-3][0-9]/(?:[A-Z][a-z][a-z])/[1-9][0-9][0-9][0-9]:[0-9][0-9]:[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9]0\\]";
+            "[0-3][0-9]/(?:[A-Z][a-z][a-z])/[1-9][0-9][0-9][0-9]:[0-9][0-9]:[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9][0-9]";
 //    public static final String FORMAT_STANDARD_TIME =
 //            "\\[[0-9][0-9]/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/20[0-9][0-9]:[0-9][0-9]"
 //             +":[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9]0\\]";

@@ -167,7 +167,7 @@ public class CookiesTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
         assertEquals(null, results.get("STRING:connection.client.user"));
-        assertEquals("[31/Dec/2012:23:00:44 -0700]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("31/Dec/2012:23:00:44 -0700", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("1357020044000", results.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals(new Long(1357020044000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
 

@@ -90,7 +90,7 @@ public class ApacheHttpdLogParserTest {
     // Because header names are case insensitive we use the lowercase version internally
     // The modifiers ( like '!200,304,302') are to be removed.
     // This next value is what should be used internally
-    private final String expectedLogFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
+    private final String expectedLogFormat = "%%%h %a %A %l %u [%t] \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
             "\"%{user-agent}i\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
@@ -121,7 +121,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
         assertEquals(null, results.get("STRING:connection.client.user"));
-        assertEquals("[31/Dec/2012:23:49:40 +0100]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("31/Dec/2012:23:49:40 +0100", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("1356994180000", results.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals("1", results.get("TIME.WEEK:request.receive.time.weekofweekyear"));
         assertEquals("2013", results.get("TIME.YEAR:request.receive.time.weekyear"));
@@ -169,7 +169,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
         assertEquals(null, results.get("STRING:connection.client.user"));
-        assertEquals("[10/Aug/2012:23:55:11 +0200]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("10/Aug/2012:23:55:11 +0200", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("11", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));

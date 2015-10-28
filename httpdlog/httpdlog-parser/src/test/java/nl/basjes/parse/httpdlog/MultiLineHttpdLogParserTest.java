@@ -98,7 +98,7 @@ public class MultiLineHttpdLogParserTest {
         Map<String, String> results = record.getResults();
 
         assertEquals("127.0.0.1", results.get("IP:connection.client.host"));
-        assertEquals("[31/Dec/2012:23:49:41 +0100]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("31/Dec/2012:23:49:41 +0100", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("/foo", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
         assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
@@ -117,7 +117,7 @@ public class MultiLineHttpdLogParserTest {
         Map<String, String> results = record.getResults();
 
         assertEquals("127.0.0.2", results.get("IP:connection.client.host"));
-        assertEquals("[31/Dec/2012:23:49:42 +0100]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("31/Dec/2012:23:49:42 +0100", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("/foo", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("404", results.get("STRING:request.status.last"));
         assertEquals(null, results.get("BYTES:response.body.bytesclf"));
