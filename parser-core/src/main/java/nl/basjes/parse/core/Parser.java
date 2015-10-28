@@ -70,6 +70,23 @@ public class Parser<RECORD> {
         return targets.keySet();
     }
 
+    /**
+     * Returns the casts possible for the specified path.
+     * Before you call 'getCasts' the actual parser needs to be constructed.
+     * Simply calling getPossiblePaths does not build the actual parser.
+     * If you want to get the casts for all possible paths the code looks something like this:
+     * <pre>{@code
+     * Parser<Object> dummyParser= new HttpdLoglineParser<>(Object.class, logformat);
+     * List<String> possiblePaths = dummyParser.getPossiblePaths();
+     * // Use a random method that has the right signature
+     * dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
+     * for (String path : possiblePaths) {
+     *     LOG.info(path + "     " + dummyParser.getCasts(path));
+     * }
+     * }</pre>
+     * @param name
+     * @return The set of casts that are valid for this name. Null if this name is unknown.
+     */
     public EnumSet<Casts> getCasts(String name) {
         try {
             assembleDissectors();
