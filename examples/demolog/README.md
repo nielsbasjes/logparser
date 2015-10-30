@@ -1,6 +1,8 @@
 The file hackers-access.log is a sample of the access logs from my home webserver.
+
 This file is in the 'combined' LogFormat
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
 
 Although small (3456 lines) this is usefull to do testing on parsing and aggregating the data.
 
