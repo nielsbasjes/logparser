@@ -22,4 +22,7 @@ public class DissectionFailure extends Exception {
     public DissectionFailure(String message) {
         super(message);
     }
+    public DissectionFailure(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

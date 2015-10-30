@@ -663,7 +663,7 @@ public class Parser<RECORD> {
                             " key = \"" + key + "\" " +
                             " name = \"" + name + "\" " +
                             " value = \"" + value + "\"" +
-                            " castsTo = \"" + castsTo + "\"");
+                            " castsTo = \"" + castsTo + "\"", e);
                 }
             }
         }

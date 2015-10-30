@@ -23,4 +23,8 @@ public class FatalErrorDuringCallOfSetterMethod extends RuntimeException {
         super("Error occurred during setter call: "+ message);
     }
 
+    public FatalErrorDuringCallOfSetterMethod(String message, Throwable cause){
+        super("Error occurred during setter call: "+ message, cause);
+    }
+
 }

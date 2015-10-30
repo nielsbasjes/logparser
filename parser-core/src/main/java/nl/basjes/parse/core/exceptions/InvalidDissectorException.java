@@ -27,4 +27,8 @@ public class InvalidDissectorException extends Exception {
         super(message);
     }
 
+    public InvalidDissectorException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
