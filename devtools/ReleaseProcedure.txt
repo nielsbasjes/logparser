@@ -29,3 +29,5 @@ mvn clean deploy -Prelease -Pdeploy-local
 VERIFY If this all looks good
 
 mvn clean deploy -Prelease -Pdeploy-sonatype
+
+git checkout master
