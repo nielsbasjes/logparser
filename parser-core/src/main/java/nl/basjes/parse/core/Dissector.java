@@ -137,6 +137,10 @@ public abstract class Dissector {
         return null;
     }
 
+    /**
+     * This is called after instantiating the class that is actually in the parsetree.
+     * @param newInstance The new instances of this class that must be initialized
+     */
     protected abstract void initializeNewInstance(Dissector newInstance);
 
 }
