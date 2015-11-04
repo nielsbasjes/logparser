@@ -54,7 +54,6 @@ public class Parser<RECORD> {
     private Map<String, Set<DissectorPhase>> compiledDissectors = null;
     private Set<String> usefulIntermediateFields = null;
     private String rootType;
-    private String rootName;
 
     // The target methods in the record class that will want to receive the values
     private final Map<String, Set<Method>> targets = new TreeMap<>();
@@ -159,9 +158,7 @@ public class Parser<RECORD> {
 
     protected void setRootType(final String newRootType) {
         compiledDissectors = null;
-
         rootType = newRootType;
-        rootName = "rootinputline";
     }
 
     // --------------------------------------------
@@ -209,8 +206,8 @@ public class Parser<RECORD> {
         // We first build a set of all possible subtargets that may be useful
         // this way we can skip anything we know not to be useful
         Set<String> needed = new HashSet<>(getNeeded());
-        needed.add(rootType + ':' + rootName);
-        LOG.debug("Root: >>>{}:{}<<<", rootType, rootName);
+        needed.add(rootType + ':' ); // The root name is an empty string
+        LOG.debug("Root: >>>{}:<<<", rootType);
 
         Set<String> allPossibleSubtargets = new HashSet<>();
         for (String need : needed) {
@@ -233,7 +230,7 @@ public class Parser<RECORD> {
         // Step 2: From the root we explore all possibly useful trees (recursively)
         compiledDissectors = new HashMap<>();
         usefulIntermediateFields = new HashSet<>();
-        findUsefulDissectorsFromField(allPossibleSubtargets, rootType, rootName, true);
+        findUsefulDissectorsFromField(allPossibleSubtargets, rootType, "", true); // The root name is an empty string
 
         // Step 3: Inform all dissectors to prepare for the run
         for (Set<DissectorPhase> dissectorPhases : compiledDissectors.values()) {
@@ -520,7 +517,7 @@ public class Parser<RECORD> {
         if (parsable == null) {
             return null;
         }
-        parsable.setRootDissection(rootType, rootName, value);
+        parsable.setRootDissection(rootType, value);
         return parse(parsable).getRecord();
     }
 
@@ -533,7 +530,7 @@ public class Parser<RECORD> {
         throws DissectionFailure, InvalidDissectorException, MissingDissectorsException {
         assembleDissectors();
         final Parsable<RECORD> parsable = createParsable(record);
-        parsable.setRootDissection(rootType, rootName, value);
+        parsable.setRootDissection(rootType, value);
         return parse(parsable).getRecord();
     }
 

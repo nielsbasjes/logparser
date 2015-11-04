@@ -46,8 +46,6 @@ public final class Parsable<RECORD> {
 
     private final Map<String, Set<String>> typeRemappings;
 
-    private String                         rootname   = null;
-
     // --------------------------------------------
 
     public Parsable(final Parser<RECORD> parser, final RECORD record, Map<String, Set<String>> typeRemappings) {
@@ -60,13 +58,11 @@ public final class Parsable<RECORD> {
 
     // --------------------------------------------
     /** Store a newly parsed value in the result set */
-    public void setRootDissection(final String type, final String name,
-                                  final String value) {
-        LOG.debug("Got root dissection: type={}; name=\"{}\"", type, name);
+    public void setRootDissection(final String type, final String value) {
+        LOG.debug("Got root dissection: type={}", type);
 
-        rootname = name;
-
-        final ParsedField parsedfield = new ParsedField(type, name, value);
+        // The root name is an empty string
+        final ParsedField parsedfield = new ParsedField(type, "", value);
 
         cache.put(parsedfield.getId(), parsedfield);
         toBeParsed.add(parsedfield);
@@ -89,7 +85,7 @@ public final class Parsable<RECORD> {
             throws DissectionFailure {
         String completeName;
         String neededWildCardName;
-        if (base.equals(rootname)) {
+        if (base.isEmpty()) { // The root name is an empty string
             completeName = name;
             neededWildCardName = type + ':' + "*";
         } else {
