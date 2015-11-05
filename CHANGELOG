@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.4
+===
+- Rewrote the way parsed values are passed around. Improves accuracy and performance in specific cases.
+
 v2.3
 ===
 - The raw timestamp extracted from the Apache logfiles no longer contains the surrounding '[' ']'.
