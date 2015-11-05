@@ -570,12 +570,17 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    void store(final RECORD record, final String key, final String name, final String value) {
+    void store(final RECORD record, final String key, final String name, final Value value) {
         boolean calledASetter = false;
+
+        if (value == null) {
+            LOG.error("Got a null value to store for key={}  name={}.", key, name);
+            return; // Nothing to do
+        }
 
         final Set<Method> methods = targets.get(key);
         if (methods == null) {
-            LOG.error("NO methods for \"" + key + "\"");
+            LOG.error("NO methods for key={}  name={}.", key, name);
             return;
         }
 
@@ -596,10 +601,11 @@ public class Parser<RECORD> {
 
                     if (valueClass == String.class) {
                         if (castsTo.contains(Casts.STRING)) {
+                            String stringValue = value.getString();
                             if (parameters.length == 2) {
-                                method.invoke(record, name, value);
+                                method.invoke(record, name, stringValue);
                             } else {
-                                method.invoke(record, value);
+                                method.invoke(record, stringValue);
                             }
                             calledASetter = true;
                         }
@@ -608,14 +614,7 @@ public class Parser<RECORD> {
 
                     if (valueClass == Long.class) {
                         if (castsTo.contains(Casts.LONG)) {
-                            Long longValue = null;
-                            try {
-                                if (value != null) {
-                                    longValue = Long.parseLong(value);
-                                }
-                            } catch (NumberFormatException e) {
-                                longValue = null;
-                            }
+                            Long longValue = value.getLong();
                             if (parameters.length == 2) {
                                 method.invoke(record, name, longValue);
                             } else {
@@ -628,14 +627,7 @@ public class Parser<RECORD> {
 
                     if (valueClass == Double.class) {
                         if (castsTo.contains(Casts.DOUBLE)) {
-                            Double doubleValue = null;
-                            try {
-                                if (value != null) {
-                                    doubleValue = Double.parseDouble(value);
-                                }
-                            } catch (NumberFormatException e) {
-                                doubleValue = null;
-                            }
+                            Double doubleValue = value.getDouble();
                             if (parameters.length == 2) {
                                 method.invoke(record, name, doubleValue);
                             } else {

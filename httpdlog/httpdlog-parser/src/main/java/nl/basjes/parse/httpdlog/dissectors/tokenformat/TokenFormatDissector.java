@@ -206,7 +206,7 @@ public abstract class TokenFormatDissector extends Dissector {
         final ParsedField line = parsable.getParsableField(inputType, inputname);
 
         // Now we create a matcher for this line
-        final Matcher matcher = logFormatPattern.matcher(line.getValue());
+        final Matcher matcher = logFormatPattern.matcher(line.getValue().getString());
 
         // Is it all as expected?
         final boolean matches = matcher.find();

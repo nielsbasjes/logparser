@@ -87,7 +87,7 @@ public class RequestCookieListDissector extends Dissector {
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
-        final String fieldValue = field.getValue();
+        final String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()){
             return; // Nothing to do here
         }

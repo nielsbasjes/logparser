@@ -85,7 +85,7 @@ public class QueryStringFieldDissector extends Dissector {
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
-        String fieldValue = field.getValue();
+        String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }

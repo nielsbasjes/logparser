@@ -17,16 +17,38 @@
 package nl.basjes.parse.core;
 
 public class ParsedField {
+
     private String  type   = null;
     private String  name   = null;
-    private String  value  = null;
+    private Value   value  = null;
+
+    public ParsedField(String type, String name, Value value) {
+        this.type = type;
+        this.name = name;
+        if (value==null) {
+            this.value = new Value((String)null);
+        } else {
+            this.value = value;
+        }
+    }
 
     public ParsedField(String type, String name, String value) {
         this.type = type;
         this.name = name;
-        this.value = value;
+        this.value = new Value(value);
     }
 
+    public ParsedField(String type, String name, Long value) {
+        this.type = type;
+        this.name = name;
+        this.value = new Value(value);
+    }
+
+    public ParsedField(String type, String name, Double value) {
+        this.type = type;
+        this.name = name;
+        this.value = new Value(value);
+    }
     public String getType() {
         return type;
     }
@@ -35,7 +57,7 @@ public class ParsedField {
         return name;
     }
 
-    public String getValue() {
+    public Value getValue() {
         return value;
     }
 

@@ -46,7 +46,7 @@ public class ScreenResolutionDissector extends Dissector {
     public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(SCREENRESOLUTION, inputname);
 
-        final String fieldValue = field.getValue();
+        final String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }

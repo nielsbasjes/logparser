@@ -47,20 +47,20 @@ public class ParserTestCasts {
 
         @Override
         public void dissect(Parsable<?> parsable, final String inputname) throws DissectionFailure {
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_null", (String)null);
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string_good", "123");
 
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "long_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "long_null", (String)null);
             parsable.addDissection(inputname, "OUTPUT_TYPE", "long_bad", "Something");
             parsable.addDissection(inputname, "OUTPUT_TYPE", "long_good", "123");
 
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "double_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "double_null", (String)null);
             parsable.addDissection(inputname, "OUTPUT_TYPE", "double_bad", "Something");
             parsable.addDissection(inputname, "OUTPUT_TYPE", "double_good", "123");
 
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_long_null", null);
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_double_null", null);
-            parsable.addDissection(inputname, "OUTPUT_TYPE", "multi_null", null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_long_null", (String)null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "string_double_null", (String)null);
+            parsable.addDissection(inputname, "OUTPUT_TYPE", "multi_null", (String)null);
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string_long_good", "123");
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string_double_good", "123");
             parsable.addDissection(inputname, "OUTPUT_TYPE", "multi_good", "123");
@@ -93,7 +93,7 @@ public class ParserTestCasts {
         }
 
 
-        private static final Map<String, EnumSet<Casts>> PREPARE_FOR_DISSECT_MAP = new HashMap();
+        private static final Map<String, EnumSet<Casts>> PREPARE_FOR_DISSECT_MAP = new HashMap<>();
         static {
             PREPARE_FOR_DISSECT_MAP.put("string_null",          Casts.STRING_ONLY);
             PREPARE_FOR_DISSECT_MAP.put("string_good",          Casts.STRING_ONLY);
