@@ -14,9 +14,16 @@ First you put something like this in your pom.xml file:
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>2.0</version>
+        <version>2.3</version>
     </dependency>
 
+In addition you need joda-time 1.6 or newer.
+
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>1.6</version>
+    </dependency>
 
 I assume we have a logformat variable that looks something like this:
 

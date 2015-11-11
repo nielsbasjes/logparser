@@ -10,6 +10,10 @@ mvn clean
 # Creating and publishing the new Tagging
 RELEASEVERSION=2.0
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
+
+# Update the version number in all of the examples in the README*md files
+vim README*.md
+
 git status
 git commit -m"Version ${RELEASEVERSION}" -a
 git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"

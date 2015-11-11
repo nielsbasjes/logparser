@@ -28,7 +28,7 @@ So using it in a Java based project is as simple as adding this to your dependen
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>2.0</version>
+        <version>2.3</version>
     </dependency>
 
 Building
