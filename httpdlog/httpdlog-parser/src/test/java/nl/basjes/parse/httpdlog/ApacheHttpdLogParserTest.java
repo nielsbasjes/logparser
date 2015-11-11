@@ -190,6 +190,45 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
+    @Test
+    public void fullTestTooLongUri() throws Exception {
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+
+        String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /ImagineAURLHereThatIsTooLong\" 414 1213 80"
+                + " \"\" \"http://localhost/\" 1306 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\""
+                + " \"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858\" \"-\" \"-\" \"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
+
+        TestRecord record = new TestRecord();
+        parser.parse(record, line);
+        Map<String, String> results = record.getResults();
+
+        // System.out.println(results.toString());
+
+        assertEquals(null, results.get("HTTP.QUERYSTRING:request.firstline.uri.query.foo"));
+        assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
+        assertEquals(null, results.get("NUMBER:connection.client.logname"));
+        assertEquals(null, results.get("STRING:connection.client.user"));
+        assertEquals("10/Aug/2012:23:55:11 +0200", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("11", results.get("TIME.SECOND:request.receive.time.second"));
+        assertEquals("/ImagineAURLHereThatIsTooLong", results.get("HTTP.URI:request.firstline.uri"));
+        assertEquals("414", results.get("STRING:request.status.last"));
+        assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
+        assertEquals("http://localhost/", results.get("HTTP.URI:request.referer"));
+        assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
+                results.get("HTTP.USERAGENT:request.user-agent"));
+        assertEquals("10", results.get("TIME.DAY:request.receive.time.day"));
+        assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
+        assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
+        assertEquals("1306", results.get("MICROSECONDS:server.process.time"));
+        assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
+        assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
+                results.get("HTTP.COOKIES:request.cookies"));
+        assertEquals("\\\"3780ff-4bd-4c1ce3df91380\\\"", results.get("HTTP.HEADER:response.header.etag"));
+        // assertEquals("351",results.get("COOKIE:request.cookie.jquery-ui-theme"));
+    }
+
+    // ------------------------------------------
+
     public static class TestRecordMissing {
         @SuppressWarnings("UnusedDeclaration")
         @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing" })

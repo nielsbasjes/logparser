@@ -42,11 +42,16 @@ public class HttpFirstLineDissector extends Dissector {
     // - Method = Single Word
     // - Request URI = String that can contain ANY letters
     // - HTTP version = HTTP/[0-9]+\.[0-9]+
+    // The HTTP version has been made optional to allow parsing the log lines you get when the URI is > 8KB
+    // In that scenario the HTTP/x.x part will not be logged at all.
     public static final String FIRSTLINE_REGEX =
-            "[a-zA-Z]+ .* HTTP/[0-9]+\\.[0-9]+";
+            "[a-zA-Z]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?";
 
     private final Pattern firstlineSplitter = Pattern
             .compile("^([a-zA-Z]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
+
+    private final Pattern tooLongFirstlineSplitter = Pattern
+            .compile("^([a-zA-Z]+) (.*)$");
 
     // --------------------------------------------
 
@@ -80,16 +85,33 @@ public class HttpFirstLineDissector extends Dissector {
         }
 
         // Now we create a matcher for this line
-        final Matcher matcher = firstlineSplitter.matcher(fieldValue);
+        Matcher matcher = firstlineSplitter.matcher(fieldValue);
 
         // Is it all as expected?
-        final boolean matches = matcher.find();
+        boolean matches = matcher.find();
 
         if (matches && matcher.groupCount() == 4) {
             outputDissection(parsable, inputname, "HTTP.METHOD", "method", matcher, 1);
             outputDissection(parsable, inputname, "HTTP.URI", "uri", matcher, 2);
             outputDissection(parsable, inputname, "HTTP.PROTOCOL", "protocol", matcher, 3);
             outputDissection(parsable, inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher, 4);
+            return;
+        }
+
+        // In the scenario that the actual URI is too long the last part ("HTTP/1.1") may have been cut off by the
+        // Apache HTTPD webserver. To still be able to parse these we try that pattern too
+
+        // Now we create a matcher for this line
+        matcher = tooLongFirstlineSplitter.matcher(fieldValue);
+
+        // Is it all as expected?
+        matches = matcher.find();
+
+        if (matches && matcher.groupCount() == 2) {
+            outputDissection(parsable, inputname, "HTTP.METHOD", "method", matcher, 1);
+            outputDissection(parsable, inputname, "HTTP.URI", "uri", matcher, 2);
+            parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", (String) null);
+            parsable.addDissection(inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", (String) null);
         }
     }
 
