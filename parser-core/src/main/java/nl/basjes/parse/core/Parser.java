@@ -260,11 +260,15 @@ public class Parser<RECORD> {
 
         String subRootId = subRootType + ':' + subRootName;
 
-        LOG.debug("findUsefulDissectors:\"" + subRootType + "\" \"" + subRootName + "\"");
-
         // When we reach this point we have dissectors to get here.
         // So we store this to later validate if we have everything.
+        if (locatedTargets.contains(subRootId)) {
+            // We already found this one.
+            return; // Avoid infinite recursion
+        }
         locatedTargets.add(subRootId);
+
+        LOG.debug("findUsefulDissectors:\"" + subRootType + "\" \"" + subRootName + "\"");
 
         for (DissectorPhase dissector: availableDissectors) {
 
