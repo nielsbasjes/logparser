@@ -3,6 +3,9 @@ This is intended as an overview of the major changes
 v2.4
 ===
 - Rewrote the way parsed values are passed around. Improves accuracy and performance in specific cases.
+- Now support parsing the first line even if it is chopped by Apache httpd because of an URI longer than 8000 bytes.
+- Fixed an infinite recursion problem.
+- Fixed Timestamp unit test (test was broken, code was fine).
 
 v2.3
 ===
