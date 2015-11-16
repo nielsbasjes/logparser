@@ -28,7 +28,15 @@ So using it in a Java based project is as simple as adding this to your dependen
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
+    </dependency>
+
+In addition you need joda-time 1.6 or newer.
+
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>1.6</version>
     </dependency>
 
 Building
