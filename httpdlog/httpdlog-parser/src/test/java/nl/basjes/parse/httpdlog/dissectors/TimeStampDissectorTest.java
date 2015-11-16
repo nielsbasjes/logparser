@@ -17,12 +17,14 @@
 
 package nl.basjes.parse.httpdlog.dissectors;
 
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.httpdlog.ApacheHttpdLogFormatDissector;
-import nl.basjes.parse.httpdlog.dissectors.TimeStampDissector;
+import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
+import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -75,12 +77,14 @@ public class TimeStampDissectorTest {
     class TimeParser extends Parser<TestRecord> {
         public TimeParser() {
             super(TestRecord.class);
-            addDissector(new ApacheHttpdLogFormatDissector("%t"));
-            addDissector(new TimeStampDissector("[dd/MMM/yyyy:HH:mm:ss ZZ]"));
-            setRootType("APACHELOGLINE");
+            Dissector httpdLogFormatDissector = new HttpdLogFormatDissector("%t");
+            addDissector(httpdLogFormatDissector);
+            addDissector(new TimeStampDissector());
+            setRootType(httpdLogFormatDissector.getInputType());
         }
     }
 
+    @Test
     public void testTimeStampDissector() throws Exception {
         TimeParser timeParser = new TimeParser();
         TestRecord record = new TestRecord();
@@ -89,7 +93,7 @@ public class TimeStampDissectorTest {
         Map<String, String> results = record.results;
         Map<String, Long> longResults = record.longResults;
 
-        assertEquals("[31/Dec/2012:23:00:44 -0700]", results.get("TIME.STAMP:request.receive.time"));
+        assertEquals("31/Dec/2012:23:00:44 -0700", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("1357020044000", results.get("TIME.EPOCH:request.receive.time.epoch"));
         assertEquals(new Long(1357020044000L), longResults.get("TIME.EPOCH:request.receive.time.epoch"));
 
