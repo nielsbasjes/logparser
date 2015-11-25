@@ -111,7 +111,7 @@ public class TestRemappedLoader {
         }
 
         try {
-            Map<String, Object> output = new HashMap<String, Object>();
+            Map<String, Object> output = new HashMap<>();
 
             for (int i = 0; i < input.length; i=i+2) {
                 String key = (String)input[i];

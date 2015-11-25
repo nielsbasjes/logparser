@@ -83,7 +83,7 @@ public class TestApacheHttpdlogDeserializer {
         assertTrue(row instanceof List);
 
         List<Object> rowArray = (List<Object>)row;
-        LOG.debug("Deserialized row: " + row);
+        LOG.debug("Deserialized row: {}", row);
         assertEquals("127.0.0.1",     rowArray.get(0));
         assertEquals(1351112444000L,  rowArray.get(1));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0", rowArray.get(2));

@@ -139,9 +139,7 @@ public class Loader
                     throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);
                 } catch (NoSuchMethodException e) {
                     throw new IllegalArgumentException("Found load with bad specification: Class does not have the required constructor");
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
+                } catch (InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public");

@@ -60,7 +60,7 @@ public final class Main {
         LOG.info("==================================");
         LOG.info("Possible output:");
         for (String path : possiblePaths) {
-            LOG.info(path + "     " + dummyParser.getCasts(path));
+            LOG.info("{}     {}", path, dummyParser.getCasts(path));
         }
         LOG.info("==================================");
     }

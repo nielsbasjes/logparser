@@ -51,7 +51,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
     }
 
     private void overrideLogFormat(String originalLogformat, String logformat){
-        LOG.debug("Specified logformat \"" + originalLogformat + "\" was mapped to " + logformat);
+        LOG.debug("Specified logformat \"{}\" was mapped to {}", originalLogformat, logformat);
         super.setLogFormat(logformat);
     }
 

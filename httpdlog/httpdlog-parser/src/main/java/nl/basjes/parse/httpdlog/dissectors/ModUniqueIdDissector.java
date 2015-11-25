@@ -154,7 +154,7 @@ public class ModUniqueIdDissector extends Dissector {
         long pid;
         long counter;
         long thread_index;
-    };
+    }
 
     // 1 letter = 6 bits of data = 2^6 = 64 letters needed to do the mapping
     // 4 letters = 4*6 = 24 = 3*8 = 3 bytes
@@ -213,7 +213,6 @@ public class ModUniqueIdDissector extends Dissector {
 //      (32-bit IP address, 32 bit pid, 32 bit time stamp, 16 bit counter, 32 bit thread index)
 //      The actual ordering of the encoding is: time stamp, IP address, pid, counter.
 
-        int i = 0;
         result.timestamp    =                                 (((int)bytes[0]) & 0xFF);
         result.timestamp    = ( result.timestamp    * 256 ) + (((int)bytes[1]) & 0xFF);
         result.timestamp    = ( result.timestamp    * 256 ) + (((int)bytes[2]) & 0xFF);

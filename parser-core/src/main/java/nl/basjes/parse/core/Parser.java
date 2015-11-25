@@ -80,7 +80,7 @@ public class Parser<RECORD> {
      * // Use a random method that has the right signature
      * dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
      * for (String path : possiblePaths) {
-     *     LOG.info(path + "     " + dummyParser.getCasts(path));
+     *     LOG.info("{}     {}", path, dummyParser.getCasts(path));
      * }
      * }</pre>
      * @param name The name of the path for which you want the casts
@@ -268,7 +268,7 @@ public class Parser<RECORD> {
         }
         locatedTargets.add(subRootId);
 
-        LOG.debug("findUsefulDissectors:\"" + subRootType + "\" \"" + subRootName + "\"");
+        LOG.debug("findUsefulDissectors:\"{}\" \"{}\"", subRootType, subRootName);
 
         for (DissectorPhase dissector: availableDissectors) {
 
@@ -323,9 +323,10 @@ public class Parser<RECORD> {
 
                     // Tell the dissector instance what to expect
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Informing : (" + dissector.inputType + ")" + subRootName
-                                + " --> " + dissector.instance.getClass().getName()
-                                + " --> (" + dissector.outputType + ")" + checkField);
+                        LOG.debug("Informing : ({}){} --> {} --> ({}){}",
+                                dissector.inputType, subRootName,
+                                dissector.instance.getClass().getName(),
+                                dissector.outputType, checkField);
                     }
                     castsOfTargets.put(dissector.outputType + ':' + checkField,
                             dissectorPhaseInstance.instance.prepareForDissect(subRootName, checkField));
@@ -430,7 +431,7 @@ public class Parser<RECORD> {
             for (final String fieldValue : fieldValues) {
                 String cleanedFieldValue = cleanupFieldValue(fieldValue);
                 if (!fieldValue.equals(cleanedFieldValue)) {
-                    LOG.warn("The requested \"" + fieldValue + "\" was converted into \"" + cleanedFieldValue + "\" ");
+                    LOG.warn("The requested \"{}\" was converted into \"{}\"", fieldValue, cleanedFieldValue);
                 }
 
                 // We have 1 real target
@@ -558,7 +559,7 @@ public class Parser<RECORD> {
                 if (dissectorSet != null) {
                     for (DissectorPhase dissector : dissectorSet) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Dissect " + fieldThatNeedsToBeParsed + " with " + dissector.instance.getClass().getName());
+                            LOG.debug("Dissect {} with {}", fieldThatNeedsToBeParsed, dissector.instance.getClass().getName());
                         }
                         dissector.instance.dissect(parsable, fieldThatNeedsToBeParsed.getName());
                     }
@@ -592,7 +593,7 @@ public class Parser<RECORD> {
         if (castsTo == null) {
             castsTo = castsOfTargets.get(name);
             if (castsTo == null) {
-                LOG.error("NO casts for \"" + name + "\"");
+                LOG.error("NO casts for \"{}\"", name);
                 return;
             }
         }
@@ -682,7 +683,7 @@ public class Parser<RECORD> {
             Constructor<RECORD> co = recordClass.getConstructor();
             record = co.newInstance();
         } catch (Exception e) {
-            LOG.error("Unable to create instance: " + e.toString());
+            LOG.error("Unable to create instance: {}", e.toString());
             return null;
         }
         return createParsable(record);
@@ -719,7 +720,7 @@ public class Parser<RECORD> {
         for (Dissector dissector : allDissectors) {
             final String inputType = dissector.getInputType();
             if (inputType == null) {
-                LOG.error("Dissector returns null on getInputType(): ["+ dissector.getClass().getCanonicalName()+"]");
+                LOG.error("Dissector returns null on getInputType(): [{}]", dissector.getClass().getCanonicalName());
                 return null;
             }
 

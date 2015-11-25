@@ -86,7 +86,7 @@ public abstract class TokenFormatDissector extends Dissector {
         if (newInstance instanceof TokenFormatDissector) {
             ((TokenFormatDissector)newInstance).setLogFormat(logFormat);
         } else {
-            LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
+            LOG.error("============================== WTF == {}", newInstance.getClass().getCanonicalName());
         }
     }
 
@@ -162,8 +162,8 @@ public abstract class TokenFormatDissector extends Dissector {
         regex.append('$'); // Link to end of the line
 
         logFormatRegEx = regex.toString();
-        LOG.debug("Source logformat : " + logFormat);
-        LOG.debug("Used regex       : " + logFormatRegEx);
+        LOG.debug("Source logformat : {}", logFormat);
+        LOG.debug("Used regex       : {}", logFormatRegEx);
 
         // Now we compile this expression ONLY ONCE!
         logFormatPattern = Pattern.compile(logFormatRegEx);

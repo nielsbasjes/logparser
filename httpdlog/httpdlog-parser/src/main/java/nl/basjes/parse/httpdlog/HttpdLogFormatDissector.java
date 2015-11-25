@@ -68,15 +68,15 @@ public class HttpdLogFormatDissector extends Dissector {
 
         switch (determineMostLikelyLogFormat(logFormat)) {
             case APACHE:
-                LOG.info("Registering APACHE HTTPD LogFormat[" + dissectors.size() + "]= >>" + logFormat + "<<");
+                LOG.info("Registering APACHE HTTPD LogFormat[{}]= >>{}<<", dissectors.size(), logFormat);
                 dissectors.add(new ApacheHttpdLogFormatDissector(logFormat));
                 break;
             case NGINX:
-                LOG.info("Registering NGINX LogFormat[" + dissectors.size() + "]= >>" + logFormat + "<<");
+                LOG.info("Registering NGINX LogFormat[{}]= >>{}<<", dissectors.size(), logFormat);
                 dissectors.add(new NginxHttpdLogFormatDissector(logFormat));
                 break;
             default:
-                LOG.error("Unable to determine if this is an APACHE or a NGINX LogFormat= >>" + logFormat + "<<");
+                LOG.error("Unable to determine if this is an APACHE or a NGINX LogFormat= >>{}<<", logFormat);
                 break;
         }
     }
@@ -114,7 +114,7 @@ public class HttpdLogFormatDissector extends Dissector {
         // Initial: We must determine the right dissector
         if (activeDissector == null) {
             activeDissector = dissectors.get(0);
-            LOG.info("At start we use LogFormat[0]= >>" + activeDissector.getLogFormat() + "<<");
+            LOG.info("At start we use LogFormat[0]= >>{}<<", activeDissector.getLogFormat());
         }
 
         try {
@@ -124,7 +124,7 @@ public class HttpdLogFormatDissector extends Dissector {
             for (TokenFormatDissector dissector : dissectors) {
                 try {
                     dissector.dissect(parsable, inputname);
-                    LOG.info("Switched to LogFormat[" + index + "]= >>" + activeDissector.getLogFormat() + "<<");
+                    LOG.info("Switched to LogFormat[{}]= >>{}<<", index, activeDissector.getLogFormat());
                     activeDissector = dissector;
                     return;
                 } catch (DissectionFailure e) {
@@ -200,7 +200,7 @@ public class HttpdLogFormatDissector extends Dissector {
         if (newInstance instanceof HttpdLogFormatDissector) {
             ((HttpdLogFormatDissector) newInstance).addLogFormat(getAllLogFormats());
         } else {
-            LOG.error("============================== WTF == " + newInstance.getClass().getCanonicalName());
+            LOG.error("============================== WTF == {}", newInstance.getClass().getCanonicalName());
         }
 
     }

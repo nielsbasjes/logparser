@@ -28,6 +28,7 @@ public class JsonLogFormatTest {
 
         private final List<String> results = new ArrayList<>();
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         public void setValue(final String name, final String value) {
             results.add(name + '=' + value);
         }
