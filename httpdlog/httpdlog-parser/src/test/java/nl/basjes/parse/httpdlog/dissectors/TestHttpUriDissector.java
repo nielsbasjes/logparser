@@ -34,6 +34,7 @@ public class TestHttpUriDissector {
 
         private final Map<String, String> results = new HashMap<>(32);
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
                 "HTTP.URI:request.referer",
                 "HTTP.PROTOCOL:request.referer.protocol",

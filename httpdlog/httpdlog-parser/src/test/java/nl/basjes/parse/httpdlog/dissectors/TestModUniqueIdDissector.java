@@ -34,6 +34,7 @@ public class TestModUniqueIdDissector {
 
         private final Map<String, String> results = new HashMap<>(32);
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({"MOD_UNIQUE_ID:request.header.moduniqueid",
                 "TIME.EPOCH:request.header.moduniqueid.epoch",
                 "IP:request.header.moduniqueid.ip",

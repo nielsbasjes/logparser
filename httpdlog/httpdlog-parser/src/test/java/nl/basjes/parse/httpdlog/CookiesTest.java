@@ -38,6 +38,7 @@ public class CookiesTest {
         private final Map<String, String> results     = new HashMap<>(32);
         private final Map<String, Long>   longResults = new HashMap<>(32);
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
             "HTTP.QUERYSTRING:request.firstline.uri.query",
             "IP:connection.client.ip",
@@ -85,6 +86,8 @@ public class CookiesTest {
         public Map<String, String> getResults() {
             return results;
         }
+
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
                 "BYTES:response.body.bytesclf",
                 "TIME.DAY:request.receive.time.day",

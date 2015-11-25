@@ -36,6 +36,7 @@ public class TimeStampDissectorTest {
         private final Map<String, String> results     = new HashMap<>(32);
         private final Map<String, Long>   longResults = new HashMap<>(32);
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
             "TIME.STAMP:request.receive.time",
             "TIME.EPOCH:request.receive.time.epoch",
@@ -57,6 +58,7 @@ public class TimeStampDissectorTest {
             results.put(name, value);
         }
 
+        @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
             "TIME.DAY:request.receive.time.day",
             "TIME.HOUR:request.receive.time.hour",
