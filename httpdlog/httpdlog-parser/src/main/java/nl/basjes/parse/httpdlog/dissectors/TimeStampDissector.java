@@ -307,7 +307,7 @@ public class TimeStampDissector extends Dissector {
         }
 
         if (wantAnyAsParsed || wantAnyTZIndependent) {
-            // FIXME: YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
+            // YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
             DateTime dateTime = asParsedFormatter.parseDateTime(fieldValue);
             DateTimeZone zone = dateTime.getZone();
             DateTimeFormatter asParsedWithZoneFormatter = asParsedFormatter.withZone(zone);

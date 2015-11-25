@@ -124,7 +124,7 @@ public class ModUniqueIdDissector extends Dissector {
 
         unique_id_rec record = decode(fieldValue);
         if (record == null) {
-            return; // FIXME?: FAIL with an error?
+            return;
         }
 
         if (wantTime) {

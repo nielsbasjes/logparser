@@ -33,8 +33,6 @@ public class ParsedRecord implements Writable {
     private final Map<String, Map<String, String>> stringSetValues = new HashMap<>();
     private final Map<String, String> stringSetPrefixes = new HashMap<>();
 
-    // FIXME: This implementation ONLY allows for END STAR situations
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
