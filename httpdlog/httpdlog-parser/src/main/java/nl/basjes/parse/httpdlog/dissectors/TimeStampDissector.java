@@ -316,7 +316,7 @@ public class TimeStampDissector extends Dissector {
             // As parsed
             if (wantDay) {
                 parsable.addDissection(inputname, "TIME.DAY", "day",
-                        dateTime.dayOfMonth().getAsString());
+                        dateTime.dayOfMonth().get());
             }
             if (wantMonthname) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname",
@@ -324,35 +324,35 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantMonth) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month",
-                        dateTime.monthOfYear().getAsString());
+                        dateTime.monthOfYear().get());
             }
             if (wantWeekOfWeekYear) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear",
-                        dateTime.weekOfWeekyear().getAsString());
+                        dateTime.weekOfWeekyear().get());
             }
             if (wantWeekYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear",
-                        dateTime.weekyear().getAsString());
+                        dateTime.weekyear().get());
             }
             if (wantYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year",
-                        dateTime.year().getAsString());
+                        dateTime.year().get());
             }
             if (wantHour) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour",
-                        dateTime.hourOfDay().getAsString());
+                        dateTime.hourOfDay().get());
             }
             if (wantMinute) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute",
-                        dateTime.minuteOfHour().getAsString());
+                        dateTime.minuteOfHour().get());
             }
             if (wantSecond) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second",
-                        dateTime.secondOfMinute().getAsString());
+                        dateTime.secondOfMinute().get());
             }
             if (wantMillisecond) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond",
-                        dateTime.millisOfSecond().getAsString());
+                        dateTime.millisOfSecond().get());
             }
 
             // Timezone independent
@@ -362,7 +362,7 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantEpoch) {
                 parsable.addDissection(inputname, "TIME.EPOCH", "epoch",
-                        Long.toString(dateTime.getMillis()));
+                        dateTime.getMillis());
             }
         }
 
@@ -372,7 +372,7 @@ public class TimeStampDissector extends Dissector {
 
             if (wantDayUTC) {
                 parsable.addDissection(inputname, "TIME.DAY", "day_utc",
-                        dateTime.dayOfMonth().getAsString());
+                        dateTime.dayOfMonth().get());
             }
             if (wantMonthnameUTC) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_utc",
@@ -380,35 +380,35 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantMonthUTC) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month_utc",
-                        dateTime.monthOfYear().getAsString());
+                        dateTime.monthOfYear().get());
             }
             if (wantWeekOfWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear_utc",
-                        dateTime.weekOfWeekyear().getAsString());
+                        dateTime.weekOfWeekyear().get());
             }
             if (wantWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear_utc",
-                        dateTime.weekyear().getAsString());
+                        dateTime.weekyear().get());
             }
             if (wantYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year_utc",
-                        dateTime.year().getAsString());
+                        dateTime.year().get());
             }
             if (wantHourUTC) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour_utc",
-                        dateTime.hourOfDay().getAsString());
+                        dateTime.hourOfDay().get());
             }
             if (wantMinuteUTC) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute_utc",
-                        dateTime.minuteOfHour().getAsString());
+                        dateTime.minuteOfHour().get());
             }
             if (wantSecondUTC) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second_utc",
-                        dateTime.secondOfMinute().getAsString());
+                        dateTime.secondOfMinute().get());
             }
             if (wantMillisecondUTC) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond_utc",
-                        dateTime.millisOfSecond().getAsString());
+                        dateTime.millisOfSecond().get());
             }
         }
     }

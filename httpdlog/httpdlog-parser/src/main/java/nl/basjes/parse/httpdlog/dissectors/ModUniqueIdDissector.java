@@ -127,22 +127,20 @@ public class ModUniqueIdDissector extends Dissector {
             return; // FIXME?: FAIL with an error?
         }
 
-        // FIXME: The parser API requires a String where in this kind scenario a 'Long' or 'Double' would make much more sense
-
         if (wantTime) {
-            parsable.addDissection(inputname, "TIME.EPOCH",   "epoch",       Long.toString(record.timestamp));
+            parsable.addDissection(inputname, "TIME.EPOCH",   "epoch",       record.timestamp);
         }
         if (wantIp) {
             parsable.addDissection(inputname, "IP",           "ip",          record.ipaddrStr);
         }
         if (wantProcessId) {
-            parsable.addDissection(inputname, "PROCESSID",    "processid",   Long.toString(record.pid));
+            parsable.addDissection(inputname, "PROCESSID",    "processid",   record.pid);
         }
         if (wantCounter) {
-            parsable.addDissection(inputname, "COUNTER",      "counter",     Long.toString(record.counter));
+            parsable.addDissection(inputname, "COUNTER",      "counter",     record.counter);
         }
         if (wantThreadIndex) {
-            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", Long.toString(record.thread_index));
+            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", record.thread_index);
         }
     }
     // --------------------------------------------

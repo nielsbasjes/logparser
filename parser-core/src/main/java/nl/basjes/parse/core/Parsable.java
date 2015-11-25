@@ -71,26 +71,44 @@ public final class Parsable<RECORD> {
     // --------------------------------------------
 
     /** Store a newly parsed value in the result set */
-    public void addDissection(final String base, final String type, final String name, final Long value) throws DissectionFailure {
-        LOG.debug("Got new (Long) dissection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+    public void addDissection(final String base, final String type, final String name, final int value) throws DissectionFailure {
+        LOG.debug("Got new (int) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        addDissection(base, type, name, new Value((long)value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
+    public void addDissection(final String base, final String type, final String name, final long value) throws DissectionFailure {
+        LOG.debug("Got new (long) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         addDissection(base, type, name, new Value(value), false);
     }
 
     /** Store a newly parsed value in the result set */
+    public void addDissection(final String base, final String type, final String name, final Long value) throws DissectionFailure {
+        LOG.debug("Got new (Long) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        addDissection(base, type, name, new Value(value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
+    public void addDissection(final String base, final String type, final String name, final float value) throws DissectionFailure {
+        LOG.debug("Got new (float) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        addDissection(base, type, name, new Value((double)value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
     public void addDissection(final String base, final String type, final String name, final Double value) throws DissectionFailure {
-        LOG.debug("Got new (Double) dissection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+        LOG.debug("Got new (Double) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         addDissection(base, type, name, new Value(value), false);
     }
 
     /** Store a newly parsed value in the result set */
     public void addDissection(final String base, final String type, final String name, final String value) throws DissectionFailure {
-        LOG.debug("Got new (String) dissection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+        LOG.debug("Got new (String) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         addDissection(base, type, name, new Value(value), false);
     }
 
     /** Store a newly parsed value in the result set */
     public void addDissection(final String base, final String type, final String name, final Value value) throws DissectionFailure {
-        LOG.debug("Got new (Value) dissection: base=" + base + "; type=" + type + "; name=\"" + name + "\"");
+        LOG.debug("Got new (Value) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         addDissection(base, type, name, value, false);
     }
 

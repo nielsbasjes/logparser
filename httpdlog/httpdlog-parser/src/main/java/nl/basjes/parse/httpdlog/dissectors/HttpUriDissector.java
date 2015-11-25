@@ -192,7 +192,7 @@ public class HttpUriDissector extends Dissector {
             }
             if (wantPort) {
                 if (url.getPort() != -1) {
-                    parsable.addDissection(inputname, "HTTP.PORT", "port", String.valueOf(url.getPort()));
+                    parsable.addDissection(inputname, "HTTP.PORT", "port", url.getPort());
                 }
             }
         }
