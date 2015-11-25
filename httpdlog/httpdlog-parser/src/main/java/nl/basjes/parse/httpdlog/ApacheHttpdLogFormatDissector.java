@@ -92,10 +92,10 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // In vim I would simply do: %s@{\([^}]*\)}@{\L\1\E@g
         // But such an expression is not (yet) possible in Java
         StringBuffer sb = new StringBuffer(logformat.length());
-        Pattern p = Pattern.compile("\\{([^\\}]*)\\}");
+        Pattern p = Pattern.compile("%\\{([^\\}]*)\\}");
         Matcher m = p.matcher(logformat);
         while (m.find()) {
-            m.appendReplacement(sb, '{'+m.group(1).toLowerCase()+'}');
+            m.appendReplacement(sb, "%{"+m.group(1).toLowerCase()+'}');
         }
         m.appendTail(sb);
 
