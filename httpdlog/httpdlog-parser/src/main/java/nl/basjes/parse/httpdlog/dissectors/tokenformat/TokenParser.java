@@ -22,7 +22,7 @@ import java.util.List;
 
 
 import nl.basjes.parse.core.Casts;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class TokenParser {
 
