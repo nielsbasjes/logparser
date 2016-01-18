@@ -22,7 +22,7 @@ In addition you need joda-time 1.6 or newer.
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>1.6</version>
+      <version>2.9.1</version>
     </dependency>
 
 I assume we have a logformat variable that looks something like this:
