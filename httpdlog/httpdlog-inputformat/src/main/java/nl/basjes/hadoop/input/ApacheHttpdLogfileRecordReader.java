@@ -51,7 +51,7 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogfileRecordReader.class);
 
-    private static final String HTTPD_LOGFILE_INPUT_FORMAT = "HTTPD (Nginx/Apache) Logfile InputFormat";
+    private static final String HTTPD_LOGFILE_INPUT_FORMAT = "HTTPD Access Logfile InputFormat";
     public static final String FIELDS = "fields";
 
     // --------------------------------------------
