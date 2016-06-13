@@ -133,7 +133,8 @@ public class TimeStampDissectorTest {
 
         @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
-            "TIME.LOCALIZEDSTRING:request.receive.time"
+            "TIME.LOCALIZEDSTRING:request.receive.time",
+            "HTTP.HEADER:request.header.timestamp"
         })
         public void setValue(final String name, final String value) {
             results.put(name, value);
@@ -142,16 +143,18 @@ public class TimeStampDissectorTest {
 
     @Test
     public void testHandlingOfNotYetImplementedSpecialTimeFormat() throws Exception {
-        String logformat = "%{%Y-%m-%dT%H:%M:%S%z}t";
+        // Test both the original form and the documented workaround.
+        String logformat = "%{%Y-%m-%dT%H:%M:%S%z}t | %{timestamp}i";
 
         Parser<TestNotYetImplementedLocalizedTimeRecord> parser = new ApacheHttpdLoglineParser<>(TestNotYetImplementedLocalizedTimeRecord.class, logformat);
 
         TestNotYetImplementedLocalizedTimeRecord record = new TestNotYetImplementedLocalizedTimeRecord();
-        parser.parse(record, "2012-12-31T23:00:44 -0700");
+        parser.parse(record, "2012-12-31T23:00:44 -0700 | 2012-12-31T23:00:44 -0700");
 
         Map<String, String> results = record.results;
 
         assertEquals("2012-12-31T23:00:44 -0700", results.get("TIME.LOCALIZEDSTRING:request.receive.time"));
+        assertEquals("2012-12-31T23:00:44 -0700", results.get("HTTP.HEADER:request.header.timestamp"));
     }
 
     // FIXME: Implement the real thing.
