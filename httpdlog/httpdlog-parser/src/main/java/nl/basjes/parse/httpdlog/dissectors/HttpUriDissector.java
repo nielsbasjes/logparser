@@ -22,8 +22,7 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -120,79 +119,67 @@ public class HttpUriDissector extends Dissector {
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
 
-        String fieldValue = field.getValue().getString();
-        if (fieldValue == null || fieldValue.isEmpty()) {
+        String uriString = field.getValue().getString();
+        if (uriString == null || uriString.isEmpty()) {
             return; // Nothing to do here
         }
 
+        // Before we hand it to the standard parser we hack it around a bit so we can parse
+        // nasty edge cases that are illegal yet do occur in real clickstreams.
+        // Also we force the query string to start with ?& so the returned query string starts with &
+        // Which leads to more consistent output after parsing.
+        int firstQuestionMark = uriString.indexOf('?');
+        int firstAmpersand = uriString.indexOf('&');
+        // Now we can have one of 3 situations:
+        // 1) No query string
+        // 2) Query string starts with a '?'
+        //      (and optionally followed by one or more '&' or '?' )
+        // 3) Query string starts with a '&'. This is invalid but does occur!
+        // We may have ?x=x&y=y?z=z so we normalize it always
+        // to:  ?&x=x&y=y&z=z
+        if (firstAmpersand != -1 || firstQuestionMark != -1) {
+            uriString = uriString.replaceAll("\\?", "&");
+            uriString = uriString.replaceFirst("&", "?&");
+        }
+
         boolean isUrl = true;
-        URL url;
-        try {
-            if (fieldValue.startsWith("/")) {
-                url = new URL("http://xxx" + fieldValue);
-                isUrl = false; // I.e. we do not return the values we just faked.
-            } else {
-                url = new URL(fieldValue);
-            }
-        } catch (MalformedURLException e) {
-            throw new DissectionFailure("Unable to parse the URI: >>>" + fieldValue + "<<< (" + e.getMessage() + ")");
+        URI uri;
+        if (uriString.startsWith("/")) {
+            uri = URI.create("http://example.com" + uriString);
+            isUrl = false; // I.e. we do not return the values we just faked.
+        } else {
+            uri = URI.create(uriString);
         }
 
         if (wantQuery || wantPath || wantRef) {
-            String rawPath = url.getFile();
-            String pathValue;
-            String queryValue;
-
-            int questionMark = rawPath.indexOf('?');
-            int firstAmpersand = rawPath.indexOf('&');
-            // Now we can have one of 3 situations:
-            // 1) No query string
-            // 2) Query string starts with a ? (and optionally followed by one or
-            // more &)
-            // 3) Query string starts with a &. This is invalid but does occur!
-            if (questionMark == -1) {
-                if (firstAmpersand == -1) {
-                    pathValue = rawPath;
-                    queryValue = ""; // We do not have anything.
-                } else {
-                    pathValue = rawPath.substring(0, firstAmpersand);
-                    queryValue = rawPath.substring(firstAmpersand, rawPath.length());
-                }
-            } else if (firstAmpersand == -1) {
-                // Replace the ? with a & to make parsing later easier
-                pathValue = rawPath.substring(0, questionMark);
-                queryValue = "&" + rawPath.substring(questionMark + 1, rawPath.length());
-            } else {
-                // We have both. So we take the first one.
-                int usedOffset = Math.min(questionMark, firstAmpersand);
-                pathValue = rawPath.substring(0, usedOffset);
-                queryValue = "&" + rawPath.substring(usedOffset + 1, rawPath.length()).replaceAll("\\?", "&");
-            }
-
             if (wantQuery) {
-                parsable.addDissection(inputname, "HTTP.QUERYSTRING", "query", queryValue);
+                String query = uri.getRawQuery();
+                if (query == null) {
+                    query = "";
+                }
+                parsable.addDissection(inputname, "HTTP.QUERYSTRING", "query", query);
             }
             if (wantPath) {
-                parsable.addDissection(inputname, "HTTP.PATH", "path", pathValue);
+                parsable.addDissection(inputname, "HTTP.PATH", "path", uri.getPath());
             }
             if (wantRef) {
-                parsable.addDissection(inputname, "HTTP.REF", "ref", url.getRef());
+                parsable.addDissection(inputname, "HTTP.REF", "ref", uri.getFragment());
             }
         }
 
         if (isUrl) {
             if (wantProtocol) {
-                parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", url.getProtocol());
+                parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", uri.getScheme());
             }
             if (wantUserinfo) {
-                parsable.addDissection(inputname, "HTTP.USERINFO", "userinfo", url.getUserInfo());
+                parsable.addDissection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
             }
             if (wantHost) {
-                parsable.addDissection(inputname, "HTTP.HOST", "host", url.getHost());
+                parsable.addDissection(inputname, "HTTP.HOST", "host", uri.getHost());
             }
             if (wantPort) {
-                if (url.getPort() != -1) {
-                    parsable.addDissection(inputname, "HTTP.PORT", "port", url.getPort());
+                if (uri.getPort() != -1) {
+                    parsable.addDissection(inputname, "HTTP.PORT", "port", uri.getPort());
                 }
             }
         }

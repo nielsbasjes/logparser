@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v2.5 (UNRELEASED)
 ===
 - Simply treat the %{...}t as a text field you can retrieve (instead of failing if it occurs).
+- Change URI dissector to allow URIs like android-app://...
 
 v2.4
 ===

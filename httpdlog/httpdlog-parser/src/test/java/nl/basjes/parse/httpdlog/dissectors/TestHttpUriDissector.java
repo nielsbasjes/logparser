@@ -17,9 +17,9 @@
 
 package nl.basjes.parse.httpdlog.dissectors;
 
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,14 +36,14 @@ public class TestHttpUriDissector {
 
         @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
-                "HTTP.URI:request.referer",
-                "HTTP.PROTOCOL:request.referer.protocol",
-                "HTTP.USERINFO:request.referer.userinfo",
-                "HTTP.HOST:request.referer.host",
-                "HTTP.PORT:request.referer.port",
-                "HTTP.PATH:request.referer.path",
-                "HTTP.QUERYSTRING:request.referer.query",
-                "HTTP.REF:request.referer.ref"})
+            "HTTP.URI:request.referer",
+            "HTTP.PROTOCOL:request.referer.protocol",
+            "HTTP.USERINFO:request.referer.userinfo",
+            "HTTP.HOST:request.referer.host",
+            "HTTP.PORT:request.referer.port",
+            "HTTP.PATH:request.referer.path",
+            "HTTP.QUERYSTRING:request.referer.query",
+            "HTTP.REF:request.referer.ref"})
         public void setValue(final String name, final String value) {
             results.put(name, value);
         }
@@ -70,15 +70,15 @@ public class TestHttpUriDissector {
 
     @Test
     public void testFullUrl1() throws Exception {
-        parser.parse(record, "http://www.example.com/some/thing/else/index.html?foofoo=barbar");
+        parser.parse(record, "http://www.example.com/some/thing/else/index.html?foofoo=bar%20bar");
 
-        assertEquals("Full input", "http://www.example.com/some/thing/else/index.html?foofoo=barbar", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Full input", "http://www.example.com/some/thing/else/index.html?foofoo=bar%20bar", record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", "http", record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", "www.example.com", record.getValue("HTTP.HOST:request.referer.host"));
         assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
         assertEquals("Path is wrong", "/some/thing/else/index.html", record.getValue("HTTP.PATH:request.referer.path"));
-        assertEquals("QueryString is wrong", "&foofoo=barbar", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("QueryString is wrong", "&foofoo=bar%20bar", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
         assertEquals("Ref is wrong", null, record.getValue("HTTP.REF:request.referer.ref"));
     }
 
@@ -88,7 +88,7 @@ public class TestHttpUriDissector {
         parser.parse(record, "http://www.example.com/some/thing/else/index.html&aap=noot?foofoo=barbar&");
 
         assertEquals("Full input", "http://www.example.com/some/thing/else/index.html&aap=noot?foofoo=barbar&",
-                record.getValue("HTTP.URI:request.referer"));
+            record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", "http", record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", "www.example.com", record.getValue("HTTP.HOST:request.referer.host"));
@@ -104,7 +104,7 @@ public class TestHttpUriDissector {
         parser.parse(record, "http://www.example.com:8080/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla");
 
         assertEquals("Full input", "http://www.example.com:8080/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla",
-                record.getValue("HTTP.URI:request.referer"));
+            record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", "http", record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", "www.example.com", record.getValue("HTTP.HOST:request.referer.host"));
@@ -132,17 +132,46 @@ public class TestHttpUriDissector {
     @Test
     public void testFullUrl5() throws Exception {
         record.clear();
-        parser.parse(record, "/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla");
+        parser.parse(record, "/some/thing/else/index.html&aap=noot?foofoo=bar%20bar&#bla%20bla");
 
-        assertEquals("Full input", "/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Full input", "/some/thing/else/index.html&aap=noot?foofoo=bar%20bar&#bla%20bla", record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", null, record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", null, record.getValue("HTTP.HOST:request.referer.host"));
         assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
         assertEquals("Path is wrong", "/some/thing/else/index.html", record.getValue("HTTP.PATH:request.referer.path"));
-        assertEquals("QueryString is wrong", "&aap=noot&foofoo=barbar&", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
-        assertEquals("Ref is wrong", "blabla", record.getValue("HTTP.REF:request.referer.ref"));
+        assertEquals("QueryString is wrong", "&aap=noot&foofoo=bar%20bar&", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("Ref is wrong", "bla bla", record.getValue("HTTP.REF:request.referer.ref"));
     }
 
+    @Test
+    public void testAndroidApp1() throws Exception {
+        record.clear();
+        parser.parse(record, "android-app://com.google.android.googlequicksearchbox");
+
+        assertEquals("Full input", "android-app://com.google.android.googlequicksearchbox", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Protocol is wrong", "android-app", record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
+        assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
+        assertEquals("Host is wrong", "com.google.android.googlequicksearchbox", record.getValue("HTTP.HOST:request.referer.host"));
+        assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
+        assertEquals("Path is wrong", "", record.getValue("HTTP.PATH:request.referer.path"));
+        assertEquals("QueryString is wrong", "", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("Ref is wrong", null, record.getValue("HTTP.REF:request.referer.ref"));
+    }
+
+    @Test
+    public void testAndroidApp2() throws Exception {
+        record.clear();
+        parser.parse(record, "android-app://com.google.android.googlequicksearchbox/https/www.google.com");
+
+        assertEquals("Full input", "android-app://com.google.android.googlequicksearchbox/https/www.google.com", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Protocol is wrong", "android-app", record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
+        assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
+        assertEquals("Host is wrong", "com.google.android.googlequicksearchbox", record.getValue("HTTP.HOST:request.referer.host"));
+        assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
+        assertEquals("Path is wrong", "/https/www.google.com", record.getValue("HTTP.PATH:request.referer.path"));
+        assertEquals("QueryString is wrong", "", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("Ref is wrong", null, record.getValue("HTTP.REF:request.referer.ref"));
+    }
 
 }
