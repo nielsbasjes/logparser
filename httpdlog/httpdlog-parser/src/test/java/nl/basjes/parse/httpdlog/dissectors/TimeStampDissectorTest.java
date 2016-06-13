@@ -125,7 +125,36 @@ public class TimeStampDissectorTest {
         assertEquals(new Long(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
     }
 
-    // FIXME: Implement this.
+
+
+    public class TestNotYetImplementedLocalizedTimeRecord {
+
+        private final Map<String, String> results     = new HashMap<>(32);
+
+        @SuppressWarnings({"unused"}) // Used via reflection
+        @Field({
+            "TIME.LOCALIZEDSTRING:request.receive.time"
+        })
+        public void setValue(final String name, final String value) {
+            results.put(name, value);
+        }
+    }
+
+    @Test
+    public void testHandlingOfNotYetImplementedSpecialTimeFormat() throws Exception {
+        String logformat = "%{%Y-%m-%dT%H:%M:%S%z}t";
+
+        Parser<TestNotYetImplementedLocalizedTimeRecord> parser = new ApacheHttpdLoglineParser<>(TestNotYetImplementedLocalizedTimeRecord.class, logformat);
+
+        TestNotYetImplementedLocalizedTimeRecord record = new TestNotYetImplementedLocalizedTimeRecord();
+        parser.parse(record, "2012-12-31T23:00:44 -0700");
+
+        Map<String, String> results = record.results;
+
+        assertEquals("2012-12-31T23:00:44 -0700", results.get("TIME.LOCALIZEDSTRING:request.receive.time"));
+    }
+
+    // FIXME: Implement the real thing.
     @Ignore
     @Test
     public void testSpecialTimeFormat() throws Exception {

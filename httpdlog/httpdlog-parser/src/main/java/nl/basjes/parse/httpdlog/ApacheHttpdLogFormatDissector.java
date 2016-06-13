@@ -121,6 +121,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // We generate the [] around it and in the rest of the parsing
         // work with the clean format.
         // This is mainly needed to ensure reuse in conjunction with Nginx parsing.
+        // NOTE: The %{...}t time format does NOT get the automatic '[' ']' around it.
         return tokenLogFormat.replaceAll("%t", "[%t]");
 
     }
@@ -436,9 +437,11 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 "request.receive.time.end.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        // This next parser is created to deliberately cause an error when it is used !!!
-        parsers.add(new NamedTokenParser("\\%\\{([^\\}]*)\\}t", "", "", null,
-                " ])========== %{format}t is not fully supported ==========[( ", -1)
+        // This next parser is created to only extract the localized string !!!
+        parsers.add(new NamedTokenParser("\\%\\{[^\\}]*\\}t",
+                "request.receive.time", "TIME.LOCALIZEDSTRING",
+                Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME)
+            .setErrorMessageWhenUsed("Fully parsing localized timestamps is NOT yet supported")
         );
 
         // -------

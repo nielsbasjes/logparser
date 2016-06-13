@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.5 (UNRELEASED)
+===
+- Simply treat the %{...}t as a text field you can retrieve (instead of failing if it occurs).
+
 v2.4
 ===
 - Rewrote the way parsed values are passed around. Improves accuracy and performance in specific cases.

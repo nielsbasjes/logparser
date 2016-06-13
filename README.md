@@ -2,7 +2,7 @@ Apache HTTPD logparser
 ===
 This is a Logparsing framework intended to make parsing Apache HTTPD logfiles much easier.
 
-The basic idea is that you should be able to have a parser that you can construct by simply 
+The basic idea is that you should be able to have a parser that you can construct by simply
 telling it with what configuration options the line was written.
 
 So we are using the LogFormat that wrote the file as the input parameter for the parser that reads the same file.
@@ -18,6 +18,9 @@ In addition to the config options specified in the Apache HTTPD manual under
 Currently *not yet supported features*:
 
 * %{format}t : The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
+
+A simple workaround for this limitation for all logparser versions before 2.5: replace the **%{...}t** with **%{timestamp}i** .
+You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
 
 Pre built versions
 ===
@@ -69,9 +72,9 @@ The languages that are supported in this version:
 
 Internal structure and type remapping
 ===
-The basic model of this system is a tree. 
+The basic model of this system is a tree.
 Each node in the tree has a 'type' and a 'name'.
-The 'type' is really a 'what is the format of this string' indicator. Because there are many more of those kinds of types than your average String or Long you will see a lot of different names. 
+The 'type' is really a 'what is the format of this string' indicator. Because there are many more of those kinds of types than your average String or Long you will see a lot of different names.
 The 'name' is the "breadbrumb" towards the point in the tree where this is located.
 
 A 'Dissector' is a class that can cut a specific type (format) into a bunch of new parts that each extend the base name and have their own type.
@@ -103,16 +106,16 @@ Special Dissectors
 ===
 **mod_unique_id**
 
-If you have a log field / request header that gets filled using mod_unique_id you can now peek inside 
+If you have a log field / request header that gets filled using mod_unique_id you can now peek inside
 the values that were used to construct this.
 
 **NOTE: http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html clearly states**
-    
-     it should be emphasized that applications should not dissect the encoding. 
-     Applications should treat the entire encoded UNIQUE_ID as an opaque token, 
+
+     it should be emphasized that applications should not dissect the encoding.
+     Applications should treat the entire encoded UNIQUE_ID as an opaque token,
      which can be compared against other UNIQUE_IDs for equality only.
 
-When you choose to ignore the clear 'should not' statement then simply add 
+When you choose to ignore the clear 'should not' statement then simply add
 a type remapping to map the field to the type *MOD_UNIQUE_ID*
 
 License
@@ -120,9 +123,9 @@ License
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

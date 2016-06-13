@@ -17,15 +17,18 @@
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class NamedTokenParser extends TokenParser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(NamedTokenParser.class);
     private final Pattern pattern;
+    private String errorMessageWhenUsed = null;
 
     // --------------------------------------------
 
@@ -60,8 +63,15 @@ public class NamedTokenParser extends TokenParser {
             return null;
         }
 
-        // Retrieve the name
-        final String fieldName = matcher.group(1);
+        if (errorMessageWhenUsed != null) {
+            LOG.error(errorMessageWhenUsed);
+        }
+
+        String fieldName = "";
+        if (matcher.groupCount() > 0) {
+            // Retrieve the name
+            fieldName = matcher.group(1);
+        }
 
         // Retrieve indices of matching string
         final int start = matcher.start();

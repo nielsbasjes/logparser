@@ -286,6 +286,15 @@ public abstract class TokenFormatDissector extends Dissector {
                     continue;
                 }
             }
+            else {
+                // Sometimes we find that a part of a token matches another token aswell.
+                // Example: %{%H}t    Custom Timeformat (only the hour) also matches the protocol token.
+                // So we kick them of they overlap
+                if (prevToken.getStartPos() + prevToken.getLength() > token.getStartPos()) {
+                    kickTokens.add(token);
+                    continue;
+                }
+            }
             prevToken=token;
 
         }

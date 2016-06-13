@@ -23,8 +23,12 @@ import java.util.List;
 
 import nl.basjes.parse.core.Casts;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TokenParser {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TokenParser.class);
 
     // ---------------------------------------
     public static final String FORMAT_NUMBER = "[0-9]*";
@@ -53,6 +57,9 @@ public class TokenParser {
 //    public static final String FORMAT_STANDARD_TIME =
 //            "\\[[0-9][0-9]/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/20[0-9][0-9]:[0-9][0-9]"
 //             +":[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9]0\\]";
+
+    public static final String FORMAT_LOCALIZED_TIME = "[0-9A-Za-z\\-:\\/ ]*";
+
     // ---------------------------------------
 
     private final String logFormatToken;
@@ -61,6 +68,7 @@ public class TokenParser {
     private final EnumSet<Casts> casts;
     private final String regex;
     private final int prio;
+    protected String errorMessageWhenUsed;
 
     // --------------------------------------------
     public TokenParser(final String nLogFormatToken,
@@ -85,6 +93,11 @@ public class TokenParser {
     }
 
     // --------------------------------------------
+
+    public TokenParser setErrorMessageWhenUsed(String errorMessageWhenUsed) {
+        this.errorMessageWhenUsed = errorMessageWhenUsed;
+        return this;
+    }
 
     public String getLogFormatToken() {
         return logFormatToken;
@@ -116,6 +129,10 @@ public class TokenParser {
         final int pos = logFormat.indexOf(logFormatToken, startOffset);
         if (pos == -1) {
             return null;
+        }
+
+        if (errorMessageWhenUsed != null) {
+            LOG.error(errorMessageWhenUsed);
         }
 
         return new Token(
