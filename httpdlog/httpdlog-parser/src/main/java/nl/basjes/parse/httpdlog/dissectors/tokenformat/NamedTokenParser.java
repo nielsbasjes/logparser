@@ -28,7 +28,6 @@ public class NamedTokenParser extends TokenParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(NamedTokenParser.class);
     private final Pattern pattern;
-    private String errorMessageWhenUsed = null;
 
     // --------------------------------------------
 
@@ -63,8 +62,8 @@ public class NamedTokenParser extends TokenParser {
             return null;
         }
 
-        if (errorMessageWhenUsed != null) {
-            LOG.error(errorMessageWhenUsed);
+        if (warningMessageWhenUsed != null) {
+            LOG.warn(warningMessageWhenUsed);
         }
 
         String fieldName = "";

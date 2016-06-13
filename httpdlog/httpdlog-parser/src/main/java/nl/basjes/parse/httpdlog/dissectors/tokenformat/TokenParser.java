@@ -68,7 +68,7 @@ public class TokenParser {
     private final EnumSet<Casts> casts;
     private final String regex;
     private final int prio;
-    protected String errorMessageWhenUsed;
+    protected String warningMessageWhenUsed;
 
     // --------------------------------------------
     public TokenParser(final String nLogFormatToken,
@@ -94,8 +94,8 @@ public class TokenParser {
 
     // --------------------------------------------
 
-    public TokenParser setErrorMessageWhenUsed(String errorMessageWhenUsed) {
-        this.errorMessageWhenUsed = errorMessageWhenUsed;
+    public TokenParser setWarningMessageWhenUsed(String warningMessageWhenUsed) {
+        this.warningMessageWhenUsed = warningMessageWhenUsed;
         return this;
     }
 
@@ -131,8 +131,8 @@ public class TokenParser {
             return null;
         }
 
-        if (errorMessageWhenUsed != null) {
-            LOG.error(errorMessageWhenUsed);
+        if (warningMessageWhenUsed != null) {
+            LOG.warn(warningMessageWhenUsed);
         }
 
         return new Token(

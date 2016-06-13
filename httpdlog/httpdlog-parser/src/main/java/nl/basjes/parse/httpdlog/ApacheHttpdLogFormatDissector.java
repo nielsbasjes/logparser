@@ -441,7 +441,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new NamedTokenParser("\\%\\{[^\\}]*\\}t",
                 "request.receive.time", "TIME.LOCALIZEDSTRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME)
-            .setErrorMessageWhenUsed("Fully parsing localized timestamps is NOT yet supported")
+            .setWarningMessageWhenUsed("Fully parsing localized timestamps is NOT yet supported")
         );
 
         // -------
