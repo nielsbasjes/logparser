@@ -108,6 +108,7 @@ public class ResponseSetCookieDissector extends Dissector {
      * This determines the type of the value that was just found.
      * This method is intended to be overruled by a subclass
      */
+    @SuppressWarnings("UnusedParameters")
     public String getDissectionType(final String basename, final String name) {
         return "STRING"; // Possible outputs are of the same type.
     }

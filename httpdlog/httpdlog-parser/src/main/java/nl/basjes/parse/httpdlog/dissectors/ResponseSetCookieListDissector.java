@@ -16,14 +16,18 @@
  */
 package nl.basjes.parse.httpdlog.dissectors;
 
-import java.net.HttpCookie;
-import java.util.*;
-
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
+
+import java.net.HttpCookie;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ResponseSetCookieListDissector extends Dissector {
     // --------------------------------------------
@@ -134,6 +138,7 @@ public class ResponseSetCookieListDissector extends Dissector {
      * This determines the type of the value that was just found.
      * This method is intended to be overruled by a subclass
      */
+    @SuppressWarnings("UnusedParameters")
     public String getDissectionType(final String basename, final String name) {
         return "HTTP.SETCOOKIE";
     }

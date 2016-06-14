@@ -517,8 +517,8 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // Some explicit type overrides.
         // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
-        parsers.add(new TokenParser("%{cookie}i"    ,
-                "request.cookies" ,   "HTTP.COOKIES"   ,
+        parsers.add(new TokenParser("%{cookie}i",
+                "request.cookies",    "HTTP.COOKIES",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("%{set-cookie}o",
                 "response.cookies",   "HTTP.SETCOOKIES",

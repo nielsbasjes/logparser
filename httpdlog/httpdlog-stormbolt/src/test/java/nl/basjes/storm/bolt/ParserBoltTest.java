@@ -16,13 +16,6 @@
  */
 package nl.basjes.storm.bolt;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import backtype.storm.LocalCluster;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.spout.SpoutOutputCollector;
@@ -36,12 +29,18 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class ParserBoltTest implements Serializable {
     // ========================================================================
 
-    public class TestApacheLogsSpout extends BaseRichSpout {
+    public static class TestApacheLogsSpout extends BaseRichSpout {
         private SpoutOutputCollector collector;
 
         public void open(@SuppressWarnings("rawtypes") Map conf, TopologyContext context, SpoutOutputCollector collectorr) {
@@ -69,7 +68,7 @@ public class ParserBoltTest implements Serializable {
 
     // ========================================================================
 
-    public class ValidateOutput extends BaseBasicBolt {
+    public static class ValidateOutput extends BaseBasicBolt {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             Fields fields = tuple.getFields();

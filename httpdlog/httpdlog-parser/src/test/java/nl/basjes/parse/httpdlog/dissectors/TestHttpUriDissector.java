@@ -23,7 +23,6 @@ import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +61,7 @@ public class TestHttpUriDissector {
     private static MyRecord record;
 
     @BeforeClass
-    public static void setUp() throws ParseException {
+    public static void setUp() {
         String logformat = "%{Referer}i";
         parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
         record = new MyRecord();

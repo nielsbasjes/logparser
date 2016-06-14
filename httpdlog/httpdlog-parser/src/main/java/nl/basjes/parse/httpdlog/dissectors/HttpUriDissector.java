@@ -144,7 +144,7 @@ public class HttpUriDissector extends Dissector {
 
         boolean isUrl = true;
         URI uri;
-        if (uriString.startsWith("/")) {
+        if (uriString.charAt(0) == '/') {
             uri = URI.create("http://example.com" + uriString);
             isUrl = false; // I.e. we do not return the values we just faked.
         } else {

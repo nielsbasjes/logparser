@@ -17,7 +17,14 @@
 package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.httpdlog.dissectors.*;
+import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineDissector;
+import nl.basjes.parse.httpdlog.dissectors.HttpUriDissector;
+import nl.basjes.parse.httpdlog.dissectors.ModUniqueIdDissector;
+import nl.basjes.parse.httpdlog.dissectors.QueryStringFieldDissector;
+import nl.basjes.parse.httpdlog.dissectors.RequestCookieListDissector;
+import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieDissector;
+import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieListDissector;
+import nl.basjes.parse.httpdlog.dissectors.TimeStampDissector;
 
 public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
 

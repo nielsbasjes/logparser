@@ -16,15 +16,14 @@
  */
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
-
 import nl.basjes.parse.core.Casts;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class TokenParser {
 
@@ -94,8 +93,8 @@ public class TokenParser {
 
     // --------------------------------------------
 
-    public TokenParser setWarningMessageWhenUsed(String warningMessageWhenUsed) {
-        this.warningMessageWhenUsed = warningMessageWhenUsed;
+    public TokenParser setWarningMessageWhenUsed(String message) {
+        this.warningMessageWhenUsed = message;
         return this;
     }
 

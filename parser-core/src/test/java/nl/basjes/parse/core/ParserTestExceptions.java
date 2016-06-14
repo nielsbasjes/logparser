@@ -16,7 +16,11 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.*;
+import nl.basjes.parse.core.exceptions.CannotChangeDissectorsAfterConstructionException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -175,11 +179,11 @@ public class ParserTestExceptions {
             output7 = output7 + "=BAR:" + name + ":" + value;
         }
 
-        @SuppressWarnings("UnusedDeclaration")
+        @SuppressWarnings({"UnusedDeclaration", "EmptyMethod"})
         public void badSetter1() {
         }
 
-        @SuppressWarnings("UnusedDeclaration")
+        @SuppressWarnings({"UnusedDeclaration", "EmptyMethod"})
         public void badSetter2(String name, Float value) {
         }
     }
@@ -248,7 +252,7 @@ public class ParserTestExceptions {
         parser.getPossiblePaths(3);
     }
 
-    public class BrokenTestDissector extends Dissector {
+    public static class BrokenTestDissector extends Dissector {
 
         public BrokenTestDissector() {
         }

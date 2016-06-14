@@ -16,24 +16,12 @@
  */
 package nl.basjes.hadoop.input;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
@@ -44,6 +32,16 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.BeanMembersShouldSerialize" })
 public class ApacheHttpdLogfileRecordReader extends
@@ -144,7 +142,7 @@ public class ApacheHttpdLogfileRecordReader extends
         setupFields();
     }
 
-    protected Parser<ParsedRecord> instantiateParser(String logFormat) throws ParseException {
+    protected Parser<ParsedRecord> instantiateParser(String logFormat)  {
         HttpdLoglineParser<ParsedRecord> newParser = new HttpdLoglineParser<>(ParsedRecord.class, logFormat);
         newParser.setTypeRemappings(typeRemappings);
         newParser.addDissectors(additionalDissectors);
@@ -166,7 +164,7 @@ public class ApacheHttpdLogfileRecordReader extends
                 newParser.addTypeRemappings(typeRemappings);
                 allCasts = newParser.getAllCasts();
             }
-        } catch (MissingDissectorsException | InvalidDissectorException | NoSuchMethodException | IOException | ParseException e) {
+        } catch (NoSuchMethodException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -209,8 +207,7 @@ public class ApacheHttpdLogfileRecordReader extends
                 }
             }
 
-        } catch (ParseException
-                |NoSuchMethodException
+        } catch (NoSuchMethodException
                 |SecurityException e) {
             throw new IOException(e.toString());
         }

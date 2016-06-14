@@ -49,14 +49,15 @@ public class BasicOverallTest {
         }
     }
 
-    private final String logformat = "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" " +
+    private static final String logformat =
+            "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" " +
             "\"%l\" \"%L\" \"%m\" \"%p\" \"%{canonical}p\" \"%{local}p\" \"%{remote}p\" \"%P\" \"%{pid}P\" \"%{tid}P\"" +
             " \"%{hextid}P\" \"%q\" \"%r\" \"%R\" \"%s\" \"%>s\" \"%t\" \"%{msec}t\" \"%{begin:msec}t\" \"%{end:msec}t" +
             "\" \"%{usec}t\" \"%{begin:usec}t\" \"%{end:usec}t\" \"%{msec_frac}t\" \"%{begin:msec_frac}t\" \"%{end:mse" +
             "c_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"" +
             "%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
 
-    private final String[] loglines = {
+    private static final String[] loglines = {
         "\"%\" \"172.17.42.1\" \"172.17.42.1\" \"172.17.0.2\" \"4880\" \"4880\" \"652\" \"/usr/share/httpd/noindex/ind" +
                 "ex.html\" \"172.17.42.1\" \"HTTP/1.1\" \"0\" \"-\" \"VG9exZ0MX@uqta4OldejvQAAAAA\" \"GET\" \"80\" \"8" +
                 "0\" \"80\" \"43417\" \"126\" \"126\" \"140597540726848\" \"140597540726848\" \"\" \"GET / HTTP/1.1\" " +

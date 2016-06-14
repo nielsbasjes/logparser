@@ -17,19 +17,18 @@
 
 package nl.basjes.parse.httpdlog;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import nl.basjes.parse.core.Field;
+import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.basjes.parse.core.Field;
-import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ApacheHttpdLogParserTest {
 
@@ -84,13 +83,13 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D " +
+    private static final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D " +
             "\"%200{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
     // The modifiers ( like '!200,304,302') are to be removed.
     // This next value is what should be used internally
-    private final String expectedLogFormat = "%%%h %a %A %l %u [%t] \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
+    private static final String expectedLogFormat = "%%%h %a %A %l %u [%t] \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
             "\"%{user-agent}i\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
@@ -230,7 +229,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecordMissing {
-        @SuppressWarnings("UnusedDeclaration")
+        @SuppressWarnings({"UnusedDeclaration", "EmptyMethod"})
         @Field({ "STRING:request.firstline.uri.query.ThisShouldNOTBeMissing", "HEADER:response.header.Etag.ThisShouldBeMissing" })
         public void dummy(final String name, final String value) {
         }
@@ -250,7 +249,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     public static class TestRecordMissing2 {
-        @SuppressWarnings("UnusedDeclaration")
+        @SuppressWarnings({"UnusedDeclaration", "EmptyMethod"})
         @Field({ "BLURP:request.firstline.uri.query.ThisShouldBeMissing", "HTTP.HEADER:response.header.etag" })
         public void dummy(final String name, final String value) {
         }
@@ -299,7 +298,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void verifyCommonFormatNamesMapping() throws Exception {
+    public void verifyCommonFormatNamesMapping() {
         ApacheHttpdLogFormatDissector dissector = new ApacheHttpdLogFormatDissector("combined");
         assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", dissector.getLogFormat());
     }

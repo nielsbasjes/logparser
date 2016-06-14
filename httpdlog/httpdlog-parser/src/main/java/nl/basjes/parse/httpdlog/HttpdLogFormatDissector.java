@@ -26,7 +26,11 @@ import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class HttpdLogFormatDissector extends Dissector {
 
@@ -87,6 +91,7 @@ public class HttpdLogFormatDissector extends Dissector {
     }
 
     // TODO: Actually implement pattern matching (OR make it explicit...).
+    @SuppressWarnings("UnusedParameters")
     private LogFormatType determineMostLikelyLogFormat(final String logFormat) {
 //    if (logFormat.indexOf('%') != -1) {
         return LogFormatType.APACHE;

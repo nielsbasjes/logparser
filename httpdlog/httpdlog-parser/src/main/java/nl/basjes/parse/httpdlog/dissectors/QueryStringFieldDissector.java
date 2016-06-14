@@ -22,7 +22,11 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static nl.basjes.parse.httpdlog.Utils.resilientUrlDecode;
 
@@ -122,6 +126,7 @@ public class QueryStringFieldDissector extends Dissector {
      * This determines the type of the value that was just found.
      * This method is intended to be overruled by a subclass
      */
+    @SuppressWarnings("UnusedParameters")
     public String getDissectionType(final String basename, final String name) {
         return "STRING";
     }

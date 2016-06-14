@@ -27,7 +27,7 @@
 
   <groupId>nl.basjes.parse.devtools</groupId>
   <artifactId>devtools</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <name>Parser - Developer Tools</name>
 
   <url>https://github.com/nielsbasjes/logparser</url>

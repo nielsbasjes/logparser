@@ -16,7 +16,10 @@
  */
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
-public class TokenSorterByStartPos implements java.util.Comparator<Token> {
+import java.io.Serializable;
+import java.util.Comparator;
+
+public class TokenSorterByStartPos implements Comparator<Token>, Serializable {
     @Override
     public int compare(final Token t1, final Token t2) {
         return t1.getStartPos() - t2.getStartPos();

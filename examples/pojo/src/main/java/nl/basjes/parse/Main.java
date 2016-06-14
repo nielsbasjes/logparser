@@ -16,16 +16,15 @@
  */
 package nl.basjes.parse;
 
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
 import java.util.List;
 
 public final class Main {
@@ -39,12 +38,7 @@ public final class Main {
         Parser<Object> dummyParser= new HttpdLoglineParser<>(Object.class, logformat);
 
         List<String> possiblePaths;
-        try {
-            possiblePaths = dummyParser.getPossiblePaths();
-        } catch (MissingDissectorsException | InvalidDissectorException e) {
-            e.printStackTrace();
-            return;
-        }
+        possiblePaths = dummyParser.getPossiblePaths();
 
         // If you want to call 'getCasts' then the actual parser needs to be constructed.
         // Simply calling getPossiblePaths does not build the actual parser.
@@ -65,7 +59,7 @@ public final class Main {
         LOG.info("==================================");
     }
 
-    private void run() throws InvalidDissectorException, MissingDissectorsException, ParseException {
+    private void run() throws InvalidDissectorException, MissingDissectorsException {
 
         // This format and logline originate from here:
         // http://stackoverflow.com/questions/20349184/java-parse-log-file

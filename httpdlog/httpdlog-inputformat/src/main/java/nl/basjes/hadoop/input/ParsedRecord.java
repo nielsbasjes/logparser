@@ -54,11 +54,8 @@ public class ParsedRecord implements Writable {
         if (!stringSetValues.equals(that.stringSetValues)) {
             return false;
         }
-        if (!stringValues.equals(that.stringValues)) {
-            return false;
-        }
+        return stringValues.equals(that.stringValues);
 
-        return true;
     }
 
     @Override

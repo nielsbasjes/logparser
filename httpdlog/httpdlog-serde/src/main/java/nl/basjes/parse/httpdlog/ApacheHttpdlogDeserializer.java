@@ -17,21 +17,9 @@
 
 package nl.basjes.parse.httpdlog;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
-
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
@@ -49,6 +37,17 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import static nl.basjes.parse.core.Casts.DOUBLE;
 import static nl.basjes.parse.core.Casts.LONG;
@@ -125,7 +124,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     private long    linesInput  = 0;
     private long    linesBad    = 0;
 
-    class ColumnToGetterMapping {
+    static class ColumnToGetterMapping {
         private int    index;
         private Casts  casts;
         private String fieldValue;

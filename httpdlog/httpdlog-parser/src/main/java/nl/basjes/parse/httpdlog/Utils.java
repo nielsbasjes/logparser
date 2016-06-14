@@ -93,7 +93,7 @@ public final class Utils {
             default: throw new IllegalArgumentException("URLDecoder: Illegal hex characters (char 1): '" + c1 + "'");
         }
         switch (c2) {
-            case '0': result |= (byte)0x00; break;
+            case '0': break; // result |= (byte)0x00; --> An OR with only 0 bits is useless
             case '1': result |= (byte)0x01; break;
             case '2': result |= (byte)0x02; break;
             case '3': result |= (byte)0x03; break;

@@ -23,7 +23,6 @@ import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +58,7 @@ public class TestModUniqueIdDissector {
     private static MyRecord record;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         String logformat = "%{ModUniqueId}i";
         parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
         parser.addTypeRemapping("request.header.moduniqueid", "MOD_UNIQUE_ID");
@@ -78,7 +77,7 @@ public class TestModUniqueIdDissector {
         //unique_id.in_addr = 10.98.119.64
         //unique_id.pid = 47706
         //unique_id.counter = 13965
-        //unique_id.thread_index = 2
+        //unique_id.threadIndex = 2
 
         assertEquals("Full input"  , "VaGTKApid0AAALpaNo0AAAAC" , record.getValue("MOD_UNIQUE_ID:request.header.moduniqueid"));
         assertEquals("Timestamp"   , "1436652328000"            , record.getValue("TIME.EPOCH:request.header.moduniqueid.epoch"));
@@ -97,7 +96,7 @@ public class TestModUniqueIdDissector {
         //unique_id.in_addr = 192.168.16.156
         //unique_id.pid = 19372
         //unique_id.counter = 42913
-        //unique_id.thread_index = 243
+        //unique_id.threadIndex = 243
 
         assertEquals("Full input"  , "Ucdv38CoEJwAAEusp6EAAADz" , record.getValue("MOD_UNIQUE_ID:request.header.moduniqueid"));
         assertEquals("Timestamp"   , "1372024799000"            , record.getValue("TIME.EPOCH:request.header.moduniqueid.epoch"));

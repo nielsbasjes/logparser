@@ -16,18 +16,9 @@
  */
 package nl.basjes.hadoop.input;
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -40,6 +31,12 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class ApacheHttpdLogfileInputFormat extends
         FileInputFormat<LongWritable, ParsedRecord> {
 
@@ -51,13 +48,12 @@ public class ApacheHttpdLogfileInputFormat extends
     // --------------------------------------------
 
     public List<String> listPossibleFields(String logformat)
-            throws MissingDissectorsException, InvalidDissectorException, ParseException {
+            throws MissingDissectorsException, InvalidDissectorException {
         return listPossibleFields(logformat, typeRemappings, additionalDissectors);
     }
 
-    public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings, List<Dissector> additionalDissectors)
-            throws MissingDissectorsException, InvalidDissectorException, ParseException {
-        HttpdLoglineParser parser = new HttpdLoglineParser<>(ParsedRecord.class, logformat);
+    public static List<String> listPossibleFields(String logformat, Map<String, Set<String>> typeRemappings, List<Dissector> additionalDissectors) {
+        HttpdLoglineParser<ParsedRecord> parser = new HttpdLoglineParser<>(ParsedRecord.class, logformat);
         parser.setTypeRemappings(typeRemappings);
         parser.addDissectors(additionalDissectors);
         return parser.getPossiblePaths();

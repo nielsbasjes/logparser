@@ -16,22 +16,22 @@
  */
 package nl.basjes.storm.bolt;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
-import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
-import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
@@ -40,7 +40,7 @@ public class ApacheHttpdLoglineParserBolt extends BaseBasicBolt {
     private String fieldName = "apachelogline";
 
     private static class RequestedField implements Serializable {
-        public RequestedField(String field, String name) {
+        RequestedField(String field, String name) {
             this.field=field;
             this.name=name;
         }

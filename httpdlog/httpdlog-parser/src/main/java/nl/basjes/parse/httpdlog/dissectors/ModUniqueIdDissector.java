@@ -23,6 +23,7 @@ import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.apache.commons.codec.binary.Base64;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -122,7 +123,7 @@ public class ModUniqueIdDissector extends Dissector {
             return; // Nothing to do here
         }
 
-        unique_id_rec record = decode(fieldValue);
+        UniqueIdRec record = decode(fieldValue);
         if (record == null) {
             return;
         }
@@ -140,23 +141,24 @@ public class ModUniqueIdDissector extends Dissector {
             parsable.addDissection(inputname, "COUNTER",      "counter",     record.counter);
         }
         if (wantThreadIndex) {
-            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", record.thread_index);
+            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", record.threadIndex);
         }
     }
     // --------------------------------------------
 
-    private class unique_id_rec {
+    private class UniqueIdRec {
         long timestamp;
         long ipaddr;
         String ipaddrStr;
         long pid;
         long counter;
-        long thread_index;
+        long threadIndex;
     }
 
     // 1 letter = 6 bits of data = 2^6 = 64 letters needed to do the mapping
     // 4 letters = 4*6 = 24 = 3*8 = 3 bytes
     // So 24 letters = 24*6 = 144 bits = 18 bytes
+    public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
 
     private byte[] decodeToBytes(String modUniqueIdString) {
         if (modUniqueIdString.length() != 24) {
@@ -174,11 +176,11 @@ public class ModUniqueIdDissector extends Dissector {
         // So by simply replacing the occurences of these letters in the source we reuse and existing
         // Base64 decode implementation.
 
-        byte[] modUniqueIdBytes = modUniqueIdString.getBytes();
+        byte[] modUniqueIdBytes = modUniqueIdString.getBytes(CHARSET_UTF_8);
 
         byte[] modUniqueIdBase64Bytes = new byte[modUniqueIdBytes.length];
 
-        for (int i = 0 ; i < modUniqueIdBytes.length ; i++) {
+        for (int i = 0; i < modUniqueIdBytes.length; i++) {
             byte nextByte = modUniqueIdBytes[i];
             switch (nextByte) {
                 case '+':
@@ -197,13 +199,13 @@ public class ModUniqueIdDissector extends Dissector {
         return Base64.decodeBase64(modUniqueIdBase64Bytes);
     }
 
-    private unique_id_rec decode(String modUniqueIdString) {
+    private UniqueIdRec decode(String modUniqueIdString) {
         byte[] bytes = decodeToBytes(modUniqueIdString);
         if (bytes == null) {
             return null;
         }
 
-        unique_id_rec result = new unique_id_rec();
+        UniqueIdRec result = new UniqueIdRec();
 
 //        http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html
 
@@ -211,35 +213,35 @@ public class ModUniqueIdDissector extends Dissector {
 //      (32-bit IP address, 32 bit pid, 32 bit time stamp, 16 bit counter, 32 bit thread index)
 //      The actual ordering of the encoding is: time stamp, IP address, pid, counter.
 
-        result.timestamp    =                                 (((int)bytes[0]) & 0xFF);
-        result.timestamp    = ( result.timestamp    * 256 ) + (((int)bytes[1]) & 0xFF);
-        result.timestamp    = ( result.timestamp    * 256 ) + (((int)bytes[2]) & 0xFF);
-        result.timestamp    = ( result.timestamp    * 256 ) + (((int)bytes[3]) & 0xFF);
+        result.timestamp    =                               (((int)bytes[0]) & 0xFF);
+        result.timestamp    = (result.timestamp    * 256) + (((int)bytes[1]) & 0xFF);
+        result.timestamp    = (result.timestamp    * 256) + (((int)bytes[2]) & 0xFF);
+        result.timestamp    = (result.timestamp    * 256) + (((int)bytes[3]) & 0xFF);
         // Quote: The timestamp has only one second granularity
-        result.timestamp   *=1000; // This is to convert the time into milliseconds
+        result.timestamp   *= 1000; // This is to convert the time into milliseconds
 
         // NOTE: In case of IPv6 the value will be related to the lower bits of the address.
-        result.ipaddr       =                                 (((int)bytes[4]) & 0xFF);
-        result.ipaddr       = ( result.ipaddr       * 256 ) + (((int)bytes[5]) & 0xFF);
-        result.ipaddr       = ( result.ipaddr       * 256 ) + (((int)bytes[6]) & 0xFF);
-        result.ipaddr       = ( result.ipaddr       * 256 ) + (((int)bytes[7]) & 0xFF);
+        result.ipaddr       =                               (((int)bytes[4]) & 0xFF);
+        result.ipaddr       = (result.ipaddr       * 256) + (((int)bytes[5]) & 0xFF);
+        result.ipaddr       = (result.ipaddr       * 256) + (((int)bytes[6]) & 0xFF);
+        result.ipaddr       = (result.ipaddr       * 256) + (((int)bytes[7]) & 0xFF);
         result.ipaddrStr    = ""  + (((int)bytes[4]) & 0xFF) +
                               '.' + (((int)bytes[5]) & 0xFF) +
                               '.' + (((int)bytes[6]) & 0xFF) +
-                              '.' + (((int)bytes[7]) & 0xFF) ;
+                              '.' + (((int)bytes[7]) & 0xFF);
 
-        result.pid          =                                 (((int)bytes[8]) & 0xFF);
-        result.pid          = ( result.pid          * 256 ) + (((int)bytes[9]) & 0xFF);
-        result.pid          = ( result.pid          * 256 ) + (((int)bytes[10]) & 0xFF);
-        result.pid          = ( result.pid          * 256 ) + (((int)bytes[11]) & 0xFF);
+        result.pid          =                                (((int)bytes[8]) & 0xFF);
+        result.pid          = (result.pid          * 256) +  (((int)bytes[9]) & 0xFF);
+        result.pid          = (result.pid          * 256) +  (((int)bytes[10]) & 0xFF);
+        result.pid          = (result.pid          * 256) +  (((int)bytes[11]) & 0xFF);
 
-        result.counter      =                                 (((int)bytes[12]) & 0xFF);
-        result.counter      = ( result.counter      * 256 ) + (((int)bytes[13]) & 0xFF);
+        result.counter      =                                (((int)bytes[12]) & 0xFF);
+        result.counter      = (result.counter      * 256) +  (((int)bytes[13]) & 0xFF);
 
-        result.thread_index =                                 (((int)bytes[14]) & 0xFF);
-        result.thread_index = ( result.thread_index * 256 ) + (((int)bytes[15]) & 0xFF);
-        result.thread_index = ( result.thread_index * 256 ) + (((int)bytes[16]) & 0xFF);
-        result.thread_index = ( result.thread_index * 256 ) + (((int)bytes[17]) & 0xFF);
+        result.threadIndex  =                                (((int)bytes[14]) & 0xFF);
+        result.threadIndex  = (result.threadIndex  * 256) +  (((int)bytes[15]) & 0xFF);
+        result.threadIndex  = (result.threadIndex  * 256) +  (((int)bytes[16]) & 0xFF);
+        result.threadIndex  = (result.threadIndex  * 256) +  (((int)bytes[17]) & 0xFF);
 
         return result;
     }

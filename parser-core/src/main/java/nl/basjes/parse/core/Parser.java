@@ -16,18 +16,32 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.*;
+import nl.basjes.parse.core.exceptions.CannotChangeDissectorsAfterConstructionException;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.FatalErrorDuringCallOfSetterMethod;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class Parser<RECORD> {
 
     private static class DissectorPhase {
-        public DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
+        DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
             this.inputType  = inputType;
             this.outputType = outputType;
             this.name       = name;
@@ -206,7 +220,7 @@ public class Parser<RECORD> {
         // We first build a set of all possible subtargets that may be useful
         // this way we can skip anything we know not to be useful
         Set<String> needed = new HashSet<>(getNeeded());
-        needed.add(rootType + ':' ); // The root name is an empty string
+        needed.add(rootType + ':'); // The root name is an empty string
         LOG.debug("Root: >>>{}:<<<", rootType);
 
         Set<String> allPossibleSubtargets = new HashSet<>();
@@ -695,10 +709,8 @@ public class Parser<RECORD> {
      * This method is for use by the developer to query the parser about
      * the possible paths that may be extracted.
      * @return A list of all possible paths that could be determined automatically.
-     * @throws nl.basjes.parse.core.exceptions.InvalidDissectorException
-     * @throws nl.basjes.parse.core.exceptions.MissingDissectorsException
      */
-    public List<String> getPossiblePaths() throws MissingDissectorsException, InvalidDissectorException {
+    public List<String> getPossiblePaths() {
         return getPossiblePaths(15);
     }
 

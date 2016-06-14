@@ -29,7 +29,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class TestApacheHttpdlogDeserializer {
 
@@ -82,6 +85,7 @@ public class TestApacheHttpdlogDeserializer {
 
         assertTrue(row instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Object> rowArray = (List<Object>)row;
         LOG.debug("Deserialized row: {}", row);
         assertEquals("127.0.0.1",     rowArray.get(0));

@@ -17,22 +17,7 @@
 
 package nl.basjes.pig.input.apachehttpdlog;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
-
 import nl.basjes.hadoop.input.ApacheHttpdLogfileRecordReader;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
@@ -57,6 +42,20 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.util.UDFContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class Loader
         extends LoadFunc
@@ -438,7 +437,7 @@ public class Loader
     }
 
     public List<OperatorSet> getFeatures() {
-        return Arrays.asList(OperatorSet.PROJECTION);
+        return Collections.singletonList(OperatorSet.PROJECTION);
     }
 
     @Override

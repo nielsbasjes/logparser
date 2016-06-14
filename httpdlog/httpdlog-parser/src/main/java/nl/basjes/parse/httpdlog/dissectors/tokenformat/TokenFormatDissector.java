@@ -58,7 +58,7 @@ public abstract class TokenFormatDissector extends Dissector {
     public static final String FIXED_STRING_TYPE = "NONE";
 
     // --------------------------------------------
-    public class FixedStringTokenParser extends TokenParser {
+    public static class FixedStringTokenParser extends TokenParser {
         public FixedStringTokenParser(final String nLogFormatToken, final String nRegEx) {
             super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nRegEx, 0);
         }
@@ -285,8 +285,7 @@ public abstract class TokenFormatDissector extends Dissector {
                     kickTokens.add(token);
                     continue;
                 }
-            }
-            else {
+            } else {
                 // Sometimes we find that a part of a token matches another token aswell.
                 // Example: %{%H}t    Custom Timeformat (only the hour) also matches the protocol token.
                 // So we kick them of they overlap

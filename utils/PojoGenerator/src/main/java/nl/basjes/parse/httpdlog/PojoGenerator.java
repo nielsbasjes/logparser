@@ -23,7 +23,6 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.text.ParseException;
 import java.util.List;
 
 public class PojoGenerator {
@@ -36,7 +35,7 @@ public class PojoGenerator {
         }
     }
 
-    public static void main(String[] args) throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
+    public static void main(String[] args) throws InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
         PojoGenerator generator = new PojoGenerator();
         CmdLineParser parser = new CmdLineParser(generator);
         try {
@@ -49,7 +48,7 @@ public class PojoGenerator {
         }
     }
 
-    public void run() throws ParseException, InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
+    public void run() throws NoSuchMethodException {
         ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logFormat);
 
         List<String> allPossiblePaths = parser.getPossiblePaths();

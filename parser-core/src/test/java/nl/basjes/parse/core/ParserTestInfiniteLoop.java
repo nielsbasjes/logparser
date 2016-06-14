@@ -19,10 +19,9 @@ package nl.basjes.parse.core;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.junit.Test;
 
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class ParserTestInfiniteLoop {
 
@@ -77,6 +76,7 @@ public class ParserTestInfiniteLoop {
     }
 
     public static class TestRecord {
+        @SuppressWarnings({"EmptyMethod", "UnusedParameters"})
         @Field({"OUTPUT_TYPE:string"})
         public void set(String name, String value) {
             // Do nothing

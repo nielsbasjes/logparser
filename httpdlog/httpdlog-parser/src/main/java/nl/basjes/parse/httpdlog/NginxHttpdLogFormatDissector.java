@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
         "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
         "PMD.BeanMembersShouldSerialize", // No beans here
         "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
-})
+    })
 public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(NginxHttpdLogFormatDissector.class);
@@ -64,7 +64,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         //              '"$http_referer" "$http_user_agent"';
         switch (logformat.toLowerCase(Locale.getDefault())) {
             case "combined":
-                overrideLogFormat(logformat, "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"");
+                overrideLogFormat(logformat,
+                    "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"");
                 break;
             default:
                 super.setLogFormat(logformat);
@@ -166,7 +167,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $request_time
         parsers.add(new FixedStringTokenParser("$request_time")); // TODO: Implement $request_time token
-//      request processing time in seconds with a milliseconds resolution; time elapsed between the first bytes were read from the client and the log write after the last bytes were sent to the client
+//      request processing time in seconds with a milliseconds resolution; time elapsed between the first bytes were
+//      read from the client and the log write after the last bytes were sent to the client
 
         // -------
 //      $status
@@ -209,7 +211,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $body_bytes_sent
         parsers.add(new FixedStringTokenParser("$body_bytes_sent")); // TODO: Implement $body_bytes_sent token
-//      number of bytes sent to a client, not counting the response header; this variable is compatible with the “%B” parameter of the mod_log_config Apache module
+//      number of bytes sent to a client, not counting the response header; this variable is compatible with
+//      the “%B” parameter of the mod_log_config Apache module
 
         // -------
 //      $bytes_sent
@@ -255,7 +258,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $host
         parsers.add(new FixedStringTokenParser("$host")); // TODO: Implement $host token
-//      in this order of precedence: host name from the request line, or host name from the “Host” request header field, or the server name matching a request
+//      in this order of precedence: host name from the request line, or host name from the “Host” request header field,
+//      or the server name matching a request
 
         // -------
 //      $hostname
@@ -317,7 +321,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $realpath_root
         parsers.add(new FixedStringTokenParser("$realpath_root")); // TODO: Implement $realpath_root token
-//      an absolute pathname corresponding to the root or alias directive’s value for the current request, with all symbolic links resolved to real paths
+//      an absolute pathname corresponding to the root or alias directive’s value for the current request,
+//      with all symbolic links resolved to real paths
 
         // -------
 //      $remote_addr
@@ -361,7 +366,11 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      $request_body_file
         parsers.add(new FixedStringTokenParser("$request_body_file")); // TODO: Implement $request_body_file token
 //      name of a temporary file with the request body
-//      At the end of processing, the file needs to be removed. To always write the request body to a file, client_body_in_file_only needs to be enabled. When the name of a temporary file is passed in a proxied request or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the proxy_pass_request_body off, fastcgi_pass_request_body off, uwsgi_pass_request_body off, or scgi_pass_request_body off directives, respectively.
+//      At the end of processing, the file needs to be removed. To always write the request body to a file,
+//      client_body_in_file_only needs to be enabled. When the name of a temporary file is passed in a proxied request
+//      or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the
+//      proxy_pass_request_body off, fastcgi_pass_request_body off, uwsgi_pass_request_body off, or
+//      scgi_pass_request_body off directives, respectively.
 
 
         // -------
@@ -418,13 +427,15 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $sent_http_name
         parsers.add(new FixedStringTokenParser("$sent_http_name")); // TODO: Implement $sent_http_name token
-//      arbitrary response header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores
+//      arbitrary response header field; the last part of a variable name is the field name converted to lower case with
+//      dashes replaced by underscores
 
 
         // -------
 //      $server_addr
 //      an address of the server which accepted a request
-//      Computing a value of this variable usually requires one system call. To avoid a system call, the listen directives must specify addresses and use the bind parameter.
+//      Computing a value of this variable usually requires one system call. To avoid a system call, the listen
+//      directives must specify addresses and use the bind parameter.
         parsers.add(new TokenParser("$server_addr",
                 "connection.server.ip", "IP",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));

@@ -24,13 +24,10 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MultiLineHttpdLogParserTest {
 
@@ -87,12 +84,12 @@ public class MultiLineHttpdLogParserTest {
         validateLine2(parser);
     }
 
-    private final String logFormat1 = "%h %t \"%r\" %>s %b \"%{Referer}i\"";
-    private final String line1 = "127.0.0.1 [31/Dec/2012:23:49:41 +0100] "
+    private static final String logFormat1 = "%h %t \"%r\" %>s %b \"%{Referer}i\"";
+    private static final String line1 = "127.0.0.1 [31/Dec/2012:23:49:41 +0100] "
             + "\"GET /foo HTTP/1.1\" 200 "
             + "1213 \"http://localhost/index.php?mies=wim\"";
 
-    private void validateLine1 (Parser parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    private void validateLine1 (Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         TestRecord record = new TestRecord();
         parser.parse(record, line1);
         Map<String, String> results = record.getResults();
@@ -106,12 +103,12 @@ public class MultiLineHttpdLogParserTest {
         assertEquals(null, results.get("HTTP.USERAGENT:request.user-agent"));
     }
 
-    private final String logFormat2 = "%h %t \"%r\" %>s \"%{User-Agent}i\"";
-    private final String line2 = "127.0.0.2 [31/Dec/2012:23:49:42 +0100] "
+    private static final String logFormat2 = "%h %t \"%r\" %>s \"%{User-Agent}i\"";
+    private static final String line2 = "127.0.0.2 [31/Dec/2012:23:49:42 +0100] "
             + "\"GET /foo HTTP/1.1\" 404 "
             + "\"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\"";
 
-    private void validateLine2 (Parser parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    private void validateLine2 (Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         TestRecord record = new TestRecord();
         parser.parse(record, line2);
         Map<String, String> results = record.getResults();

@@ -16,7 +16,7 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.*;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:string_long_null",
                 "OUTPUT_TYPE:string_double_null",
                 "OUTPUT_TYPE:multi_null"})
-        public void setStringNull(String name, String value) {
+        public void setStringNull(String value) {
             assertEquals(null, value);
             count++;
         }
@@ -146,7 +146,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:string_long_good",
                 "OUTPUT_TYPE:string_double_good",
                 "OUTPUT_TYPE:multi_good"})
-        public void setStringGood(String name, String value) {
+        public void setStringGood(String value) {
             assertEquals("123", value);
             count++;
         }
@@ -155,7 +155,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:long_bad",
                 "OUTPUT_TYPE:string_long_null",
                 "OUTPUT_TYPE:multi_null"})
-        public void setLongNull(String name, Long value) {
+        public void setLongNull(Long value) {
             assertEquals(null, value);
             count++;
         }
@@ -163,8 +163,8 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:long_good",
                 "OUTPUT_TYPE:string_long_good",
                 "OUTPUT_TYPE:multi_good"})
-        public void setLongGood(String name, Long value) {
-            assertEquals(new Long(123L), value);
+        public void setLongGood(Long value) {
+            assertEquals(Long.valueOf(123L), value);
             count++;
         }
 
@@ -172,7 +172,7 @@ public class ParserTestCasts {
                 "OUTPUT_TYPE:double_bad",
                 "OUTPUT_TYPE:string_double_null",
                 "OUTPUT_TYPE:multi_null"})
-        public void setDoubleNull(String name, Double value) {
+        public void setDoubleNull(Double value) {
             assertEquals(null, value);
             count++;
         }
@@ -180,11 +180,12 @@ public class ParserTestCasts {
         @Field({"OUTPUT_TYPE:double_good",
                 "OUTPUT_TYPE:string_double_good",
                 "OUTPUT_TYPE:multi_good"})
-        public void setDoubleGood(String name, Double value) {
+        public void setDoubleGood(Double value) {
             assertEquals(123D, value, 0.0001D);
             count++;
         }
 
+        @SuppressWarnings("UnusedParameters")
         @Field({"OUTPUT_TYPE:long_null",
                 "OUTPUT_TYPE:long_bad",
                 "OUTPUT_TYPE:long_good",
@@ -194,6 +195,7 @@ public class ParserTestCasts {
             fail("This setter uses Double but that is not allowed for \""+name+"\" ");
         }
 
+        @SuppressWarnings("UnusedParameters")
         @Field({"OUTPUT_TYPE:double_null",
                 "OUTPUT_TYPE:double_bad",
                 "OUTPUT_TYPE:double_good",

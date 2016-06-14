@@ -16,12 +16,7 @@
  */
 package nl.basjes.hadoop.io.input;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import nl.basjes.hadoop.input.ApacheHttpdLogfileInputFormat;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -38,6 +33,10 @@ import org.apache.hadoop.mapreduce.lib.reduce.LongSumReducer;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class Wordcount extends Configured implements Tool {
 
@@ -75,7 +74,7 @@ public class Wordcount extends Configured implements Tool {
                 .getRemainingArgs();
         if (otherArgs.length != 2) {
             System.err.println("Usage: wordcount <in> <out>");
-            System.exit(2);
+            return 2;
         }
 
         conf.set("nl.basjes.parse.apachehttpdlogline.format", logFormat);

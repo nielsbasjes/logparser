@@ -53,8 +53,9 @@ public class Value {
                 return l == null ? null : Long.toString(l);
             case DOUBLE:
                 return d == null ? null : Double.toString(d);
+            default:
+                return null; // Should not occur
         }
-        return null; // Should not occur
     }
 
     public Long getLong() {
@@ -69,8 +70,9 @@ public class Value {
                 return l;
             case DOUBLE:
                 return d == null ? null : (long) Math.floor(d + 0.5d); // Apply rounding
+            default:
+                return null; // Should not occur
         }
-        return null; // Should not occur
     }
 
     public Double getDouble() {
@@ -85,8 +87,9 @@ public class Value {
                 return new Double(l);
             case DOUBLE:
                 return d;
+            default:
+                return null; // Should not occur
         }
-        return null; // Should not occur
     }
 
     @Override

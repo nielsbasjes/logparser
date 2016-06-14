@@ -31,6 +31,7 @@
     <jdkLevel>1.7</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+    <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
 
     <hadoop.version>2.7.1</hadoop.version>
     <hive.version>1.2.1</hive.version>
@@ -138,6 +139,39 @@
   </profiles>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${checkstyle-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>nl.basjes.parse.devtools</groupId>
+              <artifactId>devtools</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <consoleOutput>true</consoleOutput>
+            <configLocation>checkstyle/checkstyle.xml</configLocation>
+            <suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
+          </configuration>
+          <!-- Runs by default in the verify phase  (mvn verify or later in the build cycle)
+               the 'check' goal will fail the build if it does not pass.  "mvn checkstyle:check"
+               will do this alone, or "mvn checkstyle:checkstyle" will report but not break  -->
+          <executions>
+            <execution>
+              <id>checkstyle-check</id>
+              <phase>test</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
 
       <plugin>

@@ -16,11 +16,11 @@
  */
 package nl.basjes.parse;
 
+import nl.basjes.parse.core.Field;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
-
-import nl.basjes.parse.core.Field;
 
 public class MyRecord {
 

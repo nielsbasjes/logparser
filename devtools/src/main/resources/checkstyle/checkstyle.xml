@@ -2,7 +2,12 @@
 <!DOCTYPE module PUBLIC
     "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
 <module name="Checker">
+  <module name="SuppressionFilter">
+    <property name="file" value="${checkstyle.suppressions.file}"/>
+  </module>
+  <module name="SuppressionCommentFilter"/>
 
   <!-- Checks that a package.html file exists for each package. -->
   <!-- See http://checkstyle.sf.net/config_javadoc.html#PackageHtml -->
@@ -60,9 +65,17 @@
     <!-- Checks for imports -->
     <!-- See http://checkstyle.sf.net/config_import.html -->
     <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
-    <module name="RedundantImport" />
-    <module name="UnusedImports" />
+    <module name="AvoidStarImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
 
+    <module name="EmptyStatement"/>
+    <module name="IllegalInstantiation"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+
+    <module name="InterfaceIsType"/>
+    <module name="ArrayTypeStyle"/>
 
     <!-- Checks for Size Violations. -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
@@ -86,7 +99,12 @@
     <module name="WhitespaceAfter">
       <property name="tokens" value="COMMA, SEMI" />
     </module>
-
+    <!-- Alert about trailing whitespace -->
+    <module name="Regexp">
+      <property name="format" value="[ \t]+$"/>
+      <property name="illegalPattern" value="true"/>
+      <property name="message" value="Trailing whitespace"/>
+    </module>
 
     <!-- Modifier Checks -->
     <!-- See http://checkstyle.sf.net/config_modifiers.html -->
@@ -107,7 +125,7 @@
 
     <!-- Checks for common coding problems -->
     <!-- See http://checkstyle.sf.net/config_coding.html -->
-    <module name="AvoidInlineConditionals" />
+    <!--<module name="AvoidInlineConditionals" />-->
     <!-- <module name="DoubleCheckedLocking"/> -->
     <module name="EmptyStatement" />
     <module name="EqualsHashCode" />
@@ -125,7 +143,10 @@
     <module name="FinalClass" />
     <module name="HideUtilityClassConstructor" />
     <module name="InterfaceIsType" />
-    <module name="VisibilityModifier" />
+    <module name="VisibilityModifier">
+      <property name="packageAllowed" value="true"/>
+      <property name="protectedAllowed" value="true"/>
+    </module>
 
     <!-- Miscellaneous other checks. -->
     <!-- See http://checkstyle.sf.net/config_misc.html -->
