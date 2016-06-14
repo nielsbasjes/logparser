@@ -61,7 +61,7 @@ public class ParserTestTypeColission {
         public void dissect(Parsable<?> parsable, String inputname)
             throws DissectionFailure {
             final ParsedField field = parsable.getParsableField(inputType, inputname);
-            parsable.addDissection(inputname, outputType, outputName, field.getValue() + salt);
+            parsable.addDissection(inputname, outputType, outputName, field.getValue().getString() + salt);
         }
 
         @Override
