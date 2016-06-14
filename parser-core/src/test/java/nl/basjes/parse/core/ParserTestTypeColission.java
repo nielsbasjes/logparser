@@ -16,7 +16,6 @@
  */
 package nl.basjes.parse.core;
 
-import ch.qos.logback.classic.Level;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.junit.Test;
 
@@ -27,12 +26,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class ParserTestTypeColission {
-
-    public static void setLoggingLevel(Level level) {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.setLevel(level);
-    }
 
     public static class TestDissector extends Dissector {
         private String inputType;
@@ -175,7 +168,6 @@ public class ParserTestTypeColission {
 
     @Test
     public void testParseString() throws Exception {
-        setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         TestRecord output = new TestRecord();
