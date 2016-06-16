@@ -39,10 +39,12 @@ public class HttpdLogFormatDissector extends Dissector {
     // This value MUST be the same for all formats this dissector can wrap
     public static final String INPUT_TYPE = "HTTPLOGLINE";
 
+    private List<String> registeredLogFormats;
     private List<TokenFormatDissector> dissectors;
     private TokenFormatDissector activeDissector;
 
     public HttpdLogFormatDissector() {
+        registeredLogFormats = new ArrayList<>(16);
         dissectors = new ArrayList<>(16);
         activeDissector = null;
     }
@@ -69,6 +71,13 @@ public class HttpdLogFormatDissector extends Dissector {
         if (logFormat == null || logFormat.trim().isEmpty()) {
             return; // Skip this one
         }
+
+        if (registeredLogFormats.contains(logFormat)) {
+            LOG.info("Skipping duplicate LogFormat: >>{}<<", logFormat);
+            return; // We already have this one
+        }
+
+        registeredLogFormats.add(logFormat);
 
         switch (determineMostLikelyLogFormat(logFormat)) {
             case APACHE:
