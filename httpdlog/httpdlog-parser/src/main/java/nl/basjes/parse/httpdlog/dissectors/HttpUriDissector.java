@@ -151,8 +151,7 @@ public class HttpUriDissector extends Dissector {
             } else {
                 uri = URI.create(uriString);
             }
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new DissectionFailure("Failed to parse URI >>" + field.getValue().getString()+"<< because of : " +e.getMessage());
         }
 
