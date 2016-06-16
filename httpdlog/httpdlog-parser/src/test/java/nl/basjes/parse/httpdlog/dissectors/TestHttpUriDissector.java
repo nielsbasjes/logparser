@@ -19,6 +19,7 @@ package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -171,6 +172,13 @@ public class TestHttpUriDissector {
         assertEquals("Path is wrong", "/https/www.google.com", record.getValue("HTTP.PATH:request.referer.path"));
         assertEquals("QueryString is wrong", "", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
         assertEquals("Ref is wrong", null, record.getValue("HTTP.REF:request.referer.ref"));
+    }
+
+    @Test(expected = DissectionFailure.class)
+    public void testBarURI() throws Exception {
+        record.clear();
+        parser.parse(record, "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar&#bla%20bla");
+        //                                     ^ This character MUST cause a DissectionFailure
     }
 
 }
