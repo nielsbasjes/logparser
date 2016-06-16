@@ -78,7 +78,7 @@ public class TestLoader {
 
         List<Tuple> out = data.get("Clicks");
 
-        assertEquals(1, out.size());
+        assertEquals(2, out.size());
         assertEquals(tuple(
                     "172.21.13.88",
                     3L,
@@ -93,6 +93,20 @@ public class TestLoader {
                     "bAr BaR",
                     "Mozilla/5.0 Dummy UserAgent"),
             out.get(0));
+        assertEquals(tuple(
+            "172.21.13.88",
+            3L,
+            4L,
+            49L,
+            "GET /1-500e-KWh?FoO=bAr%20BaR&bAr=fOo%20FoO HTTP/1.0",
+            "GET",
+            "/1-500e-KWh?FoO=bAr%20BaR&bAr=fOo%20FoO",
+            "&FoO=bAr%20BaR&bAr=fOo%20FoO",
+            map("foo", "bAr BaR",
+                "bar", "fOo FoO"),
+            "bAr BaR",
+            "Mozilla/5.0 Dummy UserAgent"),
+            out.get(1));
     }
 
     @Test
@@ -115,7 +129,7 @@ public class TestLoader {
 
         List<Tuple> out = data.get("Clicks2");
 
-        assertEquals(1, out.size());
+        assertEquals(2, out.size());
         assertEquals(tuple(
                         3L,
                         4L,
