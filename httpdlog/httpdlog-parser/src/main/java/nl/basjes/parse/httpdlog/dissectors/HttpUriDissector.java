@@ -21,9 +21,12 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -115,6 +118,17 @@ public class HttpUriDissector extends Dissector {
 
     // --------------------------------------------
 
+    private static BitSet badUriChars = new BitSet(256);
+    static {
+        badUriChars.set(0, 255, true);
+        badUriChars.andNot(org.apache.commons.httpclient.URI.unwise);
+        badUriChars.andNot(org.apache.commons.httpclient.URI.space);
+        badUriChars.andNot(org.apache.commons.httpclient.URI.control);
+        badUriChars.set('<', false);
+        badUriChars.set('>', false);
+        badUriChars.set('"', false);
+    }
+
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
@@ -122,6 +136,14 @@ public class HttpUriDissector extends Dissector {
         String uriString = field.getValue().getString();
         if (uriString == null || uriString.isEmpty()) {
             return; // Nothing to do here
+        }
+
+        // First we cleanup the URI so we fail less often over 'garbage' URIs.
+        // See: http://stackoverflow.com/questions/11038967/brackets-in-a-request-url-are-legal-but-not-in-a-uri-java
+        try {
+            uriString = URIUtil.encode(uriString, badUriChars, "UTF-8");
+        } catch (URIException e) {
+            throw new DissectionFailure("Failed to parse URI >>" + field.getValue().getString()+"<< because of : " +e.getMessage());
         }
 
         // Before we hand it to the standard parser we hack it around a bit so we can parse
