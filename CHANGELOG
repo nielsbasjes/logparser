@@ -4,6 +4,7 @@ v2.5 (UNRELEASED)
 ===
 - Simply treat the %{...}t as a text field you can retrieve (instead of failing if it occurs).
 - Change URI dissector to allow URIs like android-app://...
+- Change URI dissector to allow % in the URI when it is not an escape sequence (like in ?promo=Give-5%-discount)
 
 v2.4
 ===

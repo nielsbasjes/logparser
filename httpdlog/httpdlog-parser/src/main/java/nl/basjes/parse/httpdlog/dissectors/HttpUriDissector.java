@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class HttpUriDissector extends Dissector {
     // --------------------------------------------
@@ -129,6 +130,8 @@ public class HttpUriDissector extends Dissector {
         badUriChars.set('"', false);
     }
 
+    private static final Pattern BAD_EXCAPE_PATTERN = Pattern.compile("%([^0-9a-fA-F]|[0-9a-fA-F][^0-9a-fA-F])");
+
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
@@ -163,6 +166,10 @@ public class HttpUriDissector extends Dissector {
             uriString = uriString.replaceAll("\\?", "&");
             uriString = uriString.replaceFirst("&", "?&");
         }
+
+        // We find that people muck up the URL by putting % signs in the URLs that are NOT escape sequences
+        // So any % that is not followed by a two 'hex' letters is fixed
+        uriString = BAD_EXCAPE_PATTERN.matcher(uriString).replaceAll("%25$1");
 
         boolean isUrl = true;
         URI uri;
