@@ -180,14 +180,14 @@ public class TestHttpUriDissector {
         parser.parse(record, "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar #bla%20bla ");
         // Java URI parser fails on '[' here   ^
 
-        assertEquals("Full input", "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar #bla%20bla", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Full input", "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar #bla%20bla ", record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", null, record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", null, record.getValue("HTTP.HOST:request.referer.host"));
         assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
         assertEquals("Path is wrong", "/some/thing/else/[index.html", record.getValue("HTTP.PATH:request.referer.path"));
         assertEquals("QueryString is wrong", "&aap=noot&foofoo=bar%20bar%20", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
-        assertEquals("Ref is wrong", "bla bla", record.getValue("HTTP.REF:request.referer.ref"));
+        assertEquals("Ref is wrong", "bla bla ", record.getValue("HTTP.REF:request.referer.ref"));
     }
 
     @Test
