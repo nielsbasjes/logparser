@@ -171,6 +171,7 @@ public class HttpUriDissector extends Dissector {
         // We find that people muck up the URL by putting % signs in the URLs that are NOT escape sequences
         // So any % that is not followed by a two 'hex' letters is fixed
         uriString = BAD_EXCAPE_PATTERN.matcher(uriString).replaceAll("%25$1");
+        uriString = BAD_EXCAPE_PATTERN.matcher(uriString).replaceAll("%25$1");
 
         boolean isUrl = true;
         URI uri;

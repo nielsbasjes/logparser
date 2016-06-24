@@ -43,7 +43,8 @@ public class TestHttpUriDissector {
             "HTTP.PORT:request.referer.port",
             "HTTP.PATH:request.referer.path",
             "HTTP.QUERYSTRING:request.referer.query",
-            "HTTP.REF:request.referer.ref"})
+            "HTTP.REF:request.referer.ref",
+            "STRING:request.referer.query.linkid"})
         public void setValue(final String name, final String value) {
             results.put(name, value);
         }
@@ -204,6 +205,22 @@ public class TestHttpUriDissector {
         assertEquals("Path is wrong", "/index.html", record.getValue("HTTP.PATH:request.referer.path"));
         assertEquals("QueryString is wrong", "&promo=Give-50%25-discount&promo=And-do-%25Another-Wrong&last=also%20bad%20%25", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
         assertEquals("Ref is wrong", "bla bla ", record.getValue("HTTP.REF:request.referer.ref"));
+    }
+
+    @Test
+    public void testBadURIMultiPercentEncoding() throws Exception {
+        record.clear();
+        parser.parse(record, "/index.html?Linkid=%%%3dv(%40Foo)%3d%%%&emcid=B%ar");
+
+        assertEquals("Full input", "/index.html?Linkid=%%%3dv(%40Foo)%3d%%%&emcid=B%ar", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Protocol is wrong", null, record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
+        assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
+        assertEquals("Host is wrong", null, record.getValue("HTTP.HOST:request.referer.host"));
+        assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
+        assertEquals("Path is wrong", "/index.html", record.getValue("HTTP.PATH:request.referer.path"));
+        assertEquals("QueryString is wrong", "&Linkid=%25%25%3dv(%40Foo)%3d%25%25%25&emcid=B%25ar", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("Linkid parameter is wrong", "%%=v(@Foo)=%%%", record.getValue("STRING:request.referer.query.linkid"));
+        assertEquals("Ref is wrong", null, record.getValue("HTTP.REF:request.referer.ref"));
     }
 
 }
