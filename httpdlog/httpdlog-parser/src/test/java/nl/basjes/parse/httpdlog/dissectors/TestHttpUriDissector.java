@@ -177,18 +177,33 @@ public class TestHttpUriDissector {
     @Test
     public void testBadURI() throws Exception {
         record.clear();
-        parser.parse(record, "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar?promo=Give-50%-discount&promo=And-do-%Another-Wrong#bla%20bla");
+        parser.parse(record, "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar #bla%20bla ");
         // Java URI parser fails on '[' here   ^
-        // Java URI parser fails on 'Malformed escape pair' here                                  ^  and here             ^
 
-        assertEquals("Full input", "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar?promo=Give-50%-discount&promo=And-do-%Another-Wrong#bla%20bla", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Full input", "/some/thing/else/[index.html&aap=noot?foofoo=bar%20bar #bla%20bla", record.getValue("HTTP.URI:request.referer"));
         assertEquals("Protocol is wrong", null, record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
         assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
         assertEquals("Host is wrong", null, record.getValue("HTTP.HOST:request.referer.host"));
         assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
         assertEquals("Path is wrong", "/some/thing/else/[index.html", record.getValue("HTTP.PATH:request.referer.path"));
-        assertEquals("QueryString is wrong", "&aap=noot&foofoo=bar%20bar&promo=Give-50%25-discount&promo=And-do-%25Another-Wrong", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("QueryString is wrong", "&aap=noot&foofoo=bar%20bar%20", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
         assertEquals("Ref is wrong", "bla bla", record.getValue("HTTP.REF:request.referer.ref"));
+    }
+
+    @Test
+    public void testBadURIEncoding() throws Exception {
+        record.clear();
+        parser.parse(record, "/index.html&promo=Give-50%-discount&promo=And-do-%Another-Wrong&last=also bad %#bla%20bla ");
+        // Java URI parser fails on 'Malformed escape pair'        here ^              and here ^                   and here ^
+
+        assertEquals("Full input", "/index.html&promo=Give-50%-discount&promo=And-do-%Another-Wrong&last=also bad %#bla%20bla ", record.getValue("HTTP.URI:request.referer"));
+        assertEquals("Protocol is wrong", null, record.getValue("HTTP.PROTOCOL:request.referer.protocol"));
+        assertEquals("Userinfo is wrong", null, record.getValue("HTTP.USERINFO:request.referer.userinfo"));
+        assertEquals("Host is wrong", null, record.getValue("HTTP.HOST:request.referer.host"));
+        assertEquals("Port is wrong", null, record.getValue("HTTP.PORT:request.referer.port"));
+        assertEquals("Path is wrong", "/index.html", record.getValue("HTTP.PATH:request.referer.path"));
+        assertEquals("QueryString is wrong", "&promo=Give-50%25-discount&promo=And-do-%25Another-Wrong&last=also%20bad%20%25", record.getValue("HTTP.QUERYSTRING:request.referer.query"));
+        assertEquals("Ref is wrong", "bla bla ", record.getValue("HTTP.REF:request.referer.ref"));
     }
 
 }

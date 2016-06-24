@@ -130,7 +130,8 @@ public class HttpUriDissector extends Dissector {
         badUriChars.set('"', false);
     }
 
-    private static final Pattern BAD_EXCAPE_PATTERN = Pattern.compile("%([^0-9a-fA-F]|[0-9a-fA-F][^0-9a-fA-F])");
+    // Match % encoded chars that are NOT followed by hex chars (may be at the end of the string)
+    private static final Pattern BAD_EXCAPE_PATTERN = Pattern.compile("%([^0-9a-fA-F]|[0-9a-fA-F][^0-9a-fA-F]|.$|$)");
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
