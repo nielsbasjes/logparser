@@ -22,6 +22,15 @@ Currently *not yet supported features*:
 A simple workaround for this limitation for all logparser versions before 2.5: replace the **%{...}t** with **%{timestamp}i** .
 You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
 
+Analyze almost anything
+===
+I wrote this parser for practical reallife situations. In reality a lot happens that is not allowed when looking at the
+official specifications, yet in production they do happen.
+So several of the key parts in this parser try to recover from bad data where possible and thus allow to extract as
+much usefull information as possible even if the data is not valid.
+Important examples of this are invalid encoding characters and chopped multibyte encoded characters that are both
+extracted as best as possible.
+
 Pre built versions
 ===
 Prebuilt versions have been deployed to maven central so using it in a project is as simple as adding a dependency.
