@@ -176,7 +176,7 @@ public class HttpUriDissector extends Dissector {
         URI uri;
         try {
             if (uriString.charAt(0) == '/') {
-                uri = URI.create("http://dummy.host.name" + uriString);
+                uri = URI.create("dummy-protocol://dummy.host.name" + uriString);
                 isUrl = false; // I.e. we do not return the values we just faked.
             } else {
                 uri = URI.create(uriString);
