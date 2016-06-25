@@ -33,9 +33,9 @@
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
 
-    <hadoop.version>2.7.1</hadoop.version>
-    <hive.version>1.2.1</hive.version>
-    <pig.version>0.15.0</pig.version>
+    <hadoop.version>2.7.2</hadoop.version>
+    <hive.version>2.1.0</hive.version>
+    <pig.version>0.16.0</pig.version>
   </properties>
 
   <dependencies>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.13</version>
+      <version>1.7.21</version>
     </dependency>
 
     <dependency>
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.13</version>
+      <version>1.7.21</version>
       <scope>test</scope>
     </dependency>
 
@@ -92,7 +92,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.1.2</version>
+            <version>2.2.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -106,7 +106,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.8.1</version>
+            <version>2.10.4</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -121,7 +121,7 @@
             <!-- explicitly define maven-deploy-plugin after other to force exec order -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.1</version>
+            <version>2.8.2</version>
             <executions>
               <execution>
                 <id>deploy</id>
@@ -177,7 +177,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
+        <version>3.5.1</version>
         <configuration>
           <source>${jdkLevel}</source>
           <target>${jdkLevel}</target>
@@ -187,7 +187,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
+        <version>3.0.0</version>
       </plugin>
 
     </plugins>
