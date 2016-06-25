@@ -23,10 +23,9 @@ import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static org.apache.pig.builtin.mock.Storage.map;
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
@@ -69,9 +68,6 @@ public class TestRemappedLoader {
             "            );"
         );
 
-
-
-
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
 
         List<Tuple> out = data.get("Clicks");
@@ -95,38 +91,6 @@ public class TestRemappedLoader {
                         "(KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
             ),
             out.get(0));
-    }
-
-
-    // TODO: Migrate to use PIG-4405 once that is released
-    /**
-     * @param input These params are alternating "key", "value". So the number of params MUST be even !!
-     * Implementation is very similar to the TOMAP UDF.
-     * So map("A", B, "C", D) generates a map "A"->B, "C"->D
-     * @return a map containing the provided objects
-     */
-    public static Map<String, Object> map(Object... input) {
-        if (input == null || input.length < 2) {
-            return null;
-        }
-
-        try {
-            Map<String, Object> output = new HashMap<>();
-
-            for (int i = 0; i < input.length; i=i+2) {
-                String key = (String)input[i];
-                Object val = input[i+1];
-                output.put(key, val);
-            }
-
-            return output;
-        } catch (ClassCastException e){
-            throw new IllegalArgumentException("Map key must be a String");
-        } catch (ArrayIndexOutOfBoundsException e){
-            throw new IllegalArgumentException("Function input must have even number of parameters");
-        } catch (Exception e) {
-            throw new RuntimeException("Error while creating a map", e);
-        }
     }
 
 }

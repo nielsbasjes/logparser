@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static nl.basjes.pig.input.apachehttpdlog.TestRemappedLoader.map;
+import static org.apache.pig.builtin.mock.Storage.map;
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.Assert.assertEquals;
