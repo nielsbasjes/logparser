@@ -82,7 +82,7 @@
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>target/${project.build.finalName}.jar</location>
+                      <location>target/${project.build.finalName}-udf.jar</location>
                     </source>
                   </sources>
                 </mapping>
@@ -116,7 +116,7 @@
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>src/main/assembly/job.xml</descriptor>
+                <descriptor>src/main/assembly/udf.xml</descriptor>
               </descriptors>
               <archive>
                 <addMavenDescriptor>true</addMavenDescriptor>
