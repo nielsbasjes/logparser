@@ -31,6 +31,9 @@ much usefull information as possible even if the data is not valid.
 Important examples of this are invalid encoding characters and chopped multibyte encoded characters that are both
 extracted as best as possible.
 
+If you have a real logline that causes a parse error then I kindly request you to sumbit this line, the logformat and 
+the field that triggered the error as a bug report.
+
 Pre built versions
 ===
 Prebuilt versions have been deployed to maven central so using it in a project is as simple as adding a dependency.
