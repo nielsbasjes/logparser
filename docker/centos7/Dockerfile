@@ -15,3 +15,6 @@ RUN tar xzf apache-maven-3.2.5-bin.tar.gz --strip-components 1 -C /usr/local/apa
 ENV M2_HOME /usr/local/apache-maven
 ENV PATH ${M2_HOME}/bin:${PATH}
 
+# Install Pig
+RUN cd /etc/yum.repos.d && curl -O http://www.apache.org/dist/bigtop/bigtop-1.1.0/repos/centos7/bigtop.repo
+RUN yum install -y pig
