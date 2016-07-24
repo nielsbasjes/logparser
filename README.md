@@ -31,7 +31,7 @@ much usefull information as possible even if the data is not valid.
 Important examples of this are invalid encoding characters and chopped multibyte encoded characters that are both
 extracted as best as possible.
 
-If you have a real logline that causes a parse error then I kindly request you to sumbit this line, the logformat and 
+If you have a real logline that causes a parse error then I kindly request you to sumbit this line, the logformat and
 the field that triggered the error as a bug report.
 
 Pre built versions
@@ -129,6 +129,18 @@ the values that were used to construct this.
 
 When you choose to ignore the clear 'should not' statement then simply add
 a type remapping to map the field to the type *MOD_UNIQUE_ID*
+
+Working around parsing problems
+===============================
+Some tools create logfiles in the "Apache HTTPD" access log format.
+In jetty there is the option to create a logfile in what they call the NCSARequestLog format.
+It was found that if the useragent is missing in the request that the extended file format gets
+an extra space added in the line, which causes parse errors.
+
+To workaround this problem you can easily add these two logformats when calling this parser:
+
+    %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i" %I %O
+    %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i"  %I %O
 
 License
 ===

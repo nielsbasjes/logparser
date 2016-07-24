@@ -490,14 +490,14 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // need to enable mod_logio to use this.
         parsers.add(new TokenParser("%I",
                 "request.bytes", "BYTES",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NON_ZERO_NUMBER));
 
         // -------
         // %O Bytes sent, including headers, cannot be zero. You need to enable
         // mod_logio to use this.
         parsers.add(new TokenParser("%O",
                 "response.bytes", "BYTES",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NON_ZERO_NUMBER));
 
         // -------
         // %S Bytes transferred (received and sent), including request and headers, cannot be zero.
