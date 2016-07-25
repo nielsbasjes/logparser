@@ -19,16 +19,12 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class JettyLogFormatParserTest {
 
@@ -39,9 +35,17 @@ public class JettyLogFormatParserTest {
 
         @SuppressWarnings("UnusedDeclaration")
         @Field({
-            "HTTP.URI:request.referer",
-            "HTTP.USERAGENT:request.user-agent",
-            "TIME.DAY:request.receive.time.day"
+             "IP:connection.client.host"
+            ,"NUMBER:connection.client.logname"
+            ,"STRING:connection.client.user"
+            ,"TIME.STAMP:request.receive.time"
+            ,"TIME.DAY:request.receive.time.day"
+            ,"HTTP.FIRSTLINE:request.firstline"
+            ,"STRING:request.status.last"
+            ,"BYTES:response.body.bytesclf"
+            ,"HTTP.URI:request.referer"
+            ,"HTTP.USERAGENT:request.user-agent"
+            ,"MICROSECONDS:server.process.time"
         })
         public void setValue(final String name, final String value) {
             results.put(name, value);
@@ -54,30 +58,51 @@ public class JettyLogFormatParserTest {
 
     // ------------------------------------------
 
-    /**
-     * Test of initialize method, of class ApacheHttpdLogParser.
-     */
     @Test
     public void buggyJettyLogline() throws Exception {
-        // In Jetty an extra space is included if the useragent is absent (the >"-"  < near the end).
-        String line = "0.0.0.0 - - [24/Jul/2016:07:08:31 +0000] \"GET http://[:1]/foo HTTP/1.1\" 400 0 \"http://other.site\" \"-\"  - 8";
+        // In Jetty
+        // - an extra space is included if the useragent is absent (the >"-"  < near the end).
+        // - two extra spaces are included if the user field is absent ( " - " instead of "-" )
+        String[] lines = {
+            "0.0.0.0 - x [24/Jul/2016:07:08:31 +0000] \"GET http://[:1]/foo HTTP/1.1\" 400 0 \"http://other.site\" \"-\"  8",
+            "0.0.0.0 -  -  [24/Jul/2016:07:08:31 +0000] \"GET http://[:1]/foo HTTP/1.1\" 400 0 \"http://other.site\" \"-\"  8",
+            "0.0.0.0 - x [24/Jul/2016:07:08:31 +0000] \"GET http://[:1]/foo HTTP/1.1\" 400 0 \"http://other.site\" \"Mozilla/5.0 (dummy)\" 8",
+            "0.0.0.0 -  -  [24/Jul/2016:07:08:31 +0000] \"GET http://[:1]/foo HTTP/1.1\" 400 0 \"http://other.site\" \"Mozilla/5.0 (dummy)\" 8",
+        };
 
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class,
-            "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O"     + "\n" +
-            "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"  %I %O"
+            "ENABLE JETTY FIX\n"+
+            "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %D"
         );
 
-        TestRecord record = new TestRecord();
-        parser.parse(record, line);
-        Map<String, String> results = record.getResults();
+        for (String line:lines) {
+            TestRecord record = new TestRecord();
+            parser.parse(record, line);
+            Map<String, String> results = record.getResults();
 
-        System.out.println(results.toString());
+            assertEquals("0.0.0.0",results.get("IP:connection.client.host"));
+            assertEquals(null,results.get("NUMBER:connection.client.logname"));
 
-        assertEquals("http://other.site", results.get("HTTP.URI:request.referer"));
-        assertEquals(null, results.get("HTTP.USERAGENT:request.user-agent"));
-        assertEquals("24", results.get("TIME.DAY:request.receive.time.day"));
+            String user = results.get("STRING:connection.client.user");
+            if (user!=null) {
+                assertEquals("x", user);
+            }
+            assertEquals("24/Jul/2016:07:08:31 +0000",results.get("TIME.STAMP:request.receive.time"));
+            assertEquals("24",results.get("TIME.DAY:request.receive.time.day"));
+            assertEquals("GET http://[:1]/foo HTTP/1.1",results.get("HTTP.FIRSTLINE:request.firstline"));
+            assertEquals("400",results.get("STRING:request.status.last"));
+            assertEquals("0",results.get("BYTES:response.body.bytesclf"));
+            assertEquals("http://other.site",results.get("HTTP.URI:request.referer"));
+
+            String useragent = results.get("HTTP.USERAGENT:request.user-agent");
+            if (useragent!=null) {
+                assertEquals("Mozilla/5.0 (dummy)", useragent);
+            }
+            assertEquals("8",results.get("MICROSECONDS:server.process.time"));
+
+        }
     }
 
-    // ------------------------------------------
+    // -----------------------------------------
 
 }

@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -52,13 +53,40 @@ public class HttpdLogFormatDissector extends Dissector {
     public HttpdLogFormatDissector(final String multiLineLogFormat) {
         this();
         addMultipleLogFormats(multiLineLogFormat);
+
+        if (enableJettyFix) {
+            addAdditionalLogFormatsToHandleJettyUseragentProblem();
+        }
     }
 
+    // Jetty has two (historical) problems:
+    // 1) An empty user field was logged in the past as " - " instead of "-"
+    //    See: https://github.com/eclipse/jetty.project/commit/2332b4f
+    // 2) An empty useragent field was logged with an extra trailing space.
+    // This boolean enables a hack to parse these files.
+    private boolean enableJettyFix = false;
+
+    private void addAdditionalLogFormatsToHandleJettyUseragentProblem() {
+        for (String logFormat : getAllLogFormats()) {
+            if (logFormat.contains("\"%{User-Agent}i\"")) {
+                LOG.info("Creating extra logformat to handle Jetty useragent problem.");
+                String patchedLogFormat = logFormat.replace("\"%{User-Agent}i\"", "\"%{User-Agent}i\" ");
+                addLogFormat(patchedLogFormat);
+            }
+        }
+    }
+
+    public void enableJettyFix() {
+        enableJettyFix = true;
+        for (TokenFormatDissector dissector : dissectors) {
+            if (dissector instanceof ApacheHttpdLogFormatDissector) {
+                ((ApacheHttpdLogFormatDissector) dissector).enableJettyFix();
+            }
+        }
+    }
 
     public void addMultipleLogFormats(final String multiLineLogFormat) {
-        for (String logFormat : multiLineLogFormat.split("\\r?\\n")) {
-            addLogFormat(logFormat);
-        }
+        addLogFormat(Arrays.asList(multiLineLogFormat.split("\\r?\\n")));
     }
 
     public void addLogFormat(final List<String> logFormats) {
@@ -70,6 +98,11 @@ public class HttpdLogFormatDissector extends Dissector {
     public void addLogFormat(final String logFormat) {
         if (logFormat == null || logFormat.trim().isEmpty()) {
             return; // Skip this one
+        }
+
+        if (logFormat.toUpperCase().trim().equals("ENABLE JETTY FIX")) {
+            enableJettyFix();
+            return;
         }
 
         if (registeredLogFormats.contains(logFormat)) {
@@ -213,6 +246,11 @@ public class HttpdLogFormatDissector extends Dissector {
 
         if (newInstance instanceof HttpdLogFormatDissector) {
             ((HttpdLogFormatDissector) newInstance).addLogFormat(getAllLogFormats());
+
+            if (enableJettyFix) {
+                ((HttpdLogFormatDissector) newInstance).enableJettyFix();
+            }
+
         } else {
             LOG.error("============================== WTF == {}", newInstance.getClass().getCanonicalName());
         }

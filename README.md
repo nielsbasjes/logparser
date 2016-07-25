@@ -130,17 +130,22 @@ the values that were used to construct this.
 When you choose to ignore the clear 'should not' statement then simply add
 a type remapping to map the field to the type *MOD_UNIQUE_ID*
 
-Working around parsing problems
-===============================
-Some tools create logfiles in the "Apache HTTPD" access log format.
-In jetty there is the option to create a logfile in what they call the NCSARequestLog format.
-It was found that if the useragent is missing in the request that the extended file format gets
-an extra space added in the line, which causes parse errors.
+Parsing problems with Jetty generated logfiles
+==============================================
+In Jetty there is the option to create a logfile in what they call the NCSARequestLog format.
+It was found that (historically) this had two formatting problems which cause parse errors:
 
-To workaround this problem you can easily add these two logformats when calling this parser:
+1. If the useragent is missing the empty value is logged with an extra ' ' after it.
+2. Before jetty-9.2.4.v20141103 if there is no user available the %u field is logged as " - "
+(i.e. with two extra spaces around the '-').
 
-    %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i" %I %O
-    %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i"  %I %O
+To workaround these problems you can easily start the parser with this two line logformat:
+
+    ENABLE JETTY FIX
+    %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i" %D
+
+This *ENABLE JETTY FIX* is a 'magic' value that cause the underlying parser to enable the workaround for both of these problems.
+In order for this to work correctly the useragent field must look exactly like this: *"%{User-Agent}i"*
 
 License
 ===
