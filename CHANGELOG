@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.6
+===
+- Buildin fix for the problems in Jetty logging
+
 v2.5
 ===
 - Simply treat the %{...}t as a text field you can retrieve (instead of failing if it occurs).
