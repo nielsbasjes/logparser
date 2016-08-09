@@ -48,8 +48,10 @@ public class HttpFirstLineDissector extends Dissector {
     // - HTTP version = HTTP/[0-9]+\.[0-9]+
     // The HTTP version has been made optional to allow parsing the log lines you get when the URI is > 8KB
     // In that scenario the HTTP/x.x part will not be logged at all.
+    // In case of using mod_reqtimeout simply opening a connection and wait for the timeout without enreting any data
+    // results in an empty firstline. I.e. a "-"
     public static final String FIRSTLINE_REGEX =
-            "[a-zA-Z]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?";
+            "(?:[a-zA-Z]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?)|-";
 
     private final Pattern firstlineSplitter = Pattern
             .compile("^([a-zA-Z]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
@@ -84,7 +86,7 @@ public class HttpFirstLineDissector extends Dissector {
         final ParsedField field = parsable.getParsableField(HTTP_FIRSTLINE, inputname);
 
         final String fieldValue = field.getValue().getString();
-        if (fieldValue == null || fieldValue.isEmpty()){
+        if (fieldValue == null || fieldValue.isEmpty() || "-".equals(fieldValue)){
             return; // Nothing to do here
         }
 

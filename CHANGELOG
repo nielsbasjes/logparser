@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.7
+===
+- Handle the effects of mod_reqtimeout giving a http 408 (reported by Diogo Sant'Ana)
+
 v2.6
 ===
 - Buildin fix for the problems in Jetty logging

@@ -412,4 +412,45 @@ public class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
+    /**
+     * Test of mod_reqtimeout 408 status code
+     * Assume  mod_reqtimeout is enabled and absolutely no data is entered by a client
+     * after making the connection. The result is a http 408 status code and a logline that has proven to
+     * result in several field failing to be parsed because they are different than the specifications.
+     */
+    @Test
+    public void test408ModReqTimeout() throws Exception {
+
+        final String logformat =
+            "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" " +
+            "\"%l\" \"%L\" \"%m\" \"%p\" \"%{canonical}p\" \"%{local}p\" \"%{remote}p\" \"%P\" \"%{pid}P\" \"%{tid}P\"" +
+            " \"%{hextid}P\" \"%q\" \"%r\" \"%R\" \"%s\" \"%>s\" \"%t\" \"%{msec}t\" \"%{begin:msec}t\" \"%{end:msec}t" +
+            "\" \"%{usec}t\" \"%{begin:usec}t\" \"%{end:usec}t\" \"%{msec_frac}t\" \"%{begin:msec_frac}t\" \"%{end:mse" +
+            "c_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"" +
+            "%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
+
+        String line_200 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"3186\" \"3186\" \"1302\" \"/var/www/html/index.html\" " +
+            "\"127.0.0.1\" \"HTTP/1.1\" \"0\" \"-\" \"-\" \"GET\" \"80\" \"80\" \"80\" \"50142\" \"10344\" \"10344\" " +
+            "\"139854162249472\" \"139854162249472\" \"\" \"GET / HTTP/1.1\" \"-\" \"200\" \"200\" " +
+            "\"[09/Aug/2016:22:57:59 +0200]\" \"1470776279833\" \"1470776279833\" \"1470776279835\" \"1470776279833934\" " +
+            "\"1470776279833934\" \"1470776279835236\" \"833\" \"833\" \"835\" \"833934\" \"833934\" \"835236\" \"0\" " +
+            "\"-\" \"/index.html\" \"committer.lan.basjes.nl\" \"localhost\" \"+\" \"490\" \"3525\" \"-\" \"-\" " +
+            "\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36\" \"-\"";
+
+        String line_408 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"0\" \"-\" \"34\" \"-\" " +
+            "\"127.0.0.1\" \"HTTP/1.0\" \"0\" \"-\" \"-\" \"-\" \"80\" \"80\" \"80\" \"50150\" \"10344\" \"10344\" " +
+            "\"139854067267328\" \"139854067267328\" \"\" \"-\" \"-\" \"408\" \"408\" " +
+            "\"[09/Aug/2016:22:59:14 +0200]\" \"1470776354625\" \"1470776354625\" \"1470776354625\" \"1470776354625377\" " +
+            "\"1470776354625377\" \"1470776354625411\" \"625\" \"625\" \"625\" \"625377\" \"625377\" \"625411\" \"0\" " +
+            "\"-\" \"-\" \"committer.lan.basjes.nl\" \"committer.lan.basjes.nl\" \"-\" \"0\" \"0\" \"-\" \"-\" \"-\" \"-\"";
+
+        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);
+        String[] params = {
+            "STRING:request.firstline.uri.query.foo",
+        };
+        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
+
+        parser.parse(new EmptyTestRecord(), line_200);
+        parser.parse(new EmptyTestRecord(), line_408);
+    }
 }
