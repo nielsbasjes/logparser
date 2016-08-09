@@ -203,6 +203,26 @@ public class Parser<RECORD> {
     }
     // --------------------------------------------
 
+    private boolean failOnMissingDissectors = true;
+
+    /**
+     * This method sets the flag to ignore the missing dissectors situation.
+     * This must be called before parsing the first line.
+     * The effect is that those fields that would have been classified as 'missing'
+     * will result in a null value (or better: the setter is never called) for all records.
+     */
+    public void ignoreMissingDissectors() {
+        failOnMissingDissectors = false;
+    }
+
+    /**
+     * Reset back to the default of failing on missing dissectors.
+     */
+    public void failOnMissingDissectors() {
+        failOnMissingDissectors = true;
+    }
+
+
     private void assembleDissectors() throws MissingDissectorsException, InvalidDissectorException {
         if (compiledDissectors != null) {
             return; // nothing to do.
@@ -252,16 +272,18 @@ public class Parser<RECORD> {
                 dissectorPhase.instance.prepareForRun();
             }
         }
-        // Step 4: As a final step we verify that every required input can be found
-        Set<String> missingDissectors = getTheMissingFields();
-        if (missingDissectors != null && !missingDissectors.isEmpty()) {
-            StringBuilder allMissing = new StringBuilder(missingDissectors.size()*64);
-            for (String missing:missingDissectors){
-                allMissing.append(missing).append(' ');
-            }
-            throw new MissingDissectorsException(allMissing.toString());
-        }
 
+        if (failOnMissingDissectors) {
+            // Step 4: As a final step we verify that every required input can be found
+            Set<String> missingDissectors = getTheMissingFields();
+            if (missingDissectors != null && !missingDissectors.isEmpty()) {
+                StringBuilder allMissing = new StringBuilder(missingDissectors.size() * 64);
+                for (String missing : missingDissectors) {
+                    allMissing.append(missing).append(' ');
+                }
+                throw new MissingDissectorsException(allMissing.toString());
+            }
+        }
         usable = true;
     }
 

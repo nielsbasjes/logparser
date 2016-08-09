@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v2.7
 ===
 - Handle the effects of mod_reqtimeout giving a http 408 (reported by Diogo Sant'Ana)
+- Added option to optionally continue even when some requested dissectors are missing (Java only).
 
 v2.6
 ===
