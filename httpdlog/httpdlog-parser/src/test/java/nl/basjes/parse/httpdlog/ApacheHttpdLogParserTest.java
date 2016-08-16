@@ -455,7 +455,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void testIgnoreMIssingDissectors() throws Exception {
+    public void testIgnoreMissingDissectors() throws Exception {
         String line = "[09/Aug/2016:22:57:59 +0200]";
 
         String[] params = {
