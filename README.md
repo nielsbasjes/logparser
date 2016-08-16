@@ -136,15 +136,16 @@ In Jetty there is the option to create a logfile in what they call the NCSAReque
 It was found that (historically) this had two formatting problems which cause parse errors:
 
 1. If the useragent is missing the empty value is logged with an extra ' ' after it.
+   The fix for this in Jetty was committed on 2016-07-27 in the Jetty 9.3.x and 9.4.x branches
 2. Before jetty-9.2.4.v20141103 if there is no user available the %u field is logged as " - "
 (i.e. with two extra spaces around the '-').
 
-To workaround these problems you can easily start the parser with this two line logformat:
+To workaround these problems you can easily start the parser with a two line logformat:
 
     ENABLE JETTY FIX
     %h %l %u %t \"%r\" %>s %b "%{Referer}i" "%{User-Agent}i" %D
 
-This *ENABLE JETTY FIX* is a 'magic' value that cause the underlying parser to enable the workaround for both of these problems.
+This *ENABLE JETTY FIX* is a 'magic' value that causes the underlying parser to enable the workaround for both of these problems.
 In order for this to work correctly the useragent field must look exactly like this: *"%{User-Agent}i"*
 
 License
