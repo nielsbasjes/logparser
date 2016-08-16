@@ -14,7 +14,7 @@ First you put something like this in your pom.xml file:
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>2.6</version>
+        <version>2.7</version>
     </dependency>
 
 In addition you need joda-time 1.6 or newer.
