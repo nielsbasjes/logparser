@@ -125,6 +125,19 @@ public class TimeStampDissectorTest {
         assertEquals(Long.valueOf(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
     }
 
+    @Test
+    public void testTimeStamUpperLowerCaseVariations() throws Exception {
+        TimeParser timeParser = new TimeParser();
+        TestRecord record = new TestRecord();
+        timeParser.parse(record, "[30/sep/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/Sep/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/sEp/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/SEp/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/seP/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/SeP/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/sEP/2016:00:00:06 +0000]");
+        timeParser.parse(record, "[30/SEP/2016:00:00:06 +0000]");
+    }
 
 
     public class TestNotYetImplementedLocalizedTimeRecord {

@@ -301,10 +301,12 @@ public class TimeStampDissector extends Dissector {
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
-        final String fieldValue = field.getValue().getString();
+        String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }
+
+        fieldValue = fieldValue.toLowerCase(Locale.getDefault());
 
         if (wantAnyAsParsed || wantAnyTZIndependent) {
             // YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
