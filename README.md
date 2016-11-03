@@ -1,5 +1,7 @@
 Apache HTTPD logparser
 ===
+[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 This is a Logparsing framework intended to make parsing Apache HTTPD logfiles much easier.
 
 The basic idea is that you should be able to have a parser that you can construct by simply
