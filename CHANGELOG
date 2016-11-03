@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v2.8
+===
+- Added the ISO 8601 'date' output for parsed times (Is numerical yyyy-mm-dd)
+
 v2.7
 ===
 - Handle the effects of mod_reqtimeout giving a http 408 (reported by Diogo Sant'Ana)
