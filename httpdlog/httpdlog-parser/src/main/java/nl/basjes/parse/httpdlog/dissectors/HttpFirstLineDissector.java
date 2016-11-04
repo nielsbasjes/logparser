@@ -51,13 +51,13 @@ public class HttpFirstLineDissector extends Dissector {
     // In case of using mod_reqtimeout simply opening a connection and wait for the timeout without enreting any data
     // results in an empty firstline. I.e. a "-"
     public static final String FIRSTLINE_REGEX =
-            "(?:[a-zA-Z]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?)|-";
+            "(?:[a-zA-Z-_]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?)|-";
 
     private final Pattern firstlineSplitter = Pattern
-            .compile("^([a-zA-Z]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
+            .compile("^([a-zA-Z-_]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
 
     private final Pattern tooLongFirstlineSplitter = Pattern
-            .compile("^([a-zA-Z]+) (.*)$");
+            .compile("^([a-zA-Z-_]+) (.*)$");
 
     // --------------------------------------------
 
