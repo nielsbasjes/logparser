@@ -105,7 +105,8 @@ public class TimeStampDissector extends Dissector {
         result.add("TIME.SECOND:second");
         result.add("TIME.MILLISECOND:millisecond");
 
-        result.add("TIME.DATE:date"); // yyyy-mm-dd
+        result.add("TIME.DATE:date"); // yyyy-MM-dd
+        result.add("TIME.TIME:time"); // HH:mm:ss
 
         // Timezone independent
         result.add("TIME.ZONE:timezone");
@@ -123,7 +124,8 @@ public class TimeStampDissector extends Dissector {
         result.add("TIME.SECOND:second_utc");
         result.add("TIME.MILLISECOND:millisecond_utc");
 
-        result.add("TIME.DATE:date_utc"); // yyyy-mm-dd
+        result.add("TIME.DATE:date_utc"); // yyyy-MM-dd
+        result.add("TIME.TIME:time_utc"); // HH:mm:ss
 
         return result;
     }
@@ -146,6 +148,8 @@ public class TimeStampDissector extends Dissector {
     private boolean wantSecond            = false;
     private boolean wantMillisecond       = false;
     private boolean wantDate              = false;
+    private boolean wantTime              = false;
+
 
     // Timezone independent
     private boolean wantTimezone          = false;
@@ -163,6 +167,7 @@ public class TimeStampDissector extends Dissector {
     private boolean wantSecondUTC         = false;
     private boolean wantMillisecondUTC    = false;
     private boolean wantDateUTC           = false;
+    private boolean wantTimeUTC           = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
@@ -211,6 +216,10 @@ public class TimeStampDissector extends Dissector {
 
             case "date":
                 wantDate = true;
+                return Casts.STRING_ONLY;
+
+            case "time":
+                wantTime = true;
                 return Casts.STRING_ONLY;
 
             // Timezone independent
@@ -267,6 +276,10 @@ public class TimeStampDissector extends Dissector {
                 wantDateUTC = true;
                 return Casts.STRING_ONLY;
 
+            case "time_utc":
+                wantTimeUTC = true;
+                return Casts.STRING_ONLY;
+
             default:
                 return null;
         }
@@ -289,7 +302,8 @@ public class TimeStampDissector extends Dissector {
             || wantMinute
             || wantSecond
             || wantMillisecond
-            || wantDate;
+            || wantDate
+            || wantTime;
 
         // Timezone independent
         wantAnyTZIndependent =
@@ -308,12 +322,14 @@ public class TimeStampDissector extends Dissector {
             || wantMinuteUTC
             || wantSecondUTC
             || wantMillisecondUTC
-            || wantDateUTC;
+            || wantDateUTC
+            || wantTimeUTC;
     }
 
     // --------------------------------------------
 
     private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter ISO_TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss");
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
@@ -378,6 +394,11 @@ public class TimeStampDissector extends Dissector {
                         ISO_DATE_FORMATTER.print(dateTime));
             }
 
+            if (wantTime) {
+                parsable.addDissection(inputname, "TIME.TIME", "time",
+                    ISO_TIME_FORMATTER.print(dateTime));
+            }
+
             // Timezone independent
             if (wantTimezone) {
                 parsable.addDissection(inputname, "TIME.TIMEZONE", "timezone",
@@ -437,6 +458,12 @@ public class TimeStampDissector extends Dissector {
                 parsable.addDissection(inputname, "TIME.DATE", "date_utc",
                     ISO_DATE_FORMATTER.print(dateTime));
             }
+
+            if (wantTimeUTC) {
+                parsable.addDissection(inputname, "TIME.TIME", "time_utc",
+                    ISO_TIME_FORMATTER.print(dateTime));
+            }
+
         }
     }
 

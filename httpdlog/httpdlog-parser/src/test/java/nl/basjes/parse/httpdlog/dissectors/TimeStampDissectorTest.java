@@ -49,6 +49,8 @@ public class TimeStampDissectorTest {
             "TIME.YEAR:request.receive.time.year",
             "TIME.MONTHNAME:request.receive.time.monthname",
             "TIME.DATE:request.receive.time.date",
+            "TIME.TIME:request.receive.time.time",
+
             "TIME.SECOND:request.receive.time.second_utc",
             "TIME.MINUTE:request.receive.time.minute_utc",
             "TIME.HOUR:request.receive.time.hour_utc",
@@ -57,6 +59,7 @@ public class TimeStampDissectorTest {
             "TIME.YEAR:request.receive.time.year_utc",
             "TIME.MONTHNAME:request.receive.time.monthname_utc",
             "TIME.DATE:request.receive.time.date_utc",
+            "TIME.TIME:request.receive.time.time_utc",
         })
         public void setValue(final String name, final String value) {
             results.put(name, value);
@@ -115,6 +118,7 @@ public class TimeStampDissectorTest {
         assertEquals("44", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals(Long.valueOf(44), longResults.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("2012-12-31", results.get("TIME.DATE:request.receive.time.date"));
+        assertEquals("23:00:44", results.get("TIME.TIME:request.receive.time.time"));
 
         assertEquals("2013", results.get("TIME.YEAR:request.receive.time.year_utc"));
         assertEquals("1", results.get("TIME.MONTH:request.receive.time.month_utc"));
@@ -128,6 +132,7 @@ public class TimeStampDissectorTest {
         assertEquals("44", results.get("TIME.SECOND:request.receive.time.second_utc"));
         assertEquals(Long.valueOf(44), longResults.get("TIME.SECOND:request.receive.time.second_utc"));
         assertEquals("2013-01-01", results.get("TIME.DATE:request.receive.time.date_utc"));
+        assertEquals("06:00:44", results.get("TIME.TIME:request.receive.time.time_utc"));
     }
 
     @Test
