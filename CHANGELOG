@@ -6,6 +6,7 @@ v2.8
 - Added the ISO 8601 'date' output for parsed times (Is string "yyyy-MM-dd")
 - Added the ISO 8601 'time' output for parsed times (Is string "HH:mm:ss"  )
 - Solve parse error when a HTTP method like "VERSION-CONTROL" is used.
+- Fixed NPE in specific combination of cast and setter type and a null value
 
 v2.7
 ===

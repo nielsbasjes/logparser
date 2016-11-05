@@ -84,7 +84,7 @@ public class Value {
                     return null;
                 }
             case LONG:
-                return new Double(l);
+                return l == null ? null : new Double(l);
             case DOUBLE:
                 return d;
             default:
