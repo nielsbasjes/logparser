@@ -278,7 +278,7 @@
 
   <scm>
     <developerConnection>scm:git:.</developerConnection>
-    <connection>https://github.com/nielsbasjes/logparser.git</connection>
+    <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
     <url>https://github.com/nielsbasjes/logparser</url>
   </scm>
 
