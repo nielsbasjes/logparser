@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ParserTestInfiniteLoop {
+public class ParserInfiniteLoopTest {
 
     public static class TestDissector extends Dissector {
 

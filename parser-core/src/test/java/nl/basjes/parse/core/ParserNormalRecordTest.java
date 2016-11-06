@@ -16,9 +16,9 @@
  */
 package nl.basjes.parse.core;
 
-public class ParserTestNormalTestRecord {
+public class ParserNormalRecordTest {
 
-    public ParserTestNormalTestRecord() {
+    public ParserNormalRecordTest() {
         // Empty but needed for instantiating
     }
 

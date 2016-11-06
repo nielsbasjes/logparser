@@ -30,7 +30,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParserTestExceptions {
+public class ParserExceptionsTest {
 
     public static class TestDissector extends Dissector {
         private String inputType;

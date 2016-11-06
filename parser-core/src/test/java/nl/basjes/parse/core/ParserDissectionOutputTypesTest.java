@@ -27,7 +27,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParserTestDissectionOutputTypes {
+public class ParserDissectionOutputTypesTest {
 
     public static class TestDissector extends Dissector {
 

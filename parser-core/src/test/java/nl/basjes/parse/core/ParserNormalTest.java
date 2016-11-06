@@ -29,7 +29,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParserTestNormal {
+public class ParserNormalTest {
 
     public static class TestDissector extends Dissector {
         private String      inputType;
@@ -143,15 +143,15 @@ public class ParserTestNormal {
     @Test
     public void testParseString() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
+        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
+        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         parser.dropDissector(TestDissectorWildCard.class);
         parser.addDissector(new TestDissectorWildCard());
 
-        ParserTestNormalTestRecord output = new ParserTestNormalTestRecord();
+        ParserNormalRecordTest output = new ParserNormalRecordTest();
         parser.parse(output, "Something");
         assertEquals("SOMETYPE1:SOMETYPE:output1:Something", output.getOutput1());
         assertEquals("OTHERTYPE2:OTHERTYPE:output2:Something", output.getOutput2());
@@ -170,12 +170,12 @@ public class ParserTestNormal {
     @Test
     public void testParseStringInstantiate() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
+        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
+        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
-        ParserTestNormalTestRecord output = parser.parse("Something");
+        ParserNormalRecordTest output = parser.parse("Something");
 
         assertEquals("SOMETYPE1:SOMETYPE:output1:Something", output.getOutput1());
         assertEquals("OTHERTYPE2:OTHERTYPE:output2:Something", output.getOutput2());
@@ -195,22 +195,22 @@ public class ParserTestNormal {
     @Test(expected = MissingDissectorsException.class)
     public void testMissingDissector() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
+        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
 
         // Cripple the parser
         parser.dropDissector(TestDissectorTwo.class);
 
-        ParserTestNormalTestRecord output = new ParserTestNormalTestRecord();
+        ParserNormalRecordTest output = new ParserNormalRecordTest();
         parser.parse(output, "Something"); // Should fail.
     }
 
     @Test
     public void testGetPossiblePaths() throws Exception {
         // setLoggingLevel(Level.ALL);
-        Parser<ParserTestNormalTestRecord> parser = new TestParser<>(ParserTestNormalTestRecord.class);
+        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserTestNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
+        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         List<String> paths = parser.getPossiblePaths(3);
         for (String path : paths) {

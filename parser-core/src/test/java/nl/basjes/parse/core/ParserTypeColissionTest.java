@@ -25,7 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParserTestTypeColission {
+public class ParserTypeColissionTest {
 
     public static class TestDissector extends Dissector {
         private String inputType;

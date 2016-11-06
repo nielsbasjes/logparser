@@ -46,6 +46,19 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <check/>
+          <instrumentation>
+            <ignoreTrivial>true</ignoreTrivial>
+            <ignores>
+              <ignore>org.slf4j.*</ignore>
+            </ignores>
+            <excludes>
+              <exclude>nl/basjes/parse/core/Field.class</exclude>
+              <exclude>nl/basjes/parse/core/exceptions/*.class</exclude>
+            </excludes>
+          </instrumentation>
+        </configuration>
       </plugin>
     </plugins>
   </build>
