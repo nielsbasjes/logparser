@@ -45,7 +45,7 @@ So using it in a Java based project is as simple as adding this to your dependen
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>2.7</version>
+        <version>2.8</version>
     </dependency>
 
 In addition you need joda-time 1.6 or newer.
