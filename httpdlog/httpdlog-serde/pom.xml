@@ -148,6 +148,20 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <check/>
+          <instrumentation>
+            <ignoreTrivial>true</ignoreTrivial>
+            <ignores>
+              <ignore>org.slf4j.*</ignore>
+              <ignore>org.apache.hadoop.hive.serde2.SerDeException</ignore>
+            </ignores>
+          </instrumentation>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
