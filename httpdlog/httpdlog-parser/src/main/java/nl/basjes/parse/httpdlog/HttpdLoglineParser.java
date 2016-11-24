@@ -25,8 +25,16 @@ import nl.basjes.parse.httpdlog.dissectors.RequestCookieListDissector;
 import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieDissector;
 import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieListDissector;
 import nl.basjes.parse.httpdlog.dissectors.TimeStampDissector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static nl.basjes.parse.httpdlog.Version.getBuildTimestamp;
+import static nl.basjes.parse.httpdlog.Version.getGitCommitIdDescribeShort;
+import static nl.basjes.parse.httpdlog.Version.getProjectVersion;
 
 public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HttpdLoglineParser.class);
 
     // --------------------------------------------
 
@@ -34,7 +42,12 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
             final Class<RECORD> clazz,
             final String logformat) {
         super(clazz);
+        LOG.info("Loading {}", getVersion());
         setupDissectors(logformat, null);
+    }
+
+    public static String getVersion() {
+        return "HttpdLoglineParser " + getProjectVersion() + " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
     }
 
     public HttpdLoglineParser(
