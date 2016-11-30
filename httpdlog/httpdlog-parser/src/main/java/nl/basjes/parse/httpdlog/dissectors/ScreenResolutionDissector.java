@@ -77,7 +77,7 @@ public class ScreenResolutionDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-        String name = outputname.substring(inputname.length() + 1);
+        String name = extractFieldName(inputname, outputname);
         if ("width".equals(name)) {
             wantWidth = true;
             return Casts.STRING_OR_LONG;

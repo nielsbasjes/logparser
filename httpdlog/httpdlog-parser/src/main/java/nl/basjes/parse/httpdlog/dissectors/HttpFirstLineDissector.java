@@ -153,7 +153,7 @@ public class HttpFirstLineDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        requestedParameters.add(outputname.substring(inputname.length() + 1));
+        requestedParameters.add(extractFieldName(inputname, outputname));
         return Casts.STRING_ONLY;
     }
 

@@ -67,7 +67,7 @@ public class ResponseSetCookieListDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        requestedCookies.add(outputname.substring(inputname.length() + 1));
+        requestedCookies.add(extractFieldName(inputname, outputname));
         return Casts.STRING_ONLY;
     }
 

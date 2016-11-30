@@ -137,6 +137,14 @@ public abstract class Dissector {
         return null;
     }
 
+    public String extractFieldName(final String inputname, final String outputname){
+        String fieldName = outputname;
+        if (!inputname.equals("")) {
+            fieldName = outputname.substring(inputname.length() + 1);
+        }
+        return fieldName;
+    }
+
     /**
      * This is called after instantiating the class that is actually in the parsetree.
      * @param newInstance The new instances of this class that must be initialized

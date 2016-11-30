@@ -80,7 +80,7 @@ public class HttpUriDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        String name = outputname.substring(inputname.length() + 1);
+        String name = extractFieldName(inputname, outputname);
         if ("protocol".equals(name)) {
             wantProtocol = true;
             return Casts.STRING_ONLY;
