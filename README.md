@@ -29,7 +29,7 @@ Analyze almost anything
 I wrote this parser for practical reallife situations. In reality a lot happens that is not allowed when looking at the
 official specifications, yet in production they do happen.
 So several of the key parts in this parser try to recover from bad data where possible and thus allow to extract as
-much usefull information as possible even if the data is not valid.
+much useful information as possible even if the data is not valid.
 Important examples of this are invalid encoding characters and chopped multibyte encoded characters that are both
 extracted as best as possible.
 
