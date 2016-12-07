@@ -30,7 +30,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class TimeStampDissectorTest {
+public class TestTimeStampDissector {
 
     public class TestRecord {
 
