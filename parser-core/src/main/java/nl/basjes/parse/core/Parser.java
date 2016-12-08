@@ -170,7 +170,14 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    protected void setRootType(final String newRootType) {
+    public final Set<Dissector> getAllDissectors() {
+        return allDissectors;
+    }
+
+    // --------------------------------------------
+
+
+    public void setRootType(final String newRootType) {
         compiledDissectors = null;
         rootType = newRootType;
     }

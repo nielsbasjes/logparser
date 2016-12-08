@@ -19,7 +19,6 @@ package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
