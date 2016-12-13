@@ -16,26 +16,45 @@
  */
 package nl.basjes.parse.core.nl.basjes.parse.core.test;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestRecord {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DissectorTester.class);
+
     private final Map<String, String> stringMap = new HashMap<>(32);
     private final Map<String, Long> longMap = new HashMap<>(32);
     private final Map<String, Double> doubleMap = new HashMap<>(32);
 
+    public void setVerbose() {
+        this.verbose = true;
+    }
+
+    boolean verbose = false;
+
 
     public void setStringValue(final String name, final String value) {
+        if (verbose) {
+            LOG.info("Received String: {} = {}", name, value);
+        }
         stringMap.put(name, value);
     }
     public void setLongValue(final String name, final Long value) {
+        if (verbose) {
+            LOG.info("Received Long  : {} = {}", name, value);
+        }
         longMap.put(name, value);
     }
     public void setDoubleValue(final String name, final Double value) {
+        if (verbose) {
+            LOG.info("Received Double: {} = {}", name, value);
+        }
         doubleMap.put(name, value);
     }
-
 
     public String getStringValue(final String name) {
         return stringMap.get(name);

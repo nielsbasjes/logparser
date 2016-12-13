@@ -53,6 +53,11 @@ public class DissectorTester {
         return new DissectorTester();
     }
 
+    public DissectorTester withParser(Parser<TestRecord> parser) {
+        this.parser = parser;
+        return this;
+    }
+
     public DissectorTester withDissector(Dissector dissector) {
         parser.addDissector(dissector);
         if (parser.getAllDissectors().size() == 1) {
@@ -110,6 +115,11 @@ public class DissectorTester {
             fail("No expected values were specified");
         }
 
+        checkDissectors();
+        checkExpectedValues();
+    }
+
+    private void checkExpectedValues() {
         for (String inputValue : inputValues) {
             if (verbose) {
                 LOG.info("Checking for input: {}", inputValue);
@@ -119,7 +129,7 @@ public class DissectorTester {
             try {
                 result = parser.parse(new TestRecord(), inputValue);
             } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
-                fail(e.getMessage());
+                fail(e.toString());
             }
 
             if (verbose) {
@@ -157,6 +167,17 @@ public class DissectorTester {
                 if (verbose) {
                     LOG.info("Passed: Double value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
                 }
+            }
+        }
+    }
+
+    private void checkDissectors() {
+        Set<Dissector> dissectors = parser.getAllDissectors();
+        for (Dissector dissector: dissectors) {
+            for (String output: dissector.getPossibleOutput()) {
+                String[] splitOutput = output.split(":",2);
+                assertEquals(splitOutput[0], splitOutput[0].toUpperCase(Locale.ENGLISH));
+                assertEquals(splitOutput[1], splitOutput[1].toLowerCase(Locale.ENGLISH));
             }
         }
     }
