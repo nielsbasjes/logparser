@@ -119,6 +119,7 @@ public class CookiesTest {
             "200 - 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
+                "NBA-0=, " +
                 "NBA-1=1234, " +
                 "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
                 "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
@@ -213,7 +214,8 @@ public class CookiesTest {
 
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));
         assertEquals("127.0.0.1.1351111543699529", results.get("HTTP.COOKIE:request.cookies.apache"));
-        assertEquals("NBA-1=1234, " +
+        assertEquals("NBA-0=, " +
+                "NBA-1=1234, " +
                 "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
                 "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
                 "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
