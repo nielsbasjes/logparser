@@ -151,4 +151,13 @@ public abstract class Dissector {
      */
     protected abstract void initializeNewInstance(Dissector newInstance);
 
+    /**
+     * If a dissector really needs to add an additional dissector to the set this method is the
+     * place to do so.
+     * @param parser The instance of the parser where the extra dissector is to be added to.
+     * @param <RECORD> The type of the record.
+     */
+    public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
+        // Default behaviour is do nothing.
+    }
 }

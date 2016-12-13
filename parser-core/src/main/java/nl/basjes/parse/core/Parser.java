@@ -235,6 +235,11 @@ public class Parser<RECORD> {
             return; // nothing to do.
         }
 
+        // In some cases a dissector may need to create a special 'extra' dissector.
+        for (final Dissector dissector : allDissectors) {
+            dissector.createAdditionalDissectors(this);
+        }
+
         // So
         // - we have a set of needed values (targets)
         // - we have a set of dissectors that can pick apart some input
