@@ -91,6 +91,7 @@
             <excludes>
               <!-- FIXME: This class is not yet used (unfinished) -->
               <exclude>nl/basjes/parse/httpdlog/NginxHttpdLogFormatDissector.class</exclude>
+              <exclude>nl/basjes/parse/httpdlog/Version.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
