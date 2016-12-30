@@ -3,7 +3,7 @@
   "-//Puppy Crawl//DTD Suppressions 1.1//EN"
   "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
-<!-- Avoid any reports about generated code -->
 <suppressions>
+  <!-- Avoid any reports about generated code -->
   <suppress files=".*[\\/]target[\\/]" checks=".*" />
 </suppressions>
