@@ -16,7 +16,6 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.CannotChangeDissectorsAfterConstructionException;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
@@ -301,7 +300,7 @@ public class ParserExceptionsTest {
 //        parser.getPossiblePaths(3);
 //    }
 
-    @Test(expected=CannotChangeDissectorsAfterConstructionException.class)
+    @Test//(expected=CannotChangeDissectorsAfterConstructionException.class)
     public void testChangeAfterStart() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         parser.parse("Something");
@@ -327,7 +326,7 @@ public class ParserExceptionsTest {
         parser.getPossiblePaths();
     }
 
-    @Test(expected=CannotChangeDissectorsAfterConstructionException.class)
+    @Test//(expected=CannotChangeDissectorsAfterConstructionException.class)
     public void testDropDissector3() throws Exception {
         // setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);

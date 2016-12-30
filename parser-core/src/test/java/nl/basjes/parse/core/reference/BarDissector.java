@@ -11,11 +11,9 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class BarDissector extends Dissector {
-    private static final String INPUT_TYPE = "BARINPUT";
-
     @Override
     public String getInputType() {
-        return INPUT_TYPE;
+        return "BARINPUT";
     }
 
     @Override

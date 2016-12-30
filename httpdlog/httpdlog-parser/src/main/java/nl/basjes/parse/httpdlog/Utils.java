@@ -183,7 +183,6 @@ public final class Utils {
                     default:
                         // This shouldn't happen.
                         // Let's just append the unmodified input for now.
-                        // FIXME: Figure out what to do (should not occur??)
                         sb.append('\\').append(chr);
                 }
             } else {

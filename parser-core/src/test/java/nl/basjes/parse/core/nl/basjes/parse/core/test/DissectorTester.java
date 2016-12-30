@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DissectorTester {
@@ -44,6 +47,8 @@ public class DissectorTester {
     private Map<String, String> expectedStrings = new HashMap<>();
     private Map<String, Long> expectedLongs = new HashMap<>();
     private Map<String, Double> expectedDoubles = new HashMap<>();
+    private List<String> expectedValuePresent = new ArrayList<>();
+    private List<String> expectedPossible = new ArrayList<>();
     private Parser<TestRecord> parser = new Parser<>(TestRecord.class);
 
     private DissectorTester() {
@@ -101,25 +106,52 @@ public class DissectorTester {
         return this;
     }
 
+    public DissectorTester expectValuePresent(String fieldname) {
+        expectedValuePresent.add(fieldname);
+        try {
+            parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), fieldname);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    public DissectorTester expectPossible(String fieldname) {
+        expectedPossible.add(fieldname);
+        return this;
+    }
+
     public DissectorTester verbose() {
         this.verbose = true;
         return this;
     }
 
-    public void check() {
-        if (inputValues.isEmpty()) {
-            fail("No inputvalues were specified");
-        }
-
-        if (expectedStrings.isEmpty() && expectedLongs.isEmpty() && expectedDoubles.isEmpty()) {
+    public void checkExpectations() {
+        if (expectedStrings.isEmpty() &&
+            expectedLongs.isEmpty() &&
+            expectedDoubles.isEmpty() &&
+            expectedValuePresent.isEmpty() &&
+            expectedPossible.isEmpty()) {
             fail("No expected values were specified");
         }
 
         checkDissectors();
         checkExpectedValues();
+        checkExpectedPossible();
     }
 
     private void checkExpectedValues() {
+        if (expectedStrings.size() +
+            expectedLongs.size() +
+            expectedDoubles.size() +
+            expectedValuePresent.size() == 0) {
+            return; // Nothing to do here
+        }
+
+        if (inputValues.isEmpty()) {
+            fail("No inputvalues were specified");
+        }
+
         for (String inputValue : inputValues) {
             if (verbose) {
                 LOG.info("Checking for input: {}", inputValue);
@@ -127,7 +159,11 @@ public class DissectorTester {
 
             TestRecord result = null;
             try {
-                result = parser.parse(new TestRecord(), inputValue);
+                TestRecord testRecord = new TestRecord();
+                if (verbose) {
+                    testRecord.setVerbose();
+                }
+                result = parser.parse(testRecord, inputValue);
             } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
                 fail(e.toString());
             }
@@ -141,6 +177,7 @@ public class DissectorTester {
             allFieldNames.addAll(expectedStrings.keySet());
             allFieldNames.addAll(expectedLongs.keySet());
             allFieldNames.addAll(expectedDoubles.keySet());
+            allFieldNames.addAll(expectedValuePresent);
             for (String key : allFieldNames) {
                 longestFieldName = Math.max(longestFieldName, key.length());
             }
@@ -168,6 +205,29 @@ public class DissectorTester {
                     LOG.info("Passed: Double value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
                 }
             }
+
+            for (String fieldName: expectedValuePresent) {
+                assertTrue("The string value for '" + fieldName + "' was missing.", result.hasStringValue(fieldName));
+                if (verbose) {
+                    LOG.info("Passed: A value for '{}'{} was present.", fieldName, padding(fieldName, longestFieldName));
+                }
+            }
+
+        }
+    }
+
+    private void checkExpectedPossible() {
+        int longestFieldName = 0;
+        for (String fieldName : expectedValuePresent) {
+            longestFieldName = Math.max(longestFieldName, fieldName.length());
+        }
+
+        List<String> allpossible = parser.getPossiblePaths();
+        for (String fieldName: expectedPossible) {
+            assertTrue("The fieldName '" + fieldName + "' is not possible.", allpossible.contains(fieldName));
+            if (verbose) {
+                LOG.info("Passed: Fieldname '{}'{} is possible.", fieldName, padding(fieldName, longestFieldName));
+            }
         }
     }
 
@@ -175,9 +235,10 @@ public class DissectorTester {
         Set<Dissector> dissectors = parser.getAllDissectors();
         for (Dissector dissector: dissectors) {
             for (String output: dissector.getPossibleOutput()) {
+                String baseMsg = "Dissector " + dissector.getClass().getSimpleName() + " outputs " + output;
                 String[] splitOutput = output.split(":",2);
-                assertEquals(splitOutput[0], splitOutput[0].toUpperCase(Locale.ENGLISH));
-                assertEquals(splitOutput[1], splitOutput[1].toLowerCase(Locale.ENGLISH));
+                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
+                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
         }
     }
@@ -188,6 +249,34 @@ public class DissectorTester {
             return "";
         }
         return String.format(Locale.ENGLISH, "%" + i + "s", "");
+    }
+
+    public DissectorTester printDissectors() {
+        LOG.info("=====================================================");
+        LOG.info("Dissectors:");
+        LOG.info("=====================================================");
+
+        Set<Dissector> dissectors = parser.getAllDissectors();
+        for (Dissector dissector: dissectors) {
+            LOG.info("-----------------------------------------------------");
+            LOG.info("{} --> {}", dissector.getInputType(), dissector.getClass().getSimpleName());
+            for (String output: dissector.getPossibleOutput()) {
+                LOG.info(">> {}", output);
+            }
+        }
+        LOG.info("=====================================================");
+        return this;
+    }
+
+    public DissectorTester printPossible() {
+        LOG.info("=====================================================");
+        LOG.info("Possible:");
+        LOG.info("=====================================================");
+        for (String path: parser.getPossiblePaths()) {
+            LOG.info("---> {}", path);
+        }
+        LOG.info("=====================================================");
+        return this;
     }
 
 }

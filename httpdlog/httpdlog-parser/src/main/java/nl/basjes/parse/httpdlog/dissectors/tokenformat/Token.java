@@ -17,12 +17,11 @@
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Dissector;
 
 import java.util.EnumSet;
 
 public class Token {
-//    private static Map<String, String> typeOverrule = new HashMap<String, String>();
-
     private final String name;
     private final String type;
     private final String regex;
@@ -30,6 +29,9 @@ public class Token {
     private final int length;
     private final EnumSet<Casts> casts;
     private final int prio;
+
+    // In some cases a token needs a custom dissector.
+    private Dissector customDissector = null;
 
     public Token(
             final String nName,
@@ -53,9 +55,6 @@ public class Token {
         // RFC 2616 Section 4.2 states: "Field names are case-insensitive."
         name = nName.toLowerCase();
         type = nType;
-//        if (typeOverrule.containsKey(name.toLowerCase())) {
-//            type = typeOverrule.get(name.toLowerCase());
-//        }
         regex = nRegex;
         startPos = nStartPos;
         length = nLength;
@@ -63,6 +62,13 @@ public class Token {
         prio = nPrio;
     }
 
+    public void setCustomDissector(Dissector dissector) {
+        customDissector = dissector;
+    }
+
+    public Dissector getCustomDissector() {
+        return customDissector;
+    }
 
     public String getName() {
         return name;

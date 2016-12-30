@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ApacheHttpdLogParserTest {
@@ -258,7 +259,7 @@ public class ApacheHttpdLogParserTest {
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDissectorsException e) {
-            assertEquals("HEADER:response.header.etag.thisshouldbemissing ", e.getMessage());
+            assertTrue(e.getMessage().contains("HEADER:response.header.etag.thisshouldbemissing"));
         }
     }
 
@@ -278,7 +279,7 @@ public class ApacheHttpdLogParserTest {
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDissectorsException e) {
-            assertEquals("BLURP:request.firstline.uri.query.thisshouldbemissing ", e.getMessage());
+            assertTrue(e.getMessage().contains("BLURP:request.firstline.uri.query.thisshouldbemissing"));
         }
     }
 

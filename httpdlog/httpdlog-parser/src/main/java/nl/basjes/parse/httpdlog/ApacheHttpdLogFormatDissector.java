@@ -18,7 +18,9 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineDissector;
+import nl.basjes.parse.httpdlog.dissectors.StrfTimeStampDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.NamedTokenParser;
+import nl.basjes.parse.httpdlog.dissectors.tokenformat.ParameterizedTokenParser;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 import org.slf4j.Logger;
@@ -92,10 +94,12 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // In vim I would simply do: %s@{\([^}]*\)}@{\L\1\E@g
         // But such an expression is not (yet) possible in Java
         StringBuffer sb = new StringBuffer(logformat.length());
-        Pattern p = Pattern.compile("%\\{([^\\}]*)\\}");
+
+        // All patterns that have a 'name' (note we do NOT do it to %{...}t )
+        Pattern p = Pattern.compile("%\\{([^\\}]*)\\}([^t])");
         Matcher m = p.matcher(logformat);
         while (m.find()) {
-            m.appendReplacement(sb, "%{"+m.group(1).toLowerCase()+'}');
+            m.appendReplacement(sb, "%{"+m.group(1).toLowerCase()+'}'+m.group(2));
         }
         m.appendTail(sb);
 
@@ -388,9 +392,31 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // %{format}t The time, in the form given by format, which should be in
         // strftime(3) format. (potentially localized)
-        // FIXME: Implement %{format}t "should be in strftime(3) format. (potentially localized)"
+
+        parsers.add(new ParameterizedTokenParser("\\%\\{([^\\}]*%[^\\}]*)\\}t",
+            "request.receive.time", "TIME.STRFTIME_",
+            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            -1, new StrfTimeStampDissector())
+            .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
+        );
+
         // If the format starts with begin: (default) the time is taken at the beginning of the request processing.
         // If it starts with end: it is the time when the log entry gets written, close to the end of the request processing.
+
+        parsers.add(new ParameterizedTokenParser("\\%\\{begin:([^\\}]*%[^\\}]*)\\}t",
+            "request.receive.time.begin", "TIME.STRFTIME_",
+            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            0, new StrfTimeStampDissector())
+            .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
+        );
+
+        parsers.add(new ParameterizedTokenParser("\\%\\{end:([^\\}]*%[^\\}]*)\\}t",
+            "request.receive.time.end", "TIME.STRFTIME_",
+            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            0, new StrfTimeStampDissector())
+            .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
+        );
+
         // In addition to the formats supported by strftime(3), the following format tokens are supported:
         // sec number of seconds since the Epoch
         // msec number of milliseconds since the Epoch
@@ -451,13 +477,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new TokenParser("%{end:usec_frac}t",
                 "request.receive.time.end.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-
-        // This next parser is created to only extract the localized string !!!
-        parsers.add(new NamedTokenParser("\\%\\{[^\\}]*\\}t",
-                "request.receive.time", "TIME.LOCALIZEDSTRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME)
-            .setWarningMessageWhenUsed("Fully parsing localized timestamps is NOT yet supported")
-        );
 
         // -------
         // %T The time taken to serve the request, in seconds.

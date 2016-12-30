@@ -132,7 +132,9 @@ public class Loader
                     Class<?> clazz = Class.forName(dissectorClassName);
                     Constructor<?> constructor = clazz.getConstructor();
                     Dissector instance = (Dissector) constructor.newInstance();
-                    instance.initializeFromSettingsParameter(dissectorParam);
+                    if (!instance.initializeFromSettingsParameter(dissectorParam)) {
+                        throw new IllegalArgumentException("Initialization failed of dissector instance of class " + dissectorClassName);
+                    }
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
                     throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);

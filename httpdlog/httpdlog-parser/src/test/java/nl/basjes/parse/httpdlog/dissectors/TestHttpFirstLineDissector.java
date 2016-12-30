@@ -30,7 +30,7 @@ public class TestHttpFirstLineDissector {
             .expect("HTTP.URI:uri",                           "/index.html")
             .expect("HTTP.PROTOCOL:protocol",                 "HTTP")
             .expect("HTTP.PROTOCOL.VERSION:protocol.version", "1.1")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -42,7 +42,7 @@ public class TestHttpFirstLineDissector {
             .expect("HTTP.URI:uri",                           "/index.html HTT")
             .expect("HTTP.PROTOCOL:protocol",                 (String)null)
             .expect("HTTP.PROTOCOL.VERSION:protocol.version", (String)null)
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -54,6 +54,6 @@ public class TestHttpFirstLineDissector {
             .expect("HTTP.URI:uri",                           "/index.html")
             .expect("HTTP.PROTOCOL:protocol",                 "HTTP")
             .expect("HTTP.PROTOCOL.VERSION:protocol.version", "1.1")
-            .check();
+            .checkExpectations();
     }
 }

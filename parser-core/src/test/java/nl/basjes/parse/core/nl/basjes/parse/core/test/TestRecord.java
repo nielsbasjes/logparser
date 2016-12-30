@@ -66,6 +66,17 @@ public class TestRecord {
         return doubleMap.get(name);
     }
 
+    public boolean hasStringValue(final String name) {
+        return stringMap.containsKey(name);
+    }
+    public boolean hasLongValue(final String name) {
+        return longMap.containsKey(name);
+    }
+    public boolean hasDoubleValue(final String name) {
+        return doubleMap.containsKey(name);
+    }
+
+
     public void clear() {
         stringMap.clear();
         longMap.clear();

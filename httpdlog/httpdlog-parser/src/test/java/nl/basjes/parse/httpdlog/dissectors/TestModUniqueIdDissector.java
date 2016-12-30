@@ -40,7 +40,7 @@ public class TestModUniqueIdDissector {
             .expect("PROCESSID:processid",        "47706"         )
             .expect("COUNTER:counter",            "13965"         )
             .expect("THREAD_INDEX:threadindex",   "2"             )
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -61,7 +61,7 @@ public class TestModUniqueIdDissector {
             .expect("PROCESSID:processid",        "19372"          )
             .expect("COUNTER:counter",            "42913"          )
             .expect("THREAD_INDEX:threadindex",   "243"            )
-            .check();
+            .checkExpectations();
     }
 
 

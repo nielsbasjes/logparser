@@ -4,8 +4,11 @@ v2.9
 ===
 - Output the httpd parser git info, build timestamp and version info on startup.
 - Fixed problem when using a different root dissector than provided by default.
-- Created a testing toolkit for dissectors.
+- Created a testing toolkit for dissectors and improved several tests.
 - Allow a dissector to add an additional dissector (needed for custom time format parsing)
+- Support for parsing many (not all) of the possible custom time format fields.
+- Allow changing the parser even after first use (makes it more flexible to use).
+- Allow a dissector to return an empty 'extra part' to allow an alternate form of type remapping
 
 v2.8
 ===

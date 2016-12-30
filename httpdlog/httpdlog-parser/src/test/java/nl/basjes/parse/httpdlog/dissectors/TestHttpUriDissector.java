@@ -36,7 +36,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&foofoo=bar%20bar")
             .expect("HTTP.REF:ref",              (String) null)
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -53,7 +53,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&aap=noot&foofoo=barbar&")
             .expect("HTTP.REF:ref",              (String) null)
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&aap=noot&foofoo=barbar&")
             .expect("HTTP.REF:ref",              "blabla")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&foofoo=barbar")
             .expect("HTTP.REF:ref",              "blabla")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&aap=noot&foofoo=bar%20bar&")
             .expect("HTTP.REF:ref",              "bla bla")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "")
             .expect("HTTP.QUERYSTRING:query",    "")
             .expect("HTTP.REF:ref",              (String) null)
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -138,7 +138,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/https/www.google.com")
             .expect("HTTP.QUERYSTRING:query",    "")
             .expect("HTTP.REF:ref",              (String) null)
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -156,7 +156,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/some/thing/else/[index.html")
             .expect("HTTP.QUERYSTRING:query",    "&aap=noot&foofoo=bar%20bar%20")
             .expect("HTTP.REF:ref",              "bla bla ")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -175,7 +175,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&promo=Give-50%25-discount&promo=And-do-%25Another-Wrong&last=also%20bad%20%25")
             .expect("HTTP.REF:ref",              "bla bla ")
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -194,7 +194,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.QUERYSTRING:query",    "&Linkid=%25%25%3dv(%40Foo)%3d%25%25%25&emcid=B%25ar")
             .expect("STRING:query.linkid",       "%%=v(@Foo)=%%%")
             .expect("HTTP.REF:ref",              (String) null)
-            .check();
+            .checkExpectations();
     }
 
 }

@@ -6,6 +6,6 @@ public class FooSpecialDissector extends FooDissector {
     @Override
     public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
         parser.addDissector(new BarDissector());
-        parser.addTypeRemapping("fooString", "BARINPUT");
+        parser.addTypeRemapping("foostring", "BARINPUT");
     }
 }

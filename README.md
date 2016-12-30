@@ -5,7 +5,8 @@ Apache HTTPD logparser
 This is a Logparsing framework intended to make parsing Apache HTTPD logfiles much easier.
 
 The basic idea is that you should be able to have a parser that you can construct by simply
-telling it with what configuration options the line was written.
+telling it with what configuration options the line was written. 
+These configuration options are the schema of the access loglines.
 
 So we are using the LogFormat that wrote the file as the input parameter for the parser that reads the same file.
 In addition to the config options specified in the Apache HTTPD manual under
@@ -17,12 +18,15 @@ In addition to the config options specified in the Apache HTTPD manual under
 * referer
 * agent
 
-Currently *not yet supported features*:
+**Special note about %{format}t**
 
-* %{format}t : The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
+    %{format}t: The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
 
-A simple workaround for this limitation for all logparser versions before 2.5: replace the **%{...}t** with **%{timestamp}i** .
+* **Version 2.5 and before**: 
+It cannot be extracted. A simple workaround for this limitation: replace the **%{...}t** with **%{timestamp}i** .
 You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
+* **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
+* **Version 2.9 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
 
 Analyze almost anything
 ===
@@ -33,7 +37,7 @@ much useful information as possible even if the data is not valid.
 Important examples of this are invalid encoding characters and chopped multibyte encoded characters that are both
 extracted as best as possible.
 
-If you have a real logline that causes a parse error then I kindly request you to sumbit this line, the logformat and
+If you have a real logline that causes a parse error then I kindly request you to submit this line, the logformat and
 the field that triggered the error as a bug report.
 
 Pre built versions
@@ -63,7 +67,7 @@ and the whole thing should build.
 
 Java, Hadoop, PIG & Hive
 ===
-I'm a big user of bigdata tools like pig and Hadoop.
+I'm a big user of bigdata tools like Apache Pig, Hadoop, Hive, etc. .
 So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
 
 Usage (Overview)

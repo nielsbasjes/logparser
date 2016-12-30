@@ -334,6 +334,10 @@ public class TimeStampDissector extends Dissector {
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
+        dissect(field, parsable, inputname);
+    }
+
+    protected void dissect(ParsedField field, final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
@@ -343,7 +347,14 @@ public class TimeStampDissector extends Dissector {
 
         if (wantAnyAsParsed || wantAnyTZIndependent) {
             // YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
-            DateTime dateTime = asParsedFormatter.parseDateTime(fieldValue);
+
+            DateTime dateTime;
+            try {
+                dateTime = asParsedFormatter.parseDateTime(fieldValue);
+            } catch (IllegalArgumentException iae) {
+                throw new DissectionFailure(iae.getMessage(), iae);
+            }
+
             DateTimeZone zone = dateTime.getZone();
             DateTimeFormatter asParsedWithZoneFormatter = asParsedFormatter.withZone(zone);
             dateTime = asParsedWithZoneFormatter.parseDateTime(fieldValue);
@@ -412,7 +423,12 @@ public class TimeStampDissector extends Dissector {
 
         if (wantAnyUTC) {
             // In UTC timezone
-            DateTime dateTime = formatter.parseDateTime(fieldValue);
+            DateTime dateTime;
+            try {
+                dateTime = formatter.parseDateTime(fieldValue);
+            } catch (IllegalArgumentException iae) {
+                throw new DissectionFailure(iae.getMessage(), iae);
+            }
 
             if (wantDayUTC) {
                 parsable.addDissection(inputname, "TIME.DAY", "day_utc",

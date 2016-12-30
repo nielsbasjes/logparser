@@ -128,7 +128,11 @@ public final class Parsable<RECORD> {
             completeName = name;
             neededWildCardName = type + ':' + "*";
         } else {
-            completeName = base + '.' + name;
+            if (name.isEmpty()) {
+                completeName = base;
+            } else {
+                completeName = base + '.' + name;
+            }
             neededWildCardName = type + ':' + base + ".*";
         }
         String neededName = type + ':' + completeName;

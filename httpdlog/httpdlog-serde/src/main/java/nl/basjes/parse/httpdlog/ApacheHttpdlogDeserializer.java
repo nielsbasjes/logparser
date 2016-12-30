@@ -170,7 +170,9 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                     Class<?> clazz = Class.forName(dissectorClassName);
                     Constructor<?> constructor = clazz.getConstructor();
                     Dissector instance = (Dissector) constructor.newInstance();
-                    instance.initializeFromSettingsParameter(dissectorParam);
+                    if (!instance.initializeFromSettingsParameter(dissectorParam)) {
+                        throw new SerDeException("Initialization failed of dissector instance of class " + dissectorClassName);
+                    }
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
                     throw new SerDeException("Found load with bad specification: No such class:" + dissectorClassName, e);

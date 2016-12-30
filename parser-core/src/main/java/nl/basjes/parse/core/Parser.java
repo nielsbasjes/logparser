@@ -16,7 +16,6 @@
  */
 package nl.basjes.parse.core;
 
-import nl.basjes.parse.core.exceptions.CannotChangeDissectorsAfterConstructionException;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.FatalErrorDuringCallOfSetterMethod;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
@@ -73,9 +72,7 @@ public class Parser<RECORD> {
     private final Map<String, Set<Method>> targets = new TreeMap<>();
     private final Map<String, EnumSet<Casts>> castsOfTargets = new TreeMap<>();
 
-    private final Set<String> locatedTargets = new HashSet<>();
-
-    private boolean usable = false;
+    private boolean assembled = false;
 
     // --------------------------------------------
 
@@ -129,10 +126,7 @@ public class Parser<RECORD> {
     // --------------------------------------------
 
     public final void addDissectors(final List<Dissector> dissectors) {
-        if (compiledDissectors != null) {
-            throw new CannotChangeDissectorsAfterConstructionException();
-        }
-
+        assembled = false;
         if (dissectors != null) {
             for (Dissector dissector : dissectors) {
                 allDissectors.add(dissector);
@@ -143,10 +137,7 @@ public class Parser<RECORD> {
     // --------------------------------------------
 
     public final void addDissector(final Dissector dissector) {
-        if (compiledDissectors != null) {
-            throw new CannotChangeDissectorsAfterConstructionException();
-        }
-
+        assembled = false;
         if (dissector != null) {
             allDissectors.add(dissector);
         }
@@ -155,10 +146,7 @@ public class Parser<RECORD> {
     // --------------------------------------------
 
     public final void dropDissector(Class<? extends Dissector> dissectorClassToDrop) {
-        if (compiledDissectors != null) {
-            throw new CannotChangeDissectorsAfterConstructionException();
-        }
-
+        assembled = false;
         Set<Dissector> removeDissector = new HashSet<>();
         for (final Dissector dissector : allDissectors) {
             if (dissector.getClass().equals(dissectorClassToDrop)) {
@@ -176,18 +164,13 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-
     public void setRootType(final String newRootType) {
-        compiledDissectors = null;
+        assembled = false;
         rootType = newRootType;
     }
 
     // --------------------------------------------
     private void assembleDissectorPhases() throws InvalidDissectorException {
-        if (compiledDissectors != null) {
-            return; // nothing to do.
-        }
-
         for (final Dissector dissector : allDissectors) {
             final String inputType = dissector.getInputType();
             if (inputType == null) {
@@ -208,6 +191,7 @@ public class Parser<RECORD> {
             }
         }
     }
+
     // --------------------------------------------
 
     private boolean failOnMissingDissectors = true;
@@ -231,13 +215,23 @@ public class Parser<RECORD> {
 
 
     private void assembleDissectors() throws MissingDissectorsException, InvalidDissectorException {
-        if (compiledDissectors != null) {
+        if (assembled) {
             return; // nothing to do.
         }
 
         // In some cases a dissector may need to create a special 'extra' dissector.
-        for (final Dissector dissector : allDissectors) {
-            dissector.createAdditionalDissectors(this);
+        // Which in some cases this is a recursive problem
+        Set<Dissector> doneDissectors = new HashSet<>(allDissectors.size() + 10);
+        Set<Dissector> loopDissectors = new HashSet<>(allDissectors);
+
+        while (!loopDissectors.isEmpty()) {
+            for (final Dissector dissector : loopDissectors) {
+                dissector.createAdditionalDissectors(this);
+            }
+            doneDissectors.addAll(loopDissectors);
+            loopDissectors.clear();
+            loopDissectors.addAll(allDissectors);
+            loopDissectors.removeAll(doneDissectors);
         }
 
         // So
@@ -263,7 +257,7 @@ public class Parser<RECORD> {
             StringBuilder sb = new StringBuilder(need.length());
 
             for (String part : needs) {
-                if (sb.length() == 0) {
+                if (sb.length() == 0 || part.length() == 0) {
                     sb.append(part);
                 } else {
                     sb.append('.').append(part);
@@ -276,7 +270,8 @@ public class Parser<RECORD> {
         // Step 2: From the root we explore all possibly useful trees (recursively)
         compiledDissectors = new HashMap<>();
         usefulIntermediateFields = new HashSet<>();
-        findUsefulDissectorsFromField(allPossibleSubtargets, rootType, "", true); // The root name is an empty string
+        Set<String> locatedTargets = new HashSet<>();
+        findUsefulDissectorsFromField(allPossibleSubtargets, locatedTargets, rootType, "", true); // The root name is an empty string
 
         // Step 3: Inform all dissectors to prepare for the run
         for (Set<DissectorPhase> dissectorPhases : compiledDissectors.values()) {
@@ -287,22 +282,23 @@ public class Parser<RECORD> {
 
         if (failOnMissingDissectors) {
             // Step 4: As a final step we verify that every required input can be found
-            Set<String> missingDissectors = getTheMissingFields();
+            Set<String> missingDissectors = getTheMissingFields(locatedTargets);
             if (missingDissectors != null && !missingDissectors.isEmpty()) {
                 StringBuilder allMissing = new StringBuilder(missingDissectors.size() * 64);
                 for (String missing : missingDissectors) {
-                    allMissing.append(missing).append(' ');
+                    allMissing.append('\n').append(missing);
                 }
                 throw new MissingDissectorsException(allMissing.toString());
             }
         }
-        usable = true;
+        assembled = true;
     }
 
     // --------------------------------------------
 
     private void findUsefulDissectorsFromField(
             final Set<String> possibleTargets,
+            final Set<String> locatedTargets,
             final String subRootType, final String subRootName,
             final boolean thisIsTheRoot) {
 
@@ -343,6 +339,8 @@ public class Parser<RECORD> {
                 }
             } else if (thisIsTheRoot) {
                 checkFields.add(dissector.name);
+            } else if (dissector.name.isEmpty()) {
+                checkFields.add(subRootName);
             } else {
                 checkFields.add(subRootName + '.' + dissector.name);
             }
@@ -380,7 +378,7 @@ public class Parser<RECORD> {
                             dissectorPhaseInstance.instance.prepareForDissect(subRootName, checkField));
 
                     // Recurse from this point down
-                    findUsefulDissectorsFromField(possibleTargets, dissector.outputType, checkField, false);
+                    findUsefulDissectorsFromField(possibleTargets, locatedTargets, dissector.outputType, checkField, false);
                 }
             }
         }
@@ -391,7 +389,7 @@ public class Parser<RECORD> {
                 if (!compiledDissectors.containsKey(mappedType + ':' + subRootName)) {
                     // Retyped targets are ALWAYS String ONLY.
                     castsOfTargets.put(mappedType + ':' + subRootName, Casts.STRING_ONLY);
-                    findUsefulDissectorsFromField(possibleTargets, mappedType, subRootName, false);
+                    findUsefulDissectorsFromField(possibleTargets, locatedTargets, mappedType, subRootName, false);
                 }
             }
         }
@@ -410,7 +408,7 @@ public class Parser<RECORD> {
 
     // --------------------------------------------
 
-    private Set<String> getTheMissingFields() {
+    private Set<String> getTheMissingFields(Set<String> locatedTargets) {
         Set<String> missing = new HashSet<>();
         for (String target : getNeeded()) {
             if (!locatedTargets.contains(target)) {
@@ -458,6 +456,8 @@ public class Parser<RECORD> {
     /*
      * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final List<String> fieldValues) {
+        assembled = false;
+
         if (method == null || fieldValues == null) {
             return; // Nothing to do here
         }
@@ -493,8 +493,6 @@ public class Parser<RECORD> {
         } else {
             throw new InvalidFieldMethodSignature(method);
         }
-
-        compiledDissectors = null;
     }
 
     // --------------------------------------------
@@ -523,9 +521,7 @@ public class Parser<RECORD> {
     }
 
     public void addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
-        if (compiledDissectors != null) {
-            throw new CannotChangeDissectorsAfterConstructionException();
-        }
+        assembled = false;
 
         String theInput = input.trim().toLowerCase(Locale.ENGLISH);
         String theType = newType.trim().toUpperCase(Locale.ENGLISH);
@@ -593,7 +589,7 @@ public class Parser<RECORD> {
         throws DissectionFailure, InvalidDissectorException, MissingDissectorsException {
         assembleDissectors();
 
-        if (!usable) {
+        if (!assembled) {
             return null;
         }
 
@@ -759,6 +755,11 @@ public class Parser<RECORD> {
             return null; // nothing to do.
         }
 
+        try {
+            assembleDissectors();
+        } catch (MissingDissectorsException | InvalidDissectorException e) {
+            // Should never occur
+        }
         List<String> paths = new ArrayList<>();
 
         Map<String, List<String>> pathNodes = new HashMap<>();
@@ -771,10 +772,23 @@ public class Parser<RECORD> {
             }
 
             final List<String> outputs = dissector.getPossibleOutput();
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("------------------------------------");
+                LOG.debug("Possible: Dissector IN {}", inputType);
+                for (String output: outputs) {
+                    LOG.debug("Possible:          --> {}", output);
+                }
+            }
+
+            List<String> existingOutputs = pathNodes.get(inputType);
+            if (existingOutputs != null) {
+                outputs.addAll(existingOutputs);
+            }
             pathNodes.put(inputType, outputs);
         }
 
-        findAdditionalPossiblePaths(pathNodes, paths, "", rootType, maxDepth);
+        findAdditionalPossiblePaths(pathNodes, paths, "", rootType, maxDepth, "");
 
         for (Map.Entry<String, Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
             for (String typeRemapping: typeRemappingSet.getValue()) {
@@ -782,7 +796,7 @@ public class Parser<RECORD> {
                 String remappedPath = typeRemapping + ':' + typeRemappingSet.getKey();
                 LOG.debug("Adding remapped path: {}", remappedPath);
                 paths.add(remappedPath);
-                findAdditionalPossiblePaths(pathNodes, paths, typeRemappingSet.getKey(), typeRemapping, maxDepth - 1);
+                findAdditionalPossiblePaths(pathNodes, paths, typeRemappingSet.getKey(), typeRemapping, maxDepth - 1, "");
             }
         }
 
@@ -792,11 +806,17 @@ public class Parser<RECORD> {
     /**
      * Add all child paths in respect to the base (which is already present in the result set)
      */
-    private void findAdditionalPossiblePaths(Map<String, List<String>> pathNodes, List<String> paths, String base, String baseType,
-            int maxDepth) {
+    private void findAdditionalPossiblePaths(Map<String, List<String>> pathNodes,
+                                             List<String> paths,
+                                             String base,
+                                             String baseType,
+                                             int maxDepth,
+                                             String logPrefix) {
         if (maxDepth == 0) {
             return;
         }
+
+        LOG.debug("Possible:{} > {}:{}", logPrefix, baseType, base);
 
         if (pathNodes.containsKey(baseType)) {
             List<String> childPaths = pathNodes.get(baseType);
@@ -809,14 +829,19 @@ public class Parser<RECORD> {
                 if (base.isEmpty()) {
                     childBase = childName;
                 } else {
-                    childBase = base + '.' + childName;
+                    if (childName.isEmpty()) {
+                        childBase = base;
+                    } else {
+                        childBase = base + '.' + childName;
+                    }
                 }
+                LOG.debug("Possible:{} + {}:{}", logPrefix, childType, childBase);
                 paths.add(childType+':'+childBase);
 
-                findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1);
-
+                findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");
             }
         }
+        LOG.debug("Possible:{} < {}:{}", logPrefix, baseType, base);
     }
 
     // --------------------------------------------

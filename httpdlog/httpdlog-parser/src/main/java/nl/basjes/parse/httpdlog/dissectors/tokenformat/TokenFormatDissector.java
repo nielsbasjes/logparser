@@ -20,6 +20,7 @@ import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import org.slf4j.Logger;
@@ -112,6 +113,7 @@ public abstract class TokenFormatDissector extends Dissector {
         return logFormat;
     }
 
+    @SuppressWarnings("unused") // Useful for debugging purposes
     public String getLogFormatRegEx() {
         return logFormatRegEx;
     }
@@ -173,7 +175,7 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
 
-    protected void setInputType(String newInputType) {
+    public void setInputType(String newInputType) {
         this.inputType = newInputType;
     }
 
@@ -326,6 +328,14 @@ public abstract class TokenFormatDissector extends Dissector {
         }
 
         return allTokens;
+    }
+
+
+    @Override
+    public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
+        for (Token token: logFormatTokens) {
+            parser.addDissector(token.getCustomDissector());
+        }
     }
 
     // --------------------------------------------

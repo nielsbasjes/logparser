@@ -70,7 +70,7 @@ public class ParsedField {
     }
 
     public String toString(){
-        return getId();
+        return getId() + " = " + value;
     }
 
 }

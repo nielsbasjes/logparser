@@ -20,6 +20,7 @@ package nl.basjes.parse.httpdlog;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
@@ -132,7 +133,7 @@ public class HttpdLogFormatDissector extends Dissector {
         NGINX
     }
 
-    // TODO: Actually implement pattern matching (OR make it explicit...).
+    // TODO for NGINX support: Actually implement pattern matching (OR make it explicit...).
     @SuppressWarnings("UnusedParameters")
     private LogFormatType determineMostLikelyLogFormat(final String logFormat) {
 //    if (logFormat.indexOf('%') != -1) {
@@ -150,6 +151,13 @@ public class HttpdLogFormatDissector extends Dissector {
     public boolean initializeFromSettingsParameter(String multiLineLogFormat) {
         addMultipleLogFormats(multiLineLogFormat);
         return true;
+    }
+
+    @Override
+    public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
+        for (Dissector dissector : dissectors) {
+            dissector.createAdditionalDissectors(parser);
+        }
     }
 
     @Override
@@ -185,7 +193,6 @@ public class HttpdLogFormatDissector extends Dissector {
 
     @Override
     public String getInputType() {
-        // FIXME: Assert that all dissectors use the same input type!!
         return INPUT_TYPE;
     }
 
@@ -223,6 +230,10 @@ public class HttpdLogFormatDissector extends Dissector {
         }
 
         for (Dissector dissector : dissectors) {
+            if (!INPUT_TYPE.equals(dissector.getInputType())) {
+                throw new InvalidDissectorException("All dissectors controlled by " + this.getClass().getCanonicalName()
+                    + " MUST have \"" + INPUT_TYPE + "\" as their inputtype.");
+            }
             dissector.prepareForRun();
         }
     }

@@ -197,7 +197,6 @@ public class ApacheHttpdLogfileRecordReader extends
                     newParser.addParseTarget(ParsedRecord.class.getMethod("setMultiValueString",
                             String.class, String.class), field);
                 } else {
-                    // FIXME: So far I do not see a way to do this more efficiently yet
                     newParser.addParseTarget(ParsedRecord.class.getMethod("set",
                             String.class, String.class), field);
                     newParser.addParseTarget(ParsedRecord.class.getMethod("set",

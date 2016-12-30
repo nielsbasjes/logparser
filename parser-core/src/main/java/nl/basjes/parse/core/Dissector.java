@@ -149,7 +149,7 @@ public abstract class Dissector {
      * This is called after instantiating the class that is actually in the parsetree.
      * @param newInstance The new instances of this class that must be initialized
      */
-    protected abstract void initializeNewInstance(Dissector newInstance);
+    protected abstract void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException;
 
     /**
      * If a dissector really needs to add an additional dissector to the set this method is the
@@ -159,5 +159,9 @@ public abstract class Dissector {
      */
     public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
         // Default behaviour is do nothing.
+    }
+
+    public void setInputType(String s) {
+        // Usually only implemented in very dynamic dissectors (like custom timestamp format)
     }
 }

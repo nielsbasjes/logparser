@@ -22,7 +22,7 @@ public class ReferenceTest {
             .expect("DOUBLE:foodouble",  42L)
             .expect("DOUBLE:foodouble",  42D)
             .verbose()
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -40,20 +40,16 @@ public class ReferenceTest {
             .expect("DOUBLE:bardouble",  42L)
             .expect("DOUBLE:bardouble",  42D)
             .verbose()
-            .check();
+            .checkExpectations();
     }
 
     @Test
     public void runManuallyCombined(){
         Parser<TestRecord> parser = new Parser<>(TestRecord.class);
-        parser.addTypeRemapping("fooString", "BARINPUT");
         parser.addDissector(new FooDissector());
         parser.addDissector(new BarDissector());
+        parser.addTypeRemapping("foostring", "BARINPUT");
         parser.setRootType(new FooDissector().getInputType());
-
-        for (String path : parser.getPossiblePaths()){
-            System.out.println(path);
-        }
 
         DissectorTester.create()
             .withParser(parser)
@@ -78,7 +74,7 @@ public class ReferenceTest {
             .expect("DOUBLE:foostring.bardouble",   42L)
             .expect("DOUBLE:foostring.bardouble",   42D)
 
-            .check();
+            .checkExpectations();
     }
 
     @Test
@@ -106,7 +102,7 @@ public class ReferenceTest {
             .expect("DOUBLE:foostring.bardouble",   42L)
             .expect("DOUBLE:foostring.bardouble",   42D)
 
-            .check();
+            .checkExpectations();
     }
 
 
