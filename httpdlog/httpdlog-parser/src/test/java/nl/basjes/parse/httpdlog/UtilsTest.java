@@ -48,19 +48,39 @@ public class UtilsTest {
     }
 
     @Test
-    public void testApacheLogDecoder() {
+    public void testHexToByte() {
         // Test basic character decoder
-        assertEquals((byte)0x00, Utils.hexCharsToByte('0', '0'));
-        assertEquals((byte)0x20, Utils.hexCharsToByte('2', '0'));
-        assertEquals((byte)0x43, Utils.hexCharsToByte('4', '3'));
-        assertEquals((byte)0x88, Utils.hexCharsToByte('8', '8'));
-        assertEquals((byte)0xde, Utils.hexCharsToByte('d', 'E'));
-        assertEquals((byte)0xff, Utils.hexCharsToByte('F', 'f'));
+        assertEquals((byte) 0x00, Utils.hexCharsToByte('0', '0'));
+        assertEquals((byte) 0x11, Utils.hexCharsToByte('1', '1'));
+        assertEquals((byte) 0x22, Utils.hexCharsToByte('2', '2'));
+        assertEquals((byte) 0x33, Utils.hexCharsToByte('3', '3'));
+        assertEquals((byte) 0x44, Utils.hexCharsToByte('4', '4'));
+        assertEquals((byte) 0x55, Utils.hexCharsToByte('5', '5'));
+        assertEquals((byte) 0x66, Utils.hexCharsToByte('6', '6'));
+        assertEquals((byte) 0x77, Utils.hexCharsToByte('7', '7'));
+        assertEquals((byte) 0x88, Utils.hexCharsToByte('8', '8'));
+        assertEquals((byte) 0x99, Utils.hexCharsToByte('9', '9'));
+        assertEquals((byte) 0xaa, Utils.hexCharsToByte('a', 'a'));
+        assertEquals((byte) 0xbb, Utils.hexCharsToByte('b', 'b'));
+        assertEquals((byte) 0xcc, Utils.hexCharsToByte('c', 'c'));
+        assertEquals((byte) 0xdd, Utils.hexCharsToByte('d', 'd'));
+        assertEquals((byte) 0xee, Utils.hexCharsToByte('e', 'e'));
+        assertEquals((byte) 0xff, Utils.hexCharsToByte('f', 'f'));
+    }
 
+    @Test
+    public void testApacheLogDecoder() {
         // Decoding a value
         assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla bla bla"));
         assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla\\x20bla bla"));
         assertEquals("bla\bbla\nbla\tbla", Utils.decodeApacheHTTPDLogValue("bla\\bbla\\nbla\\tbla"));
         assertEquals("bla\"bla\nbla\tbla", Utils.decodeApacheHTTPDLogValue("bla\\\"bla\\nbla\\tbla"));
+        assertEquals(new String(new byte[] {(byte)0x0b}), Utils.decodeApacheHTTPDLogValue("\\v"));
+
+        // Specials
+        assertEquals("\\q", Utils.decodeApacheHTTPDLogValue("\\q"));
+        assertEquals("", Utils.decodeApacheHTTPDLogValue(""));
+        assertEquals(null, Utils.decodeApacheHTTPDLogValue(null));
     }
+
 }

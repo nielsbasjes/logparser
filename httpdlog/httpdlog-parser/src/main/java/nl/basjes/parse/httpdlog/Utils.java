@@ -172,7 +172,7 @@ public final class Utils {
                         sb.append('\t');
                         break;
                     case 'v':
-                        sb.append(0x0b);
+                        sb.append((char)hexCharsToByte('0', 'b'));
                         break;
                     case 'x':
                         // This should be \xhh  (hh = [0-9a-f][0-9a-f])
