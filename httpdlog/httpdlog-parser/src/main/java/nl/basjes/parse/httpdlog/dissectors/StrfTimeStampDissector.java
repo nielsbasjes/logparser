@@ -128,6 +128,12 @@ public class StrfTimeStampDissector extends Dissector {
 
     List<String> convertStrfTimeToTimeFormat(String strftime) throws InvalidDissectorException {
         List<String> resultSet = new ArrayList<>();
+
+        // In some cases these may be still in there
+        strftime = strftime
+            .replaceAll("begin:", "")
+            .replaceAll("end:", "");
+
         resultSet.add(strftime);
 
         // Translating the strftime format into something jodatime should understand.
@@ -164,6 +170,10 @@ public class StrfTimeStampDissector extends Dissector {
         List<String> quotedResultSet = new ArrayList<>();
         for (String result: resultSet) {
             result = result.replaceAll("(%.)", "'$1'");                     // Quote all
+
+            result = result.replaceAll("msec_frac", "'SSS'");    // Apache HTTPD specific: milliseconds fraction
+//            result = result.replaceAll("usec_frac", "'SSSSSSS'");  // Apache HTTPD specific: microseconds fraction
+
             result = result.replaceAll("''", "");                           // Remove the quotes between two adjacent
             result = result.replaceAll("^'(%.)", "$1");                     // Remove the quote at the front IFF first is field
             result = result.replaceAll("(%.)'$", "$1");                     // Remove the quote at the end   IFF last  is field

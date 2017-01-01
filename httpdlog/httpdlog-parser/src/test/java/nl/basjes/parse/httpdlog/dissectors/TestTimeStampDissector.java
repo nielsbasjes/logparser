@@ -332,7 +332,6 @@ public class TestTimeStampDissector {
             .checkExpectations();
     }
 
-    @Ignore
     @Test
     public void testMultipleSpecialTime() throws Exception {
         // As described here: http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples
@@ -341,14 +340,20 @@ public class TestTimeStampDissector {
         //          "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
 
         String logline   = "01/Jan/2017 21:52:58.483 +0100";
-        String logformat = "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t";
+
+        // The original logformat
+        // String logformat = "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t";
+
+        // The transformation
+        // logformat = logformat.replaceAll("\\}t([^%{]+)%\\{","$1");
+
+        // The reformatted result.
+        String logformat = "%{%d/%b/%Y %T.msec_frac %z}t";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch", "1483303978000")
-            .expect("TIME.EPOCH:request.receive.time.begin.msec_frac", "483")
-            .expect("TIME.ZONE:request.receive.time.timezone", "+0100")
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1483303978483")
             .checkExpectations();
     }
 

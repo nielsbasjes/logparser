@@ -389,7 +389,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         parsers.add(new ParameterizedTokenParser("\\%\\{([^\\}]*%[^\\}]*)\\}t",
             "request.receive.time", "TIME.STRFTIME_",
-            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING,
             -1, new StrfTimeStampDissector())
             .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
         );
@@ -399,14 +399,14 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         parsers.add(new ParameterizedTokenParser("\\%\\{begin:([^\\}]*%[^\\}]*)\\}t",
             "request.receive.time.begin", "TIME.STRFTIME_",
-            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING,
             0, new StrfTimeStampDissector())
             .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
         );
 
         parsers.add(new ParameterizedTokenParser("\\%\\{end:([^\\}]*%[^\\}]*)\\}t",
             "request.receive.time.end", "TIME.STRFTIME_",
-            Casts.STRING_ONLY, TokenParser.FORMAT_LOCALIZED_TIME,
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING,
             0, new StrfTimeStampDissector())
             .setWarningMessageWhenUsed("Only some parts of localized timestamps are supported")
         );
@@ -501,7 +501,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %{UNIT}T The time taken to serve the request, in a time unit given by UNIT.
         // Valid units are ms for milliseconds, us for microseconds, and s for seconds.
         // Using s gives the same result as %T without any format;
-        // using us gives the same result as %D.
+        // Using us gives the same result as %D.
         parsers.add(new TokenParser("%{us}T",
             "response.server.processing.time", "MICROSECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
