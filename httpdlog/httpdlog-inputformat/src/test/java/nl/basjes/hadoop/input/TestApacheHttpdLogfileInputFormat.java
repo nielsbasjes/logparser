@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ApacheHttpdLogfileInputFormatTest {
+public class TestApacheHttpdLogfileInputFormat {
     @Test
     public void checkInputFormat() throws IOException, InterruptedException {
         // CHECKSTYLE.OFF: LineLength
@@ -48,7 +48,8 @@ public class ApacheHttpdLogfileInputFormatTest {
 
         // A ',' separated list of fields
         conf.set("nl.basjes.parse.apachehttpdlogline.fields",
-            "TIME.EPOCH:request.receive.time.epoch");
+            "TIME.EPOCH:request.receive.time.epoch," +
+            "HTTP.USERAGENT:request.user-agent");
 
         File testFile = new File("src/test/resources/access.log");
         Path path = new Path(testFile.getAbsoluteFile().toURI());
@@ -65,6 +66,7 @@ public class ApacheHttpdLogfileInputFormatTest {
         Object value = reader.getCurrentValue();
         if (value instanceof ParsedRecord) {
             assertEquals("1483272081000", ((ParsedRecord) value).getString("TIME.EPOCH:request.receive.time.epoch"));
+            assertEquals("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36", ((ParsedRecord) value).getString("HTTP.USERAGENT:request.user-agent"));
         } else {
             fail("Wrong return class type");
         }
