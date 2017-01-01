@@ -19,6 +19,7 @@ package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestTimeStampDissector {
@@ -331,7 +332,24 @@ public class TestTimeStampDissector {
             .checkExpectations();
     }
 
+    @Ignore
+    @Test
+    public void testMultipleSpecialTime() throws Exception {
+        // As described here: http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples
+        // You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
+        // Timestamp including milliseconds
+        //          "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
 
+        String logline   = "01/Jan/2017 21:52:58.483 +0100";
+        String logformat = "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t";
 
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1483303978000")
+            .expect("TIME.EPOCH:request.receive.time.begin.msec_frac", "483")
+            .expect("TIME.ZONE:request.receive.time.timezone", "+0100")
+            .checkExpectations();
+    }
 
 }
