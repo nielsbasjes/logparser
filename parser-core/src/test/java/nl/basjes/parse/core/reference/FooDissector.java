@@ -19,6 +19,7 @@ public class FooDissector extends Dissector {
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = new ArrayList<>();
+        result.add("ANY:fooany");
         result.add("STRING:foostring");
         result.add("LONG:foolong");
         result.add("DOUBLE:foodouble");
@@ -32,6 +33,7 @@ public class FooDissector extends Dissector {
 
     @Override
     public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+        parsable.addDissection(inputname, "ANY",    "fooany",    "42");
         parsable.addDissection(inputname, "STRING", "foostring", "42");
         parsable.addDissection(inputname, "LONG",   "foolong",   42L);
         parsable.addDissection(inputname, "DOUBLE", "foodouble", 42D);
@@ -39,7 +41,17 @@ public class FooDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-        return Casts.STRING_OR_LONG_OR_DOUBLE;
+        String name = extractFieldName(inputname, outputname);
+        switch (name) {
+            case "foostring":
+                return Casts.STRING_ONLY;
+            case "foolong":
+                return Casts.STRING_OR_LONG;
+            case "foodouble":
+                return Casts.STRING_OR_DOUBLE;
+            default:
+                return Casts.STRING_OR_LONG_OR_DOUBLE;
+        }
     }
 
     @Override

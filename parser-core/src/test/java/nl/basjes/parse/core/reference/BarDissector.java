@@ -19,6 +19,7 @@ public class BarDissector extends Dissector {
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = new ArrayList<>();
+        result.add("ANY:barany");
         result.add("STRING:barstring");
         result.add("LONG:barlong");
         result.add("DOUBLE:bardouble");
@@ -32,6 +33,7 @@ public class BarDissector extends Dissector {
 
     @Override
     public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+        parsable.addDissection(inputname, "ANY",    "barany",   "42");
         parsable.addDissection(inputname, "STRING", "barstring", "42");
         parsable.addDissection(inputname, "LONG",   "barlong",   42L);
         parsable.addDissection(inputname, "DOUBLE", "bardouble", 42D);
@@ -39,7 +41,17 @@ public class BarDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-        return Casts.STRING_OR_LONG_OR_DOUBLE;
+        String name = extractFieldName(inputname, outputname);
+        switch (name) {
+            case "barstring":
+                return Casts.STRING_ONLY;
+            case "barlong":
+                return Casts.STRING_OR_LONG;
+            case "bardouble":
+                return Casts.STRING_OR_DOUBLE;
+            default:
+                return Casts.STRING_OR_LONG_OR_DOUBLE;
+        }
     }
 
     @Override
