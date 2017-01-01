@@ -9,6 +9,8 @@ v2.9
 - Support for parsing many (not all) of the possible custom time format fields.
 - Allow changing the parser even after first use (makes it more flexible to use).
 - Allow a dissector to return an empty 'extra part' to allow an alternate form of type remapping
+- Improved test coverage
+- Dissection the setcookies expire value was not deterministic and an absent 'expire' value is now returned as null instead of the 'now' timestamp.
 
 v2.8
 ===
