@@ -420,9 +420,22 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // These tokens can not be combined with each other or strftime(3) formatting in the same format string.
         // You can use multiple %{format}t tokens instead.
 
+        // sec
+        parsers.add(new TokenParser("%{sec}t",
+            "request.receive.time.sec", "TIME.SECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{begin:sec}t",
+            "request.receive.time.begin.sec", "TIME.SECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        parsers.add(new TokenParser("%{end:sec}t",
+            "request.receive.time.end.sec", "TIME.SECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
         // msec
         parsers.add(new TokenParser("%{msec}t",
-                "request.receive.time.begin.msec", "TIME.EPOCH",
+                "request.receive.time.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{begin:msec}t",
@@ -435,7 +448,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // usec
         parsers.add(new TokenParser("%{usec}t",
-                "request.receive.time.begin.usec", "TIME.EPOCH.USEC",
+                "request.receive.time.usec", "TIME.EPOCH.USEC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{begin:usec}t",
@@ -448,7 +461,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // msec_frac
         parsers.add(new TokenParser("%{msec_frac}t",
-                "request.receive.time.begin.msec_frac", "TIME.EPOCH",
+                "request.receive.time.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{begin:msec_frac}t",
@@ -461,7 +474,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // usec_frac
         parsers.add(new TokenParser("%{usec_frac}t",
-                "request.receive.time.begin.usec_frac", "TIME.EPOCH.USEC_FRAC",
+                "request.receive.time.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         parsers.add(new TokenParser("%{begin:usec_frac}t",
