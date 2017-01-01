@@ -151,6 +151,9 @@ public class ApacheHttpdLogfileRecordReader extends
 
     private Map<String, EnumSet<Casts>> allCasts;
     private void setupFields() {
+        if (fieldList == null || fieldList.isEmpty()) {
+            return; // Nothing to do here
+        }
         try {
             String firstField = fieldList.get(0);
             if (fieldList.size() == 1 &&
