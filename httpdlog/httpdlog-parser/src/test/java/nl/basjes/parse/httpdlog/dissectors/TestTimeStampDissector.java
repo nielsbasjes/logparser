@@ -309,7 +309,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeLeadingSpaces() throws Exception {
+    public void testSpecialTimeLeadingSpaces1() throws Exception {
         String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 20 21 2016 Dec 20 08 356 20  8 12 50 PM 25 3 2016 +0100";
         String logformat = "%{%D %F %R %T %r %a %A %b %B %C %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t";
 
@@ -319,5 +319,20 @@ public class TestTimeStampDissector {
             .expect("TIME.EPOCH:request.receive.time.epoch" ,"1482349825000")
             .checkExpectations();
     }
+
+    @Test
+    public void testSpecialTimeLeadingSpaces2() throws Exception {
+        String logline = "127.0.0.1 - - [01/Jan/2017:13:01:21 +0100] \"GET / HTTP/1.1\" 200 3525 \"01/01/17 2017-01-01 13:01 13:01:21 01:01:21 PM Sun Sunday Jan January 20 01 2016 Jan 13 01 001 13  1 01 01 PM 21 7 2017 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
+        String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %C %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
+
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch" ,"1483272081000")
+            .checkExpectations();
+    }
+
+
+
 
 }
