@@ -18,15 +18,27 @@ In addition to the config options specified in the Apache HTTPD manual under
 * referer
 * agent
 
-**Special note about %{format}t**
+**Special notes about %{format}t**
+===
+
+Quote from [Apache HTTPD manual](http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats)
 
     %{format}t: The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
 
-* **Version 2.5 and before**: 
+* **Version 2.5 and before**:
 It cannot be extracted. A simple workaround for this limitation: replace the **%{...}t** with **%{timestamp}i** .
 You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
 * **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
 * **Version 2.9 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
+
+**Limitation**: Only a single %{format}t entry is supported per line. 
+So examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples) 
+of the Apache HTTPD manual cannot be parsed.
+
+    You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
+    Timestamp including milliseconds
+             "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
+
 
 Analyze almost anything
 ===
