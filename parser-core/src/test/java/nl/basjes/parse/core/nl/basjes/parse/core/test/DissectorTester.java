@@ -16,7 +16,10 @@
  */
 package nl.basjes.parse.core.nl.basjes.parse.core.test;
 
+import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
+import nl.basjes.parse.core.Parsable;
+import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
@@ -25,16 +28,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -44,9 +48,9 @@ public class DissectorTester {
 
     boolean verbose = false;
     private List<String> inputValues = new ArrayList<>();
-    private Map<String, String> expectedStrings = new HashMap<>();
-    private Map<String, Long> expectedLongs = new HashMap<>();
-    private Map<String, Double> expectedDoubles = new HashMap<>();
+    private Map<String, String> expectedStrings = new TreeMap<>();
+    private Map<String, Long> expectedLongs = new TreeMap<>();
+    private Map<String, Double> expectedDoubles = new TreeMap<>();
     private List<String> expectedValuePresent = new ArrayList<>();
     private List<String> expectedPossible = new ArrayList<>();
     private Parser<TestRecord> parser = new Parser<>(TestRecord.class);
@@ -61,6 +65,18 @@ public class DissectorTester {
     public DissectorTester withParser(Parser<TestRecord> parser) {
         this.parser = parser;
         return this;
+    }
+
+    /**
+     * Wildcard dissectors at the root doesn't work (yet)
+     * So to test these we can create a dummy root dissector that simply inserts a "first level dissector that does nothing"
+     * @param fieldName The fieldName of the first level path
+     * @param dissector The first REAL dissector for this test
+     * @return This DissectorTester
+     */
+    public DissectorTester withDissectorUnderDummyRoot(String fieldName, Dissector dissector) {
+        return withDissector(new DummyDissector(dissector.getInputType(), fieldName))
+                .withDissector(dissector);
     }
 
     public DissectorTester withDissector(Dissector dissector) {
@@ -278,5 +294,58 @@ public class DissectorTester {
         LOG.info("=====================================================");
         return this;
     }
+
+    public static class DummyDissector extends Dissector {
+
+        private String outputType;
+        private String fieldName;
+
+        public DummyDissector() {
+        }
+
+        public DummyDissector(String newOutputType, String newFieldName) {
+            fieldName = newFieldName;
+            outputType = newOutputType;
+        }
+
+        @Override
+        public boolean initializeFromSettingsParameter(String settings) {
+            return true;
+        }
+
+        @Override
+        public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+            final ParsedField field = parsable.getParsableField("DUMMYROOT", inputname);
+            parsable.addDissection(inputname, outputType, fieldName, field.getValue());
+        }
+
+        @Override
+        public String getInputType() {
+            return "DUMMYROOT";
+        }
+
+        @Override
+        public List<String> getPossibleOutput() {
+            return Collections.singletonList(outputType + ":" + fieldName);
+        }
+
+        @Override
+        public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
+            return Casts.STRING_ONLY;
+        }
+
+        @Override
+        public void prepareForRun() throws InvalidDissectorException {
+
+        }
+
+        @Override
+        protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+            DummyDissector dummyDissector = (DummyDissector)newInstance;
+            dummyDissector.fieldName = fieldName;
+            dummyDissector.outputType = outputType;
+        }
+    }
+
 
 }
