@@ -69,7 +69,7 @@ public class JsonLogFormatTest {
         tester.expectValuePresent("HTTP.PROTOCOL.VERSION:request.firstline.protocol.version");
         tester.expectValuePresent("STRING:request.status.last");
         tester.expectValuePresent("BYTES:response.body.bytes");
-        tester.expectValuePresent("MICROSECONDS:server.process.time");
+        tester.expectValuePresent("MICROSECONDS:response.server.processing.time");
         tester.expectValuePresent("HTTP.QUERYSTRING:request.firstline.uri.query");
         tester.expectValuePresent("HTTP.PATH:request.firstline.uri.path");
         tester.expectValuePresent("HTTP.REF:request.firstline.uri.ref");

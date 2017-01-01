@@ -1,6 +1,6 @@
 This is intended as an overview of the major changes
 
-v2.9
+v3.0
 ===
 - Output the httpd parser git info, build timestamp and version info on startup.
 - Fixed problem when using a different root dissector than provided by default.
@@ -11,6 +11,7 @@ v2.9
 - Allow a dissector to return an empty 'extra part' to allow an alternate form of type remapping
 - Improved test coverage
 - Dissection the setcookies expire value was not deterministic and an absent 'expire' value is now returned as null instead of the 'now' timestamp.
+- Implemented %{UNIT}T and %D changed from "server.process.time" to "response.server.processing.time"
 
 v2.8
 ===

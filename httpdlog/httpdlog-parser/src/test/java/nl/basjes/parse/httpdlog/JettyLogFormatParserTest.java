@@ -45,7 +45,7 @@ public class JettyLogFormatParserTest {
             ,"BYTES:response.body.bytesclf"
             ,"HTTP.URI:request.referer"
             ,"HTTP.USERAGENT:request.user-agent"
-            ,"MICROSECONDS:server.process.time"
+            ,"MICROSECONDS:response.server.processing.time"
         })
         public void setValue(final String name, final String value) {
             results.put(name, value);
@@ -98,7 +98,7 @@ public class JettyLogFormatParserTest {
             if (useragent!=null) {
                 assertEquals("Mozilla/5.0 (dummy)", useragent);
             }
-            assertEquals("8",results.get("MICROSECONDS:server.process.time"));
+            assertEquals("8",results.get("MICROSECONDS:response.server.processing.time"));
 
         }
     }

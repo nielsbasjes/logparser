@@ -69,7 +69,7 @@ public class ApacheHttpdLogParserTest {
             "HTTP.COOKIE:request.cookies.jquery-ui-theme",
             "HTTP.SETCOOKIE:response.cookies.apache",
             "STRING:response.cookies.apache.domain",
-            "MICROSECONDS:server.process.time",
+            "MICROSECONDS:response.server.processing.time",
             "STRING:request.status.last",
             "HTTP.HEADER:response.header.etag"})
         public void setValue(final String name, final String value) {
@@ -153,7 +153,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("31", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("December", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
-        assertEquals("351", results.get("MICROSECONDS:server.process.time"));
+        assertEquals("351", results.get("MICROSECONDS:response.server.processing.time"));
         assertEquals("Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl",
                 results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant", results.get("HTTP.COOKIES:request.cookies"));
@@ -196,7 +196,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("10", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
-        assertEquals("1306", results.get("MICROSECONDS:server.process.time"));
+        assertEquals("1306", results.get("MICROSECONDS:response.server.processing.time"));
         assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
                 results.get("HTTP.COOKIES:request.cookies"));
@@ -235,7 +235,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("10", results.get("TIME.DAY:request.receive.time.day"));
         assertEquals("23", results.get("TIME.HOUR:request.receive.time.hour"));
         assertEquals("August", results.get("TIME.MONTHNAME:request.receive.time.monthname"));
-        assertEquals("1306", results.get("MICROSECONDS:server.process.time"));
+        assertEquals("1306", results.get("MICROSECONDS:response.server.processing.time"));
         assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
                 results.get("HTTP.COOKIES:request.cookies"));

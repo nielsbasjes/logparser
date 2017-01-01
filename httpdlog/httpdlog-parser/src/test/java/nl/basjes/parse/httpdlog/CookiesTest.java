@@ -63,7 +63,7 @@ public class CookiesTest {
             "TIME.MONTH:request.receive.time.month_utc",
             "TIME.YEAR:request.receive.time.year_utc",
             "TIME.MONTHNAME:request.receive.time.monthname_utc",
-            "MICROSECONDS:server.process.time",
+            "MICROSECONDS:response.server.processing.time",
             "STRING:request.status.last",
             "HTTP.HEADER:response.header.etag",
 
@@ -209,7 +209,7 @@ public class CookiesTest {
         assertEquals(null, results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                      results.get("HTTP.USERAGENT:request.user-agent"));
-        assertEquals("80991", results.get("MICROSECONDS:server.process.time"));
+        assertEquals("80991", results.get("MICROSECONDS:response.server.processing.time"));
         assertEquals(null, results.get("HTTP.HEADER:response.header.etag"));
 
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));

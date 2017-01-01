@@ -231,12 +231,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
-        // %D The time taken to serve the request, in microseconds.
-        parsers.add(new TokenParser("%D",
-                "server.process.time", "MICROSECONDS",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-
-        // -------
         // %{FOOBAR}e The contents of the environment variable FOOBAR
         parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}e", "server.environment.", "VARIABLE",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
@@ -485,6 +479,27 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
+        // %D The time taken to serve the request, in microseconds.
+        parsers.add(new TokenParser("%D",
+            "response.server.processing.time", "MICROSECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // -------
+        // %{UNIT}T The time taken to serve the request, in a time unit given by UNIT.
+        // Valid units are ms for milliseconds, us for microseconds, and s for seconds.
+        // Using s gives the same result as %T without any format;
+        // using us gives the same result as %D.
+        parsers.add(new TokenParser("%{us}T",
+            "response.server.processing.time", "MICROSECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+        parsers.add(new TokenParser("%{ms}T",
+            "response.server.processing.time", "MILLISECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+        parsers.add(new TokenParser("%{s}T",
+            "response.server.processing.time", "SECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // -------
         // %u Remote user (from auth; may be bogus if return status (%s) is 401)
         parsers.add(new TokenParser("%u",
                 "connection.client.user", "STRING",
@@ -538,18 +553,23 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // %S Bytes transferred (received and sent), including request and headers, cannot be zero.
         // This is the combination of %I and %O. You need to enable mod_logio to use this.
-        // TODO: Implement %S. I have not been able to test this one yet.
-//        parsers.add(new TokenParser("%S",
-//                "total.bytes", "BYTES",
-//                Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
+        parsers.add(new TokenParser("%S",
+                "total.bytes", "BYTES",
+                Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
 
         // -------
         // %{VARNAME}^ti The contents of VARNAME: trailer line(s) in the request sent to the server.
         // TODO: Implement %{VARNAME}^ti
+//        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^ti",
+//            "request.trailer.", "STRING",
+//            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // %{VARNAME}^to The contents of VARNAME: trailer line(s) in the response sent from the server.
         // TODO: Implement %{VARNAME}^to
+//        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^ti",
+//            "response.trailer.", "STRING",
+//            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // Some explicit type overrides.
         // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
