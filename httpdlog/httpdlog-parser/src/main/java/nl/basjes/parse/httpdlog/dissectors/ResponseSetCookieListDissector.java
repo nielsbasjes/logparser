@@ -122,25 +122,11 @@ public class ResponseSetCookieListDissector extends Dissector {
                 cookie.setVersion(1);
                 String cookieName = cookie.getName().toLowerCase();
                 if (wantAllCookies || requestedCookies.contains(cookieName)) {
-                    parsable.addDissection(inputname,
-                            getDissectionType(inputname, cookieName),
-                            cookieName,
-                            value);
+                    parsable.addDissection(inputname, "HTTP.SETCOOKIE", cookieName, value);
                 }
             }
         }
 
-    }
-
-    // --------------------------------------------
-
-    /**
-     * This determines the type of the value that was just found.
-     * This method is intended to be overruled by a subclass
-     */
-    @SuppressWarnings("UnusedParameters")
-    public String getDissectionType(final String basename, final String name) {
-        return "HTTP.SETCOOKIE";
     }
 
     // --------------------------------------------

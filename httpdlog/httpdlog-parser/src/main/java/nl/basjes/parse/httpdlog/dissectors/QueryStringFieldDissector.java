@@ -102,14 +102,14 @@ public class QueryStringFieldDissector extends Dissector {
                 if (!"".equals(value)) {
                     String name = value.toLowerCase();
                     if (wantAllFields || requestedParameters.contains(name)) {
-                        parsable.addDissection(inputname, getDissectionType(inputname, value), name, "");
+                        parsable.addDissection(inputname, "STRING", name, "");
                     }
                 }
             } else {
                 String name = value.substring(0, equalPos).toLowerCase();
                 if (wantAllFields || requestedParameters.contains(name)) {
                     try {
-                        parsable.addDissection(inputname, getDissectionType(inputname, name), name,
+                        parsable.addDissection(inputname, "STRING", name,
                                 resilientUrlDecode(value.substring(equalPos + 1, value.length())));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
@@ -118,17 +118,6 @@ public class QueryStringFieldDissector extends Dissector {
                 }
             }
         }
-    }
-
-    // --------------------------------------------
-
-    /**
-     * This determines the type of the value that was just found.
-     * This method is intended to be overruled by a subclass
-     */
-    @SuppressWarnings("UnusedParameters")
-    public String getDissectionType(final String basename, final String name) {
-        return "STRING";
     }
 
     // --------------------------------------------

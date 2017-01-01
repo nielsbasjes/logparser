@@ -17,7 +17,6 @@
 
 package nl.basjes.parse.httpdlog.dissectors;
 
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
 import org.junit.Test;

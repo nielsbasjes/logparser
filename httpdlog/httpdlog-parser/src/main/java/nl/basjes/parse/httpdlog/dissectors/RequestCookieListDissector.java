@@ -103,7 +103,7 @@ public class RequestCookieListDissector extends Dissector {
                 if (!"".equals(value)) {
                     String theName = value.trim().toLowerCase(); // Just a name, no value
                     if (wantAllCookies || requestedCookies.contains(theName)) {
-                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName, "");
+                        parsable.addDissection(inputname, "HTTP.COOKIE", theName, "");
                     }
                 }
             } else {
@@ -111,7 +111,7 @@ public class RequestCookieListDissector extends Dissector {
                 if (wantAllCookies || requestedCookies.contains(theName)) {
                     String theValue = value.substring(equalPos + 1, value.length()).trim();
                     try {
-                        parsable.addDissection(inputname, getDissectionType(inputname, theName), theName,
+                        parsable.addDissection(inputname, "HTTP.COOKIE", theName,
                                 Utils.resilientUrlDecode(theValue));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
@@ -120,17 +120,6 @@ public class RequestCookieListDissector extends Dissector {
                 }
             }
         }
-    }
-
-    // --------------------------------------------
-
-    /**
-     * This determines the type of the value that was just found.
-     * This method is intended to be overruled by a subclass
-     */
-    @SuppressWarnings("UnusedParameters")
-    public String getDissectionType(final String basename, final String name) {
-        return "HTTP.COOKIE";
     }
 
     // --------------------------------------------
