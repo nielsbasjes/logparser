@@ -38,17 +38,6 @@ public class ParsedField {
         this.value = new Value(value);
     }
 
-    public ParsedField(String type, String name, Long value) {
-        this.type = type;
-        this.name = name;
-        this.value = new Value(value);
-    }
-
-    public ParsedField(String type, String name, Double value) {
-        this.type = type;
-        this.name = name;
-        this.value = new Value(value);
-    }
     public String getType() {
         return type;
     }
