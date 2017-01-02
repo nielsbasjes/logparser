@@ -64,5 +64,30 @@ public class TestModUniqueIdDissector {
             .checkExpectations();
     }
 
+    @Test
+    public void testBadUniqueId_tooShort() throws Exception {
+        DissectorTester.create()
+            .withDissector(new ModUniqueIdDissector())
+            .withInput("Ucdv38CoEJwAAEusp6EAAAD") // BAD: 1 letter too short
+            .expect("TIME.EPOCH:epoch",         (String)null)
+            .expect("IP:ip",                    (String)null)
+            .expect("PROCESSID:processid",      (String)null)
+            .expect("COUNTER:counter",          (String)null)
+            .expect("THREAD_INDEX:threadindex", (String)null)
+            .checkExpectations();
+    }
+
+    @Test
+    public void testBadUniqueId_notBase64() throws Exception {
+        DissectorTester.create()
+            .withDissector(new ModUniqueIdDissector())
+            .withInput("Ucdv38CoEJwAAEusp6EAAAD!") // BAD: 1 letter wrong
+            .expect("TIME.EPOCH:epoch",         (String)null)
+            .expect("IP:ip",                    (String)null)
+            .expect("PROCESSID:processid",      (String)null)
+            .expect("COUNTER:counter",          (String)null)
+            .expect("THREAD_INDEX:threadindex", (String)null)
+            .checkExpectations();
+    }
 
 }

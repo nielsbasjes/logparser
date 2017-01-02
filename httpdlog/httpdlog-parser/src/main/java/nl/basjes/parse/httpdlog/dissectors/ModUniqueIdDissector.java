@@ -205,6 +205,11 @@ public class ModUniqueIdDissector extends Dissector {
             return null;
         }
 
+        // Is the decoded output the right length?
+        if (bytes.length != 18) {
+            return null;
+        }
+
         UniqueIdRec result = new UniqueIdRec();
 
 //        http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html
