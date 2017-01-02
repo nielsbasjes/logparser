@@ -66,6 +66,12 @@ public class UtilsTest {
         assertEquals((byte) 0xdd, Utils.hexCharsToByte('d', 'd'));
         assertEquals((byte) 0xee, Utils.hexCharsToByte('e', 'e'));
         assertEquals((byte) 0xff, Utils.hexCharsToByte('f', 'f'));
+        assertEquals((byte) 0xAA, Utils.hexCharsToByte('A', 'A'));
+        assertEquals((byte) 0xBB, Utils.hexCharsToByte('B', 'B'));
+        assertEquals((byte) 0xCC, Utils.hexCharsToByte('C', 'C'));
+        assertEquals((byte) 0xDD, Utils.hexCharsToByte('D', 'D'));
+        assertEquals((byte) 0xEE, Utils.hexCharsToByte('E', 'E'));
+        assertEquals((byte) 0xFF, Utils.hexCharsToByte('F', 'F'));
     }
 
     @Test
