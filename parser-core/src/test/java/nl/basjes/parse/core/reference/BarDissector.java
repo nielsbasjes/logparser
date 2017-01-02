@@ -21,7 +21,9 @@ public class BarDissector extends Dissector {
         List<String> result = new ArrayList<>();
         result.add("ANY:barany");
         result.add("STRING:barstring");
+        result.add("INT:barint");
         result.add("LONG:barlong");
+        result.add("FLOAT:barfloat");
         result.add("DOUBLE:bardouble");
         return result;
     }
@@ -33,9 +35,11 @@ public class BarDissector extends Dissector {
 
     @Override
     public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
-        parsable.addDissection(inputname, "ANY",    "barany",   "42");
+        parsable.addDissection(inputname, "ANY",    "barany",    "42");
         parsable.addDissection(inputname, "STRING", "barstring", "42");
+        parsable.addDissection(inputname, "INT",    "barint",    42);
         parsable.addDissection(inputname, "LONG",   "barlong",   42L);
+        parsable.addDissection(inputname, "FLOAT",  "barfloat",  42F);
         parsable.addDissection(inputname, "DOUBLE", "bardouble", 42D);
     }
 
@@ -45,8 +49,12 @@ public class BarDissector extends Dissector {
         switch (name) {
             case "barstring":
                 return Casts.STRING_ONLY;
+            case "barint":
+                return Casts.STRING_OR_LONG;
             case "barlong":
                 return Casts.STRING_OR_LONG;
+            case "barfloat":
+                return Casts.STRING_OR_DOUBLE;
             case "bardouble":
                 return Casts.STRING_OR_DOUBLE;
             default:

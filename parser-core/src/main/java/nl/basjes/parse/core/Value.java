@@ -47,14 +47,12 @@ public class Value {
 
     public String getString() {
         switch (filled) {
-            case STRING:
-                return s;
             case LONG:
                 return l == null ? null : Long.toString(l);
             case DOUBLE:
                 return d == null ? null : Double.toString(d);
-            default:
-                return null; // Should not occur
+            default: // == case STRING:
+                return s;
         }
     }
 
@@ -66,12 +64,10 @@ public class Value {
                 } catch (NumberFormatException e) {
                     return null;
                 }
-            case LONG:
-                return l;
             case DOUBLE:
                 return d == null ? null : (long) Math.floor(d + 0.5d); // Apply rounding
-            default:
-                return null; // Should not occur
+            default: // == case LONG:
+                return l;
         }
     }
 
@@ -85,10 +81,8 @@ public class Value {
                 }
             case LONG:
                 return l == null ? null : new Double(l);
-            case DOUBLE:
+            default: // == case DOUBLE:
                 return d;
-            default:
-                return null; // Should not occur
         }
     }
 

@@ -21,7 +21,9 @@ public class FooDissector extends Dissector {
         List<String> result = new ArrayList<>();
         result.add("ANY:fooany");
         result.add("STRING:foostring");
+        result.add("INT:fooint");
         result.add("LONG:foolong");
+        result.add("FLOAT:foofloat");
         result.add("DOUBLE:foodouble");
         return result;
     }
@@ -35,7 +37,9 @@ public class FooDissector extends Dissector {
     public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
         parsable.addDissection(inputname, "ANY",    "fooany",    "42");
         parsable.addDissection(inputname, "STRING", "foostring", "42");
+        parsable.addDissection(inputname, "INT",    "fooint",    42);
         parsable.addDissection(inputname, "LONG",   "foolong",   42L);
+        parsable.addDissection(inputname, "FLOAT",  "foofloat",  42F);
         parsable.addDissection(inputname, "DOUBLE", "foodouble", 42D);
     }
 
@@ -45,8 +49,12 @@ public class FooDissector extends Dissector {
         switch (name) {
             case "foostring":
                 return Casts.STRING_ONLY;
+            case "fooint":
+                return Casts.STRING_OR_LONG;
             case "foolong":
                 return Casts.STRING_OR_LONG;
+            case "foofloat":
+                return Casts.STRING_OR_DOUBLE;
             case "foodouble":
                 return Casts.STRING_OR_DOUBLE;
             default:
