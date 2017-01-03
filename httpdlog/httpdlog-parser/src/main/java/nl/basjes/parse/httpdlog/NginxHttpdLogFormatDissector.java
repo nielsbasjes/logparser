@@ -123,7 +123,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      $bytes_sent
 //      the number of bytes sent to a client
         parsers.add(new TokenParser("$bytes_sent",
-            "response.body.bytesclf", "BYTES",
+            "response.bytes", "BYTES",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
@@ -189,7 +189,9 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $arg_name
 //      argument name in the request line
-        parsers.add(new IgnoreUnknownTokenParser("$arg_name")); // TODO: Implement $arg_name token
+        parsers.add(new NamedTokenParser("\\$arg_([a-z0-9\\-\\_]*)",
+            "request.firstline.uri.query.", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
 //      $args
@@ -228,21 +230,21 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      $content_length
 //      “Content-Length” request header field
         parsers.add(new TokenParser("$content_length",
-                "request.header.content_length", "HTTP.HEADER",
+                "request.header.content_length", "HTTP.HEADER",  // TODO: Use '-' or '_' ??
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
 //      $content_type
 //      “Content-Type” request header field
         parsers.add(new TokenParser("$content_type",
-                "request.cookies.content-type", "STRING",
+                "request.header.content_type", "HTTP.HEADER", // TODO: Use '-' or '_' ??
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
 //      $cookie_name
 //      the name cookie
         parsers.add(new NamedTokenParser("\\$cookie_([a-z0-9\\-_]*)",
-                "request.header.", "HTTP.HEADER", // FIXME: Must be cookie
+                "request.cookies.", "HTTP.COOKIE",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
@@ -254,7 +256,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      $host
 //      in this order of precedence: host name from the request line, or host name from the “Host” request header field,
 //      or the server name matching a request
-        parsers.add(new IgnoreUnknownTokenParser("$host")); // TODO: Implement $host token
+        parsers.add(new IgnoreUnknownTokenParser("$host", -1)); // TODO: Implement $host token
 
         // -------
 //      $hostname
@@ -346,13 +348,13 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             "request.firstline", "HTTP.FIRSTLINE",
             Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
             TokenParser.FORMAT_NO_SPACE_STRING + " " +
-            TokenParser.FORMAT_NO_SPACE_STRING, -1));
+            TokenParser.FORMAT_NO_SPACE_STRING, -2));
 
         // -------
 //      $request_body
 //      request body
 //      The variable’s value is made available in locations processed by the proxy_pass, fastcgi_pass, uwsgi_pass, and scgi_pass directives.
-        parsers.add(new IgnoreUnknownTokenParser("$request_body")); // TODO: Implement $request_body token
+        parsers.add(new IgnoreUnknownTokenParser("$request_body", -1)); // TODO: Implement $request_body token
 
         // -------
 //      $request_body_file
@@ -462,7 +464,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space
 //      information about the client TCP connection; available on systems that support the TCP_INFO socket option
 //      $tcpinfo_rtt
-        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rtt")); // TODO: Implement $tcpinfo_rtt token
+        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rtt", -1)); // TODO: Implement $tcpinfo_rtt token
 //      $tcpinfo_rttvar
         parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
 //      $tcpinfo_snd_cwnd
