@@ -16,6 +16,7 @@
  */
 package nl.basjes.parse.httpdlog;
 
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineDissector;
 import nl.basjes.parse.httpdlog.dissectors.HttpUriDissector;
@@ -64,6 +65,11 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
         // The pieces we have to get there
         addDissector(new HttpdLogFormatDissector(logformat));
         addDissector(new TimeStampDissector(timestampFormat));
+
+        Dissector iso8601TimeStamp = new TimeStampDissector("yyyy-MMM-dd'T'HH:mm:ssZZ");
+        iso8601TimeStamp.setInputType("TIME.ISO8601");
+
+        addDissector(iso8601TimeStamp);
         addDissector(new HttpFirstLineDissector());
         addDissector(new HttpUriDissector());
         addDissector(new QueryStringFieldDissector());

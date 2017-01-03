@@ -81,11 +81,16 @@ public class TimeStampDissector extends Dissector {
 
     // --------------------------------------------
 
-    private static final String INPUT_TYPE = "TIME.STAMP";
+    private String inputType = "TIME.STAMP";
 
     @Override
     public String getInputType() {
-        return INPUT_TYPE;
+        return inputType;
+    }
+
+    @Override
+    public void setInputType(String nInputType) {
+        inputType = nInputType;
     }
 
     // --------------------------------------------
@@ -333,7 +338,7 @@ public class TimeStampDissector extends Dissector {
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
-        final ParsedField field = parsable.getParsableField(INPUT_TYPE, inputname);
+        final ParsedField field = parsable.getParsableField(getInputType(), inputname);
         dissect(field, parsable, inputname);
     }
 
