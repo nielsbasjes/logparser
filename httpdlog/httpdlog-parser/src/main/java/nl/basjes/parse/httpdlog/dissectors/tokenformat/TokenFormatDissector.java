@@ -69,6 +69,17 @@ public abstract class TokenFormatDissector extends Dissector {
         }
     }
 
+    // --------------------------------------------
+    public static class IgnoreUnknownTokenParser extends TokenParser {
+        public IgnoreUnknownTokenParser(final String nLogFormatToken) {
+            this(nLogFormatToken, 0);
+        }
+
+        public IgnoreUnknownTokenParser(final String nLogFormatToken, int nPrio) {
+            super(nLogFormatToken, "IGNORED", "IGNORED", Casts.STRING_ONLY, TokenParser.FORMAT_STRING, nPrio);
+        }
+    }
+
     public TokenFormatDissector(final String logFormat) {
         setLogFormat(logFormat);
     }
