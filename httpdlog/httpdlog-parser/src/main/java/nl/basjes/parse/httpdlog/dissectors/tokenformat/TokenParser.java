@@ -58,6 +58,9 @@ public class TokenParser {
 //            "\\[[0-9][0-9]/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/20[0-9][0-9]:[0-9][0-9]"
 //             +":[0-9][0-9]:[0-9][0-9] [\\+|\\-][0-9][0-9][0-9]0\\]";
 
+    public static final String FORMAT_STANDARD_TIME_ISO8601 =
+        "[1-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9][\\+|\\-][0-9][0-9]:[0-9][0-9]";
+
     public static final String FORMAT_LOCALIZED_TIME = "[0-9A-Za-z\\-+:\\/ ]*";
 
     // ---------------------------------------

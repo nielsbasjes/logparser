@@ -66,7 +66,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
         addDissector(new HttpdLogFormatDissector(logformat));
         addDissector(new TimeStampDissector(timestampFormat));
 
-        Dissector iso8601TimeStamp = new TimeStampDissector("yyyy-MMM-dd'T'HH:mm:ssZZ");
+        Dissector iso8601TimeStamp = new TimeStampDissector("yyyy-MM-dd'T'HH:mm:ssZZ");
         iso8601TimeStamp.setInputType("TIME.ISO8601");
 
         addDissector(iso8601TimeStamp);

@@ -170,7 +170,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // FIXME: Test this fixed format !!
         parsers.add(new TokenParser("$time_iso8601",
             "request.receive.time", "TIME.ISO8601",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
+            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_ISO8601));
 
         // -------
 //      $time_local

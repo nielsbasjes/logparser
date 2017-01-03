@@ -76,6 +76,7 @@ public class TimeStampDissector extends Dissector {
 
     @Override
     protected void initializeNewInstance(Dissector newInstance) {
+        newInstance.setInputType(getInputType());
         ((TimeStampDissector) newInstance).setDateTimePattern(dateTimePattern);
     }
 
