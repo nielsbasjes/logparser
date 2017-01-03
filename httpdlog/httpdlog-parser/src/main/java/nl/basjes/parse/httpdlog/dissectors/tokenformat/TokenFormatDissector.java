@@ -76,7 +76,7 @@ public abstract class TokenFormatDissector extends Dissector {
         }
 
         public IgnoreUnknownTokenParser(final String nLogFormatToken, int nPrio) {
-            super(nLogFormatToken, "IGNORED", "IGNORED", Casts.STRING_ONLY, TokenParser.FORMAT_STRING, nPrio);
+            super(nLogFormatToken, "IGNORED", "IGNORED", Casts.STRING_ONLY, "[^\"]*", nPrio);
         }
     }
 
