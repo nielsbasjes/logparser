@@ -295,6 +295,46 @@ public class DissectorTester {
         return this;
     }
 
+    public DissectorTester printAllPossibleValues() {
+        if (inputValues.isEmpty()) {
+            fail("No inputvalues were specified");
+        }
+
+        try {
+            List<String> possibleFieldNames = parser.getPossiblePaths();
+            for (String path: possibleFieldNames) {
+                parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), path);
+            }
+
+            for (String inputValue : inputValues) {
+                LOG.info("=====================================================");
+                LOG.info("All values (except wildcards) for input:{}", inputValue);
+                LOG.info("=====================================================");
+                for (String path : possibleFieldNames) {
+                    parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), path);
+                }
+                TestRecord result = parser.parse(inputValue);
+
+                int longestFieldName = 0;
+                for (String fieldName : possibleFieldNames) {
+                    longestFieldName = Math.max(longestFieldName, fieldName.length());
+                }
+                for (String fieldName : possibleFieldNames) {
+                    String value = result.getStringValue(fieldName);
+                    if (value == null) {
+                        value = "<<<null>>>";
+                    }
+                    LOG.info("Found value for {}{} = {}", fieldName, padding(fieldName, longestFieldName), value);
+                }
+
+            }
+            LOG.info("=====================================================");
+        } catch (NoSuchMethodException | InvalidDissectorException | MissingDissectorsException | DissectionFailure e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
     public static class DummyDissector extends Dissector {
 
         private String outputType;
