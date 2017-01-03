@@ -17,7 +17,6 @@
 
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
@@ -113,9 +112,7 @@ public class ApacheHttpdLogParserTest {
         Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
 
         // Manually add an extra dissector
-        List<Dissector> extraDissectors = new ArrayList<>();
-        extraDissectors.add(new ScreenResolutionDissector());
-        parser.addDissectors(extraDissectors);
+        parser.addDissector(new ScreenResolutionDissector());
         parser.addTypeRemapping("request.firstline.uri.query.res", "SCREENRESOLUTION");
         List<String> extraFields = new ArrayList<>();
         extraFields.add("SCREENWIDTH:request.firstline.uri.query.res.width");
