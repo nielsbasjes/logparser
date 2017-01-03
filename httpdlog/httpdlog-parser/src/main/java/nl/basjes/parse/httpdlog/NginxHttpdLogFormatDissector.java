@@ -119,9 +119,11 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
 //      http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
 
+        // FIXME: !!!!!!!!!!! CHECK FOR DUPLICATE RULES !!!!!!!!!!!!!
+
         // -------
 //      $bytes_sent
-//      the number of bytes sent to a client
+//      number of bytes sent to a client (1.3.8, 1.2.5)
         parsers.add(new TokenParser("$bytes_sent",
             "response.bytes", "BYTES",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
@@ -218,13 +220,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new TokenParser("$body_bytes_sent",
             "response.body.bytes", "BYTES",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-
-        // -------
-//      $bytes_sent
-//      number of bytes sent to a client (1.3.8, 1.2.5)
-        parsers.add(new TokenParser("$bytes_sent",
-            "response.bytes", "BYTES",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
 //      $content_length
