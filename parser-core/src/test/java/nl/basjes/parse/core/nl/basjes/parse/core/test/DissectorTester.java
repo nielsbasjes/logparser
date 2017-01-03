@@ -331,6 +331,7 @@ public class DissectorTester {
             LOG.info("=====================================================");
         } catch (NoSuchMethodException | InvalidDissectorException | MissingDissectorsException | DissectionFailure e) {
             e.printStackTrace();
+            fail("Shouldn't have any exceptions");
         }
         return this;
     }
