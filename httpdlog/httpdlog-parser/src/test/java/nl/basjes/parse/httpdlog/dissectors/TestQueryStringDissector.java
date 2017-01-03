@@ -35,7 +35,7 @@ public class TestQueryStringDissector {
             .expect("STRING:query.aap",          "1")           // Present with value
             .expect("STRING:query.noot",         "")            // Present without value
             .expect("STRING:query.mies",         "")            // Present without value
-            .expect("STRING:query.wim",          (String)null)  // NOT Present
+            .expectAbsentString("STRING:query.wim")  // NOT Present
 
             .checkExpectations();
     }

@@ -69,11 +69,11 @@ public class TestModUniqueIdDissector {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD") // BAD: 1 letter too short
-            .expect("TIME.EPOCH:epoch",         (String)null)
-            .expect("IP:ip",                    (String)null)
-            .expect("PROCESSID:processid",      (String)null)
-            .expect("COUNTER:counter",          (String)null)
-            .expect("THREAD_INDEX:threadindex", (String)null)
+            .expectAbsentString("TIME.EPOCH:epoch")
+            .expectAbsentString("IP:ip")
+            .expectAbsentString("PROCESSID:processid")
+            .expectAbsentString("COUNTER:counter")
+            .expectAbsentString("THREAD_INDEX:threadindex")
             .checkExpectations();
     }
 
@@ -82,11 +82,11 @@ public class TestModUniqueIdDissector {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD!") // BAD: 1 letter wrong
-            .expect("TIME.EPOCH:epoch",         (String)null)
-            .expect("IP:ip",                    (String)null)
-            .expect("PROCESSID:processid",      (String)null)
-            .expect("COUNTER:counter",          (String)null)
-            .expect("THREAD_INDEX:threadindex", (String)null)
+            .expectAbsentString("TIME.EPOCH:epoch")
+            .expectAbsentString("IP:ip")
+            .expectAbsentString("PROCESSID:processid")
+            .expectAbsentString("COUNTER:counter")
+            .expectAbsentString("THREAD_INDEX:threadindex")
             .checkExpectations();
     }
 

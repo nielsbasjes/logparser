@@ -236,7 +236,7 @@ public class TestTimeStampDissector {
             .withInput(logline)
             .expect("TIME.EPOCH:request.receive.time.epoch"                    ,"1482349825000")
 
-            .expect("TIME.ZONE:request.receive.time.timezone"                  ,(String)null)
+            .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
 
             .expect("TIME.DATE:request.receive.time.date"                      ,"2016-12-21")
             .expect("TIME.TIME:request.receive.time.time"                      ,"20:50:25")
@@ -277,7 +277,7 @@ public class TestTimeStampDissector {
             .withInput(logline)
             .expect("TIME.EPOCH:request.receive.time.epoch"                    ,"1482361794000")
 
-            .expect("TIME.ZONE:request.receive.time.timezone"                  ,(String)null)
+            .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
 
             .expect("TIME.DATE:request.receive.time.date"                      ,"2016-12-22")
             .expect("TIME.TIME:request.receive.time.time"                      ,"00:09:54")
