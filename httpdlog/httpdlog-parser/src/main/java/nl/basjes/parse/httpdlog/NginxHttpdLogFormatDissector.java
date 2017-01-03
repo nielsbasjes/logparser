@@ -128,34 +128,32 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $connection
-        parsers.add(new FixedStringTokenParser("$connection")); // TODO: Implement $connection token
-//      connection serial number
+//      connection serial number (1.3.8, 1.2.5)
+        parsers.add(new IgnoreUnknownTokenParser("$connection", -1)); // TODO: Implement $connection token
 
         // -------
 //      $connection_requests
-        parsers.add(new FixedStringTokenParser("$connection_requests")); // TODO: Implement $connection_requests token
-//      the current number of requests made through a connection (1.1.18)
+//      current number of requests made through a connection (1.3.8, 1.2.5)
+        parsers.add(new IgnoreUnknownTokenParser("$connection_requests")); // TODO: Implement $connection_requests token
 
         // -------
 //      $msec
-        parsers.add(new FixedStringTokenParser("$msec")); // TODO: Implement $msec token
+        parsers.add(new IgnoreUnknownTokenParser("$msec")); // TODO: Implement $msec token
 //      time in seconds with a milliseconds resolution at the time of the log write
 
         // -------
 //      $pipe
-        parsers.add(new FixedStringTokenParser("$pipe")); // TODO: Implement $pipe token
+        parsers.add(new IgnoreUnknownTokenParser("$pipe")); // TODO: Implement $pipe token
 //      “p” if request was pipelined, “.” otherwise
 
         // -------
 //      $request_length
-        parsers.add(new FixedStringTokenParser("$request_length")); // TODO: Implement $request_length token
+        parsers.add(new IgnoreUnknownTokenParser("$request_length")); // TODO: Implement $request_length token
 //      request length (including request line, header, and request body)
-
-
 
         // -------
 //      $request_time
-        parsers.add(new FixedStringTokenParser("$request_time")); // TODO: Implement $request_time token
+        parsers.add(new IgnoreUnknownTokenParser("$request_time")); // TODO: Implement $request_time token
 //      request processing time in seconds with a milliseconds resolution; time elapsed between the first bytes were
 //      read from the client and the log write after the last bytes were sent to the client
 
@@ -166,43 +164,50 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             "request.status.original", "STRING",
             Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
-//        // -------
-////      $time_iso8601
-//        parsers.add(new FixedStringTokenParser("$time_iso8601")); // TODO: Implement $time_iso8601 token
-////      local time in the ISO 8601 standard format
-//
-//        // -------
-////      $time_local
-//        parsers.add(new FixedStringTokenParser("$time_local")); // TODO: Implement $time_local token
-////      local time in the Common Log Format
+        // -------
+//      $time_iso8601
+//      local time in the ISO 8601 standard format (1.3.12, 1.2.7)
+        // FIXME: Test this fixed format !!
+        parsers.add(new TokenParser("$time_iso8601",
+            "request.receive.time", "TIME.ISO8601",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
+
+        // -------
+//      $time_local
+//      local time in the Common Log Format (1.3.12, 1.2.7)
+        parsers.add(new TokenParser("$time_local",
+            "request.receive.time", "TIME.STAMP",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
 
         // -------
 //      Header lines sent to a client have the prefix “sent_http_”, for example, $sent_http_content_range.
-        // TODO: Request header lines.
+        parsers.add(new NamedTokenParser("\\$sent_http_([a-z0-9\\-\\_]*)",
+            "response.header.", "HTTP.HEADER",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
 //      http://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
         // -------
 //      $arg_name
-        parsers.add(new FixedStringTokenParser("$arg_name")); // TODO: Implement $arg_name token
 //      argument name in the request line
+        parsers.add(new IgnoreUnknownTokenParser("$arg_name")); // TODO: Implement $arg_name token
 
         // -------
 //      $args
+//      arguments in the request line
         parsers.add(new TokenParser("$args",
             "request.firstline.uri.query", "HTTP.QUERYSTRING",
             Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
-//      arguments in the request line
         // -------
 //      $query_string
+//      same as $args
         parsers.add(new TokenParser("$query_string",
             "request.firstline.uri.query", "HTTP.QUERYSTRING",
             Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
-//      same as $args
 
         // -------
 //      $binary_remote_addr
-        parsers.add(new FixedStringTokenParser("$binary_remote_addr")); // TODO: Implement $binary_remote_addr token
 //      client address in a binary form, value’s length is always 4 bytes
+        parsers.add(new IgnoreUnknownTokenParser("$binary_remote_addr")); // TODO: Implement $binary_remote_addr token
 
         // -------
 //      $body_bytes_sent
@@ -214,25 +219,15 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $bytes_sent
+//      number of bytes sent to a client (1.3.8, 1.2.5)
         parsers.add(new TokenParser("$bytes_sent",
             "response.bytes", "BYTES",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
-//      number of bytes sent to a client (1.3.8, 1.2.5)
-
-        // -------
-//      $connection
-        parsers.add(new FixedStringTokenParser("$connection")); // TODO: Implement $connection token
-//      connection serial number (1.3.8, 1.2.5)
-
-        // -------
-//      $connection_requests
-        parsers.add(new FixedStringTokenParser("$connection_requests")); // TODO: Implement $connection_requests token
-//      current number of requests made through a connection (1.3.8, 1.2.5)
 
         // -------
 //      $content_length
 //      “Content-Length” request header field
-        parsers.add(new TokenParser("\\%\\{([a-z0-9\\-_]*)\\}i",
+        parsers.add(new TokenParser("$content_length",
                 "request.header.content_length", "HTTP.HEADER",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
@@ -246,95 +241,94 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $cookie_name
 //      the name cookie
-        parsers.add(new NamedTokenParser("$cookie_([a-z0-9\\-_]*)",
-                "request.header.", "HTTP.HEADER",
+        parsers.add(new NamedTokenParser("\\$cookie_([a-z0-9\\-_]*)",
+                "request.header.", "HTTP.HEADER", // FIXME: Must be cookie
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
 //      $document_root
-        parsers.add(new FixedStringTokenParser("$document_root")); // TODO: Implement $document_root token
+        parsers.add(new IgnoreUnknownTokenParser("$document_root")); // TODO: Implement $document_root token
 //      root or alias directive’s value for the current request
 
         // -------
 //      $host
-        parsers.add(new FixedStringTokenParser("$host")); // TODO: Implement $host token
 //      in this order of precedence: host name from the request line, or host name from the “Host” request header field,
 //      or the server name matching a request
+        parsers.add(new IgnoreUnknownTokenParser("$host")); // TODO: Implement $host token
 
         // -------
 //      $hostname
-        parsers.add(new FixedStringTokenParser("$hostname")); // TODO: Implement $hostname token
 //      host name
+        parsers.add(new IgnoreUnknownTokenParser("$hostname")); // TODO: Implement $hostname token
 
         // -------
 //      $http_name
 //      arbitrary request header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores
-        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}i",
+        parsers.add(new NamedTokenParser("\\$http_([a-z0-9\\-_]*)",
                 "request.header.", "HTTP.HEADER",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
-
         // -------
 //      $https
-        parsers.add(new FixedStringTokenParser("$https")); // TODO: Implement $https token
 //      “on” if connection operates in SSL mode, or an empty string otherwise
+        parsers.add(new IgnoreUnknownTokenParser("$https")); // TODO: Implement $https token
 
 
         // -------
 //      $is_args
-        parsers.add(new FixedStringTokenParser("$is_args")); // TODO: Implement $is_args token
 //      “?” if a request line has arguments, or an empty string otherwise
+        parsers.add(new IgnoreUnknownTokenParser("$is_args")); // TODO: Implement $is_args token
 
 
         // -------
 //      $limit_rate
-        parsers.add(new FixedStringTokenParser("$limit_rate")); // TODO: Implement $limit_rate token
 //      setting this variable enables response rate limiting; see limit_rate
+        parsers.add(new IgnoreUnknownTokenParser("$limit_rate")); // TODO: Implement $limit_rate token
 
         // -------
 //      $msec
-        parsers.add(new FixedStringTokenParser("$msec")); // TODO: Implement $msec token
 //      current time in seconds with the milliseconds resolution (1.3.9, 1.2.6)
+        parsers.add(new IgnoreUnknownTokenParser("$msec")); // TODO: Implement $msec token
 
         // -------
 //      $nginx_version
-        parsers.add(new FixedStringTokenParser("$nginx_version")); // TODO: Implement $nginx_version token
 //      nginx version
+        parsers.add(new IgnoreUnknownTokenParser("$nginx_version")); // TODO: Implement $nginx_version token
 
         // -------
 //      $pid
-        parsers.add(new FixedStringTokenParser("$pid")); // TODO: Implement $pid token
 //      PID of the worker process
+        parsers.add(new IgnoreUnknownTokenParser("$pid")); // TODO: Implement $pid token
 
         // -------
 //      $pipe
-        parsers.add(new FixedStringTokenParser("$pipe")); // TODO: Implement $pipe token
 //      “p” if request was pipelined, “.” otherwise (1.3.12, 1.2.7)
+        parsers.add(new IgnoreUnknownTokenParser("$pipe")); // TODO: Implement $pipe token
 
         // -------
 //      $proxy_protocol_addr
-        parsers.add(new FixedStringTokenParser("$proxy_protocol_addr")); // TODO: Implement $proxy_protocol_addr token
 //      client address from the PROXY protocol header, or an empty string otherwise (1.5.12)
 //      The PROXY protocol must be previously enabled by setting the proxy_protocol parameter in the listen directive.
+        parsers.add(new IgnoreUnknownTokenParser("$proxy_protocol_addr")); // TODO: Implement $proxy_protocol_addr token
 
 
         // -------
 //      $realpath_root
-        parsers.add(new FixedStringTokenParser("$realpath_root")); // TODO: Implement $realpath_root token
 //      an absolute pathname corresponding to the root or alias directive’s value for the current request,
 //      with all symbolic links resolved to real paths
+        parsers.add(new IgnoreUnknownTokenParser("$realpath_root")); // TODO: Implement $realpath_root token
 
         // -------
 //      $remote_addr
+//      client address
         parsers.add(new TokenParser("$remote_addr",
             "connection.client.ip", "IP",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
-//      client address
 
         // -------
 //      $remote_port
 //      client port
-        parsers.add(new FixedStringTokenParser("$remote_port")); // TODO: Implement $remote_port token
+        parsers.add(new IgnoreUnknownTokenParser("$remote_port")); // TODO: Implement $remote_port token
 
         // -------
 //      $remote_user
@@ -347,50 +341,46 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $request
+//      full original request line
         parsers.add(new TokenParser("$request",
             "request.firstline", "HTTP.FIRSTLINE",
             Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
             TokenParser.FORMAT_NO_SPACE_STRING + " " +
-            TokenParser.FORMAT_NO_SPACE_STRING));
-//      full original request line
-
+            TokenParser.FORMAT_NO_SPACE_STRING, -1));
 
         // -------
 //      $request_body
-        parsers.add(new FixedStringTokenParser("$request_body")); // TODO: Implement $request_body token
 //      request body
 //      The variable’s value is made available in locations processed by the proxy_pass, fastcgi_pass, uwsgi_pass, and scgi_pass directives.
-
+        parsers.add(new IgnoreUnknownTokenParser("$request_body")); // TODO: Implement $request_body token
 
         // -------
 //      $request_body_file
-        parsers.add(new FixedStringTokenParser("$request_body_file")); // TODO: Implement $request_body_file token
 //      name of a temporary file with the request body
 //      At the end of processing, the file needs to be removed. To always write the request body to a file,
 //      client_body_in_file_only needs to be enabled. When the name of a temporary file is passed in a proxied request
 //      or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the
 //      proxy_pass_request_body off, fastcgi_pass_request_body off, uwsgi_pass_request_body off, or
 //      scgi_pass_request_body off directives, respectively.
-
+        parsers.add(new IgnoreUnknownTokenParser("$request_body_file")); // TODO: Implement $request_body_file token
 
         // -------
 //      $request_completion
-        parsers.add(new FixedStringTokenParser("$request_completion")); // TODO: Implement $request_completion token
 //      “OK” if a request has completed, or an empty string otherwise
+        parsers.add(new IgnoreUnknownTokenParser("$request_completion")); // TODO: Implement $request_completion token
 
         // -------
 //      $request_filename
-        parsers.add(new FixedStringTokenParser("$request_filename")); // TODO: Implement $request_filename token
 //      file path for the current request, based on the root or alias directives, and the request URI
+        parsers.add(new IgnoreUnknownTokenParser("$request_filename")); // TODO: Implement $request_filename token
 
         // -------
 //      $request_length
-        parsers.add(new FixedStringTokenParser("$request_length")); // TODO: Implement $request_length token
 //      request length (including request line, header, and request body) (1.3.12, 1.2.7)
+        parsers.add(new IgnoreUnknownTokenParser("$request_length")); // TODO: Implement $request_length token
 
         // -------
 //      $request_method
-        parsers.add(new FixedStringTokenParser("$request_method")); // TODO: Implement $request_method token
 //      request method, usually “GET” or “POST”
 //    parsers.add(new TokenParser("%r",
 //            "request.firstline", "HTTP.FIRSTLINE",
@@ -398,15 +388,15 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //            TokenParser.FORMAT_NO_SPACE_STRING + " " +
 //            TokenParser.FORMAT_NO_SPACE_STRING));
 //    result.add("HTTP.METHOD:method");
+        parsers.add(new IgnoreUnknownTokenParser("$request_method")); // TODO: Implement $request_method token
 
         // -------
 //      $request_time
-        parsers.add(new FixedStringTokenParser("$request_time")); // TODO: Implement $request_time token
 //      request processing time in seconds with a milliseconds resolution (1.3.9, 1.2.6); time elapsed since the first bytes were read from the client
+        parsers.add(new IgnoreUnknownTokenParser("$request_time")); // TODO: Implement $request_time token
 
         // -------
 //      $request_uri
-        parsers.add(new FixedStringTokenParser("$request_uri")); // TODO: Implement $request_uri token
 //      full original request URI (with arguments)
 //    parsers.add(new TokenParser("%r",
 //            "request.firstline", "HTTP.FIRSTLINE",
@@ -414,22 +404,23 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //            TokenParser.FORMAT_NO_SPACE_STRING + " " +
 //            TokenParser.FORMAT_NO_SPACE_STRING));
 //    result.add("HTTP.URI:uri");
+        parsers.add(new IgnoreUnknownTokenParser("$request_uri")); // TODO: Implement $request_uri token
 
 
         // -------
 //      $scheme
 //      request scheme, “http” or “https”
-
         parsers.add(new TokenParser("$scheme",
                 "request.firstline.uri.protocol", "HTTP.PROTOCOL",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
 //      $sent_http_name
-        parsers.add(new FixedStringTokenParser("$sent_http_name")); // TODO: Implement $sent_http_name token
 //      arbitrary response header field; the last part of a variable name is the field name converted to lower case with
 //      dashes replaced by underscores
-
+        parsers.add(new NamedTokenParser("\\$sent_http_([a-z0-9\\-_]*)",
+            "response.header.", "HTTP.HEADER",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
 //      $server_addr
@@ -456,7 +447,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $server_protocol
-        parsers.add(new FixedStringTokenParser("$server_protocol")); // TODO: Implement $server_protocol token
 //      request protocol, usually “HTTP/1.0” or “HTTP/1.1”
 //    parsers.add(new TokenParser("%r",
 //            "request.firstline", "HTTP.FIRSTLINE",
@@ -466,50 +456,29 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //    result.add("HTTP.URI:uri");
 //    result.add("HTTP.PROTOCOL:protocol");
 //    result.add("HTTP.PROTOCOL.VERSION:protocol.version");
-
-        // -------
-//      $status
-        parsers.add(new FixedStringTokenParser("$status")); // TODO: Implement $status token
-//      response status (1.3.2, 1.2.2)
-        parsers.add(new TokenParser("%s",
-                "request.status.original", "STRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+        parsers.add(new IgnoreUnknownTokenParser("$server_protocol")); // TODO: Implement $server_protocol token
 
         // -------
 //      $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space
 //      information about the client TCP connection; available on systems that support the TCP_INFO socket option
 //      $tcpinfo_rtt
-        parsers.add(new FixedStringTokenParser("$tcpinfo_rtt")); // TODO: Implement $tcpinfo_rtt token
+        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rtt")); // TODO: Implement $tcpinfo_rtt token
 //      $tcpinfo_rttvar
-        parsers.add(new FixedStringTokenParser("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
+        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
 //      $tcpinfo_snd_cwnd
-        parsers.add(new FixedStringTokenParser("$tcpinfo_snd_cwnd")); // TODO: Implement $tcpinfo_snd_cwnd token
+        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_snd_cwnd")); // TODO: Implement $tcpinfo_snd_cwnd token
 //      $tcpinfo_rcv_space
-        parsers.add(new FixedStringTokenParser("$tcpinfo_rcv_space")); // TODO: Implement $tcpinfo_rcv_space token
-
-        // -------
-//      $time_iso8601
-//      local time in the ISO 8601 standard format (1.3.12, 1.2.7)
-        parsers.add(new TokenParser("$time_iso8601", // FIXME: Wrong format !!
-                "request.receive.time", "TIME.STAMP",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
-
-        // -------
-//      $time_local
-//      local time in the Common Log Format (1.3.12, 1.2.7)
-        parsers.add(new TokenParser("$time_local",
-            "request.receive.time", "TIME.STAMP",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
+        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rcv_space")); // TODO: Implement $tcpinfo_rcv_space token
 
 
         // -------
 //      $uri
-        parsers.add(new FixedStringTokenParser("$uri")); // TODO: Implement $uri token
+        parsers.add(new IgnoreUnknownTokenParser("$uri")); // TODO: Implement $uri token
 //      current URI in request, normalized
 //      The value of $uri may change during request processing, e.g. when doing internal redirects, or when using index files.
         // -------
 //      $document_uri
-        parsers.add(new FixedStringTokenParser("$document_uri")); // TODO: Implement $document_uri token
+        parsers.add(new IgnoreUnknownTokenParser("$document_uri")); // TODO: Implement $document_uri token
 //      same as $uri
 
 //    parsers.add(new TokenParser("%r",
