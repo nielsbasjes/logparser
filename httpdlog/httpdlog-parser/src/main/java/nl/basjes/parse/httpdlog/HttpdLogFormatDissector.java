@@ -175,16 +175,18 @@ public class HttpdLogFormatDissector extends Dissector {
         try {
             activeDissector.dissect(parsable, inputname);
         } catch (DissectionFailure df) {
-            int index = 0;
-            for (TokenFormatDissector dissector : dissectors) {
-                try {
-                    dissector.dissect(parsable, inputname);
-                    LOG.info("Switched to LogFormat[{}]= >>{}<<", index, activeDissector.getLogFormat());
-                    activeDissector = dissector;
-                    return;
-                } catch (DissectionFailure e) {
-                    index++;
-                    // We ignore the error and try the next one.
+            if (dissectors.size() > 1) {
+                int index = 0;
+                for (TokenFormatDissector dissector : dissectors) {
+                    try {
+                        dissector.dissect(parsable, inputname);
+                        LOG.info("Switched to LogFormat[{}]= >>{}<<", index, activeDissector.getLogFormat());
+                        activeDissector = dissector;
+                        return;
+                    } catch (DissectionFailure e) {
+                        index++;
+                        // We ignore the error and try the next one.
+                    }
                 }
             }
             throw df;
