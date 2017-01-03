@@ -109,21 +109,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             return null;
         }
 
-//        // http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats
-//        // Format Notes
-//        // For security reasons, starting with version 2.0.46, non-printable and other special characters
-//        // in %r, %i and %o are escaped using \xhh sequences, where hh stands for the hexadecimal representation of
-//        // the raw byte. Exceptions from this rule are " and \, which are escaped by prepending a backslash, and
-//        // all whitespace characters, which are written in their C-style notation (\n, \t, etc).
-//        // In versions prior to 2.0.46, no escaping was performed on these strings so you had to be quite careful
-//        // when dealing with raw log files.
-//
-//        if (value.equals("request.firstline")   ||  // %r         First line of request.
-//            value.startsWith("request.header.") ||  // %{Foobar}i The contents of Foobar: request header line(s).
-//            value.startsWith("response.header.")) { // %{Foobar}o The contents of Foobar: response header line(s).
-//            return Utils.decodeApacheHTTPDLogValue(value);
-//        }
-
         return value;
     }
 
@@ -134,11 +119,13 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
 //      http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
 
-
         // -------
 //      $bytes_sent
 //      the number of bytes sent to a client
-        parsers.add(new FixedStringTokenParser("$bytes_sent")); // TODO: Implement $bytes_sent token
+        parsers.add(new TokenParser("$bytes_sent",
+            "response.body.bytesclf", "BYTES",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
+
         // -------
 //      $connection
         parsers.add(new FixedStringTokenParser("$connection")); // TODO: Implement $connection token
@@ -164,6 +151,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new FixedStringTokenParser("$request_length")); // TODO: Implement $request_length token
 //      request length (including request line, header, and request body)
 
+
+
         // -------
 //      $request_time
         parsers.add(new FixedStringTokenParser("$request_time")); // TODO: Implement $request_time token
@@ -172,21 +161,24 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $status
-        parsers.add(new FixedStringTokenParser("$status")); // TODO: Implement $status token
 //      response status
+        parsers.add(new TokenParser("$status",
+            "request.status.original", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
-        // -------
-//      $time_iso8601
-        parsers.add(new FixedStringTokenParser("$time_iso8601")); // TODO: Implement $time_iso8601 token
-//      local time in the ISO 8601 standard format
-
-        // -------
-//      $time_local
-        parsers.add(new FixedStringTokenParser("$time_local")); // TODO: Implement $time_local token
-//      local time in the Common Log Format
+//        // -------
+////      $time_iso8601
+//        parsers.add(new FixedStringTokenParser("$time_iso8601")); // TODO: Implement $time_iso8601 token
+////      local time in the ISO 8601 standard format
+//
+//        // -------
+////      $time_local
+//        parsers.add(new FixedStringTokenParser("$time_local")); // TODO: Implement $time_local token
+////      local time in the Common Log Format
 
         // -------
 //      Header lines sent to a client have the prefix “sent_http_”, for example, $sent_http_content_range.
+        // TODO: Request header lines.
 
 //      http://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
         // -------
@@ -196,11 +188,15 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $args
-        parsers.add(new FixedStringTokenParser("$args")); // TODO: Implement $args token
+        parsers.add(new TokenParser("$args",
+            "request.firstline.uri.query", "HTTP.QUERYSTRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 //      arguments in the request line
         // -------
 //      $query_string
-        parsers.add(new FixedStringTokenParser("$query_string")); // TODO: Implement $query_string token
+        parsers.add(new TokenParser("$query_string",
+            "request.firstline.uri.query", "HTTP.QUERYSTRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 //      same as $args
 
         // -------
@@ -210,13 +206,17 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $body_bytes_sent
-        parsers.add(new FixedStringTokenParser("$body_bytes_sent")); // TODO: Implement $body_bytes_sent token
 //      number of bytes sent to a client, not counting the response header; this variable is compatible with
 //      the “%B” parameter of the mod_log_config Apache module
+        parsers.add(new TokenParser("$body_bytes_sent",
+            "response.body.bytes", "BYTES",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
 //      $bytes_sent
-        parsers.add(new FixedStringTokenParser("$bytes_sent")); // TODO: Implement $bytes_sent token
+        parsers.add(new TokenParser("$bytes_sent",
+            "response.bytes", "BYTES",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 //      number of bytes sent to a client (1.3.8, 1.2.5)
 
         // -------
@@ -326,33 +326,33 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $remote_addr
-        parsers.add(new FixedStringTokenParser("$remote_addr")); // TODO: Implement $remote_addr token
+        parsers.add(new TokenParser("$remote_addr",
+            "connection.client.ip", "IP",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
 //      client address
-//    parsers.add(new TokenParser("%a",
-//            "connection.client.ip", "$remote_addr",
-//            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
 
         // -------
 //      $remote_port
-        parsers.add(new FixedStringTokenParser("$remote_port")); // TODO: Implement $remote_port token
 //      client port
+        parsers.add(new FixedStringTokenParser("$remote_port")); // TODO: Implement $remote_port token
 
         // -------
 //      $remote_user
-        parsers.add(new FixedStringTokenParser("$remote_user")); // TODO: Implement $remote_user token
 //      user name supplied with the Basic authentication
+        parsers.add(new TokenParser("$remote_user",
+            "connection.client.user", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         //TODO: Add basic authentication parsing to Apache too!!
 
         // -------
 //      $request
-        parsers.add(new FixedStringTokenParser("$request")); // TODO: Implement $request token
+        parsers.add(new TokenParser("$request",
+            "request.firstline", "HTTP.FIRSTLINE",
+            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
+            TokenParser.FORMAT_NO_SPACE_STRING + " " +
+            TokenParser.FORMAT_NO_SPACE_STRING));
 //      full original request line
-        parsers.add(new TokenParser("%r",
-                "request.firstline", "HTTP.FIRSTLINE",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
-                TokenParser.FORMAT_NO_SPACE_STRING + " " +
-                TokenParser.FORMAT_NO_SPACE_STRING));
 
 
         // -------
@@ -490,14 +490,16 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
 //      $time_iso8601
 //      local time in the ISO 8601 standard format (1.3.12, 1.2.7)
-        parsers.add(new TokenParser("%t",
+        parsers.add(new TokenParser("$time_iso8601", // FIXME: Wrong format !!
                 "request.receive.time", "TIME.STAMP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
 
         // -------
 //      $time_local
-        parsers.add(new FixedStringTokenParser("$time_local")); // TODO: Implement $time_local token
 //      local time in the Common Log Format (1.3.12, 1.2.7)
+        parsers.add(new TokenParser("$time_local",
+            "request.receive.time", "TIME.STAMP",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
 
 
         // -------
@@ -524,18 +526,18 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //        Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
 
 
-        // Some explicit type overrides.
-        // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
-        parsers.add(new TokenParser("%{cookie}i",
-                "request.cookies", "HTTP.COOKIES",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{set-cookie}o",
-                "response.cookies", "HTTP.SETCOOKIES",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{user-agent}i",
+//        // Some explicit type overrides.
+//        // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
+//        parsers.add(new TokenParser("%{cookie}i",
+//                "request.cookies", "HTTP.COOKIES",
+//                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
+//        parsers.add(new TokenParser("%{set-cookie}o",
+//                "response.cookies", "HTTP.SETCOOKIES",
+//                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
+        parsers.add(new TokenParser("$http_user_agent",
                 "request.user-agent", "HTTP.USERAGENT",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{referer}i",
+        parsers.add(new TokenParser("$http_referer",
                 "request.referer", "HTTP.URI",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, 1));
 

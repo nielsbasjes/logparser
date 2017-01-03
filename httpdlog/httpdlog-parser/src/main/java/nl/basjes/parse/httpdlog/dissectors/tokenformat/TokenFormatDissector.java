@@ -65,7 +65,7 @@ public abstract class TokenFormatDissector extends Dissector {
         }
 
         public FixedStringTokenParser(final String nLogFormatToken) {
-            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, TokenParser.FORMAT_STRING, 0);
+            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nLogFormatToken, 0);
         }
     }
 
