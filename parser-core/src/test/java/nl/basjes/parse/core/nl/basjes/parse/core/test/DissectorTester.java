@@ -142,7 +142,7 @@ public class DissectorTester {
         return this;
     }
 
-    public void checkExpectations() {
+    public DissectorTester checkExpectations() {
         if (expectedStrings.isEmpty() &&
             expectedLongs.isEmpty() &&
             expectedDoubles.isEmpty() &&
@@ -154,6 +154,7 @@ public class DissectorTester {
         checkDissectors();
         checkExpectedValues();
         checkExpectedPossible();
+        return this;
     }
 
     private void checkExpectedValues() {
