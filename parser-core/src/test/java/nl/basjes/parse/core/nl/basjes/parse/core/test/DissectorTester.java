@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -52,6 +53,9 @@ public class DissectorTester {
     private Map<String, Long> expectedLongs = new TreeMap<>();
     private Map<String, Double> expectedDoubles = new TreeMap<>();
     private List<String> expectedValuePresent = new ArrayList<>();
+    private List<String> expectedAbsentStrings = new ArrayList<>();
+    private List<String> expectedAbsentLongs = new ArrayList<>();
+    private List<String> expectedAbsentDoubles = new ArrayList<>();
     private List<String> expectedPossible = new ArrayList<>();
     private Parser<TestRecord> parser = new Parser<>(TestRecord.class);
 
@@ -132,6 +136,21 @@ public class DissectorTester {
         return this;
     }
 
+    public DissectorTester expectAbsentString(String fieldname) {
+        expectedAbsentStrings.add(fieldname);
+        return this;
+    }
+
+    public DissectorTester expectAbsentLong(String fieldname) {
+        expectedAbsentLongs.add(fieldname);
+        return this;
+    }
+
+    public DissectorTester expectAbsentDouble(String fieldname) {
+        expectedAbsentDoubles.add(fieldname);
+        return this;
+    }
+
     public DissectorTester expectPossible(String fieldname) {
         expectedPossible.add(fieldname);
         return this;
@@ -146,13 +165,20 @@ public class DissectorTester {
         if (expectedStrings.isEmpty() &&
             expectedLongs.isEmpty() &&
             expectedDoubles.isEmpty() &&
+
             expectedValuePresent.isEmpty() &&
+
+            expectedAbsentStrings.isEmpty() &&
+            expectedAbsentLongs.isEmpty() &&
+            expectedAbsentDoubles.isEmpty() &&
+
             expectedPossible.isEmpty()) {
             fail("No expected values were specified");
         }
 
         checkDissectors();
         checkExpectedValues();
+        checkExpectedAbsent();
         checkExpectedPossible();
         return this;
     }
@@ -201,7 +227,8 @@ public class DissectorTester {
 
             for (Map.Entry<String, String> expectation : expectedStrings.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertEquals("The expected string value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getStringValue(fieldName));
+                assertTrue("The expected String value for '" + fieldName + "' was missing.", result.hasStringValue(fieldName));
+                assertEquals("The expected String value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getStringValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: String value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getStringValue(fieldName));
                 }
@@ -209,7 +236,8 @@ public class DissectorTester {
 
             for (Map.Entry<String, Long> expectation : expectedLongs.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertEquals("The expected string value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getLongValue(fieldName));
+                assertTrue("The expected Long value for '" + fieldName + "' was missing.", result.hasLongValue(fieldName));
+                assertEquals("The expected Long value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getLongValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: Long   value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getLongValue(fieldName));
                 }
@@ -217,7 +245,8 @@ public class DissectorTester {
 
             for (Map.Entry<String, Double> expectation : expectedDoubles.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertEquals("The expected string value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getDoubleValue(fieldName));
+                assertTrue("The expected Double value for '" + fieldName + "' was missing.", result.hasDoubleValue(fieldName));
+                assertEquals("The expected Double value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getDoubleValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: Double value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
                 }
@@ -230,6 +259,70 @@ public class DissectorTester {
                 }
             }
 
+        }
+    }
+
+    private void checkExpectedAbsent() {
+        if (expectedAbsentStrings.size() +
+            expectedAbsentLongs.size() +
+            expectedAbsentDoubles.size() == 0) {
+            return; // Nothing to do here
+        }
+
+        if (inputValues.isEmpty()) {
+            fail("No inputvalues were specified");
+        }
+
+        for (String inputValue : inputValues) {
+            if (verbose) {
+                LOG.info("Checking for input: {}", inputValue);
+            }
+
+            TestRecord result = null;
+            try {
+                TestRecord testRecord = new TestRecord();
+                if (verbose) {
+                    testRecord.setVerbose();
+                }
+                result = parser.parse(testRecord, inputValue);
+            } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
+                fail(e.toString());
+            }
+
+            if (verbose) {
+                LOG.info("Parse completed successfully");
+            }
+
+            int longestFieldName = 0;
+            Set<String> allFieldNames = new HashSet<>();
+            allFieldNames.addAll(expectedAbsentStrings);
+            allFieldNames.addAll(expectedAbsentLongs);
+            allFieldNames.addAll(expectedAbsentDoubles);
+            allFieldNames.addAll(expectedValuePresent);
+            for (String key : allFieldNames) {
+                longestFieldName = Math.max(longestFieldName, key.length());
+            }
+
+            for (String fieldName: expectedAbsentStrings) {
+                assertFalse("The String value for '" + fieldName + "' should have been absent. It was :." + result.getStringValue(fieldName), result.hasStringValue(fieldName));
+                if (verbose) {
+                    LOG.info("Passed: String value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
+                }
+            }
+
+            for (String fieldName: expectedAbsentLongs) {
+                assertFalse("The Long value for '" + fieldName + "' should have been absent. It was :." + result.getLongValue(fieldName), result.hasLongValue(fieldName));
+                if (verbose) {
+                    LOG.info("Passed: Long value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
+                }
+            }
+
+            for (String fieldName: expectedAbsentDoubles) {
+                assertFalse("The Double value for '" + fieldName + "' should have been absent. It was :." + result.getDoubleValue(fieldName), result.hasDoubleValue(fieldName));
+                if (verbose) {
+                    LOG.info("Passed: Double value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
+                }
+            }
         }
     }
 
@@ -334,6 +427,13 @@ public class DissectorTester {
             e.printStackTrace();
             fail("Shouldn't have any exceptions");
         }
+        return this;
+    }
+
+    public DissectorTester printSeparator() {
+        LOG.info("");
+        LOG.info("--");
+        LOG.info("");
         return this;
     }
 
