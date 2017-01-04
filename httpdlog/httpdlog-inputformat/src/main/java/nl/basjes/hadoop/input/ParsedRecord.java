@@ -45,17 +45,12 @@ public class ParsedRecord implements Writable {
 
         ParsedRecord that = (ParsedRecord) o;
 
-        if (!doubleValues.equals(that.doubleValues)) {
-            return false;
-        }
-        if (!longValues.equals(that.longValues)) {
-            return false;
-        }
-        if (!stringSetValues.equals(that.stringSetValues)) {
-            return false;
-        }
-        return stringValues.equals(that.stringValues);
-
+        return
+            stringValues.equals(that.stringValues)              &&
+            longValues.equals(that.longValues)                  &&
+            doubleValues.equals(that.doubleValues)              &&
+            stringSetPrefixes.equals(that.stringSetPrefixes)    &&
+            stringSetValues.equals(that.stringSetValues);
     }
 
     @Override
@@ -87,6 +82,12 @@ public class ParsedRecord implements Writable {
             out.writeDouble(e.getValue());
         }
 
+        out.writeInt(stringSetPrefixes.size());
+        for (Map.Entry<String, String> e : stringSetPrefixes.entrySet()) {
+            out.writeUTF(e.getKey());
+            out.writeUTF(e.getValue());
+        }
+
         out.writeInt(stringSetValues.size());
         for (Map.Entry<String, Map<String, String>> e : stringSetValues.entrySet()) {
             out.writeUTF(e.getKey());
@@ -96,7 +97,6 @@ public class ParsedRecord implements Writable {
                 out.writeUTF(s.getValue());
             }
         }
-
     }
 
     @Override
@@ -104,32 +104,39 @@ public class ParsedRecord implements Writable {
         // String
         int nrOfValues = in.readInt();
         for (int count = 0; count < nrOfValues; count++) {
-            set(in.readUTF(), in.readUTF());
+            stringValues.put(in.readUTF(), in.readUTF());
         }
 
         // Long
         nrOfValues = in.readInt();
         for (int count = 0; count < nrOfValues; count++) {
-            set(in.readUTF(), in.readLong());
+            longValues.put(in.readUTF(), in.readLong());
         }
 
         // Double
         nrOfValues = in.readInt();
         for (int count = 0; count < nrOfValues; count++) {
-            set(in.readUTF(), in.readDouble());
+            doubleValues.put(in.readUTF(), in.readDouble());
+        }
+
+        // String Prefixes
+        nrOfValues = in.readInt();
+        for (int count = 0; count < nrOfValues; count++) {
+            stringSetPrefixes.put(in.readUTF(), in.readUTF());
         }
 
         // String Map
         int nrOfFields = in.readInt();
         for (int fieldNr = 0; fieldNr < nrOfFields; fieldNr++) {
             String fieldName = in.readUTF();
-            declareRequestedFieldname(fieldName);
             nrOfValues = in.readInt();
+            Map<String, String> values =  new HashMap<>(nrOfValues);
             for (int valueNr = 0; valueNr < nrOfValues; valueNr++) {
                 String key = in.readUTF();
                 String value = in.readUTF();
-                setMultiValueString(key, value);
+                values.put(key, value);
             }
+            stringSetValues.put(fieldName, values);
         }
     }
 
