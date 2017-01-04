@@ -69,7 +69,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     private static String padding(char letter, int count) {
         StringBuilder sb = new StringBuilder(128);
-        for (int i=0; i <count;i++) {
+        for (int i=0; i <count; i++) {
             sb.append(letter);
         }
         return sb.toString();
@@ -82,7 +82,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
     // --------------------------------------------
 
     public static String getVersion() {
-        return "HttpdLoglineParser " + getProjectVersion() + " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
+        return "HTTPD access log parser " + getProjectVersion() + " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
     }
 
     public HttpdLoglineParser(

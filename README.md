@@ -1,11 +1,11 @@
-Apache HTTPD logparser
-===
+Apache HTTPD & NGINX access log parser
+======================================
 [![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg?branch=master)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-This is a Logparsing framework intended to make parsing Apache HTTPD logfiles much easier.
+This is a Logparsing framework intended to make parsing Apache HTTPD and NGINX access log files much easier.
 
 The basic idea is that you should be able to have a parser that you can construct by simply
-telling it with what configuration options the line was written. 
+telling it with what configuration options the line was written.
 These configuration options are the schema of the access loglines.
 
 So we are using the LogFormat that wrote the file as the input parameter for the parser that reads the same file.
@@ -31,8 +31,8 @@ You will then get this timestamp field as if it was a request header: HTTP.HEADE
 * **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
 * **Version 3.0 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
 
-**Limitation**: Only a single %{format}t entry is supported per line. 
-Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples) 
+**Limitation**: Only a single %{format}t entry is supported per line.
+Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
 of the Apache HTTPD manual cannot be parsed.
 
     You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
@@ -40,7 +40,7 @@ of the Apache HTTPD manual cannot be parsed.
              "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
 
 In this case where all %{format}t fields are only separated by fixed text you can rewrite this example like this
- 
+
     "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
     "%{%d/%b/%Y %T.msec_frac %z}t"
 
