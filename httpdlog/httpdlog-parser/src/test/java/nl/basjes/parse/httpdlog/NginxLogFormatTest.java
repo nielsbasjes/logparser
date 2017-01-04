@@ -211,6 +211,7 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$content_length"          , "-"                                  , "HTTP.HEADER:request.header.content_length"    , null                                   ));
         fieldsTests.add(new SingleFieldTestcase("$content_type"            , "-"                                  , "HTTP.HEADER:request.header.content_type"  , null                                   ));
         fieldsTests.add(new SingleFieldTestcase("$cookie_name"             , "Something"                          , "HTTP.COOKIE:request.cookies.name"   , "Something"                                   ));
+
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_root"           , "/var/www/html"                      , "IGNORED:ignored__document_root"  , "/var/www/html"                       ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$host"                    , "localhost"                          , "IGNORED:ignored__host"  , "localhost"                           ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$hostname"                , "hackbox"                            , "IGNORED:ignored__hostname"  , "hackbox"                             ));
@@ -229,18 +230,18 @@ public class NginxLogFormatTest {
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_completion"      , "OK"                                 , "IGNORED:ignored__request_completion"  , "OK"                                  ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "IGNORED:ignored__request_filename"  , "/var/www/html/index.html"            ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_length"          , "491"                                , "IGNORED:ignored__request_length"  , "491"                                 ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_method"          , "GET"                                , "HTTP.METHOD:request.firstline.method"  , "GET"                                 ));
+        fieldsTests.add(new SingleFieldTestcase("$request_method"          , "GET"                                , "HTTP.METHOD:request.firstline.method"  , "GET"                                 ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_time"            , "0.000"                              , "IGNORED:ignored__request_time"  , "0.000"                               ));
         fieldsTests.add(new SingleFieldTestcase("$request_uri"             , "/?aap&noot=&mies=wim"               , "HTTP.URI:request.firstline.uri"  , "/?aap&noot=&mies=wim"                ));
         fieldsTests.add(new SingleFieldTestcase("$scheme"                  , "http"                               , "HTTP.PROTOCOL:request.firstline.uri.protocol"  , "http"                                ));
         fieldsTests.add(new SingleFieldTestcase("$sent_http_etag"          , "W/\\x22586bbb8b-29e\\x22"           , "HTTP.HEADER:response.header.etag"  , "W/\\x22586bbb8b-29e\\x22"            ));
         fieldsTests.add(new SingleFieldTestcase("$sent_http_last_modified" , "Tue, 03 Jan 2017 14:56:11 GMT"      , "HTTP.HEADER:response.header.last_modified"   , "Tue, 03 Jan 2017 14:56:11 GMT"       ));
         fieldsTests.add(new SingleFieldTestcase("$server_addr"             , "127.0.0.1"                          , "IP:connection.server.ip"   , "127.0.0.1"                           ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$server_name"             , "_"                                  , "STRING:connection.server.name"  , "_"                                   ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$server_port"             , "80"                                 , "PORT:connection.server.port"  , "80"                                  ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL_VERSION:request.firstline.protocol" , "HTTP/1.1"                            ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL:request.firstline.protocol" , "HTTP"                            ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version" , "1.1"                            ));
+        fieldsTests.add(new SingleFieldTestcase("$server_name"             , "_"                                  , "STRING:connection.server.name"  , "_"                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$server_port"             , "80"                                 , "PORT:connection.server.port"  , "80"                                  ));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL_VERSION:request.firstline.protocol" , "HTTP/1.1"                            ));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL:request.firstline.protocol" , "HTTP"                            ));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version" , "1.1"                            ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rtt"             , "52"                                 , "IGNORED:ignored__tcpinfo_rtt"  , "52"                                  ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar"          , "30"                                 , "IGNORED:ignored__tcpinfo_rttvar"  , "30"                                  ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd"        , "10"                                 , "IGNORED:ignored__tcpinfo_snd_cwnd"  , "10"                                  ));
