@@ -17,8 +17,6 @@
 package nl.basjes.hadoop.input;
 
 import nl.basjes.parse.core.Dissector;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
-import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -47,8 +45,7 @@ public class ApacheHttpdLogfileInputFormat extends
     private ApacheHttpdLogfileRecordReader theRecordReader;
     // --------------------------------------------
 
-    public List<String> listPossibleFields(String logformat)
-            throws MissingDissectorsException, InvalidDissectorException {
+    public List<String> listPossibleFields(String logformat) {
         return listPossibleFields(logformat, typeRemappings, additionalDissectors);
     }
 
