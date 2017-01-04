@@ -11,6 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TestParsedRecord {
@@ -42,7 +43,7 @@ public class TestParsedRecord {
         return result;
     }
 
-
+    @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "ObjectEqualsNull", "EqualsWithItself"})
     @Test
     public void testParsedRecordSerialization() throws IOException, InstantiationException, IllegalAccessException {
         ParsedRecord record = new ParsedRecord();
@@ -58,7 +59,11 @@ public class TestParsedRecord {
         checkAllValues(record);
         checkAllValues(deserialized);
         assertTrue("Equals failed!", record.equals(deserialized));
+        assertTrue("Equals failed!", record.equals(record));
+        assertFalse("Equals failed!", record.equals(null));
+        assertFalse("Equals failed!", record.equals(this));
         assertEquals("Hashcode is different!", record.hashCode(), deserialized.hashCode());
+        record.clear();
     }
 
     private void setAllValues(ParsedRecord record) {
