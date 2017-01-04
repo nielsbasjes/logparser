@@ -43,9 +43,43 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
             final Class<RECORD> clazz,
             final String logformat) {
         super(clazz);
-        LOG.info("Loading {}", getVersion());
+        logVersion();
         setupDissectors(logformat, null);
     }
+
+    // --------------------------------------------
+
+    public static void logVersion(){
+        String version = getVersion();
+        int width = version.length();
+        String line1 = "For more information: https://github.com/nielsbasjes/logparser";
+        width = Math.max(width, line1.length());
+        String line2 = "Copyright (C) 2011-2017 Niels Basjes - License Apache 2.0";
+        width = Math.max(width, line2.length());
+
+        LOG.info("");
+        LOG.info("/-{}-\\", padding('-', width));
+        logLine(version, width);
+        LOG.info("+-{}-+", padding('-', width));
+        logLine(line1, width);
+        logLine(line2, width);
+        LOG.info("\\-{}-/", padding('-', width));
+        LOG.info("");
+    }
+
+    private static String padding(char letter, int count) {
+        StringBuilder sb = new StringBuilder(128);
+        for (int i=0; i <count;i++) {
+            sb.append(letter);
+        }
+        return sb.toString();
+    }
+
+    private static void logLine(String line, int width) {
+        LOG.info("| {}{} |", line, padding(' ', width - line.length()));
+    }
+
+    // --------------------------------------------
 
     public static String getVersion() {
         return "HttpdLoglineParser " + getProjectVersion() + " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
