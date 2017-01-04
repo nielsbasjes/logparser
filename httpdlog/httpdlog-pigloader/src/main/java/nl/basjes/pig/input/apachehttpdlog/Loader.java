@@ -67,7 +67,9 @@ public class Loader
     @SuppressWarnings("rawtypes")
     private ApacheHttpdLogfileRecordReader  reader;
 
-    private boolean                         isBuildingExample;
+    // If we ONLY want the example or the list of fields we set this to true.
+    private boolean                         onlyWantListOfFields    = false;
+    private boolean                         isBuildingExample       = false;
     private String                          logformat;
     private List<String>                    requestedFields         = new ArrayList<>();
     private List<String>                    originalRequestedFields = null;
@@ -150,6 +152,7 @@ public class Loader
             }
 
             if (ApacheHttpdLogfileRecordReader.FIELDS.equals(param.toLowerCase(Locale.ENGLISH))) {
+                onlyWantListOfFields = true;
                 requestedFields.add(ApacheHttpdLogfileRecordReader.FIELDS);
                 LOG.debug("Requested ONLY the possible field values");
                 continue;
@@ -221,8 +224,10 @@ public class Loader
 
         if (value != null) {
             List<Object> values = new ArrayList<>();
-            for (String fieldName : requestedFields) {
-                if (!ApacheHttpdLogfileRecordReader.FIELDS.equals(fieldName)) { // FIXME: Performance
+            if (onlyWantListOfFields) {
+                values.add(value.getString(ApacheHttpdLogfileRecordReader.FIELDS));
+            } else {
+                for (String fieldName : requestedFields) {
                     if (fieldName.endsWith(".*")) {
                         values.add(value.getStringSet(fieldName));
                         continue;
@@ -241,9 +246,8 @@ public class Loader
                             }
                         }
                     }
+                    values.add(value.getString(fieldName));
                 }
-
-                values.add(value.getString(fieldName));
             }
             tuple = tupleFactory.newTuple(values);
         }
