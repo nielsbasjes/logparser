@@ -47,8 +47,8 @@ public abstract class SimpleDissector extends Dissector {
     }
 
     @Override
-    public void setInputType(String inputType) {
-        this.inputType = inputType;
+    public void setInputType(String nInputType) {
+        inputType = nInputType;
     }
 
     @Override

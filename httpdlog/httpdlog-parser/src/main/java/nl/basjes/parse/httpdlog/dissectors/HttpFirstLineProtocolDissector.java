@@ -59,7 +59,7 @@ public class HttpFirstLineProtocolDissector extends Dissector {
             return; // Nothing to do here
         }
 
-        String [] protocol = fieldValue.split("/", 2);
+        String[] protocol = fieldValue.split("/", 2);
 
         if (protocol.length == 2) {
             outputDissection(parsable, inputname, "HTTP.PROTOCOL", "", protocol[0]);

@@ -537,7 +537,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             if (fieldValue == null || fieldValue.isEmpty()) {
                 return; // Nothing to do here
             }
-            String epochStrings[] = fieldValue.split("\\.",2);
+            String[] epochStrings = fieldValue.split("\\.", 2);
             Long seconds =  Long.parseLong(epochStrings[0]);
             Long milliseconds =  Long.parseLong(epochStrings[1]);
             Long epoch = seconds * 1000 + milliseconds;
