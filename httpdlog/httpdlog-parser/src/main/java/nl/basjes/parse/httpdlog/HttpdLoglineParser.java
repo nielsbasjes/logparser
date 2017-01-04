@@ -50,19 +50,23 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
     // --------------------------------------------
 
     public static void logVersion(){
+        String[] lines = {
+            "For more information: https://github.com/nielsbasjes/logparser",
+            "Copyright (C) 2011-2017 Niels Basjes - License Apache 2.0"
+        };
         String version = getVersion();
         int width = version.length();
-        String line1 = "For more information: https://github.com/nielsbasjes/logparser";
-        width = Math.max(width, line1.length());
-        String line2 = "Copyright (C) 2011-2017 Niels Basjes - License Apache 2.0";
-        width = Math.max(width, line2.length());
+        for (String line: lines) {
+            width = Math.max(width, line.length());
+        }
 
         LOG.info("");
         LOG.info("/-{}-\\", padding('-', width));
         logLine(version, width);
         LOG.info("+-{}-+", padding('-', width));
-        logLine(line1, width);
-        logLine(line2, width);
+        for (String line: lines) {
+            logLine(line, width);
+        }
         LOG.info("\\-{}-/", padding('-', width));
         LOG.info("");
     }
