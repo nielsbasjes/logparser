@@ -30,7 +30,7 @@ public class TestParsedRecord {
     }
 
     public static <T extends Writable> T asWritable(byte[] bytes, Class<T> clazz) throws IOException, IllegalAccessException, InstantiationException {
-        T result = null;
+        T result;
         DataInputStream dataIn = null;
         try {
             result = clazz.newInstance();
