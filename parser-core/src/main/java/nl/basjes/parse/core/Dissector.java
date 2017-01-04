@@ -139,6 +139,10 @@ public abstract class Dissector {
 
     public String extractFieldName(final String inputname, final String outputname){
         String fieldName = outputname;
+
+        if (inputname.equals(outputname)) {
+            return "";
+        }
         if (!inputname.equals("")) {
             fieldName = outputname.substring(inputname.length() + 1);
         }
@@ -161,7 +165,8 @@ public abstract class Dissector {
         // Default behaviour is do nothing.
     }
 
-    public void setInputType(String s) {
+    public void setInputType(String s) throws InvalidDissectorException {
         // Usually only implemented in very dynamic dissectors (like custom timestamp format)
+        throw new InvalidDissectorException("The InputType of " + this.getClass().getCanonicalName() + " cannot be changed");
     }
 }

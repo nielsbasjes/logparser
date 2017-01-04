@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,7 +77,7 @@ public abstract class TokenFormatDissector extends Dissector {
         }
 
         public IgnoreUnknownTokenParser(final String nLogFormatToken, int nPrio) {
-            super(nLogFormatToken, "IGNORED", "IGNORED", Casts.STRING_ONLY, "[^\"]*", nPrio);
+            super(nLogFormatToken, "ignored_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]","_"), "IGNORED", Casts.STRING_ONLY, "[^\"]*", nPrio);
         }
     }
 

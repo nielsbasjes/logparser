@@ -25,6 +25,7 @@ public class TestHttpFirstLineDissector {
     public void testNormal() throws Exception {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
+            .withDissector(new HttpFirstLineProtocolDissector())
             .withInput("GET /index.html HTTP/1.1")
             .expect("HTTP.METHOD:method",                     "GET")
             .expect("HTTP.URI:uri",                           "/index.html")
@@ -37,11 +38,12 @@ public class TestHttpFirstLineDissector {
     public void testChoppedFirstLine() throws Exception {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
+            .withDissector(new HttpFirstLineProtocolDissector())
             .withInput("GET /index.html HTT")
             .expect("HTTP.METHOD:method",                     "GET")
             .expect("HTTP.URI:uri",                           "/index.html HTT")
-            .expect("HTTP.PROTOCOL:protocol",                 (String)null)
-            .expect("HTTP.PROTOCOL.VERSION:protocol.version", (String)null)
+            .expectAbsentString("HTTP.PROTOCOL:protocol")
+            .expectAbsentString("HTTP.PROTOCOL.VERSION:protocol.version")
             .checkExpectations();
     }
 
@@ -49,6 +51,7 @@ public class TestHttpFirstLineDissector {
     public void testStrangeCommandVersionControl() throws Exception {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
+            .withDissector(new HttpFirstLineProtocolDissector())
             .withInput("VERSION-CONTROL /index.html HTTP/1.1")
             .expect("HTTP.METHOD:method",                     "VERSION-CONTROL")
             .expect("HTTP.URI:uri",                           "/index.html")

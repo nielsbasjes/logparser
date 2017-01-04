@@ -19,7 +19,6 @@ package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestTimeStampDissector {

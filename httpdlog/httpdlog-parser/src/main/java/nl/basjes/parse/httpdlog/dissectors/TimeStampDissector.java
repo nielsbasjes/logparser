@@ -45,10 +45,15 @@ public class TimeStampDissector extends Dissector {
 
     @SuppressWarnings("UnusedDeclaration")
     public TimeStampDissector() {
-        setDateTimePattern(DEFAULT_APACHE_DATE_TIME_PATTERN);
+        this(DEFAULT_APACHE_DATE_TIME_PATTERN);
     }
 
     public TimeStampDissector(String newDateTimePattern) {
+        this("TIME.STAMP", newDateTimePattern);
+    }
+
+    public TimeStampDissector(String inputType, String newDateTimePattern) {
+        setInputType(inputType);
         if (newDateTimePattern == null ||
             newDateTimePattern.trim().isEmpty()) {
             setDateTimePattern(DEFAULT_APACHE_DATE_TIME_PATTERN);
@@ -76,8 +81,9 @@ public class TimeStampDissector extends Dissector {
 
     @Override
     protected void initializeNewInstance(Dissector newInstance) {
-        newInstance.setInputType(getInputType());
-        ((TimeStampDissector) newInstance).setDateTimePattern(dateTimePattern);
+        TimeStampDissector newTimeStampDissector = (TimeStampDissector) newInstance;
+        newTimeStampDissector.setInputType(getInputType());
+        newTimeStampDissector.setDateTimePattern(dateTimePattern);
     }
 
     // --------------------------------------------
@@ -90,7 +96,7 @@ public class TimeStampDissector extends Dissector {
     }
 
     @Override
-    public void setInputType(String nInputType) {
+    public final void setInputType(String nInputType) {
         inputType = nInputType;
     }
 

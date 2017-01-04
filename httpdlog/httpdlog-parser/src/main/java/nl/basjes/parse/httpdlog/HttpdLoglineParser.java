@@ -16,9 +16,9 @@
  */
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineDissector;
+import nl.basjes.parse.httpdlog.dissectors.HttpFirstLineProtocolDissector;
 import nl.basjes.parse.httpdlog.dissectors.HttpUriDissector;
 import nl.basjes.parse.httpdlog.dissectors.ModUniqueIdDissector;
 import nl.basjes.parse.httpdlog.dissectors.QueryStringFieldDissector;
@@ -64,13 +64,10 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
             final String timestampFormat) {
         // The pieces we have to get there
         addDissector(new HttpdLogFormatDissector(logformat));
-        addDissector(new TimeStampDissector(timestampFormat));
-
-        Dissector iso8601TimeStamp = new TimeStampDissector("yyyy-MM-dd'T'HH:mm:ssZZ");
-        iso8601TimeStamp.setInputType("TIME.ISO8601");
-
-        addDissector(iso8601TimeStamp);
+        addDissector(new TimeStampDissector("TIME.STAMP", timestampFormat));
+        addDissector(new TimeStampDissector("TIME.ISO8601", "yyyy-MM-dd'T'HH:mm:ssZZ"));
         addDissector(new HttpFirstLineDissector());
+        addDissector(new HttpFirstLineProtocolDissector());
         addDissector(new HttpUriDissector());
         addDissector(new QueryStringFieldDissector());
         addDissector(new RequestCookieListDissector());

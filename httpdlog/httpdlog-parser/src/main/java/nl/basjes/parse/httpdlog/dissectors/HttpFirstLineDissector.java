@@ -54,7 +54,7 @@ public class HttpFirstLineDissector extends Dissector {
             "(?:[a-zA-Z-_]+ .*(?: HTTP/[0-9]+\\.[0-9]+)?)|-";
 
     private final Pattern firstlineSplitter = Pattern
-            .compile("^([a-zA-Z-_]+) (.*) (HTTP)/([0-9]+\\.[0-9]+)$");
+            .compile("^([a-zA-Z-_]+) (.*) (HTTP/[0-9]+\\.[0-9]+)$");
 
     private final Pattern tooLongFirstlineSplitter = Pattern
             .compile("^([a-zA-Z-_]+) (.*)$");
@@ -74,8 +74,7 @@ public class HttpFirstLineDissector extends Dissector {
         List<String> result = new ArrayList<>();
         result.add("HTTP.METHOD:method");
         result.add("HTTP.URI:uri");
-        result.add("HTTP.PROTOCOL:protocol");
-        result.add("HTTP.PROTOCOL.VERSION:protocol.version");
+        result.add("HTTP.PROTOCOL_VERSION:protocol");
         return result;
     }
 
@@ -96,11 +95,10 @@ public class HttpFirstLineDissector extends Dissector {
         // Is it all as expected?
         boolean matches = matcher.find();
 
-        if (matches && matcher.groupCount() == 4) {
+        if (matches && matcher.groupCount() == 3) {
             outputDissection(parsable, inputname, "HTTP.METHOD", "method", matcher, 1);
             outputDissection(parsable, inputname, "HTTP.URI", "uri", matcher, 2);
-            outputDissection(parsable, inputname, "HTTP.PROTOCOL", "protocol", matcher, 3);
-            outputDissection(parsable, inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", matcher, 4);
+            outputDissection(parsable, inputname, "HTTP.PROTOCOL_VERSION", "protocol", matcher, 3);
             return;
         }
 
@@ -116,8 +114,7 @@ public class HttpFirstLineDissector extends Dissector {
         if (matches && matcher.groupCount() == 2) {
             outputDissection(parsable, inputname, "HTTP.METHOD", "method", matcher, 1);
             outputDissection(parsable, inputname, "HTTP.URI", "uri", matcher, 2);
-            parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", (String) null);
-            parsable.addDissection(inputname, "HTTP.PROTOCOL.VERSION", "protocol.version", (String) null);
+            parsable.addDissection(inputname, "HTTP.PROTOCOL_VERSION", "protocol", (String) null);
         }
     }
 

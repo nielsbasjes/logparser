@@ -117,8 +117,9 @@ public class StrfTimeStampDissector extends Dissector {
 
     @Override
     protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
-        newInstance.setInputType(inputType);
-        ((StrfTimeStampDissector)newInstance).setDateTimePattern(dateTimePattern);
+        StrfTimeStampDissector newStrfTimeStampDissector = (StrfTimeStampDissector) newInstance;
+        newStrfTimeStampDissector.setInputType(getInputType());
+        newStrfTimeStampDissector.setDateTimePattern(dateTimePattern);
     }
 
     @Override

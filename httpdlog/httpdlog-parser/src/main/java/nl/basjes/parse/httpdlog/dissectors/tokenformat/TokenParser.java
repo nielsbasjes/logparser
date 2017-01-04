@@ -17,6 +17,7 @@
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Dissector;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,7 @@ public class TokenParser {
     private final String regex;
     private final int prio;
     protected String warningMessageWhenUsed;
+    private final Dissector customDissector;
 
     // --------------------------------------------
     public TokenParser(final String nLogFormatToken,
@@ -81,18 +83,30 @@ public class TokenParser {
             final String nRegex) {
         this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 10);
     }
+
+    public TokenParser(final String nLogFormatToken,
+                       final String nValueName,
+                       final String nValueType,
+                       final EnumSet<Casts> nCasts,
+                       final String nRegex,
+                       final int nPrio) {
+        this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, nPrio, null);
+    }
+
     public TokenParser(final String nLogFormatToken,
             final String nValueName,
             final String nValueType,
             final EnumSet<Casts> nCasts,
             final String nRegex,
-            final int nPrio) {
+            final int nPrio,
+           final Dissector nCustomDissector) {
         logFormatToken = nLogFormatToken;
         valueName = nValueName;
         valueType = nValueType;
         casts = nCasts;
         regex = nRegex;
         prio = nPrio;
+        customDissector = nCustomDissector;
     }
 
     // --------------------------------------------
@@ -126,6 +140,10 @@ public class TokenParser {
         return prio;
     }
 
+    public Dissector getCustomDissector() {
+        return customDissector;
+    }
+
     // --------------------------------------------
 
     public Token getNextToken(final String logFormat, final int startOffset) {
@@ -138,13 +156,18 @@ public class TokenParser {
             LOG.warn(warningMessageWhenUsed);
         }
 
-        return new Token(
+        Token token = new Token(
                 valueName,
                 valueType,
                 casts,
                 regex,
                 pos, logFormatToken.length(),
                 prio);
+
+        if (!addCustomDissector(token, valueType, valueName)) {
+            return null;
+        }
+        return token;
     }
 
     // --------------------------------------------
@@ -169,5 +192,24 @@ public class TokenParser {
     }
 
     // --------------------------------------------
+
+    protected boolean addCustomDissector(Token token, String fieldType, String fieldName) {
+        if (customDissector == null) {
+            return true;
+        }
+        try {
+            Dissector dissector = customDissector.getNewInstance();
+            dissector.setInputType(fieldType);
+            if (!dissector.initializeFromSettingsParameter(fieldName)) {
+                LOG.error("Unable to INITIALIZE custom dissector for {}:{}", fieldType, fieldName);
+                return false;
+            }
+            token.setCustomDissector(dissector);
+        } catch (Exception e) {
+            LOG.error("Unable to add custom dissector for {}:{} because of : {}", fieldType, fieldName, e);
+            return false;
+        }
+        return true;
+    }
 
 }

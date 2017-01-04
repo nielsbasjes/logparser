@@ -33,7 +33,6 @@ public class ParameterizedTokenParser extends TokenParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParameterizedTokenParser.class);
     private final Pattern pattern;
-    private final Dissector customDissector;
 
     // --------------------------------------------
 
@@ -54,9 +53,7 @@ public class ParameterizedTokenParser extends TokenParser {
             final String nRegex,
             final int prio,
             final Dissector customDissector) {
-        super(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, prio);
-
-        this.customDissector = customDissector;
+        super(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, prio, customDissector);
 
         // Compile the regular expression
         pattern = Pattern.compile(getLogFormatToken());
@@ -86,6 +83,7 @@ public class ParameterizedTokenParser extends TokenParser {
         final int end = matcher.end();
         // the end is index of the last matching character + 1
 
+        Dissector customDissector = getCustomDissector();
         if (customDissector == null) {
             return new Token(
                 getValueName() + fieldName,
@@ -106,14 +104,7 @@ public class ParameterizedTokenParser extends TokenParser {
             startOffset + start, end - start,
             getPrio());
 
-        try {
-            Dissector dissector = customDissector.getNewInstance();
-            dissector.setInputType(fieldType);
-            if (!dissector.initializeFromSettingsParameter(fieldName)) {
-                return null;
-            }
-            token.setCustomDissector(dissector);
-        } catch (Exception e) {
+        if (!addCustomDissector(token, fieldType, fieldName)) {
             return null;
         }
         return token;

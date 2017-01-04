@@ -17,6 +17,10 @@
 package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Casts;
+import nl.basjes.parse.core.Parsable;
+import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.SimpleDissector;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.NamedTokenParser;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
@@ -24,10 +28,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_CLF_IP;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_CLF_NUMBER;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NO_SPACE_STRING;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STANDARD_TIME_ISO8601;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STANDARD_TIME_US;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
 
 @SuppressWarnings({
         "PMD.LongVariable", // I like my variable names this way
@@ -126,7 +140,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      number of bytes sent to a client (1.3.8, 1.2.5)
         parsers.add(new TokenParser("$bytes_sent",
             "response.bytes", "BYTES",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
+            Casts.STRING_OR_LONG, FORMAT_CLF_NUMBER));
 
         // -------
 //      $connection
@@ -140,31 +154,35 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
 //      $msec
-        parsers.add(new IgnoreUnknownTokenParser("$msec")); // TODO: Implement $msec token
 //      time in seconds with a milliseconds resolution at the time of the log write
+        // Example value:  1483455396.639
+        parsers.add(new TokenParser("$msec",
+            "epoch", "TIME.EPOCH_SECOND_MILLIS",
+            Casts.STRING_ONLY, "[0-9]+\\.[0-9][0-9][0-9]",
+            0, new EpochSecondsWithMillisDissector()));
 
         // -------
 //      $pipe
-        parsers.add(new IgnoreUnknownTokenParser("$pipe")); // TODO: Implement $pipe token
 //      “p” if request was pipelined, “.” otherwise
+        parsers.add(new IgnoreUnknownTokenParser("$pipe")); // TODO: Implement $pipe token
 
         // -------
 //      $request_length
-        parsers.add(new IgnoreUnknownTokenParser("$request_length")); // TODO: Implement $request_length token
 //      request length (including request line, header, and request body)
+        parsers.add(new IgnoreUnknownTokenParser("$request_length")); // TODO: Implement $request_length token
 
         // -------
 //      $request_time
-        parsers.add(new IgnoreUnknownTokenParser("$request_time")); // TODO: Implement $request_time token
 //      request processing time in seconds with a milliseconds resolution; time elapsed between the first bytes were
 //      read from the client and the log write after the last bytes were sent to the client
+        parsers.add(new IgnoreUnknownTokenParser("$request_time")); // TODO: Implement $request_time token
 
         // -------
 //      $status
 //      response status
         parsers.add(new TokenParser("$status",
             "request.status.original", "STRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+            Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -------
 //      $time_iso8601
@@ -172,20 +190,20 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // FIXME: Test this fixed format !!
         parsers.add(new TokenParser("$time_iso8601",
             "request.receive.time", "TIME.ISO8601",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_ISO8601));
+            Casts.STRING_ONLY, FORMAT_STANDARD_TIME_ISO8601));
 
         // -------
 //      $time_local
 //      local time in the Common Log Format (1.3.12, 1.2.7)
         parsers.add(new TokenParser("$time_local",
             "request.receive.time", "TIME.STAMP",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
+            Casts.STRING_ONLY, FORMAT_STANDARD_TIME_US));
 
         // -------
 //      Header lines sent to a client have the prefix “sent_http_”, for example, $sent_http_content_range.
         parsers.add(new NamedTokenParser("\\$sent_http_([a-z0-9\\-\\_]*)",
             "response.header.", "HTTP.HEADER",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
 
 //      http://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
         // -------
@@ -193,20 +211,20 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      argument name in the request line
         parsers.add(new NamedTokenParser("\\$arg_([a-z0-9\\-\\_]*)",
             "request.firstline.uri.query.", "STRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $args
 //      arguments in the request line
         parsers.add(new TokenParser("$args",
             "request.firstline.uri.query", "HTTP.QUERYSTRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
         // -------
 //      $query_string
 //      same as $args
         parsers.add(new TokenParser("$query_string",
             "request.firstline.uri.query", "HTTP.QUERYSTRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $binary_remote_addr
@@ -219,28 +237,28 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      the “%B” parameter of the mod_log_config Apache module
         parsers.add(new TokenParser("$body_bytes_sent",
             "response.body.bytes", "BYTES",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
 //      $content_length
 //      “Content-Length” request header field
         parsers.add(new TokenParser("$content_length",
                 "request.header.content_length", "HTTP.HEADER",  // TODO: Use '-' or '_' ??
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $content_type
 //      “Content-Type” request header field
         parsers.add(new TokenParser("$content_type",
                 "request.header.content_type", "HTTP.HEADER", // TODO: Use '-' or '_' ??
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $cookie_name
 //      the name cookie
         parsers.add(new NamedTokenParser("\\$cookie_([a-z0-9\\-_]*)",
                 "request.cookies.", "HTTP.COOKIE",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $document_root
@@ -259,23 +277,21 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new IgnoreUnknownTokenParser("$hostname")); // TODO: Implement $hostname token
 
         // -------
-//      $http_name
+//      $http_<name>
 //      arbitrary request header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores
         parsers.add(new NamedTokenParser("\\$http_([a-z0-9\\-_]*)",
                 "request.header.", "HTTP.HEADER",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $https
 //      “on” if connection operates in SSL mode, or an empty string otherwise
         parsers.add(new IgnoreUnknownTokenParser("$https")); // TODO: Implement $https token
 
-
         // -------
 //      $is_args
 //      “?” if a request line has arguments, or an empty string otherwise
         parsers.add(new IgnoreUnknownTokenParser("$is_args")); // TODO: Implement $is_args token
-
 
         // -------
 //      $limit_rate
@@ -320,7 +336,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      client address
         parsers.add(new TokenParser("$remote_addr",
             "connection.client.ip", "IP",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+            Casts.STRING_OR_LONG, FORMAT_CLF_IP));
 
         // -------
 //      $remote_port
@@ -332,7 +348,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      user name supplied with the Basic authentication
         parsers.add(new TokenParser("$remote_user",
             "connection.client.user", "STRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
 
         //TODO: Add basic authentication parsing to Apache too!!
 
@@ -341,9 +357,9 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      full original request line
         parsers.add(new TokenParser("$request",
             "request.firstline", "HTTP.FIRSTLINE",
-            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
-            TokenParser.FORMAT_NO_SPACE_STRING + " " +
-            TokenParser.FORMAT_NO_SPACE_STRING, -2));
+            Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING + " " +
+            FORMAT_NO_SPACE_STRING + " " +
+            FORMAT_NO_SPACE_STRING, -2));
 
         // -------
 //      $request_body
@@ -409,7 +425,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      request scheme, “http” or “https”
         parsers.add(new TokenParser("$scheme",
                 "request.firstline.uri.protocol", "HTTP.PROTOCOL",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+                Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -------
 //      $sent_http_name
@@ -417,7 +433,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      dashes replaced by underscores
         parsers.add(new NamedTokenParser("\\$sent_http_([a-z0-9\\-_]*)",
             "response.header.", "HTTP.HEADER",
-            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+            Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
 //      $server_addr
@@ -426,34 +442,28 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //      directives must specify addresses and use the bind parameter.
         parsers.add(new TokenParser("$server_addr",
                 "connection.server.ip", "IP",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+                Casts.STRING_OR_LONG, FORMAT_CLF_IP));
 
         // -------
 //      $server_name
 //      name of the server which accepted a request
         parsers.add(new TokenParser("$server_name",
                 "connection.server.name", "STRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+                Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -------
 //      $server_port
 //      port of the server which accepted a request
         parsers.add(new TokenParser("$server_port",
                 "connection.server.port", "PORT",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+                Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
 //      $server_protocol
 //      request protocol, usually “HTTP/1.0” or “HTTP/1.1”
-//    parsers.add(new TokenParser("%r",
-//            "request.firstline", "HTTP.FIRSTLINE",
-//            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
-//            TokenParser.FORMAT_NO_SPACE_STRING + " " +
-//            TokenParser.FORMAT_NO_SPACE_STRING));
-//    result.add("HTTP.URI:uri");
-//    result.add("HTTP.PROTOCOL:protocol");
-//    result.add("HTTP.PROTOCOL.VERSION:protocol.version");
-        parsers.add(new IgnoreUnknownTokenParser("$server_protocol")); // TODO: Implement $server_protocol token
+        parsers.add(new TokenParser("$server_protocol",
+            "protocol", "HTTP.PROTOCOL_VERSION",
+            Casts.STRING_OR_LONG, FORMAT_NO_SPACE_STRING));
 
         // -------
 //      $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space
@@ -502,11 +512,38 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 //                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
         parsers.add(new TokenParser("$http_user_agent",
                 "request.user-agent", "HTTP.USERAGENT",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
+                Casts.STRING_ONLY, FORMAT_STRING, 1));
         parsers.add(new TokenParser("$http_referer",
                 "request.referer", "HTTP.URI",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, 1));
+                Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING, 1));
 
         return parsers;
     }
+
+    public static class EpochSecondsWithMillisDissector extends SimpleDissector {
+
+        private static HashMap<String, EnumSet<Casts>> epochMillisConfig = new HashMap<>();
+        static {
+            epochMillisConfig.put("TIME.EPOCH:", Casts.STRING_OR_LONG);
+        }
+        public EpochSecondsWithMillisDissector() {
+            super("TIME.EPOCH_SECOND_MILLIS", epochMillisConfig);
+        }
+
+        @Override
+        public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+            final ParsedField field = parsable.getParsableField(getInputType(), inputname);
+            String fieldValue = field.getValue().getString();
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                return; // Nothing to do here
+            }
+            String epochStrings[] = fieldValue.split("\\.",2);
+            Long seconds =  Long.parseLong(epochStrings[0]);
+            Long milliseconds =  Long.parseLong(epochStrings[1]);
+            Long epoch = seconds * 1000 + milliseconds;
+
+            parsable.addDissection(inputname, "TIME.EPOCH", "", epoch);
+        }
+    }
+
 }
