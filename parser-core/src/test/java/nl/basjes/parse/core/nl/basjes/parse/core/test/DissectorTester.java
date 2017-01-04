@@ -426,7 +426,7 @@ public class DissectorTester {
 
     public DissectorTester printSeparator() {
         LOG.info("");
-        LOG.info("--");
+        LOG.info("------------------------------------------------------------------------------------------------");
         LOG.info("");
         return this;
     }

@@ -84,7 +84,7 @@ public class ReferenceTestDouble {
     @Test
     public void runDoubleDissectors(){
         DissectorTester.create()
-            .verbose()
+//            .verbose()
 
             .withDissector(new InputCreatingDissector())
             .withDissector(new RemapInputDissector())

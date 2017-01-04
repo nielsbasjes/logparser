@@ -41,15 +41,6 @@ public class ParameterizedTokenParser extends TokenParser {
             final String nValueName,
             final String nValueType,
             final EnumSet<Casts> nCasts,
-            final String nRegex) {
-        this(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 0, null);
-    }
-
-    public ParameterizedTokenParser(
-            final String nLogFormatToken,
-            final String nValueName,
-            final String nValueType,
-            final EnumSet<Casts> nCasts,
             final String nRegex,
             final int prio,
             final Dissector customDissector) {
@@ -82,17 +73,6 @@ public class ParameterizedTokenParser extends TokenParser {
         final int start = matcher.start();
         final int end = matcher.end();
         // the end is index of the last matching character + 1
-
-        Dissector customDissector = getCustomDissector();
-        if (customDissector == null) {
-            return new Token(
-                getValueName() + fieldName,
-                getValueType(),
-                getCasts(),
-                getRegex(),
-                startOffset + start, end - start,
-                getPrio());
-        }
 
         String fieldType = tokenParameterToTypeName(fieldName);
 
