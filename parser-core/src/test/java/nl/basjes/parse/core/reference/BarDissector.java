@@ -3,34 +3,31 @@ package nl.basjes.parse.core.reference;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
+import nl.basjes.parse.core.ParsedField;
+import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class BarDissector extends Dissector {
-    @Override
-    public String getInputType() {
-        return "BARINPUT";
+public class BarDissector extends SimpleDissector {
+
+    private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
+    static {
+        dissectorConfig.put("ANY:barany",         Casts.STRING_OR_LONG_OR_DOUBLE);
+        dissectorConfig.put("STRING:barstring",   Casts.STRING_ONLY);
+        dissectorConfig.put("INT:barint",         Casts.STRING_OR_LONG);
+        dissectorConfig.put("LONG:barlong",       Casts.STRING_OR_LONG);
+        dissectorConfig.put("FLOAT:barfloat",     Casts.STRING_OR_DOUBLE);
+        dissectorConfig.put("DOUBLE:bardouble",   Casts.STRING_OR_DOUBLE);
     }
 
-    @Override
-    public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<>();
-        result.add("ANY:barany");
-        result.add("STRING:barstring");
-        result.add("INT:barint");
-        result.add("LONG:barlong");
-        result.add("FLOAT:barfloat");
-        result.add("DOUBLE:bardouble");
-        return result;
-    }
-
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true;
+    public BarDissector() {
+        super("BARINPUT", dissectorConfig);
     }
 
     @Override
@@ -41,34 +38,5 @@ public class BarDissector extends Dissector {
         parsable.addDissection(inputname, "LONG",   "barlong",   42L);
         parsable.addDissection(inputname, "FLOAT",  "barfloat",  42F);
         parsable.addDissection(inputname, "DOUBLE", "bardouble", 42D);
-    }
-
-    @Override
-    public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-        String name = extractFieldName(inputname, outputname);
-        switch (name) {
-            case "barstring":
-                return Casts.STRING_ONLY;
-            case "barint":
-                return Casts.STRING_OR_LONG;
-            case "barlong":
-                return Casts.STRING_OR_LONG;
-            case "barfloat":
-                return Casts.STRING_OR_DOUBLE;
-            case "bardouble":
-                return Casts.STRING_OR_DOUBLE;
-            default:
-                return Casts.STRING_OR_LONG_OR_DOUBLE;
-        }
-    }
-
-    @Override
-    public void prepareForRun() throws InvalidDissectorException {
-        // We do not do anything extra here
-    }
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // We do not do anything extra here
     }
 }
