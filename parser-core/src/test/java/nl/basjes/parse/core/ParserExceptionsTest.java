@@ -111,8 +111,12 @@ public class ParserExceptionsTest {
             super(clazz);
             addDissector(new TestDissectorOne());
             addDissector(new TestDissectorTwo());
-            addDissector(new TestDissectorThree());
-            addDissector(new TestDissectorFour());
+
+            // Needlessly clumsy to test the addDissectors method too.
+            List<Dissector> dissectors = new ArrayList<>();
+            dissectors.add(new TestDissectorThree());
+            dissectors.add(new TestDissectorFour());
+            addDissectors(dissectors);
             setRootType("INPUTTYPE");
         }
     }
@@ -176,6 +180,11 @@ public class ParserExceptionsTest {
         @Field({ "BAR:output1.bar"})
         public void setValue7(String name, String value) {
             output7 = output7 + "=BAR:" + name + ":" + value;
+        }
+
+        private String output8 = "Z";
+        public void setValue8(String name, String value) {
+            output8 = output8 + "=" + name + ":" + value;
         }
 
         @SuppressWarnings({"UnusedDeclaration", "EmptyMethod"})
@@ -267,13 +276,13 @@ public class ParserExceptionsTest {
 
         @Override
         public String getInputType() {
-            return "foo";
+            return "FOO";
         }
 
         @Override
         public List<String> getPossibleOutput() {
             List<String> result = new ArrayList<>();
-            result.add("foo:bar");
+            result.add("FOO:bar");
             return result;
         }
 
@@ -292,15 +301,17 @@ public class ParserExceptionsTest {
         }
     }
 
-//    @Test(expected=InvalidDissectorException.class)
-//    public void testBrokenDissector() throws Exception {
-//        Parser<TestRecord> parser = new TestParser<TestRecord>(TestRecord.class);
-//        parser.addDissector(new BrokenTestDissector());
-//
-//        parser.getPossiblePaths(3);
-//    }
+    @Test(expected=InvalidDissectorException.class)
+    public void testBrokenDissector() throws Exception {
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
+        Dissector dissector = new BrokenTestDissector();
+        parser.setRootType(dissector.getInputType());
+        parser.addParseTarget(TestRecord.class.getMethod("setValue8", String.class, String.class), "FOO:bar");
+        parser.addDissector(dissector);
+        parser.parse("Something");
+    }
 
-    @Test//(expected=CannotChangeDissectorsAfterConstructionException.class)
+    @Test
     public void testChangeAfterStart() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         parser.parse("Something");
