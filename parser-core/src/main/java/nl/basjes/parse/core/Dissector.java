@@ -78,7 +78,7 @@ public abstract class Dissector {
     /**
      * This method must dissect the provided field from the parsable into 'smaller' pieces.
      */
-    public abstract void dissect(final Parsable<?> parsable, final String inputname)
+    public abstract void dissect(Parsable<?> parsable, String inputname)
         throws DissectionFailure;
 
     // --------------------------------------------
@@ -107,7 +107,7 @@ public abstract class Dissector {
      * algorithms and lookup tables and such.
      * The dissector must return the types to which this value can be mapped later on during the run.
      */
-    public abstract EnumSet<Casts> prepareForDissect(final String inputname, final String outputname);
+    public abstract EnumSet<Casts> prepareForDissect(String inputname, String outputname);
 
     // --------------------------------------------
 

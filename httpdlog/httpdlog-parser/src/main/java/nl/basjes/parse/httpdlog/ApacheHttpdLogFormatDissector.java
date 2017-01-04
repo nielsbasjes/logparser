@@ -96,7 +96,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         StringBuffer sb = new StringBuffer(logformat.length());
 
         // All patterns that have a 'name' (note we do NOT do it to %{...}t )
-        Pattern p = Pattern.compile("%\\{([^\\}]*)\\}([^t])");
+        Pattern p = Pattern.compile("%\\{([^}]*)}([^t])");
         Matcher m = p.matcher(logformat);
         while (m.find()) {
             m.appendReplacement(sb, "%{"+m.group(1).toLowerCase()+'}'+m.group(2));

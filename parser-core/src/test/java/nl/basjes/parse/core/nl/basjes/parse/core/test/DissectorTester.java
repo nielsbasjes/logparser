@@ -199,16 +199,7 @@ public class DissectorTester {
                 LOG.info("Checking for input: {}", inputValue);
             }
 
-            TestRecord result = null;
-            try {
-                TestRecord testRecord = new TestRecord();
-                if (verbose) {
-                    testRecord.setVerbose();
-                }
-                result = parser.parse(testRecord, inputValue);
-            } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
-                fail(e.toString());
-            }
+            TestRecord result = parse(inputValue);
 
             if (verbose) {
                 LOG.info("Parse completed successfully");
@@ -277,16 +268,7 @@ public class DissectorTester {
                 LOG.info("Checking for input: {}", inputValue);
             }
 
-            TestRecord result = null;
-            try {
-                TestRecord testRecord = new TestRecord();
-                if (verbose) {
-                    testRecord.setVerbose();
-                }
-                result = parser.parse(testRecord, inputValue);
-            } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
-                fail(e.toString());
-            }
+            TestRecord result = parse(inputValue);
 
             if (verbose) {
                 LOG.info("Parse completed successfully");
@@ -323,6 +305,19 @@ public class DissectorTester {
                 }
             }
         }
+    }
+
+    private TestRecord parse(String inputValue) {
+        try {
+            TestRecord testRecord = new TestRecord();
+            if (verbose) {
+                testRecord.setVerbose();
+            }
+            return parser.parse(testRecord, inputValue);
+        } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
+            fail(e.toString());
+        }
+        return null;
     }
 
     private void checkExpectedPossible() {

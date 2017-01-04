@@ -88,9 +88,8 @@ public class ParserInfiniteLoopTest {
      * This creates a dissector and a type remap that causes it to (effectively)
      * be an infinite recursive loop. This is the reproduction situation for a problem
      * that is now fixed.
-     * @throws Exception
+     * @throws Exception in case of error
      */
-
     @Test
     public void testInfiniteRecursionAvoidance() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);

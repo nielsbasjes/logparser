@@ -1,16 +1,12 @@
 package nl.basjes.parse.core.reference;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 
 public class FooDissector extends SimpleDissector {
 
