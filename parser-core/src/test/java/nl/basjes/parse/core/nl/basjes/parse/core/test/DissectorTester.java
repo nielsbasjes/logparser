@@ -308,16 +308,16 @@ public class DissectorTester {
     }
 
     private TestRecord parse(String inputValue) {
+        TestRecord testRecord = new TestRecord();
+        if (verbose) {
+            testRecord.setVerbose();
+        }
         try {
-            TestRecord testRecord = new TestRecord();
-            if (verbose) {
-                testRecord.setVerbose();
-            }
             return parser.parse(testRecord, inputValue);
         } catch (DissectionFailure | InvalidDissectorException | MissingDissectorsException e) {
             fail(e.toString());
         }
-        return null;
+        return testRecord; // This will never happen
     }
 
     private void checkExpectedPossible() {
@@ -426,7 +426,7 @@ public class DissectorTester {
 
     public DissectorTester printSeparator() {
         LOG.info("");
-        LOG.info("------------------------------------------------------------------------------------------------");
+        LOG.info("--------------------------------------------------------------------------------");
         LOG.info("");
         return this;
     }
@@ -482,6 +482,4 @@ public class DissectorTester {
             dummyDissector.outputType = outputType;
         }
     }
-
-
 }
