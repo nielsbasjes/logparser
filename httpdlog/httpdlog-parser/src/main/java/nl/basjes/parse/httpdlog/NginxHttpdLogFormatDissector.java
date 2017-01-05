@@ -247,12 +247,16 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // $host
         // in this order of precedence: host name from the request line, or host name from the “Host” request header field,
         // or the server name matching a request
-        parsers.add(new IgnoreUnknownTokenParser("$host", -1)); // TODO: Implement $host token
+        parsers.add(new TokenParser("$host",
+            "connection.server.name", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, -1));
 
         // -------
         // $hostname
         // host name
-        parsers.add(new IgnoreUnknownTokenParser("$hostname")); // TODO: Implement $hostname token
+        parsers.add(new TokenParser("$hostname",
+            "connection.client.host", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // $http_<name>
@@ -288,7 +292,9 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $nginx_version
         // nginx version
-        parsers.add(new IgnoreUnknownTokenParser("$nginx_version")); // TODO: Implement $nginx_version token
+        parsers.add(new TokenParser("$nginx_version",
+            "server.nginx.version", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // $pid
@@ -376,22 +382,20 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $request_filename
         // file path for the current request, based on the root or alias directives, and the request URI
-        parsers.add(new IgnoreUnknownTokenParser("$request_filename")); // TODO: Implement $request_filename token
+        parsers.add(new TokenParser("$request_filename",
+            "server.filename", "FILENAME",
+            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // $request_length
         // request length (including request line, header, and request body) (1.3.12, 1.2.7)
-        parsers.add(new IgnoreUnknownTokenParser("$request_length")); // TODO: Implement $request_length token
+        parsers.add(new TokenParser("$request_length",
+            "request.bytes", "BYTES",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
         // $request_method
         // request method, usually “GET” or “POST”
-//    parsers.add(new TokenParser("%r",
-        //       "request.firstline", "HTTP.FIRSTLINE",
-        //       Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING + " " +
-        //       TokenParser.FORMAT_NO_SPACE_STRING + " " +
-        //       TokenParser.FORMAT_NO_SPACE_STRING));
-//    result.add("HTTP.METHOD:method");
         parsers.add(new TokenParser("$request_method",
             "request.firstline.method", "HTTP.METHOD",
             Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));

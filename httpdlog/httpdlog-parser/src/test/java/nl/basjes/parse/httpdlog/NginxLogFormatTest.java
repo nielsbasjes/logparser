@@ -200,9 +200,13 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$remote_port"             , "44448"                              , "PORT:connection.client.port"  , "44448"                               ));
         fieldsTests.add(new SingleFieldTestcase("$remote_user"             , "-"                                  , "STRING:connection.client.user"  , null                                   ));
 
-        fieldsTests.add(new SingleFieldTestcase("$arg_name"                , "-"                                  , "STRING:request.firstline.uri.query.name"    , null                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$args"                    , "aap&noot=&mies=wim"                 , "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"                  ));
-        fieldsTests.add(new SingleFieldTestcase("$query_string"            , "aap&noot=&mies=wim"                 , "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"                  ));
+        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$is_args"                 , "?"                                  , "IGNORED:ignored__is_args"  , "?"                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$query_string" , "aap&noot=&mies=wim", "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.aap" , ""   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.noot" , ""   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.mies" , "wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$arg_name"      , "foo", "STRING:request.firstline.uri.query.name"    , "foo"                        ));
 
         fieldsTests.add(new SingleFieldTestcase("$bytes_sent"              , "694"                                , "BYTES:response.bytes"              , "694"                              ));
         fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent"         , "436"                                , "BYTES:response.body.bytes" , "436"                                 ));
@@ -213,13 +217,12 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$cookie_name"             , "Something"                          , "HTTP.COOKIE:request.cookies.name"   , "Something"                                   ));
 
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_root"           , "/var/www/html"                      , "IGNORED:ignored__document_root"  , "/var/www/html"                       ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$host"                    , "localhost"                          , "IGNORED:ignored__host"  , "localhost"                           ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$hostname"                , "hackbox"                            , "IGNORED:ignored__hostname"  , "hackbox"                             ));
+        fieldsTests.add(new SingleFieldTestcase("$host"                    , "localhost"                          , "STRING:connection.server.name"  , "localhost"                           ));
+        fieldsTests.add(new SingleFieldTestcase("$hostname"                , "hackbox"                            , "STRING:connection.client.host"  , "hackbox"                             ));
         fieldsTests.add(new SingleFieldTestcase("$http_name"               , "Something"                          , "HTTP.HEADER:request.header.name", "Something"                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$https"                   , ""                                   , "IGNORED:ignored__https"  , ""                                    ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$is_args"                 , "?"                                  , "IGNORED:ignored__is_args"  , "?"                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$limit_rate"              , "0"                                  , "IGNORED:ignored__limit_rate"  , "0"                                   ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$nginx_version"           , "1.10.0"                             , "IGNORED:ignored__nginx_version"  , "1.10.0"                              ));
+        fieldsTests.add(new SingleFieldTestcase("$nginx_version"           , "1.10.0"                             , "STRING:server.nginx.version"  , "1.10.0"                              ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$pid"                     , "5137"                               , "IGNORED:ignored__pid"  , "5137"                                ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$pipe"                    , "."                                  , "IGNORED:ignored__pipe"  , "."                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr"     , ""                                   , "IGNORED:ignored__proxy_protocol_addr"  , ""                                    ));
@@ -228,8 +231,8 @@ public class NginxLogFormatTest {
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_body"            , "-"                                  , "IGNORED:ignored__request_body"  , null                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_body_file"       , "-"                                  , "IGNORED:ignored__request_body_file"  , null                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_completion"      , "OK"                                 , "IGNORED:ignored__request_completion"  , "OK"                                  ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "IGNORED:ignored__request_filename"  , "/var/www/html/index.html"            ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_length"          , "491"                                , "IGNORED:ignored__request_length"  , "491"                                 ));
+        fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "FILENAME:server.filename"  , "/var/www/html/index.html"            ));
+        fieldsTests.add(new SingleFieldTestcase("$request_length"          , "491"                                , "BYTES:request.bytes"  , "491"                                 ));
         fieldsTests.add(new SingleFieldTestcase("$request_method"          , "GET"                                , "HTTP.METHOD:request.firstline.method"  , "GET"                                 ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_time"            , "0.000"                              , "IGNORED:ignored__request_time"  , "0.000"                               ));
         fieldsTests.add(new SingleFieldTestcase("$request_uri"             , "/?aap&noot=&mies=wim"               , "HTTP.URI:request.firstline.uri"  , "/?aap&noot=&mies=wim"                ));
