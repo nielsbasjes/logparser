@@ -113,7 +113,9 @@
           <outputFile>${basedir}/target/generated-sources/java/nl/basjes/parse/httpdlog/Version.java</outputFile>
           <replacements>
             <replacement>
+              <!--suppress MavenModelInspection -->
               <token>@git.commit.id.describe-short@</token>
+              <!--suppress MavenModelInspection -->
               <value>${git.commit.id.describe-short}</value>
             </replacement>
             <replacement>
