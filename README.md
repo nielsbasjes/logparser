@@ -1,6 +1,6 @@
 Apache HTTPD & NGINX access log parser
 ======================================
-[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg?branch=master)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 This is a Logparsing framework intended to make parsing Apache HTTPD and NGINX access log files much easier.
 
