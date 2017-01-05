@@ -74,6 +74,16 @@ public class UtilsTest {
         assertEquals((byte) 0xFF, Utils.hexCharsToByte('F', 'F'));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testHexToByteIllegalLeft() {
+        Utils.hexCharsToByte('X', '0');
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHexToByteIllegalRight() {
+        Utils.hexCharsToByte('0', 'X');
+    }
+
     @Test
     public void testApacheLogDecoder() {
         // Decoding a value
