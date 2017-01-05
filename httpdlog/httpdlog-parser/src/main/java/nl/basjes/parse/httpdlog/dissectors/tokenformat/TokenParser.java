@@ -34,17 +34,17 @@ public class TokenParser {
     public static final String FORMAT_NUMBER = "[0-9]*";
     public static final String FORMAT_CLF_NUMBER = FORMAT_NUMBER + "|-";
     public static final String FORMAT_HEXDIGIT = "[0-9a-fA-F]";
-    public static final String FORMAT_HEXNUMBER = FORMAT_HEXDIGIT+"*";
+    public static final String FORMAT_HEXNUMBER = FORMAT_HEXDIGIT + "*";
     public static final String FORMAT_CLF_HEXNUMBER = FORMAT_HEXNUMBER + "|-";
     public static final String FORMAT_NON_ZERO_NUMBER = "[1-9]|[1-9][0-9]*";
     public static final String FORMAT_CLF_NON_ZERO_NUMBER = FORMAT_NON_ZERO_NUMBER + "|-";
     public static final String FORMAT_EIGHT_BIT_DECIMAL = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 
     // This next regex only allows for the common form of an IPv4 address that appear in a logfile.
-    public static final String FORMAT_IPV4 = "(?:"+FORMAT_EIGHT_BIT_DECIMAL+"\\.){3}"+FORMAT_EIGHT_BIT_DECIMAL;
+    public static final String FORMAT_IPV4 = "(?:" + FORMAT_EIGHT_BIT_DECIMAL + "\\.){3}" + FORMAT_EIGHT_BIT_DECIMAL;
 
     // From http://codepad.org/wo95tiyp
-    public static final String FORMAT_IPV6 = ":?(?:"+FORMAT_HEXDIGIT+"{1,4}(?::|.)?){0,8}(?::|::)?(?:"+FORMAT_HEXDIGIT+"{1,4}(?::|.)?){0,8}";
+    public static final String FORMAT_IPV6 = ":?(?:" + FORMAT_HEXDIGIT + "{1,4}(?::|.)?){0,8}(?::|::)?(?:" + FORMAT_HEXDIGIT + "{1,4}(?::|.)?){0,8}";
     public static final String FORMAT_IP = FORMAT_IPV4 + "|" + FORMAT_IPV6;
 
     public static final String FORMAT_CLF_IP = FORMAT_IP + "|-";
@@ -201,7 +201,7 @@ public class TokenParser {
             }
             token.setCustomDissector(dissector);
         } catch (Exception e) {
-            LOG.error("Unable to add custom dissector for {}:{} because of : {}", fieldType, fieldName, e);
+            LOG.error("Unable to add custom dissector for {}:{} because of : {}", fieldType, fieldName, e.getMessage());
             return false;
         }
         return true;
