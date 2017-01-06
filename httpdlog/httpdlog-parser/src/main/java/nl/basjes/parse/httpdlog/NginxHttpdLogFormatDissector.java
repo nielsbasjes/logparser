@@ -18,7 +18,6 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parsable;
-import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.NamedTokenParser;
@@ -144,12 +143,12 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $connection
         // connection serial number (1.3.8, 1.2.5)
-        parsers.add(new IgnoreUnknownTokenParser("$connection", -1)); // TODO: Implement $connection token
+        parsers.add(new NotYetImplemented("$connection", -1)); // TODO: Implement $connection token
 
         // -------
         // $connection_requests
         // current number of requests made through a connection (1.3.8, 1.2.5)
-        parsers.add(new IgnoreUnknownTokenParser("$connection_requests")); // TODO: Implement $connection_requests token
+        parsers.add(new NotYetImplemented("$connection_requests")); // TODO: Implement $connection_requests token
 
         // -------
         // $msec
@@ -240,7 +239,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // $document_root
-        parsers.add(new IgnoreUnknownTokenParser("$document_root")); // TODO: Implement $document_root token
+        parsers.add(new NotYetImplemented("$document_root")); // TODO: Implement $document_root token
         // root or alias directive’s value for the current request
 
         // -------
@@ -277,17 +276,17 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $https
         // “on” if connection operates in SSL mode, or an empty string otherwise
-        parsers.add(new IgnoreUnknownTokenParser("$https")); // TODO: Implement $https token
+        parsers.add(new NotYetImplemented("$https")); // TODO: Implement $https token
 
         // -------
         // $is_args
         // “?” if a request line has arguments, or an empty string otherwise
-        parsers.add(new IgnoreUnknownTokenParser("$is_args")); // TODO: Implement $is_args token
+        parsers.add(new NotYetImplemented("$is_args")); // TODO: Implement $is_args token
 
         // -------
         // $limit_rate
         // setting this variable enables response rate limiting; see limit_rate
-        parsers.add(new IgnoreUnknownTokenParser("$limit_rate")); // TODO: Implement $limit_rate token
+        parsers.add(new NotYetImplemented("$limit_rate")); // TODO: Implement $limit_rate token
 
         // -------
         // $nginx_version
@@ -299,24 +298,26 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $pid
         // PID of the worker process
-        parsers.add(new IgnoreUnknownTokenParser("$pid")); // TODO: Implement $pid token
+        parsers.add(new TokenParser("$pid",
+            "connection.server.child.processid", "NUMBER",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // $pipe
         // “p” if request was pipelined, “.” otherwise (1.3.12, 1.2.7)
-        parsers.add(new IgnoreUnknownTokenParser("$pipe")); // TODO: Implement $pipe token
+        parsers.add(new NotYetImplemented("$pipe")); // TODO: Implement $pipe token
 
         // -------
         // $proxy_protocol_addr
         // client address from the PROXY protocol header, or an empty string otherwise (1.5.12)
         // The PROXY protocol must be previously enabled by setting the proxy_protocol parameter in the listen directive.
-        parsers.add(new IgnoreUnknownTokenParser("$proxy_protocol_addr")); // TODO: Implement $proxy_protocol_addr token
+        parsers.add(new NotYetImplemented("$proxy_protocol_addr")); // TODO: Implement $proxy_protocol_addr token
 
         // -------
         // $realpath_root
         // an absolute pathname corresponding to the root or alias directive’s value for the current request,
         // with all symbolic links resolved to real paths
-        parsers.add(new IgnoreUnknownTokenParser("$realpath_root")); // TODO: Implement $realpath_root token
+        parsers.add(new NotYetImplemented("$realpath_root")); // TODO: Implement $realpath_root token
 
         // -------
         // $remote_addr
@@ -331,7 +332,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         String formatHexByte = "\\\\x" + FORMAT_HEXDIGIT + FORMAT_HEXDIGIT;
         parsers.add(new TokenParser("$binary_remote_addr",
             "connection.client.ip", "IP_BINARY",
-            Casts.STRING_OR_LONG, formatHexByte + formatHexByte + formatHexByte + formatHexByte));
+            Casts.STRING_OR_LONG, formatHexByte + formatHexByte + formatHexByte + formatHexByte,
+            0, new BinaryIPDissector()));
 
         // -------
         // $remote_port
@@ -362,7 +364,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // $request_body
         // request body
         // The variable’s value is made available in locations processed by the proxy_pass, fastcgi_pass, uwsgi_pass, and scgi_pass directives.
-        parsers.add(new IgnoreUnknownTokenParser("$request_body", -1)); // TODO: Implement $request_body token
+        parsers.add(new NotYetImplemented("$request_body", -1)); // TODO: Implement $request_body token
 
         // -------
         // $request_body_file
@@ -372,12 +374,12 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the
         // proxy_pass_request_body off, fastcgi_pass_request_body off, uwsgi_pass_request_body off, or
         // scgi_pass_request_body off directives, respectively.
-        parsers.add(new IgnoreUnknownTokenParser("$request_body_file")); // TODO: Implement $request_body_file token
+        parsers.add(new NotYetImplemented("$request_body_file")); // TODO: Implement $request_body_file token
 
         // -------
         // $request_completion
         // “OK” if a request has completed, or an empty string otherwise
-        parsers.add(new IgnoreUnknownTokenParser("$request_completion")); // TODO: Implement $request_completion token
+        parsers.add(new NotYetImplemented("$request_completion")); // TODO: Implement $request_completion token
 
         // -------
         // $request_filename
@@ -404,7 +406,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // $request_time
         // request processing time in seconds with a milliseconds resolution (1.3.9, 1.2.6);
         // time elapsed since the first bytes were read from the client
-        parsers.add(new IgnoreUnknownTokenParser("$request_time")); // TODO: Implement $request_time token
+        parsers.add(new NotYetImplemented("$request_time")); // TODO: Implement $request_time token
 
         // -------
         // $request_uri
@@ -462,23 +464,23 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space
         // information about the client TCP connection; available on systems that support the TCP_INFO socket option
         // $tcpinfo_rtt
-        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rtt", -1)); // TODO: Implement $tcpinfo_rtt token
+        parsers.add(new NotYetImplemented("$tcpinfo_rtt", -1)); // TODO: Implement $tcpinfo_rtt token
         // $tcpinfo_rttvar
-        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
+        parsers.add(new NotYetImplemented("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
         // $tcpinfo_snd_cwnd
-        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_snd_cwnd")); // TODO: Implement $tcpinfo_snd_cwnd token
+        parsers.add(new NotYetImplemented("$tcpinfo_snd_cwnd")); // TODO: Implement $tcpinfo_snd_cwnd token
         // $tcpinfo_rcv_space
-        parsers.add(new IgnoreUnknownTokenParser("$tcpinfo_rcv_space")); // TODO: Implement $tcpinfo_rcv_space token
+        parsers.add(new NotYetImplemented("$tcpinfo_rcv_space")); // TODO: Implement $tcpinfo_rcv_space token
 
 
         // -------
         // $uri
-        parsers.add(new IgnoreUnknownTokenParser("$uri")); // TODO: Implement $uri token
+        parsers.add(new NotYetImplemented("$uri")); // TODO: Implement $uri token
         // current URI in request, normalized
         // The value of $uri may change during request processing, e.g. when doing internal redirects, or when using index files.
         // -------
         // $document_uri
-        parsers.add(new IgnoreUnknownTokenParser("$document_uri")); // TODO: Implement $document_uri token
+        parsers.add(new NotYetImplemented("$document_uri")); // TODO: Implement $document_uri token
         // same as $uri
 
 //    parsers.add(new TokenParser("%r",
@@ -518,18 +520,55 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         }
 
         @Override
-        public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
-            final ParsedField field = parsable.getParsableField(getInputType(), inputname);
-            String fieldValue = field.getValue().getString();
-            if (fieldValue == null || fieldValue.isEmpty()) {
-                return; // Nothing to do here
-            }
+        public void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure {
             String[] epochStrings = fieldValue.split("\\.", 2);
             Long seconds =  Long.parseLong(epochStrings[0]);
             Long milliseconds =  Long.parseLong(epochStrings[1]);
             Long epoch = seconds * 1000 + milliseconds;
 
             parsable.addDissection(inputname, "TIME.EPOCH", "", epoch);
+        }
+    }
+
+    public static class BinaryIPDissector extends SimpleDissector {
+
+        private static HashMap<String, EnumSet<Casts>> epochMillisConfig = new HashMap<>();
+        static {
+            epochMillisConfig.put("IP:", Casts.STRING_OR_LONG);
+        }
+        public BinaryIPDissector() {
+            super("IP_BINARY", epochMillisConfig);
+        }
+
+        private static final String CAPTURE_HEX_BYTE = "\\\\x([0-9a-fA-F][0-9a-fA-F])";
+        Pattern binaryIPPattern = Pattern.compile(
+            CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE
+        );
+
+        @Override
+        public void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure {
+            Matcher matcher = binaryIPPattern.matcher(fieldValue);
+            if (matcher.matches()) {
+                String[] binaryIPParts = fieldValue.split("\\.");
+                String ip =
+                    String.valueOf(Utils.hexCharsToByte(matcher.group(1))) + '.' +
+                    String.valueOf(Utils.hexCharsToByte(matcher.group(2))) + '.' +
+                    String.valueOf(Utils.hexCharsToByte(matcher.group(3))) + '.' +
+                    String.valueOf(Utils.hexCharsToByte(matcher.group(4)));
+                parsable.addDissection(inputname, "IP", "", ip);
+            }
+        }
+    }
+
+    @Deprecated
+    public static class NotYetImplemented extends NotYetImplementedTokenParser  {
+        private static final String FIELD_PREFIX = "nginx_parameter";
+        public NotYetImplemented(final String nLogFormatToken) {
+            super(nLogFormatToken, FIELD_PREFIX, 0);
+        }
+
+        public NotYetImplemented(final String nLogFormatToken, final int prio) {
+            super(nLogFormatToken, FIELD_PREFIX, prio);
         }
     }
 

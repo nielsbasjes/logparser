@@ -25,7 +25,7 @@ public class BarDissector extends SimpleDissector {
     }
 
     @Override
-    public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+    public void dissect(Parsable<?> parsable, String inputname, String fieldName) throws DissectionFailure {
         parsable.addDissection(inputname, "ANY",    "barany",    "42");
         parsable.addDissection(inputname, "STRING", "barstring", "42");
         parsable.addDissection(inputname, "INT",    "barint",    42);

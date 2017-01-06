@@ -71,15 +71,15 @@ public abstract class TokenFormatDissector extends Dissector {
     }
 
     // --------------------------------------------
-    public static class IgnoreUnknownTokenParser extends TokenParser {
-        public IgnoreUnknownTokenParser(final String nLogFormatToken) {
-            this(nLogFormatToken, 0);
+    public static class NotYetImplementedTokenParser extends TokenParser {
+        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix) {
+            this(nLogFormatToken, fieldPrefix, 0);
         }
 
-        public IgnoreUnknownTokenParser(final String nLogFormatToken, int nPrio) {
+        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, int nPrio) {
             super(nLogFormatToken,
-                "ignored_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "_"),
-                "IGNORED",
+                fieldPrefix + "_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "_"),
+                "NOT_YET_IMPLEMENTED",
                 Casts.STRING_ONLY,
                 "[^\"]*",
                 nPrio);

@@ -16,6 +16,7 @@
  */
 package nl.basjes.parse.core;
 
+import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
 import java.util.ArrayList;
@@ -82,6 +83,16 @@ public abstract class SimpleDissector extends Dissector {
         }
     }
 
+    @Override
+    public final void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+        final ParsedField field = parsable.getParsableField(getInputType(), inputname);
+        String fieldValue = field.getValue().getString();
+        if (fieldValue == null || fieldValue.isEmpty()) {
+            return; // Nothing to do here
+        }
+        dissect(parsable, inputname, fieldValue);
+    }
 
+    public abstract void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure;
 
 }

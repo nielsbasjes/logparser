@@ -25,7 +25,7 @@ public class FooDissector extends SimpleDissector {
     }
 
     @Override
-    public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+    public void dissect(Parsable<?> parsable, String inputname, String fieldName) throws DissectionFailure {
         parsable.addDissection(inputname, "ANY",    "fooany",    "42");
         parsable.addDissection(inputname, "STRING", "foostring", "42");
         parsable.addDissection(inputname, "INT",    "fooint",    42);

@@ -198,18 +198,18 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %a Remote IP-address
         parsers.add(new TokenParser("%a",
                 "connection.client.ip", "IP",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+                Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // %{c}a Underlying peer IP address of the connection (see the mod_remoteip module).
         parsers.add(new TokenParser("%{c}a",
                 "connection.client.peerip", "IP",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+                Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // -------
         // %A Local IP-address
         parsers.add(new TokenParser("%A",
                 "connection.server.ip", "IP",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_IP));
+                Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // -------
         // %B Size of response in bytes, excluding HTTP headers.
@@ -521,7 +521,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // %U The URL path requested, not including any query string.
         parsers.add(new TokenParser("%U",
-                "request.urlpath", "URI",
+                "request.urlpath", "URI", // FIXME: This is wrong
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------

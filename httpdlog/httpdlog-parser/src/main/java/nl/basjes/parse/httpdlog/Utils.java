@@ -65,6 +65,13 @@ public final class Utils {
     }
 
 
+    public static byte hexCharsToByte(String twoHexDigits) {
+        if (twoHexDigits == null || twoHexDigits.length() != 2) {
+            throw new IllegalArgumentException("URLDecoder: Illegal hex characters : \"" + twoHexDigits + "\"");
+        }
+        return hexCharsToByte(twoHexDigits.charAt(0), twoHexDigits.charAt(1));
+    }
+
     public static byte hexCharsToByte(char c1, char c2){
         byte result;
         switch (c1) {
