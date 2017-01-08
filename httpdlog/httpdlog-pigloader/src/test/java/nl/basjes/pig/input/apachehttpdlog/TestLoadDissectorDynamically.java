@@ -56,7 +56,13 @@ public class TestLoadDissectorDynamically {
                     "    '-map:request.firstline.uri.query.r:HTTP.URI'," +
                     "            'STRING:request.firstline.uri.query.r.query.blabla'," +
                     "            'HTTP.COOKIE:request.cookies.bui'," +
-                    "            'HTTP.USERAGENT:request.user-agent'" +
+                    "            'HTTP.USERAGENT:request.user-agent'," +
+                    "    '-load:nl.basjes.parse.useragent.dissector.UserAgentDissector:'," +
+                    "            'STRING:request.user-agent.device_class'," +
+                    "            'STRING:request.user-agent.device_brand'," +
+                    "            'STRING:request.user-agent.agent_class'," +
+                    "            'STRING:request.user-agent.agent_name'," +
+                    "            'STRING:request.user-agent.agent_version'" +
                     "            )" +
                     "         AS (" +
                     "            ConnectionClientHost," +
@@ -67,7 +73,12 @@ public class TestLoadDissectorDynamically {
                     "            ScreenHeight," +
                     "            GoogleQuery," +
                     "            BUI," +
-                    "            RequestUseragent" +
+                    "            RequestUseragent," +
+                    "            device_class," +
+                    "            device_brand," +
+                    "            agent_class," +
+                    "            agent_name," +
+                    "            agent_version " +
                     "            );"
         );
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
@@ -84,7 +95,12 @@ public class TestLoadDissectorDynamically {
                     "800",
                     "blablawashere",
                     "SomeThing",
-                    "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
+                    "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8",
+                    "Desktop",
+                    "Apple",
+                    "Browser",
+                    "Safari",
+                    "5.0.1"
             ).toDelimitedString("><#><"),
             out.get(0).toDelimitedString("><#><"));
   }
