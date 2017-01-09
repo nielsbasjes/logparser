@@ -28,6 +28,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ParserExceptionsTest {
 
@@ -220,20 +221,17 @@ public class ParserExceptionsTest {
 
     @Test
     public void testGetPossiblePaths() throws Exception {
-//        setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser.addParseTarget(TestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         List<String> paths = parser.getPossiblePaths(3);
-        for (String path:paths){
-            System.out.println("XXX "+path);
-        }
-
-//        assertEquals(true, paths.contains("SOMETYPE:output1"));
-//        assertEquals(true, paths.contains("FOO:output1.foo"));
-//        assertEquals(true, paths.contains("BAR:output1.bar"));
+        assertEquals(4, paths.size());
+        assertTrue(paths.contains("SOMETYPE:output1"));
+        assertTrue(paths.contains("FOO:output1.foo"));
+        assertTrue(paths.contains("BAR:output1.bar"));
+        assertTrue(paths.contains("OTHERTYPE:output2"));
     }
 
 
