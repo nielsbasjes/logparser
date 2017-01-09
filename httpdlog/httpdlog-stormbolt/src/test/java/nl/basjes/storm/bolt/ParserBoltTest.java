@@ -31,6 +31,8 @@ import org.apache.storm.tuple.Values;
 import org.apache.storm.utils.Utils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -40,6 +42,8 @@ import java.util.Map;
 public class ParserBoltTest implements Serializable {
     // ========================================================================
 
+    private static final Logger LOG = LoggerFactory.getLogger(ParserBoltTest.class);
+
     public static class TestApacheLogsSpout extends BaseRichSpout {
         private SpoutOutputCollector collector;
 
@@ -48,7 +52,6 @@ public class ParserBoltTest implements Serializable {
         }
 
         public void nextTuple() {
-            Utils.sleep(10L);
             String logline = "84.105.31.162 - - [05/Sep/2010:11:27:50 +0200] "
                     + "\"GET /fotos/index.html?img=geboorte-kaartje&foo=foofoo&bar=barbar HTTP/1.1\" 200 23617 "
                     + "\"http://www.google.nl/imgres?imgurl=http://daniel_en_sander.basjes.nl/fotos/geboorte-kaartje/"
@@ -59,6 +62,7 @@ public class ParserBoltTest implements Serializable {
                     + "\"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) "
                     + "Version/5.0.1 Safari/533.17.8\"";
             collector.emit(new Values(logline));
+            Utils.sleep(1000L);
         }
 
         public void declareOutputFields(OutputFieldsDeclarer declarer) {
@@ -82,7 +86,7 @@ public class ParserBoltTest implements Serializable {
             Assert.assertEquals("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) " +
                                 "AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 " +
                                 "Safari/533.17.8", tuple.getStringByField("useragent"));
-            System.out.print("Ok ");
+            LOG.info("Test passed");
         }
 
         @Override
