@@ -54,7 +54,8 @@ public class TestCookieDissector {
                 "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/xx, " +
                 "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/xx; domain=.basj.es, " +
                 "NBA-5=1234; path=/xx; domain=.basj.es, " +
-                "NBA-6=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es, "
+                "NBA-6=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es, " +
+                "NBA-7=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es; comment=bla bla bla"
             )
 
             .expect("HTTP.SETCOOKIES:cookies",
@@ -64,7 +65,9 @@ public class TestCookieDissector {
                 "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/xx, " +
                 "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/xx; domain=.basj.es, " +
                 "NBA-5=1234; path=/xx; domain=.basj.es, " +
-                "NBA-6=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es, ")
+                "NBA-6=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es, " +
+                "NBA-7=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es; comment=bla bla bla"
+            )
 
             .expect("HTTP.SETCOOKIE:cookies.nba-0",     "NBA-0=")
             .expect("STRING:cookies.nba-0.value",       "")
@@ -117,6 +120,15 @@ public class TestCookieDissector {
             .expect("TIME.EPOCH:cookies.nba-6.expires", 1577836810000L)
             .expect("STRING:cookies.nba-6.path"   ,     (String)null)
             .expect("STRING:cookies.nba-6.domain" ,     ".basj.es")
+
+            .expect("HTTP.SETCOOKIE:cookies.nba-7",     "NBA-7=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; domain=.basj.es; comment=bla bla bla")
+            .expect("STRING:cookies.nba-7.value",       "1234")
+            .expect("STRING:cookies.nba-7.expires",     "1577836810")
+            .expect("STRING:cookies.nba-7.expires",     1577836810L)
+            .expect("TIME.EPOCH:cookies.nba-7.expires", 1577836810000L)
+            .expect("STRING:cookies.nba-7.path"   ,     (String)null)
+            .expect("STRING:cookies.nba-7.domain" ,     ".basj.es")
+            .expect("STRING:cookies.nba-7.comment" ,    "bla bla bla")
 
             .checkExpectations();
     }

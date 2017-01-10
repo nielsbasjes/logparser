@@ -50,6 +50,7 @@ public class ResponseSetCookieDissector extends Dissector {
         result.add("TIME.EPOCH:expires");
         result.add("STRING:path");
         result.add("STRING:domain");
+        result.add("STRING:comment");
         return result;
     }
 
@@ -76,6 +77,7 @@ public class ResponseSetCookieDissector extends Dissector {
             case "expires": return Casts.STRING_OR_LONG;
             case "path":    return Casts.STRING_ONLY;
             case "domain":  return Casts.STRING_ONLY;
+            case "comment": return Casts.STRING_ONLY;
             default:        return Casts.STRING_ONLY;
         }
     }
