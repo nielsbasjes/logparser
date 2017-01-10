@@ -102,12 +102,13 @@ public class ParameterizedTokenParser extends TokenParser {
     }
 
     private String stringHashAsHexString(String input) {
+        String result = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            return Hex.encodeHexString(md.digest(input.getBytes()));
+            result = Hex.encodeHexString(md.digest(input.getBytes()));
         } catch (NoSuchAlgorithmException e) {
             // Shouldn't happen
         }
-        return "";
+        return result;
     }
 }
