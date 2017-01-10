@@ -298,11 +298,18 @@ public abstract class TokenFormatDissector extends Dissector {
             }
 
             if (prevToken.getStartPos() == token.getStartPos()) {
-                if (prevToken.getPrio() < token.getPrio()) {
-                    kickTokens.add(prevToken);
+                if (prevToken.getLength() == token.getLength()) {
+                    if (prevToken.getPrio() < token.getPrio()) {
+                        kickTokens.add(prevToken);
+                    } else {
+                        kickTokens.add(token);
+                    }
                 } else {
-                    kickTokens.add(token);
-                    continue;
+                    if (prevToken.getLength() < token.getLength()) {
+                        kickTokens.add(prevToken);
+                    } else {
+                        kickTokens.add(token);
+                    }
                 }
             } else {
                 // Sometimes we find that a part of a token matches another token aswell.

@@ -252,9 +252,9 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space"       , "43690"                              , "BYTES:connection.tcpinfo.receive.space"  , "43690"                               ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$uri"                     , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__uri"  , "/index.html"                         ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_uri"            , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__document_uri"  , "/index.html"                         ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$http_user_agent"         , "Mozilla/5.0 (Foo)"  , "HTTP.USERAGENT:request.user-agent" /* TODO: check the '-' / '_' */    , "Mozilla/5.0 (Foo)"                   ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent"      , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.foo_user_agent" /* TODO: check the '-' / '_' */    , "Mozilla/5.0 (Foo)"                   ));
-//        /* FIXME THIS IS A MAJOR PROBLEM */ fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo"      , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.user_agent_foo" /* TODO: check the '-' / '_' */    , "Mozilla/5.0 (Foo)"                   ));
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent"         , "Mozilla/5.0 (Foo)"  , "HTTP.USERAGENT:request.user-agent"             , "Mozilla/5.0 (Foo)"                   ));
+        fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent"     , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.foo_user_agent"     , "Mozilla/5.0 (Foo)"                   ));
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo"     , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.user_agent_foo"     , "Mozilla/5.0 (Foo)"                   ));
 //        fieldsTests.add(new SingleFieldTestcase("$http_referer"            , "http://localhost/"                  , "HTTP.URI:request.referer"    , "http://localhost/"                   ));
 
         for (SingleFieldTestcase testCase: fieldsTests) {
@@ -272,15 +272,14 @@ public class NginxLogFormatTest {
 
     }
 
-
-    @Ignore // FIXME: Test proofs a BROKEN situation right now.
     @Test
     public void validateAllFieldsPrefix() {
         List<SingleFieldTestcase> fieldsTests = new ArrayList<>();
 
-        fieldsTests.add(new SingleFieldTestcase("$http_user_agent"      , "Mozilla/5.0 (Foo)", "HTTP.USERAGENT:request.user-agent"        , "Mozilla/5.0 (Foo)"));
-        fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent"  , "Mozilla/5.0 (Foo)", "HTTP.HEADER:request.header.foo_user_agent", "Mozilla/5.0 (Foo)"));
-        fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo"  , "Mozilla/5.0 (Foo)", "HTTP.HEADER:request.header.user_agent_foo", "Mozilla/5.0 (Foo)"));
+        final String useragent = "Mozilla/5.0 (Foo)";
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent"      , useragent, "HTTP.USERAGENT:request.user-agent"        , useragent));
+        fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent"  , useragent, "HTTP.HEADER:request.header.foo_user_agent", useragent));
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo"  , useragent, "HTTP.HEADER:request.header.user_agent_foo", useragent));
 
         for (SingleFieldTestcase testCase: fieldsTests) {
             DissectorTester.create()
