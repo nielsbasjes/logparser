@@ -463,14 +463,27 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space
         // information about the client TCP connection; available on systems that support the TCP_INFO socket option
+        // See http://linuxgazette.net/136/pfeiffer.html
+        //      tcpi_rtt and tcpi_rttvar are the Round Trip Time (RTT), and its smoothed mean deviation maximum measured in microseconds
         // $tcpinfo_rtt
-        parsers.add(new NotYetImplemented("$tcpinfo_rtt", -1)); // TODO: Implement $tcpinfo_rtt token
         // $tcpinfo_rttvar
-        parsers.add(new NotYetImplemented("$tcpinfo_rttvar")); // TODO: Implement $tcpinfo_rttvar token
+        parsers.add(new TokenParser("$tcpinfo_rtt",
+            "connection.tcpinfo.rtt", "MICROSECONDS",
+            Casts.STRING_OR_LONG, FORMAT_NUMBER, -1));
+        parsers.add(new TokenParser("$tcpinfo_rttvar",
+            "connection.tcpinfo.rttvar", "MICROSECONDS",
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
+
         // $tcpinfo_snd_cwnd
-        parsers.add(new NotYetImplemented("$tcpinfo_snd_cwnd")); // TODO: Implement $tcpinfo_snd_cwnd token
+        //      tcpi_snd_cwnd is the sending congestion window.
+        parsers.add(new TokenParser("$tcpinfo_snd_cwnd",
+            "connection.tcpinfo.send.cwnd", "BYTES",
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
+
         // $tcpinfo_rcv_space
-        parsers.add(new NotYetImplemented("$tcpinfo_rcv_space")); // TODO: Implement $tcpinfo_rcv_space token
+        parsers.add(new TokenParser("$tcpinfo_rcv_space",
+            "connection.tcpinfo.receive.space", "BYTES",
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
 
         // -------
@@ -549,7 +562,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         public void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure {
             Matcher matcher = binaryIPPattern.matcher(fieldValue);
             if (matcher.matches()) {
-                String[] binaryIPParts = fieldValue.split("\\.");
                 String ip =
                     String.valueOf(Utils.hexCharsToByte(matcher.group(1))) + '.' +
                     String.valueOf(Utils.hexCharsToByte(matcher.group(2))) + '.' +
@@ -561,7 +573,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
     }
 
     @Deprecated
-    public static class NotYetImplemented extends NotYetImplementedTokenParser  {
+    public static class NotYetImplemented extends NotYetImplementedTokenParser {
         private static final String FIELD_PREFIX = "nginx_parameter";
         public NotYetImplemented(final String nLogFormatToken) {
             super(nLogFormatToken, FIELD_PREFIX, 0);

@@ -194,8 +194,8 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$msec"                    , "1483455396.639"                     , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396639"                      ));
 
         fieldsTests.add(new SingleFieldTestcase("$remote_addr"             , "127.0.0.1"                          , "IP:connection.client.ip"    , "127.0.0.1"                           ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"   , "IP_BINARY:connection.client.ip"     , "\\x7F\\x00\\x00\\x01"                ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"   , "IP:connection.client.ip"    , "127.0.0.1"));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP_BINARY:connection.client.ip"     , "\\x7F\\x00\\x00\\x01"                ));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP:connection.client.ip"    , "127.0.0.1"));
 
         fieldsTests.add(new SingleFieldTestcase("$remote_port"             , "44448"                              , "PORT:connection.client.port"  , "44448"                               ));
         fieldsTests.add(new SingleFieldTestcase("$remote_user"             , "-"                                  , "STRING:connection.client.user"  , null                                   ));
@@ -246,10 +246,10 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL_VERSION:request.firstline.protocol" , "HTTP/1.1"                            ));
         fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL:request.firstline.protocol" , "HTTP"                            ));
         fieldsTests.add(new SingleFieldTestcase("$server_protocol"         , "HTTP/1.1"                           , "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version" , "1.1"                            ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rtt"             , "52"                                 , "NOT_YET_IMPLEMENTED:nginx_parameter__tcpinfo_rtt"  , "52"                                  ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar"          , "30"                                 , "NOT_YET_IMPLEMENTED:nginx_parameter__tcpinfo_rttvar"  , "30"                                  ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd"        , "10"                                 , "NOT_YET_IMPLEMENTED:nginx_parameter__tcpinfo_snd_cwnd"  , "10"                                  ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space"       , "43690"                              , "NOT_YET_IMPLEMENTED:nginx_parameter__tcpinfo_rcv_space"  , "43690"                               ));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rtt"             , "52"                                 , "MICROSECONDS:connection.tcpinfo.rtt"  , "52"                                  ));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar"          , "30"                                 , "MICROSECONDS:connection.tcpinfo.rttvar"  , "30"                                  ));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd"        , "10"                                 , "BYTES:connection.tcpinfo.send.cwnd"  , "10"                                  ));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space"       , "43690"                              , "BYTES:connection.tcpinfo.receive.space"  , "43690"                               ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$uri"                     , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__uri"  , "/index.html"                         ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_uri"            , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__document_uri"  , "/index.html"                         ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$http_user_agent"         , "Mozilla/5.0 (Foo)"  , "HTTP.USERAGENT:request.user-agent" /* TODO: check the '-' / '_' */    , "Mozilla/5.0 (Foo)"                   ));
