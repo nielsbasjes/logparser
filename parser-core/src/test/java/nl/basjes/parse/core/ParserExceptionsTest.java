@@ -122,6 +122,7 @@ public class ParserExceptionsTest {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class TestRecord {
         private String output1 = "xxx";
         @Field("SOMETYPE:output1")
