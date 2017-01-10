@@ -144,12 +144,12 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $connection
         // connection serial number (1.3.8, 1.2.5)
-        parsers.add(new NotYetImplemented("$connection", -1)); // TODO: Implement $connection token
+        parsers.add(new NotYetImplemented("$connection", FORMAT_NUMBER, -1)); // TODO: Implement $connection token
 
         // -------
         // $connection_requests
         // current number of requests made through a connection (1.3.8, 1.2.5)
-        parsers.add(new NotYetImplemented("$connection_requests")); // TODO: Implement $connection_requests token
+        parsers.add(new NotYetImplemented("$connection_requests", FORMAT_NUMBER)); // TODO: Implement $connection_requests token
 
         // -------
         // $msec
@@ -240,7 +240,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // $document_root
-        parsers.add(new NotYetImplemented("$document_root")); // TODO: Implement $document_root token
+        parsers.add(new NotYetImplemented("$document_root", FORMAT_NO_SPACE_STRING)); // TODO: Implement $document_root token
         // root or alias directive’s value for the current request
 
         // -------
@@ -249,14 +249,14 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // or the server name matching a request
         parsers.add(new TokenParser("$host",
             "connection.server.name", "STRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, -1));
+            Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING, -1));
 
         // -------
         // $hostname
         // host name
         parsers.add(new TokenParser("$hostname",
             "connection.client.host", "STRING",
-            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+            Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -------
         // $http_<name>
@@ -277,12 +277,12 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $https
         // “on” if connection operates in SSL mode, or an empty string otherwise
-        parsers.add(new NotYetImplemented("$https")); // TODO: Implement $https token
+        parsers.add(new NotYetImplemented("$https", "[on]*")); // TODO: Implement $https token
 
         // -------
         // $is_args
         // “?” if a request line has arguments, or an empty string otherwise
-        parsers.add(new NotYetImplemented("$is_args")); // TODO: Implement $is_args token
+        parsers.add(new NotYetImplemented("$is_args", "\\??")); // TODO: Implement $is_args token
 
         // -------
         // $limit_rate
@@ -301,24 +301,24 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // PID of the worker process
         parsers.add(new TokenParser("$pid",
             "connection.server.child.processid", "NUMBER",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
         // $pipe
         // “p” if request was pipelined, “.” otherwise (1.3.12, 1.2.7)
-        parsers.add(new NotYetImplemented("$pipe")); // TODO: Implement $pipe token
+        parsers.add(new NotYetImplemented("$pipe", ".")); // TODO: Implement $pipe token
 
         // -------
         // $proxy_protocol_addr
         // client address from the PROXY protocol header, or an empty string otherwise (1.5.12)
         // The PROXY protocol must be previously enabled by setting the proxy_protocol parameter in the listen directive.
-        parsers.add(new NotYetImplemented("$proxy_protocol_addr")); // TODO: Implement $proxy_protocol_addr token
+        parsers.add(new NotYetImplemented("$proxy_protocol_addr", FORMAT_NO_SPACE_STRING)); // TODO: Implement $proxy_protocol_addr token
 
         // -------
         // $realpath_root
         // an absolute pathname corresponding to the root or alias directive’s value for the current request,
         // with all symbolic links resolved to real paths
-        parsers.add(new NotYetImplemented("$realpath_root")); // TODO: Implement $realpath_root token
+        parsers.add(new NotYetImplemented("$realpath_root", FORMAT_STRING)); // TODO: Implement $realpath_root token
 
         // -------
         // $remote_addr
@@ -341,7 +341,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // client port
         parsers.add(new TokenParser("$remote_port",
             "connection.client.port", "PORT",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
         // $remote_user
@@ -380,7 +380,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // $request_completion
         // “OK” if a request has completed, or an empty string otherwise
-        parsers.add(new NotYetImplemented("$request_completion")); // TODO: Implement $request_completion token
+        parsers.add(new NotYetImplemented("$request_completion", "[OK]*")); // TODO: Implement $request_completion token
 
         // -------
         // $request_filename
@@ -407,7 +407,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // $request_time
         // request processing time in seconds with a milliseconds resolution (1.3.9, 1.2.6);
         // time elapsed since the first bytes were read from the client
-        parsers.add(new NotYetImplemented("$request_time")); // TODO: Implement $request_time token
+        parsers.add(new NotYetImplemented("$request_time", "[0-9]+\\.[0-9][0-9][0-9]")); // TODO: Implement $request_time token
 
         // -------
         // $request_uri
@@ -581,8 +581,16 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             super(nLogFormatToken, FIELD_PREFIX, 0);
         }
 
+        public NotYetImplemented(final String nLogFormatToken, final String regex) {
+            super(nLogFormatToken, FIELD_PREFIX, regex, 0);
+        }
+
+        public NotYetImplemented(final String nLogFormatToken, final String regex, final int prio) {
+            super(nLogFormatToken, FIELD_PREFIX, regex, prio);
+        }
+
         public NotYetImplemented(final String nLogFormatToken, final int prio) {
-            super(nLogFormatToken, FIELD_PREFIX, prio);
+            super(nLogFormatToken, FIELD_PREFIX, "[^\" ]*", prio);
         }
     }
 

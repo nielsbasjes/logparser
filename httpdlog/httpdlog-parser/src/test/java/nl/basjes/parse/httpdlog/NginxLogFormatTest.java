@@ -42,7 +42,6 @@ public class NginxLogFormatTest {
             .printAllPossibleValues();
     }
 
-    @Ignore
     @Test
     public void testFullTestAllFields() {
         String logFormat =
