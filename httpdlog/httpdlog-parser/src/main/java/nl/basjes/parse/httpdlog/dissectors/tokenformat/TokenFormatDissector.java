@@ -64,24 +64,24 @@ public abstract class TokenFormatDissector extends Dissector {
         public FixedStringTokenParser(final String nLogFormatToken, final String nRegEx) {
             super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nRegEx, 0);
         }
-
-        public FixedStringTokenParser(final String nLogFormatToken) {
-            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nLogFormatToken, 0);
-        }
     }
 
     // --------------------------------------------
+
+    // This is marked as deprecated because we want to mark all uses of this as "undesirable"
+    @Deprecated
     public static class NotYetImplementedTokenParser extends TokenParser {
-        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix) {
-            this(nLogFormatToken, fieldPrefix, 0);
-        }
 
         public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, int nPrio) {
+            this(nLogFormatToken, fieldPrefix, ".*", nPrio);
+        }
+
+        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, final String regEx, int nPrio) {
             super(nLogFormatToken,
                 fieldPrefix + "_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "_"),
                 "NOT_YET_IMPLEMENTED",
                 Casts.STRING_ONLY,
-                "[^\"]*",
+                regEx,
                 nPrio);
         }
     }

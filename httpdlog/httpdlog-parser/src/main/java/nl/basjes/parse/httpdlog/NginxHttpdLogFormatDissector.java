@@ -63,6 +63,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         setInputType(HttpdLogFormatDissector.INPUT_TYPE);
     }
 
+    @SuppressWarnings("SameParameterValue") //
     private void overrideLogFormat(String originalLogformat, String logformat) {
         LOG.debug("Specified logformat \"{}\" was mapped to {}", originalLogformat, logformat);
         super.setLogFormat(logformat);
@@ -572,6 +573,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         }
     }
 
+    // This is marked as deprecated because we want to mark all uses of this as "undesirable"
     @Deprecated
     public static class NotYetImplemented extends NotYetImplementedTokenParser {
         private static final String FIELD_PREFIX = "nginx_parameter";
