@@ -102,11 +102,6 @@ public class ResponseSetCookieDissector extends Dissector {
 
         String[] parts = fieldValue.split(";");
 
-        Long expires    = null;
-        String domain   = null;
-        String comment  = null;
-        String path     = null;
-
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i].trim();
             String[] keyValue = part.split("=", 2);
@@ -123,30 +118,24 @@ public class ResponseSetCookieDissector extends Dissector {
                 switch (key) {
                     // We ignore the max-age field because that is unsupported by IE anyway.
                     case "expires":
-                        expires = parseExpire(value);
+                        Long expires = parseExpire(value);
+                        // Backwards compatibility: STRING version is in seconds
+                        parsable.addDissection(inputname, "STRING",     "expires", expires / 1000);
+                        parsable.addDissection(inputname, "TIME.EPOCH", "expires", expires);
                         break;
                     case "domain":
-                        domain = value;
+                        parsable.addDissection(inputname, "STRING", "domain",   value);
                         break;
                     case "comment":
-                        comment = value;
+                        parsable.addDissection(inputname, "STRING", "comment",  value);
                         break;
                     case "path":
-                        path = value;
+                        parsable.addDissection(inputname, "STRING", "path",     value);
                         break;
                     default: // Ignore anything else
                 }
-
             }
         }
-
-        // Backwards compatibility: STRING version is in seconds
-        parsable.addDissection(inputname, "STRING",     "expires", expires == null ? null : expires / 1000);
-        parsable.addDissection(inputname, "TIME.EPOCH", "expires", expires);
-
-        parsable.addDissection(inputname, "STRING", "domain",   domain);
-        parsable.addDissection(inputname, "STRING", "comment",  comment);
-        parsable.addDissection(inputname, "STRING", "path",     path);
     }
 
     // --------------------------------------------
