@@ -68,18 +68,16 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
 
-    // This is marked as deprecated because we want to mark all uses of this as "undesirable"
-    @Deprecated
-    public static class NotYetImplementedTokenParser extends TokenParser {
+    public static class NotImplementedTokenParser extends TokenParser {
 
-        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, int nPrio) {
+        public NotImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, int nPrio) {
             this(nLogFormatToken, fieldPrefix, ".*", nPrio);
         }
 
-        public NotYetImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, final String regEx, int nPrio) {
+        public NotImplementedTokenParser(final String nLogFormatToken, final String fieldPrefix, final String regEx, int nPrio) {
             super(nLogFormatToken,
                 fieldPrefix + "_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "_"),
-                "NOT_YET_IMPLEMENTED",
+                "NOT_IMPLEMENTED",
                 Casts.STRING_ONLY,
                 regEx,
                 nPrio);

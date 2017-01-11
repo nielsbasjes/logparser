@@ -59,6 +59,8 @@ public class TokenParser {
     public static final String FORMAT_STANDARD_TIME_ISO8601 =
         "[1-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9][\\+|\\-][0-9][0-9]:[0-9][0-9]";
 
+    public static final String FORMAT_NUMBER_DOT_NUMBER = FORMAT_NUMBER + "\\." + FORMAT_NUMBER;
+
     // ---------------------------------------
 
     private final String logFormatToken;

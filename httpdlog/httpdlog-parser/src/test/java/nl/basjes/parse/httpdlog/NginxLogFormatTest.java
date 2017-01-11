@@ -184,53 +184,53 @@ public class NginxLogFormatTest {
     public void validateAllFields() {
         List<SingleFieldTestcase> fieldsTests = new ArrayList<>();
 
-        fieldsTests.add(new SingleFieldTestcase("$status"                  , "200"                                , "STRING:request.status.original"    , "200"                              ));
-        fieldsTests.add(new SingleFieldTestcase("$time_iso8601"            , "2017-01-03T15:56:36+01:00"          , "TIME.ISO8601:request.receive.time" , "2017-01-03T15:56:36+01:00"        ));
-        fieldsTests.add(new SingleFieldTestcase("$time_local"              , "03/Jan/2017:15:56:36 +0100"         , "TIME.STAMP:request.receive.time"   , "03/Jan/2017:15:56:36 +0100"       ));
+        fieldsTests.add(new SingleFieldTestcase("$status"                  , "200"                                , "STRING:request.status.last"        , "200"                        ));
+        fieldsTests.add(new SingleFieldTestcase("$time_iso8601"            , "2017-01-03T15:56:36+01:00"          , "TIME.ISO8601:request.receive.time" , "2017-01-03T15:56:36+01:00"  ));
+        fieldsTests.add(new SingleFieldTestcase("$time_local"              , "03/Jan/2017:15:56:36 +0100"         , "TIME.STAMP:request.receive.time"   , "03/Jan/2017:15:56:36 +0100" ));
 
-        fieldsTests.add(new SingleFieldTestcase("$time_iso8601"            , "2017-01-03T15:56:36+01:00"          , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396000"  ));
-        fieldsTests.add(new SingleFieldTestcase("$time_local"              , "03/Jan/2017:15:56:36 +0100"         , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396000"  ));
-        fieldsTests.add(new SingleFieldTestcase("$msec"                    , "1483455396.639"                     , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396639"                      ));
+        fieldsTests.add(new SingleFieldTestcase("$time_iso8601"            , "2017-01-03T15:56:36+01:00"          , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396000" ));
+        fieldsTests.add(new SingleFieldTestcase("$time_local"              , "03/Jan/2017:15:56:36 +0100"         , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396000" ));
+        fieldsTests.add(new SingleFieldTestcase("$msec"                    , "1483455396.639"                     , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396639" ));
 
-        fieldsTests.add(new SingleFieldTestcase("$remote_addr"             , "127.0.0.1"                          , "IP:connection.client.ip"    , "127.0.0.1"                           ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP_BINARY:connection.client.ip"     , "\\x7F\\x00\\x00\\x01"                ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP:connection.client.ip"    , "127.0.0.1"));
+        fieldsTests.add(new SingleFieldTestcase("$remote_addr"             , "127.0.0.1"                          , "IP:connection.client.ip"           , "127.0.0.1"            ));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP_BINARY:connection.client.ip"    , "\\x7F\\x00\\x00\\x01" ));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP:connection.client.ip"           , "127.0.0.1"            ));
 
-        fieldsTests.add(new SingleFieldTestcase("$remote_port"             , "44448"                              , "PORT:connection.client.port"  , "44448"                               ));
-        fieldsTests.add(new SingleFieldTestcase("$remote_user"             , "-"                                  , "STRING:connection.client.user"  , null                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$remote_port"             , "44448"                              , "PORT:connection.client.port"       , "44448"    ));
+        fieldsTests.add(new SingleFieldTestcase("$remote_user"             , "-"                                  , "STRING:connection.client.user"     , null       ));
 
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$is_args"                 , "?"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__is_args"  , "?"                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$query_string" , "aap&noot=&mies=wim", "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"   ));
-        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "HTTP.QUERYSTRING:request.firstline.uri.query" , "aap&noot=&mies=wim"   ));
-        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.aap" , ""   ));
-        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.noot" , ""   ));
-        fieldsTests.add(new SingleFieldTestcase("$args"         , "aap&noot=&mies=wim", "STRING:request.firstline.uri.query.mies" , "wim"   ));
-        fieldsTests.add(new SingleFieldTestcase("$arg_name"      , "foo", "STRING:request.firstline.uri.query.name"    , "foo"                        ));
+        fieldsTests.add(new SingleFieldTestcase("$is_args"                 , "?"                                  , "STRING:request.firstline.uri.is_args"  , "?"                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$query_string"            , "aap&noot=&mies=wim"                 , "HTTP.QUERYSTRING:request.firstline.uri.query", "aap&noot=&mies=wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"                    , "aap&noot=&mies=wim"                 , "HTTP.QUERYSTRING:request.firstline.uri.query", "aap&noot=&mies=wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$args"                    , "aap&noot=&mies=wim"                 , "STRING:request.firstline.uri.query.aap",           ""      ));
+        fieldsTests.add(new SingleFieldTestcase("$args"                    , "aap&noot=&mies=wim"                 , "STRING:request.firstline.uri.query.noot",          ""      ));
+        fieldsTests.add(new SingleFieldTestcase("$args"                    , "aap&noot=&mies=wim"                 , "STRING:request.firstline.uri.query.mies",          "wim"   ));
+        fieldsTests.add(new SingleFieldTestcase("$arg_name"                , "foo"                                , "STRING:request.firstline.uri.query.name",          "foo"   ));
 
-        fieldsTests.add(new SingleFieldTestcase("$bytes_sent"              , "694"                                , "BYTES:response.bytes"              , "694"                              ));
-        fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent"         , "436"                                , "BYTES:response.body.bytes" , "436"                                 ));
-        /* FIXME */fieldsTests.add(new SingleFieldTestcase("$connection"              , "5"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__connection"  , "5"                                   ));
-        /* FIXME */fieldsTests.add(new SingleFieldTestcase("$connection_requests"     , "4"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__connection_requests"  , "4"                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$content_length"          , "-"                                  , "HTTP.HEADER:request.header.content_length"    , null                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$content_type"            , "-"                                  , "HTTP.HEADER:request.header.content_type"  , null                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$cookie_name"             , "Something"                          , "HTTP.COOKIE:request.cookies.name"   , "Something"                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$bytes_sent"              , "694"                                , "BYTES:response.bytes",             "694"   ));
+        fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent"         , "436"                                , "BYTES:response.body.bytes",        "436"   ));
+        fieldsTests.add(new SingleFieldTestcase("$connection"              , "5"                                  , "NUMBER:connection.serial_number",  "5"     ));
+        fieldsTests.add(new SingleFieldTestcase("$connection_requests"     , "4"                                  , "NUMBER:connection.requestnr",      "4"     ));
+        fieldsTests.add(new SingleFieldTestcase("$https"                   , ""                                   , "STRING:connection.https"  ,        ""      ));
+        fieldsTests.add(new SingleFieldTestcase("$content_length"          , "-"                                  , "HTTP.HEADER:request.header.content_length",    null         ));
+        fieldsTests.add(new SingleFieldTestcase("$content_type"            , "-"                                  , "HTTP.HEADER:request.header.content_type",      null         ));
+        fieldsTests.add(new SingleFieldTestcase("$cookie_name"             , "Something"                          , "HTTP.COOKIE:request.cookies.name",             "Something"  ));
 
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_root"           , "/var/www/html"                      , "NOT_YET_IMPLEMENTED:nginx_parameter__document_root"  , "/var/www/html"                       ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$realpath_root"           , "/var/www/html"                      , "NOT_YET_IMPLEMENTED:nginx_parameter__realpath_root"  , "/var/www/html"                       ));
+        fieldsTests.add(new SingleFieldTestcase("$document_root"           , "/var/www/html"                      , "STRING:request.firstline.document_root",   "/var/www/html"  ));
+        fieldsTests.add(new SingleFieldTestcase("$realpath_root"           , "/var/www/html"                      , "STRING:request.firstline.realpath_root",   "/var/www/html"  ));
 
-        fieldsTests.add(new SingleFieldTestcase("$host"                    , "localhost"                          , "STRING:connection.server.name"  , "localhost"                           ));
-        fieldsTests.add(new SingleFieldTestcase("$hostname"                , "hackbox"                            , "STRING:connection.client.host"  , "hackbox"                             ));
-        fieldsTests.add(new SingleFieldTestcase("$http_name"               , "Something"                          , "HTTP.HEADER:request.header.name", "Something"                                   ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$https"                   , ""                                   , "NOT_YET_IMPLEMENTED:nginx_parameter__https"  , ""                                    ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$limit_rate"              , "0"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__limit_rate"  , "0"                                   ));
-        fieldsTests.add(new SingleFieldTestcase("$nginx_version"           , "1.10.0"                             , "STRING:server.nginx.version"  , "1.10.0"                              ));
-        fieldsTests.add(new SingleFieldTestcase("$pid"                     , "5137"                               , "NUMBER:connection.server.child.processid"  , "5137"                                ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$pipe"                    , "."                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__pipe"  , "."                                   ));
+        fieldsTests.add(new SingleFieldTestcase("$host"                    , "localhost"                          , "STRING:connection.server.name"         ,   "localhost"      ));
+        fieldsTests.add(new SingleFieldTestcase("$hostname"                , "hackbox"                            , "STRING:connection.client.host"         ,   "hackbox"        ));
+        fieldsTests.add(new SingleFieldTestcase("$http_name"               , "Something"                          , "HTTP.HEADER:request.header.name"       ,   "Something"      ));
+        fieldsTests.add(new SingleFieldTestcase("$limit_rate"              , "0"                                  , "STRING:connection.nginx.limit_rate"    ,   "0"              ));
+        fieldsTests.add(new SingleFieldTestcase("$nginx_version"           , "1.10.0"                             , "STRING:server.nginx.version"           , "1.10.0"           ));
+        fieldsTests.add(new SingleFieldTestcase("$pid"                     , "5137"                               , "NUMBER:connection.server.child.processid"  , "5137"         ));
+        fieldsTests.add(new SingleFieldTestcase("$pipe"                    , "."                                  , "STRING:connection.nginx.pipe"          , "."                ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr"     , ""                                   , "NOT_YET_IMPLEMENTED:nginx_parameter__proxy_protocol_addr"  , ""                                    ));
         fieldsTests.add(new SingleFieldTestcase("$request"                 , "GET /?aap&noot=&mies=wim HTTP/1.1"  , "HTTP.FIRSTLINE:request.firstline"     , "GET /?aap&noot=&mies=wim HTTP/1.1"   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_body"            , "-"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__request_body"  , null                                   ));
         /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_body_file"       , "-"                                  , "NOT_YET_IMPLEMENTED:nginx_parameter__request_body_file"  , null                                   ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$request_completion"      , "OK"                                 , "NOT_YET_IMPLEMENTED:nginx_parameter__request_completion"  , "OK"                                  ));
+        fieldsTests.add(new SingleFieldTestcase("$request_completion"      , "OK"                                 , "STRING:request.completion"  , "OK"                                  ));
         fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "FILENAME:server.filename"  , "/var/www/html/index.html"            ));
         fieldsTests.add(new SingleFieldTestcase("$request_length"          , "491"                                , "BYTES:request.bytes"  , "491"                                 ));
         fieldsTests.add(new SingleFieldTestcase("$request_method"          , "GET"                                , "HTTP.METHOD:request.firstline.method"  , "GET"                                 ));
@@ -249,12 +249,12 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar"          , "30"                                 , "MICROSECONDS:connection.tcpinfo.rttvar"  , "30"                                  ));
         fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd"        , "10"                                 , "BYTES:connection.tcpinfo.send.cwnd"  , "10"                                  ));
         fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space"       , "43690"                              , "BYTES:connection.tcpinfo.receive.space"  , "43690"                               ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$uri"                     , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__uri"  , "/index.html"                         ));
-        /* FIXME */ fieldsTests.add(new SingleFieldTestcase("$document_uri"            , "/index.html"                        , "NOT_YET_IMPLEMENTED:nginx_parameter__document_uri"  , "/index.html"                         ));
+        fieldsTests.add(new SingleFieldTestcase("$uri"                     , "/index.html"                        , "HTTP.URI:request.firstline.uri.normalized"  , "/index.html"                         ));
+        fieldsTests.add(new SingleFieldTestcase("$document_uri"            , "/index.html"                        , "HTTP.URI:request.firstline.uri.normalized"  , "/index.html"                         ));
         fieldsTests.add(new SingleFieldTestcase("$http_user_agent"         , "Mozilla/5.0 (Foo)"  , "HTTP.USERAGENT:request.user-agent"             , "Mozilla/5.0 (Foo)"                   ));
         fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent"     , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.foo_user_agent"     , "Mozilla/5.0 (Foo)"                   ));
         fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo"     , "Mozilla/5.0 (Foo)"  , "HTTP.HEADER:request.header.user_agent_foo"     , "Mozilla/5.0 (Foo)"                   ));
-//        fieldsTests.add(new SingleFieldTestcase("$http_referer"            , "http://localhost/"                  , "HTTP.URI:request.referer"    , "http://localhost/"                   ));
+        fieldsTests.add(new SingleFieldTestcase("$http_referer"            , "http://localhost/"  , "HTTP.URI:request.referer"                      , "http://localhost/"                   ));
 
         for (SingleFieldTestcase testCase: fieldsTests) {
             DissectorTester.create()
