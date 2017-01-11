@@ -269,7 +269,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // number of bytes sent to a client (1.3.8, 1.2.5)
         parsers.add(new TokenParser("$bytes_sent",
             "response.bytes", "BYTES",
-            Casts.STRING_OR_LONG, FORMAT_CLF_NUMBER));
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
         // $connection
@@ -357,6 +357,11 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new TokenParser("$body_bytes_sent",
             "response.body.bytes", "BYTES",
             Casts.STRING_OR_LONG, FORMAT_NUMBER));
+
+//        // the %b variant
+//        parsers.add(new TokenParser("$body_bytes_sent",
+//            "response.body.bytesclf", "BYTES",
+//            Casts.STRING_OR_LONG, FORMAT_NUMBER)); // FIXME: In case of '0' there should be a null value here.
 
         // -------
         // $content_length
@@ -463,14 +468,16 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // The PROXY protocol must be previously enabled by setting the proxy_protocol parameter in the listen directive.
         // TODO: Check if this is correct. Need actually logged example for this.
         parsers.add(new TokenParser("$proxy_protocol_addr",
-            "connection.client.proxy.ip", "IP",
+            "connection.client.proxy.host", "IP",
             Casts.STRING_OR_LONG, FORMAT_CLF_IP));
+
+        // TODO: Consider renaming 'host' to 'ip'
 
         // -------
         // $remote_addr
         // client address
         parsers.add(new TokenParser("$remote_addr",
-            "connection.client.ip", "IP",
+            "connection.client.host", "IP",
             Casts.STRING_OR_LONG, FORMAT_CLF_IP));
 
         // -------
@@ -478,7 +485,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // client address in a binary form, value’s length is always 4 bytes
         String formatHexByte = "\\\\x" + FORMAT_HEXDIGIT + FORMAT_HEXDIGIT;
         parsers.add(new TokenParser("$binary_remote_addr",
-            "connection.client.ip", "IP_BINARY",
+            "connection.client.host", "IP_BINARY",
             Casts.STRING_OR_LONG, formatHexByte + formatHexByte + formatHexByte + formatHexByte,
             0, new BinaryIPDissector()));
 

@@ -17,15 +17,27 @@
 
 package nl.basjes.parse.httpdlog;
 
+import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.nl.basjes.parse.core.test.TestRecord;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class NginxLogFormatTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(NginxLogFormatTest.class);
 
     @Test
     public void testBasicLogFormat() {
@@ -41,6 +53,79 @@ public class NginxLogFormatTest {
             .printPossible()
             .printAllPossibleValues();
     }
+
+    @Test
+    public void testBasicLogFormatDissector() {
+        // From: http://articles.slicehost.com/2010/8/27/customizing-nginx-web-logs
+        String logFormat = "combined";
+        String logLine = "123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
+
+        HttpdLoglineParser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, "$msec");
+        parser.dropDissector(HttpdLogFormatDissector.class);
+
+        NginxHttpdLogFormatDissector dissector = new NginxHttpdLogFormatDissector();
+        dissector.setLogFormat(logFormat);
+        parser.addDissector(dissector);
+
+        DissectorTester.create()
+            .verbose()
+            .withParser(parser)
+            .withInput(logLine)
+            .printPossible()
+            .printAllPossibleValues();
+    }
+
+    @Ignore // FIXME: Unfinished
+    @Test
+    public void testCompareApacheAndNginxOutput() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+
+        String logFormatNginx  = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
+
+        // combined format except the logname was removed.
+        String logFormatApache = "%h - %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+
+        String logLine = "1.2.3.4 - - [23/Aug/2010:03:50:59 +0000] \"POST /foo.html?aap&noot=mies HTTP/1.1\" 200 2 \"http://www.example.com/bar.html?wim&zus=jet\" \"Niels Basjes/1.0\"";
+
+        Parser<TestRecord> apacheParser = new HttpdLoglineParser<>(TestRecord.class, logFormatApache);
+        List<String> fields = apacheParser.getPossiblePaths();
+
+        ArrayList<String> checkFields = new ArrayList<>(fields.size() + 10);
+        String[] parameterNames = { "aap", "noot", "mies", "wim", "zus", "jet" };
+        for (String field: fields) {
+            if (field.endsWith(".*")){
+                String fieldHead = field.substring(0, field.length()-1);
+                for (String parameterName: parameterNames){
+                    checkFields.add(fieldHead + parameterName);
+                }
+            } else {
+                checkFields.add(field);
+            }
+        }
+
+        Parser<TestRecord> nginxParser = new HttpdLoglineParser<>(TestRecord.class, logFormatNginx);
+        for (String field: checkFields) {
+            apacheParser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), field);
+            nginxParser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), field);
+        }
+
+        TestRecord apacheRecord = apacheParser.parse(logLine);
+        TestRecord nginxRecord  = nginxParser.parse(logLine);
+
+        for (String field: checkFields) {
+            boolean apacheHasValue = apacheRecord.hasStringValue(field);
+            boolean nginxHasValue = nginxRecord.hasStringValue(field);
+            assertEquals("Apache and Nginx values for field " + field + " are different.", apacheHasValue, nginxHasValue);
+
+            if (apacheRecord.hasStringValue(field)) {
+                String apacheValue = apacheRecord.getStringValue(field);
+                String nginxValue = nginxRecord.getStringValue(field);
+                assertEquals("Apache and Nginx values for field " + field + " are different.", apacheValue, nginxValue);
+            }
+
+        }
+
+    }
+
 
     @Test
     public void testFullTestAllFields() {
@@ -192,9 +277,9 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$time_local"              , "03/Jan/2017:15:56:36 +0100"         , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396000" ));
         fieldsTests.add(new SingleFieldTestcase("$msec"                    , "1483455396.639"                     , "TIME.EPOCH:request.receive.time.epoch"  , "1483455396639" ));
 
-        fieldsTests.add(new SingleFieldTestcase("$remote_addr"             , "127.0.0.1"                          , "IP:connection.client.ip"           , "127.0.0.1"            ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP_BINARY:connection.client.ip"    , "\\x7F\\x00\\x00\\x01" ));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP:connection.client.ip"           , "127.0.0.1"            ));
+        fieldsTests.add(new SingleFieldTestcase("$remote_addr"             , "127.0.0.1"                          , "IP:connection.client.host"           , "127.0.0.1"            ));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP_BINARY:connection.client.host"    , "\\x7F\\x00\\x00\\x01" ));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr"      , "\\x7F\\x00\\x00\\x01"               , "IP:connection.client.host"           , "127.0.0.1"            ));
 
         fieldsTests.add(new SingleFieldTestcase("$remote_port"             , "44448"                              , "PORT:connection.client.port"       , "44448"    ));
         fieldsTests.add(new SingleFieldTestcase("$remote_user"             , "-"                                  , "STRING:connection.client.user"     , null       ));
@@ -225,7 +310,7 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$nginx_version"           , "1.10.0"                             , "STRING:server.nginx.version"                               , "1.10.0"           ));
         fieldsTests.add(new SingleFieldTestcase("$pid"                     , "5137"                               , "NUMBER:connection.server.child.processid"                  , "5137"         ));
         fieldsTests.add(new SingleFieldTestcase("$pipe"                    , "."                                  , "STRING:connection.nginx.pipe"                              , "."                ));
-        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr"     , ""                                   , "IP:connection.client.proxy.ip"                             , ""                                    ));
+        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr"     , ""                                   , "IP:connection.client.proxy.host"                           , ""                                    ));
         fieldsTests.add(new SingleFieldTestcase("$request"                 , "GET /?aap&noot=&mies=wim HTTP/1.1"  , "HTTP.FIRSTLINE:request.firstline"                          , "GET /?aap&noot=&mies=wim HTTP/1.1"   ));
         fieldsTests.add(new SingleFieldTestcase("$request_completion"      , "OK"                                 , "STRING:request.completion"                                 , "OK"                                  ));
         fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "FILENAME:server.filename"                                  , "/var/www/html/index.html"            ));
