@@ -90,29 +90,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
     // --------------------------------------------
 
-    protected String makeHeaderNamesLowercaseInLogFormat(String logformat) {
-        // In vim I would simply do: %s@{\([^}]*\)}@{\L\1\E@g
-        // But such an expression is not (yet) possible in Java
-        StringBuffer sb = new StringBuffer(logformat.length());
-        Pattern p = Pattern.compile("\\{([^}]*)}");
-        Matcher m = p.matcher(logformat);
-        while (m.find()) {
-            m.appendReplacement(sb, '{' + m.group(1).toLowerCase() + '}');
-        }
-        m.appendTail(sb);
-
-        return sb.toString();
-    }
-
-
-    @Override
-    protected String cleanupLogFormat(String tokenLogFormat) {
-        return makeHeaderNamesLowercaseInLogFormat(
-                tokenLogFormat
-        );
-    }
-
-
     @Override
     public String decodeExtractedValue(String tokenName, String value) {
         if (value == null || value.equals("")) {
