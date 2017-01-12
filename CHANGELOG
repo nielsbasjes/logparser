@@ -2,6 +2,7 @@ This is intended as an overview of the major changes
 
 v3.0
 ===
+- Accept the NGinx logformat.
 - Output the httpd parser git info, build timestamp and version info on startup.
 - Fixed problem when using a different root dissector than provided by default.
 - Created a testing toolkit for dissectors and improved several tests.
@@ -14,14 +15,13 @@ v3.0
 - Implemented %{UNIT}T
 - Implemented converters between several closely related formats (BYTES/BYTESCLF, time related formats)
 
-INCOMPATIBLE CHANGES:
+INCOMPATIBLE CHANGES WITH THE 2.X VERSION:
 - %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
 - %D changed from "server.process.time" to "response.server.processing.time"
 - %{msec_frac}t" changed from "request.receive.time.begin.msec_frac" to "request.receive.time.msec_frac"
 - %{usec_frac}t" changed from "request.receive.time.begin.usec_frac" to "request.receive.time.usec_frac"
 - %{msec}t"      changed from "request.receive.time.begin.msec"      to "request.receive.time.msec"
 - %{usec}t"      changed from "request.receive.time.begin.usec"      to "request.receive.time.usec"
-
 
 v2.8
 ===

@@ -74,14 +74,17 @@ public class NginxLogFormatTest {
 
     @Test
     public void testBasicLogFormatWithUnknownField() {
-        String logFormat = "$foobar $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
-        String logLine = "something 123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
+        // $remote_user_age is fake and doesn't exist.
+        String logFormat = "$foobar $remote_user_age $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
+        String logLine = "something 42 123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
 
         DissectorTester.create()
             .verbose()
             .withParser(new HttpdLoglineParser<>(TestRecord.class, logFormat))
             .withInput(logLine)
-
+            .expect("UNKNOWN_NGINX_VARIABLE:nginx.unknown.foobar", "something")
+            .expect("UNKNOWN_NGINX_VARIABLE:nginx.unknown.remote_user_age", "42")
+            .checkExpectations()
             .printPossible()
             .printAllPossibleValues();
     }
