@@ -100,12 +100,7 @@ public final class Main {
         LOG.info("==================================================================================");
     }
 
-    /**
-     * @param args The commandline arguments
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws MissingDissectorsException, InvalidDissectorException {
         new Main().run();
     }
 

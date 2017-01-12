@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-/**
+/*
  * Defines the source field that must be used to call this setter.
  */
 public @interface Field {

@@ -35,7 +35,7 @@ public class PojoGenerator {
         }
     }
 
-    public static void main(String[] args) throws InvalidDissectorException, MissingDissectorsException, NoSuchMethodException {
+    public static void main(String[] args) throws NoSuchMethodException {
         PojoGenerator generator = new PojoGenerator();
         CmdLineParser parser = new CmdLineParser(generator);
         try {
