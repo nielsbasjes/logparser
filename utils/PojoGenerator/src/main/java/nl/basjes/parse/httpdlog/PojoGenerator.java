@@ -17,8 +17,6 @@
 package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
-import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
