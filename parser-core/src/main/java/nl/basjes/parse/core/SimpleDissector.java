@@ -80,19 +80,20 @@ public abstract class SimpleDissector extends Dissector {
             SimpleDissector dissector = (SimpleDissector) newInstance;
             dissector.inputType     = inputType;
             dissector.outputTypes   = outputTypes;
+            dissector.outputCasts   = outputCasts;
         }
     }
 
     @Override
     public final void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
         final ParsedField field = parsable.getParsableField(getInputType(), inputname);
-        String fieldValue = field.getValue().getString();
-        if (fieldValue == null || fieldValue.isEmpty()) {
+        Value value = field.getValue();
+        if (value == null) {
             return; // Nothing to do here
         }
-        dissect(parsable, inputname, fieldValue);
+        dissect(parsable, inputname, value);
     }
 
-    public abstract void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure;
+    public abstract void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure;
 
 }

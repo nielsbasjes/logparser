@@ -3,6 +3,7 @@ package nl.basjes.parse.core.reference;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.SimpleDissector;
+import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.util.EnumSet;
@@ -25,7 +26,7 @@ public class FooDissector extends SimpleDissector {
     }
 
     @Override
-    public void dissect(Parsable<?> parsable, String inputname, String fieldName) throws DissectionFailure {
+    public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
         parsable.addDissection(inputname, "ANY",    "fooany",    "42");
         parsable.addDissection(inputname, "STRING", "foostring", "42");
         parsable.addDissection(inputname, "INT",    "fooint",    42);

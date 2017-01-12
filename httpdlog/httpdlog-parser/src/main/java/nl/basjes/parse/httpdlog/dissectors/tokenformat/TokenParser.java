@@ -31,7 +31,8 @@ public class TokenParser {
     private static final Logger LOG = LoggerFactory.getLogger(TokenParser.class);
 
     // ---------------------------------------
-    public static final String FORMAT_NUMBER = "[0-9]*";
+    public static final String FORMAT_DIGIT = "[0-9]";
+    public static final String FORMAT_NUMBER = FORMAT_DIGIT + "*";
     public static final String FORMAT_CLF_NUMBER = FORMAT_NUMBER + "|-";
     public static final String FORMAT_HEXDIGIT = "[0-9a-fA-F]";
     public static final String FORMAT_HEXNUMBER = FORMAT_HEXDIGIT + "*";

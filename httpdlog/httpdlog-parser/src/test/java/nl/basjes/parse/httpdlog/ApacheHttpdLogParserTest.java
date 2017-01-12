@@ -51,7 +51,7 @@ public class ApacheHttpdLogParserTest {
             "TIME.SECOND:request.receive.time.second",
             "HTTP.URI:request.firstline.uri",
             "STRING:request.status.last",
-            "BYTES:response.body.bytesclf",
+            "BYTESCLF:response.body.bytes",
             "HTTP.URI:request.referer",
             "STRING:request.referer.query.mies",
             "STRING:request.referer.query.wim",
@@ -142,7 +142,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("40", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png?aap=noot&res=1024x768", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
-        assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
+        assertEquals("1213", results.get("BYTESCLF:response.body.bytes"));
         assertEquals("http://localhost/index.php?mies=wim", results.get("HTTP.URI:request.referer"));
         assertEquals("wim", results.get("STRING:request.referer.query.mies"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
@@ -186,7 +186,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("11", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/icons/powered_by_rh.png", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
-        assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
+        assertEquals("1213", results.get("BYTESCLF:response.body.bytes"));
         assertEquals("http://localhost/", results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));
@@ -225,7 +225,7 @@ public class ApacheHttpdLogParserTest {
         assertEquals("11", results.get("TIME.SECOND:request.receive.time.second"));
         assertEquals("/ImagineAURLHereThatIsTooLong", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("414", results.get("STRING:request.status.last"));
-        assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
+        assertEquals("1213", results.get("BYTESCLF:response.body.bytes"));
         assertEquals("http://localhost/", results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));

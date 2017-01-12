@@ -63,7 +63,7 @@ You will get a list that looks something like this:
     HTTP.PROTOCOL:request.firstline.protocol
     HTTP.PROTOCOL.VERSION:request.firstline.protocol.version
     STRING:request.status.last
-    BYTES:response.body.bytesclf
+    BYTESCLF:response.body.bytes
     HTTP.URI:request.referer
     HTTP.QUERYSTRING:request.referer.query
     STRING:request.referer.query.*

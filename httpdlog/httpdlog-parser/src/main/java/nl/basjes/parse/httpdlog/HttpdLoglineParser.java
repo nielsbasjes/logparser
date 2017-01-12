@@ -26,6 +26,8 @@ import nl.basjes.parse.httpdlog.dissectors.RequestCookieListDissector;
 import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieDissector;
 import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieListDissector;
 import nl.basjes.parse.httpdlog.dissectors.TimeStampDissector;
+import nl.basjes.parse.httpdlog.dissectors.translate.ConvertCLFIntoNumber;
+import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,6 +114,10 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
         addDissector(new ResponseSetCookieListDissector());
         addDissector(new ResponseSetCookieDissector());
         addDissector(new ModUniqueIdDissector());
+
+        // Type translators
+        addDissector(new ConvertCLFIntoNumber("BYTESCLF", "BYTES"));
+        addDissector(new ConvertNumberIntoCLF("BYTES", "BYTESCLF"));
 
         // And we define the input for this parser
         setRootType(HttpdLogFormatDissector.INPUT_TYPE);

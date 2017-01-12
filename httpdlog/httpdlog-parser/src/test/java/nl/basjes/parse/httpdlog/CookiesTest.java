@@ -46,7 +46,7 @@ public class CookiesTest {
             "STRING:connection.client.user",
             "HTTP.URI:request.firstline.uri",
             "STRING:request.status.last",
-            "BYTES:response.body.bytesclf",
+            "BYTESCLF:response.body.bytes",
             "HTTP.URI:request.referer",
             "HTTP.USERAGENT:request.user-agent",
             "TIME.STAMP:request.receive.time",
@@ -89,7 +89,7 @@ public class CookiesTest {
 
         @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
-                "BYTES:response.body.bytesclf",
+                "BYTESCLF:response.body.bytes",
                 "TIME.DAY:request.receive.time.day",
                 "TIME.HOUR:request.receive.time.hour",
                 "TIME.SECOND:request.receive.time.second",
@@ -201,10 +201,10 @@ public class CookiesTest {
 
         // The "-" value means "Not specified" which is mapped to the setter being called
         // with a 'null' value intending to say "We know it is not there".
-        assertTrue(results.containsKey("BYTES:response.body.bytesclf"));
-        assertEquals(null, results.get("BYTES:response.body.bytesclf"));
-        assertTrue(longResults.containsKey("BYTES:response.body.bytesclf"));
-        assertEquals(null, longResults.get("BYTES:response.body.bytesclf"));
+        assertTrue(results.containsKey("BYTESCLF:response.body.bytes"));
+        assertEquals(null, results.get("BYTESCLF:response.body.bytes"));
+        assertTrue(longResults.containsKey("BYTESCLF:response.body.bytes"));
+        assertEquals(null, longResults.get("BYTESCLF:response.body.bytes"));
 
         assertEquals(null, results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",

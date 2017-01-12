@@ -18,11 +18,15 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parsable;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.SimpleDissector;
+import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.NamedTokenParser;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
+import nl.basjes.parse.httpdlog.dissectors.translate.ConvertMillisecondsIntoMicroseconds;
+import nl.basjes.parse.httpdlog.dissectors.translate.ConvertSecondsWithMillisStringDissector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +69,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         setInputType(HttpdLogFormatDissector.INPUT_TYPE);
     }
 
-    @SuppressWarnings("SameParameterValue") //
     private void overrideLogFormat(String originalLogformat, String logformat) {
         LOG.debug("Specified logformat \"{}\" was mapped to {}", originalLogformat, logformat);
         super.setLogFormat(logformat);
@@ -291,8 +294,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         // Example value:  1483455396.639
         parsers.add(new TokenParser("$msec",
             "request.receive.time.epoch", "TIME.EPOCH_SECOND_MILLIS",
-            Casts.STRING_ONLY, FORMAT_NUMBER_DOT_NUMBER,
-            0, new EpochSecondsWithMillisDissector()));
+            Casts.STRING_ONLY, "[0-9]+\\.[0-9][0-9][0-9]"));
 
         // -------
         // $status
@@ -360,8 +362,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
 //        // the %b variant
 //        parsers.add(new TokenParser("$body_bytes_sent",
-//            "response.body.bytesclf", "BYTES",
-//            Casts.STRING_OR_LONG, FORMAT_NUMBER)); // FIXME: In case of '0' there should be a null value here.
+//            "response.body.bytes", "BYTESCLF",
+//            Casts.STRING_OR_LONG, FORMAT_CLF_NUMBER));
 
         // -------
         // $content_length
@@ -486,8 +488,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         String formatHexByte = "\\\\x" + FORMAT_HEXDIGIT + FORMAT_HEXDIGIT;
         parsers.add(new TokenParser("$binary_remote_addr",
             "connection.client.host", "IP_BINARY",
-            Casts.STRING_OR_LONG, formatHexByte + formatHexByte + formatHexByte + formatHexByte,
-            0, new BinaryIPDissector()));
+            Casts.STRING_OR_LONG, formatHexByte + formatHexByte + formatHexByte + formatHexByte));
 
         // -------
         // $remote_port
@@ -502,8 +503,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new TokenParser("$remote_user",
             "connection.client.user", "STRING",
             Casts.STRING_ONLY, FORMAT_STRING));
-
-        //TODO: Add basic authentication parsing to Apache too!!
 
         // -------
         // $request
@@ -565,9 +564,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.add(new TokenParser("$request_time",
             "response.server.processing.time", "SECOND_MILLIS",
             Casts.STRING_ONLY, FORMAT_NUMBER_DOT_NUMBER));
-
-// TODO: Add converter for SECOND_MILLIS to MICROSECONDS --> "MICROSECONDS:response.server.processing.time"
-// TODO: Add converter for SECOND_MILLIS to MILLISECONDS --> "MILLISECONDS:response.server.processing.time"
 
         // -------
         // $request_uri
@@ -688,25 +684,13 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         return parsers;
     }
 
-    public static class EpochSecondsWithMillisDissector extends SimpleDissector {
-
-        private static HashMap<String, EnumSet<Casts>> epochMillisConfig = new HashMap<>();
-        static {
-            epochMillisConfig.put("TIME.EPOCH:", Casts.STRING_OR_LONG);
-        }
-        public EpochSecondsWithMillisDissector() {
-            super("TIME.EPOCH_SECOND_MILLIS", epochMillisConfig);
-        }
-
-        @Override
-        public void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure {
-            String[] epochStrings = fieldValue.split("\\.", 2);
-            Long seconds =  Long.parseLong(epochStrings[0]);
-            Long milliseconds =  Long.parseLong(epochStrings[1]);
-            Long epoch = seconds * 1000 + milliseconds;
-
-            parsable.addDissection(inputname, "TIME.EPOCH", "", epoch);
-        }
+    @Override
+    public <RECORD> void createAdditionalDissectors(Parser<RECORD> parser) {
+        super.createAdditionalDissectors(parser);
+        parser.addDissector(new BinaryIPDissector());
+        parser.addDissector(new ConvertSecondsWithMillisStringDissector("SECOND_MILLIS",            "MILLISECONDS"));
+        parser.addDissector(new ConvertSecondsWithMillisStringDissector("TIME.EPOCH_SECOND_MILLIS", "TIME.EPOCH"));
+        parser.addDissector(new ConvertMillisecondsIntoMicroseconds("MILLISECONDS", "MICROSECONDS"));
     }
 
     public static class BinaryIPDissector extends SimpleDissector {
@@ -725,8 +709,8 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         );
 
         @Override
-        public void dissect(Parsable<?> parsable, String inputname, String fieldValue) throws DissectionFailure {
-            Matcher matcher = binaryIPPattern.matcher(fieldValue);
+        public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
+            Matcher matcher = binaryIPPattern.matcher(value.getString());
             if (matcher.matches()) {
                 String ip =
                     String.valueOf(Utils.hexCharsToByte(matcher.group(1))) + '.' +

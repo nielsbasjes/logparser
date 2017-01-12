@@ -221,7 +221,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %b Size of response in bytes, excluding HTTP headers. In CLF format,
         // i.e. a '-' rather than a 0 when no bytes are sent.
         parsers.add(new TokenParser("%b",
-                "response.body.bytesclf", "BYTES",
+                "response.body.bytes", "BYTESCLF",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
@@ -386,7 +386,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // %{format}t The time, in the form given by format, which should be in
         // strftime(3) format. (potentially localized)
-
         parsers.add(new ParameterizedTokenParser("\\%\\{([^\\}]*%[^\\}]*)\\}t",
             "request.receive.time", "TIME.STRFTIME_",
             Casts.STRING_ONLY, TokenParser.FORMAT_STRING,

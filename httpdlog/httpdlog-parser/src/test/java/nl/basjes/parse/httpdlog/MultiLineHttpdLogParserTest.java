@@ -42,7 +42,7 @@ public class MultiLineHttpdLogParserTest {
             "TIME.STAMP:request.receive.time",
             "TIME.SECOND:request.receive.time.second",
             "STRING:request.status.last",
-            "BYTES:response.body.bytesclf",
+            "BYTESCLF:response.body.bytes",
             "HTTP.URI:request.firstline.uri",
             "HTTP.URI:request.referer",
             "HTTP.USERAGENT:request.user-agent"})
@@ -98,7 +98,7 @@ public class MultiLineHttpdLogParserTest {
         assertEquals("31/Dec/2012:23:49:41 +0100", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("/foo", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("200", results.get("STRING:request.status.last"));
-        assertEquals("1213", results.get("BYTES:response.body.bytesclf"));
+        assertEquals("1213", results.get("BYTESCLF:response.body.bytes"));
         assertEquals("http://localhost/index.php?mies=wim", results.get("HTTP.URI:request.referer"));
         assertEquals(null, results.get("HTTP.USERAGENT:request.user-agent"));
     }
@@ -117,7 +117,7 @@ public class MultiLineHttpdLogParserTest {
         assertEquals("31/Dec/2012:23:49:42 +0100", results.get("TIME.STAMP:request.receive.time"));
         assertEquals("/foo", results.get("HTTP.URI:request.firstline.uri"));
         assertEquals("404", results.get("STRING:request.status.last"));
-        assertEquals(null, results.get("BYTES:response.body.bytesclf"));
+        assertEquals(null, results.get("BYTESCLF:response.body.bytes"));
         assertEquals(null, results.get("HTTP.URI:request.referer"));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0",
                 results.get("HTTP.USERAGENT:request.user-agent"));

@@ -42,7 +42,7 @@ public class JettyLogFormatParserTest {
             ,"TIME.DAY:request.receive.time.day"
             ,"HTTP.FIRSTLINE:request.firstline"
             ,"STRING:request.status.last"
-            ,"BYTES:response.body.bytesclf"
+            ,"BYTES:response.body.bytes"
             ,"HTTP.URI:request.referer"
             ,"HTTP.USERAGENT:request.user-agent"
             ,"MICROSECONDS:response.server.processing.time"
@@ -91,7 +91,7 @@ public class JettyLogFormatParserTest {
             assertEquals("24",results.get("TIME.DAY:request.receive.time.day"));
             assertEquals("GET http://[:1]/foo HTTP/1.1",results.get("HTTP.FIRSTLINE:request.firstline"));
             assertEquals("400",results.get("STRING:request.status.last"));
-            assertEquals("0",results.get("BYTES:response.body.bytesclf"));
+            assertEquals("0",results.get("BYTES:response.body.bytes"));
             assertEquals("http://other.site",results.get("HTTP.URI:request.referer"));
 
             String useragent = results.get("HTTP.USERAGENT:request.user-agent");

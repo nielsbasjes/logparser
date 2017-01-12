@@ -835,10 +835,14 @@ public class Parser<RECORD> {
                         childBase = base + '.' + childName;
                     }
                 }
-                LOG.debug("Possible:{} + {}:{}", logPrefix, childType, childBase);
-                paths.add(childType+':'+childBase);
 
-                findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");
+                String newPath = childType + ':' + childBase;
+                if (!paths.contains(newPath)) {
+                    LOG.debug("Possible:{} + {}", logPrefix, childType, childBase);
+                    paths.add(childType + ':' + childBase);
+
+                    findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");
+                }
             }
         }
         LOG.debug("Possible:{} < {}:{}", logPrefix, baseType, base);

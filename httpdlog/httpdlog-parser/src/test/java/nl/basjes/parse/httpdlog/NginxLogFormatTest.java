@@ -75,7 +75,6 @@ public class NginxLogFormatTest {
             .printAllPossibleValues();
     }
 
-    @Ignore // FIXME: Unfinished
     @Test
     public void testCompareApacheAndNginxOutput() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
 
@@ -316,7 +315,11 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$request_filename"        , "/var/www/html/index.html"           , "FILENAME:server.filename"                                  , "/var/www/html/index.html"            ));
         fieldsTests.add(new SingleFieldTestcase("$request_length"          , "491"                                , "BYTES:request.bytes"                                       , "491"                                 ));
         fieldsTests.add(new SingleFieldTestcase("$request_method"          , "GET"                                , "HTTP.METHOD:request.firstline.method"                      , "GET"                                 ));
-        fieldsTests.add(new SingleFieldTestcase("$request_time"            , "0.000"                              , "SECOND_MILLIS:response.server.processing.time"             , "0.000"                               ));
+
+        fieldsTests.add(new SingleFieldTestcase("$request_time"            , "123.456"                            , "SECOND_MILLIS:response.server.processing.time"             , "123.456"                             ));
+        fieldsTests.add(new SingleFieldTestcase("$request_time"            , "123.456"                            , "MILLISECONDS:response.server.processing.time"              , "123456"                              ));
+        fieldsTests.add(new SingleFieldTestcase("$request_time"            , "123.456"                            , "MICROSECONDS:response.server.processing.time"              , "123456000"                           ));
+
         fieldsTests.add(new SingleFieldTestcase("$request_uri"             , "/?aap&noot=&mies=wim"               , "HTTP.URI:request.firstline.uri"                            , "/?aap&noot=&mies=wim"                ));
         fieldsTests.add(new SingleFieldTestcase("$scheme"                  , "http"                               , "HTTP.PROTOCOL:request.firstline.uri.protocol"              , "http"                                ));
         fieldsTests.add(new SingleFieldTestcase("$sent_http_etag"          , "W/\\x22586bbb8b-29e\\x22"           , "HTTP.HEADER:response.header.etag"                          , "W/\\x22586bbb8b-29e\\x22"            ));

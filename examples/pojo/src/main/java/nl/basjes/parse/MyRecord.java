@@ -47,7 +47,7 @@ public class MyRecord {
         "STRING:connection.client.user",
         "TIME.STAMP:request.receive.time",
         "HTTP.URI:request.firstline.uri",
-        "BYTES:response.body.bytesclf",
+        "BYTESCLF:response.body.bytes",
         "HTTP.URI:request.referer",
         "HTTP.USERAGENT:request.user-agent",
         "TIME.DAY:request.receive.time.day",
