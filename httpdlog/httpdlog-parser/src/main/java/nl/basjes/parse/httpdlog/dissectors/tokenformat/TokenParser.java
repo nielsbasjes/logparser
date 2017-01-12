@@ -150,10 +150,6 @@ public class TokenParser {
             return null;
         }
 
-        if (warningMessageWhenUsed != null) {
-            LOG.warn(warningMessageWhenUsed);
-        }
-
         Token token = new Token(
                 valueName,
                 valueType,
@@ -161,6 +157,10 @@ public class TokenParser {
                 regex,
                 pos, logFormatToken.length(),
                 prio);
+
+        if (warningMessageWhenUsed != null) {
+            token.setWarningMessageWhenUsed(warningMessageWhenUsed);
+        }
 
         if (!addCustomDissector(token, valueType, valueName)) {
             return null;

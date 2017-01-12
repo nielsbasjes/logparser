@@ -375,7 +375,7 @@ public class DissectorTester {
     public DissectorTester printPossible() {
         LOG.info("=====================================================");
         LOG.info("Possible:");
-        LOG.info("=====================================================");
+        LOG.info("----------");
         for (String path: parser.getPossiblePaths()) {
             LOG.info("---> {}", path);
         }

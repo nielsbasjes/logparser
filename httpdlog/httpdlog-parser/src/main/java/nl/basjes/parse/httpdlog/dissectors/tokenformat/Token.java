@@ -18,10 +18,14 @@ package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 
 public class Token {
+    private static final Logger LOG = LoggerFactory.getLogger(Token.class);
+
     private final String name;
     private final String type;
     private final String regex;
@@ -29,19 +33,10 @@ public class Token {
     private final int length;
     private final EnumSet<Casts> casts;
     private final int prio;
+    protected String warningMessageWhenUsed = null;
 
     // In some cases a token needs a custom dissector.
     private Dissector customDissector = null;
-
-    public Token(
-            final String nName,
-            final String nType,
-            final EnumSet<Casts> nCasts,
-            final String nRegex,
-            final int nStartPos,
-            final int nLength) {
-        this(nName, nType, nCasts, nRegex, nStartPos, nLength,  0);
-    }
 
     public Token(
             final String nName,
@@ -96,6 +91,18 @@ public class Token {
 
     public int getPrio() {
         return prio;
+    }
+
+    public void setWarningMessageWhenUsed(String message) {
+        warningMessageWhenUsed = message;
+    }
+
+    public void tokenWasUsed() {
+        if (warningMessageWhenUsed != null) {
+            LOG.warn("------------------------------------------------------------------------");
+            LOG.warn(warningMessageWhenUsed, getType()+':'+getName());
+            LOG.warn("------------------------------------------------------------------------");
+        }
     }
 
     // This is used by your favorite debugger.

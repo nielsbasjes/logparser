@@ -62,10 +62,6 @@ public class NamedTokenParser extends TokenParser {
             return null;
         }
 
-        if (warningMessageWhenUsed != null) {
-            LOG.warn(warningMessageWhenUsed);
-        }
-
         String fieldName = "";
         if (matcher.groupCount() > 0) {
             // Retrieve the name
@@ -77,13 +73,19 @@ public class NamedTokenParser extends TokenParser {
         final int end = matcher.end();
         // the end is index of the last matching character + 1
 
-        return new Token(
+        Token token = new Token(
                 getValueName() + fieldName,
                 getValueType(),
                 getCasts(),
                 getRegex(),
                 startOffset + start, end - start,
                 getPrio());
+
+        if (warningMessageWhenUsed != null) {
+            token.setWarningMessageWhenUsed(warningMessageWhenUsed.replaceFirst("\\{\\}", fieldName));
+        }
+
+        return token;
     }
 
     // --------------------------------------------

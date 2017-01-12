@@ -164,6 +164,7 @@ public abstract class TokenFormatDissector extends Dissector {
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {
+            token.tokenWasUsed();
             if (FIXED_STRING_TYPE.equals(token.getType())) {
                 // Only insert the fixed part
                 regex.append(Pattern.quote(token.getRegex()));
@@ -334,7 +335,7 @@ public abstract class TokenFormatDissector extends Dissector {
             if (tokenBegin - tokenEnd > 0) {
                 String separator = cleanedTokenLogFormat.substring(tokenEnd, tokenBegin);
                 Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                        separator, tokenBegin, tokenBegin - tokenEnd);
+                        separator, tokenBegin, tokenBegin - tokenEnd, 0);
                 allTokens.add(fixedStringToken);
             }
             allTokens.add(token);
@@ -345,7 +346,7 @@ public abstract class TokenFormatDissector extends Dissector {
         if (tokenEnd < logFormatLength) {
             String separator = cleanedTokenLogFormat.substring(tokenEnd);
             Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                    separator, tokenEnd, cleanedTokenLogFormat.length() - tokenEnd);
+                    separator, tokenEnd, cleanedTokenLogFormat.length() - tokenEnd, 0);
             allTokens.add(fixedStringToken);
         }
 
