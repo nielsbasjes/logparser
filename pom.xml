@@ -38,7 +38,7 @@
     <pig.version>0.16.0</pig.version>
 
     <!-- Used for testing the plugin loading -->
-    <yauaa.version>0.12</yauaa.version>
+    <yauaa.version>1.0</yauaa.version>
   </properties>
 
   <dependencies>
