@@ -1,6 +1,6 @@
 package nl.basjes.hadoop.input;
 /*
- * Apache HTTPD logparsing made easy
+ * Apache HTTPD & NGINX Access log parsing made easy
  * Copyright (C) 2011-2017 Niels Basjes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
