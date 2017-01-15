@@ -39,6 +39,9 @@
 
     <!-- Used for testing the plugin loading -->
     <yauaa.version>1.0</yauaa.version>
+
+    <rat.version>0.9</rat.version>
+
   </properties>
 
   <dependencies>
@@ -251,6 +254,41 @@
         </executions>
         <configuration>
           <dateFormat>yyyy-MM-dd '@' HH:mm:ss z</dateFormat>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>${rat.version}</version>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <excludeSubProjects>false</excludeSubProjects>
+          <excludes>
+            <!-- Version control files -->
+            <exclude>**/.git/**</exclude>
+            <exclude>**/.gitignore</exclude>
+            <!-- IDE settings and files -->
+            <exclude>**/.classpath</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.idea/**</exclude>
+            <exclude>**/*.iml</exclude>
+            <!-- Test and demo input files -->
+            <exclude>**/src/test/resources/*.log</exclude>
+            <exclude>**/demolog/*.log</exclude>
+            <!-- File generated during build -->
+            <exclude>**/target/**</exclude>
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+          </excludes>
         </configuration>
       </plugin>
 
