@@ -32,9 +32,9 @@ public abstract class TypeConvertBaseDissector extends SimpleDissector {
     }
 
     private static HashMap<String, EnumSet<Casts>> fillOutputConfig(String outputType, EnumSet<Casts> casts) {
-        HashMap<String, EnumSet<Casts>>  epochMillisConfig = new HashMap<>();
-        epochMillisConfig.put(outputType + ":", casts);
-        return epochMillisConfig;
+        HashMap<String, EnumSet<Casts>>  typeConvertConfig = new HashMap<>();
+        typeConvertConfig.put(outputType + ":", casts);
+        return typeConvertConfig;
     }
 
     public TypeConvertBaseDissector(String nInputType, String nOutputType) {

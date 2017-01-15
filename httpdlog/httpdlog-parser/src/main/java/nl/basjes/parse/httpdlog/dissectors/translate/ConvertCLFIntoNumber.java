@@ -31,7 +31,8 @@ public class ConvertCLFIntoNumber extends TypeConvertBaseDissector {
 
     @Override
     public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
-        if (value.getString() == null) {
+        String stringValue = value.getString();
+        if (stringValue == null || "-".equals(stringValue)) {
             parsable.addDissection(inputname, outputType, "", 0);
         } else {
             parsable.addDissection(inputname, outputType, "", value);
