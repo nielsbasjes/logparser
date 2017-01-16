@@ -383,6 +383,10 @@ public class DissectorTester {
         return this;
     }
 
+    public List<String> getPossible() {
+        return parser.getPossiblePaths();
+    }
+
     public DissectorTester printAllPossibleValues() {
         if (inputValues.isEmpty()) {
             fail("No inputvalues were specified");
