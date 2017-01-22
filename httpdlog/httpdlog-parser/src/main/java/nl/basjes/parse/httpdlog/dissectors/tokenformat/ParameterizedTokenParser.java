@@ -25,10 +25,15 @@ import org.slf4j.LoggerFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a TokenParser where we expect to get the constructor parameter for the provided dissector as a group in
+ * the regular expression. As a consequence the type is a generated string to match THIS dissector instance.
+ */
 public class ParameterizedTokenParser extends TokenParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParameterizedTokenParser.class);
@@ -50,6 +55,22 @@ public class ParameterizedTokenParser extends TokenParser {
         pattern = Pattern.compile(getLogFormatToken());
     }
 
+    @Override
+    public TokenParser addOutputField(String type, String name, EnumSet<Casts> casts) {
+        if (getOutputFields().isEmpty()) {
+            return super.addOutputField(type, name, casts);
+        }
+        throw new UnsupportedOperationException("A ParameterizedTokenParser only supports ONE outputfield.");
+    }
+
+    @Override
+    public TokenParser addOutputFields(List<TokenOutputField> outputFields) {
+        if (getOutputFields().isEmpty()) {
+            return super.addOutputFields(outputFields);
+        }
+        throw new UnsupportedOperationException("A ParameterizedTokenParser only supports ONE outputfield.");
+    }
+
     // --------------------------------------------
 
     @Override
@@ -57,10 +78,6 @@ public class ParameterizedTokenParser extends TokenParser {
         final Matcher matcher = pattern.matcher(logFormat.substring(startOffset));
         if (!matcher.find()) {
             return null;
-        }
-
-        if (warningMessageWhenUsed != null) {
-            LOG.warn(warningMessageWhenUsed);
         }
 
         String fieldName = "";
@@ -74,19 +91,25 @@ public class ParameterizedTokenParser extends TokenParser {
         final int end = matcher.end();
         // the end is index of the last matching character + 1
 
-        String fieldType = tokenParameterToTypeName(fieldName);
 
         Token token = new Token(
-            getValueName(),
-            fieldType,
-            getCasts(),
             getRegex(),
             startOffset + start, end - start,
             getPrio());
 
-        if (!addCustomDissector(token, fieldType, fieldName)) {
-            return null;
+        for (TokenOutputField tokenOutputField: getOutputFields()) {
+            String fieldType = tokenParameterToTypeName(fieldName);
+            token.addOutputField(
+                tokenParameterToTypeName(fieldName),
+                tokenOutputField.getName(),
+                tokenOutputField.getCasts());
+            addCustomDissector(token, fieldType, fieldName);
         }
+
+        if (warningMessageWhenUsed != null) {
+            token.setWarningMessageWhenUsed(warningMessageWhenUsed.replaceFirst("\\{\\}", fieldName));
+        }
+
         return token;
     }
 
@@ -94,9 +117,8 @@ public class ParameterizedTokenParser extends TokenParser {
 
     String tokenParameterToTypeName(String parameter) {
         return (
-                getValueType() +
-                parameter
-                    .replaceAll("[^A-Za-z0-9]", "") +
+                getOutputFields().get(0).getType() +
+                parameter.replaceAll("[^A-Za-z0-9]", "") +
                 "_" + stringHashAsHexString(parameter)
             ).toUpperCase(Locale.ENGLISH);
     }
@@ -111,4 +133,5 @@ public class ParameterizedTokenParser extends TokenParser {
         }
         return result;
     }
+
 }

@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -101,7 +102,66 @@ public class NginxLogFormatTest {
         String logLine = "1.2.3.4 - - [23/Aug/2010:03:50:59 +0000] \"POST /foo.html?aap&noot=mies HTTP/1.1\" 200 2 \"http://www.example.com/bar.html?wim&zus=jet\" \"Niels Basjes/1.0\"";
 
         Parser<TestRecord> apacheParser = new HttpdLoglineParser<>(TestRecord.class, logFormatApache);
-        List<String> fields = apacheParser.getPossiblePaths();
+
+        String[] fieldsArray = {
+            "HTTP.URI:request.referer" ,
+            "HTTP.PROTOCOL:request.referer.protocol" ,
+            "HTTP.USERINFO:request.referer.userinfo" ,
+            "HTTP.HOST:request.referer.host" ,
+            "HTTP.PORT:request.referer.port" ,
+            "HTTP.PATH:request.referer.path" ,
+            "HTTP.QUERYSTRING:request.referer.query" ,
+            "STRING:request.referer.query.*" ,
+            "HTTP.REF:request.referer.ref" ,
+            "TIME.STAMP:request.receive.time" ,
+            "TIME.DAY:request.receive.time.day" ,
+            "TIME.MONTHNAME:request.receive.time.monthname" ,
+            "TIME.MONTH:request.receive.time.month" ,
+            "TIME.WEEK:request.receive.time.weekofweekyear" ,
+            "TIME.YEAR:request.receive.time.weekyear" ,
+            "TIME.YEAR:request.receive.time.year" ,
+            "TIME.HOUR:request.receive.time.hour" ,
+            "TIME.MINUTE:request.receive.time.minute" ,
+            "TIME.SECOND:request.receive.time.second" ,
+            "TIME.MILLISECOND:request.receive.time.millisecond" ,
+            "TIME.DATE:request.receive.time.date" ,
+            "TIME.TIME:request.receive.time.time" ,
+            "TIME.ZONE:request.receive.time.timezone" ,
+            "TIME.EPOCH:request.receive.time.epoch" ,
+            "TIME.DAY:request.receive.time.day_utc" ,
+            "TIME.MONTHNAME:request.receive.time.monthname_utc" ,
+            "TIME.MONTH:request.receive.time.month_utc" ,
+            "TIME.WEEK:request.receive.time.weekofweekyear_utc" ,
+            "TIME.YEAR:request.receive.time.weekyear_utc" ,
+            "TIME.YEAR:request.receive.time.year_utc" ,
+            "TIME.HOUR:request.receive.time.hour_utc" ,
+            "TIME.MINUTE:request.receive.time.minute_utc" ,
+            "TIME.SECOND:request.receive.time.second_utc" ,
+            "TIME.MILLISECOND:request.receive.time.millisecond_utc" ,
+            "TIME.DATE:request.receive.time.date_utc" ,
+            "TIME.TIME:request.receive.time.time_utc" ,
+            "BYTESCLF:response.body.bytes" ,
+            "BYTES:response.body.bytes" ,
+            "STRING:request.status.last" ,
+            "HTTP.USERAGENT:request.user-agent" ,
+            "HTTP.FIRSTLINE:request.firstline" ,
+            "HTTP.METHOD:request.firstline.method" ,
+            "HTTP.URI:request.firstline.uri" ,
+            "HTTP.PROTOCOL:request.firstline.uri.protocol" ,
+            "HTTP.USERINFO:request.firstline.uri.userinfo" ,
+            "HTTP.HOST:request.firstline.uri.host" ,
+            "HTTP.PORT:request.firstline.uri.port" ,
+            "HTTP.PATH:request.firstline.uri.path" ,
+            "HTTP.QUERYSTRING:request.firstline.uri.query" ,
+            "STRING:request.firstline.uri.query.*" ,
+            "HTTP.REF:request.firstline.uri.ref" ,
+            "HTTP.PROTOCOL_VERSION:request.firstline.protocol" ,
+            "HTTP.PROTOCOL:request.firstline.protocol" ,
+            "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version" ,
+            "IP:connection.client.host"
+        };
+
+        List<String> fields = Arrays.asList(fieldsArray);//apacheParser.getPossiblePaths();
 
         ArrayList<String> checkFields = new ArrayList<>(fields.size() + 10);
         String[] parameterNames = { "aap", "noot", "mies", "wim", "zus", "jet" };
@@ -122,7 +182,9 @@ public class NginxLogFormatTest {
             nginxParser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), field);
         }
 
+        LOG.info("Running Apache parser");
         TestRecord apacheRecord = apacheParser.parse(logLine);
+        LOG.info("Running Nginx parser");
         TestRecord nginxRecord  = nginxParser.parse(logLine);
 
         for (String field: checkFields) {

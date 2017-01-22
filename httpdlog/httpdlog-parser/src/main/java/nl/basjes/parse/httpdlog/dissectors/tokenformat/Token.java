@@ -21,22 +21,34 @@ import nl.basjes.parse.core.Dissector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 public class Token {
     private static final Logger LOG = LoggerFactory.getLogger(Token.class);
 
-    private final String name;
-    private final String type;
+    private List<TokenOutputField> outputFields = new ArrayList<>();
     private final String regex;
     private final int startPos;
     private final int length;
-    private final EnumSet<Casts> casts;
     private final int prio;
     protected String warningMessageWhenUsed = null;
 
     // In some cases a token needs a custom dissector.
     private Dissector customDissector = null;
+
+    public Token(
+        final String nRegex,
+        final int nStartPos,
+        final int nLength,
+        final int nPrio) {
+        regex = nRegex;
+        startPos = nStartPos;
+        length = nLength;
+        prio = nPrio;
+    }
 
     public Token(
             final String nName,
@@ -46,15 +58,31 @@ public class Token {
             final int nStartPos,
             final int nLength,
             final int nPrio) {
+        this(nRegex, nStartPos, nLength, nPrio);
+        addOutputField(nType, nName, nCasts);
+    }
 
-        // RFC 2616 Section 4.2 states: "Field names are case-insensitive."
-        name = nName.toLowerCase();
-        type = nType;
-        regex = nRegex;
-        startPos = nStartPos;
-        length = nLength;
-        casts = nCasts;
-        prio = nPrio;
+    public Token addOutputField(String type, String name, EnumSet<Casts> casts) {
+        outputFields.add(new TokenOutputField(type, name, casts));
+        return this;
+    }
+
+    public Token addOutputFields(List<TokenOutputField> nOutputFields) {
+        this.outputFields.addAll(nOutputFields);
+        return this;
+    }
+
+    public List<TokenOutputField> getOutputFields() {
+        return outputFields;
+    }
+
+    public boolean canProduceADesiredFieldName(Set<String> desiredNames) {
+        for (TokenOutputField tokenOutputField: outputFields) {
+            if (desiredNames.contains(tokenOutputField.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setCustomDissector(Dissector dissector) {
@@ -63,14 +91,6 @@ public class Token {
 
     public Dissector getCustomDissector() {
         return customDissector;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public String getRegex() {
@@ -85,9 +105,6 @@ public class Token {
         return length;
     }
 
-    public EnumSet<Casts> getCasts() {
-        return casts;
-    }
 
     public int getPrio() {
         return prio;
@@ -100,7 +117,7 @@ public class Token {
     public void tokenWasUsed() {
         if (warningMessageWhenUsed != null) {
             LOG.warn("------------------------------------------------------------------------");
-            LOG.warn(warningMessageWhenUsed, getType()+':'+getName());
+            LOG.warn(warningMessageWhenUsed, outputFields);
             LOG.warn("------------------------------------------------------------------------");
         }
     }
@@ -108,6 +125,7 @@ public class Token {
     // This is used by your favorite debugger.
     @Override
     public String toString() {
-        return "{" + type + ':' + name + " (" + startPos + "+" + length + ");Prio=" + prio + "}";
+        return "{" + outputFields + " (" + startPos + "+" + length + ");Prio=" + prio + "}";
     }
+
 }

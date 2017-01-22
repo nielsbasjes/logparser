@@ -46,12 +46,11 @@ public abstract class TokenFormatDissector extends Dissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenFormatDissector.class);
 
-    private String       logFormat          = null;
-    private List<String> logFormatNames     = null;
-    private List<String> logFormatTypes     = null;
-    private String       logFormatRegEx     = null;
-    private Pattern      logFormatPattern   = null;
-    private boolean      isUsable           = false;
+    private String       logFormat           = null;
+    private List<Token>  logFormatUsedTokens = null;
+    private String       logFormatRegEx      = null;
+    private Pattern      logFormatPattern    = null;
+    private boolean      isUsable            = false;
 
     private List<Token>  logFormatTokens;
 
@@ -62,8 +61,33 @@ public abstract class TokenFormatDissector extends Dissector {
     // --------------------------------------------
     public static class FixedStringTokenParser extends TokenParser {
         public FixedStringTokenParser(final String nLogFormatToken, final String nRegEx) {
-            super(nLogFormatToken, TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null, nRegEx, 0);
+            super(nLogFormatToken, nRegEx, 0);
         }
+
+        @Override
+        public Token getNextToken(String logFormat, int startOffset) {
+            final int pos = logFormat.indexOf(getLogFormatToken(), startOffset);
+            if (pos == -1) {
+                return null;
+            }
+
+            Token token = new FixedStringToken(
+                getRegex(),
+                pos,
+                getLogFormatToken().length(),
+                0)
+                .addOutputFields(getOutputFields());
+
+            return token;
+        }
+    }
+
+    public static class FixedStringToken extends Token {
+        public FixedStringToken(String nRegex, int nStartPos, int nLength, int nPrio) {
+            super(nRegex, nStartPos, nLength, nPrio);
+        }
+
+
     }
 
     // --------------------------------------------
@@ -115,12 +139,16 @@ public abstract class TokenFormatDissector extends Dissector {
         outputTypes = new ArrayList<>();
 
         for (final Token token : logFormatTokens) {
-            String type = token.getType();
-            if (FIXED_STRING_TYPE.equals(type)) {
-                continue;
-            }
+            List<TokenOutputField> outputFields = token.getOutputFields();
+            if (!outputFields.isEmpty()) {
+                if (FIXED_STRING_TYPE.equals(outputFields.get(0).getType())) {
+                    continue;
+                }
 
-            outputTypes.add(token.getType() + ':' + token.getName());
+                for (TokenOutputField tokenOutputField: outputFields) {
+                    outputTypes.add(tokenOutputField.getType() + ':' + tokenOutputField.getName());
+                }
+            }
         }
     }
 
@@ -141,8 +169,10 @@ public abstract class TokenFormatDissector extends Dissector {
     public EnumSet<Casts> prepareForDissect(final String inputName, final String outputName) {
         requestedFields.add(outputName);
         for (Token token: logFormatTokens) {
-            if (outputName.equals(token.getName())) {
-                return token.getCasts();
+            for (TokenOutputField tokenOutputField: token.getOutputFields()) {
+                if (outputName.equals(tokenOutputField.getName())) {
+                    return tokenOutputField.getCasts();
+                }
             }
         }
         return Casts.STRING_ONLY;
@@ -159,18 +189,16 @@ public abstract class TokenFormatDissector extends Dissector {
         // Allocated buffer is a bit bigger than needed
         final StringBuilder regex = new StringBuilder(logFormatTokens.size() * 16);
 
-        logFormatNames = new ArrayList<>();
-        logFormatTypes = new ArrayList<>();
+        logFormatUsedTokens = new ArrayList<>();
 
         regex.append('^'); // Link to start of the line
         for (final Token token : logFormatTokens) {
             token.tokenWasUsed();
-            if (FIXED_STRING_TYPE.equals(token.getType())) {
+            if (token instanceof FixedStringToken) {
                 // Only insert the fixed part
                 regex.append(Pattern.quote(token.getRegex()));
-            } else if (requestedFields.contains(token.getName())) {
-                logFormatNames.add(token.getName());
-                logFormatTypes.add(token.getType());
+            } else if (token.canProduceADesiredFieldName(requestedFields)) {
+                logFormatUsedTokens.add(token);
                 regex.append("(").append(token.getRegex()).append(")");
             } else {
                 regex.append("(?:").append(token.getRegex()).append(")");
@@ -232,11 +260,14 @@ public abstract class TokenFormatDissector extends Dissector {
         if (matches) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String matchedStr = matcher.group(i);
-                final String matchedName            = logFormatNames.get(i - 1);
-                final String matchedType            = logFormatTypes.get(i - 1);
+                Token token = logFormatUsedTokens.get(i-1);
+                for (TokenOutputField tokenOutputField: token.getOutputFields()) {
+                    final String matchedName = tokenOutputField.getName();
+                    final String matchedType = tokenOutputField.getType();
 
-                parsable.addDissection(inputname, matchedType, matchedName,
+                    parsable.addDissection(inputname, matchedType, matchedName,
                         decodeExtractedValue(matchedName, matchedStr));
+                }
             }
         } else {
             throw new DissectionFailure("The input line does not match the specified log format." +
@@ -334,8 +365,7 @@ public abstract class TokenFormatDissector extends Dissector {
             // Space between the begin of the next token and the end of the previous token?
             if (tokenBegin - tokenEnd > 0) {
                 String separator = cleanedTokenLogFormat.substring(tokenEnd, tokenBegin);
-                Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                        separator, tokenBegin, tokenBegin - tokenEnd, 0);
+                Token fixedStringToken = new FixedStringToken(separator, tokenBegin, tokenBegin - tokenEnd, 0);
                 allTokens.add(fixedStringToken);
             }
             allTokens.add(token);
@@ -345,8 +375,7 @@ public abstract class TokenFormatDissector extends Dissector {
         int logFormatLength = cleanedTokenLogFormat.length();
         if (tokenEnd < logFormatLength) {
             String separator = cleanedTokenLogFormat.substring(tokenEnd);
-            Token fixedStringToken = new Token(TokenParser.FIXED_STRING, FIXED_STRING_TYPE, null,
-                    separator, tokenEnd, cleanedTokenLogFormat.length() - tokenEnd, 0);
+            Token fixedStringToken = new FixedStringToken(separator, tokenEnd, cleanedTokenLogFormat.length() - tokenEnd, 0);
             allTokens.add(fixedStringToken);
         }
 

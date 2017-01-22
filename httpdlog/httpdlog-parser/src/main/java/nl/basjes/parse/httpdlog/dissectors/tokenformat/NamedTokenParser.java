@@ -24,6 +24,9 @@ import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a TokenParser where we expect to get the NAME of the field as a group in the regular expression.
+ */
 public class NamedTokenParser extends TokenParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(NamedTokenParser.class);
@@ -74,12 +77,16 @@ public class NamedTokenParser extends TokenParser {
         // the end is index of the last matching character + 1
 
         Token token = new Token(
-                getValueName() + fieldName,
-                getValueType(),
-                getCasts(),
                 getRegex(),
                 startOffset + start, end - start,
                 getPrio());
+
+        for (TokenOutputField tokenOutputField: getOutputFields()) {
+            token.addOutputField(
+                tokenOutputField.getType(),
+                tokenOutputField.getName() + fieldName,
+                tokenOutputField.getCasts());
+        }
 
         if (warningMessageWhenUsed != null) {
             token.setWarningMessageWhenUsed(warningMessageWhenUsed.replaceFirst("\\{\\}", fieldName));

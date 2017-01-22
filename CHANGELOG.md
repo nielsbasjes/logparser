@@ -14,8 +14,10 @@ v3.0
 - Dissection the setcookies expire value was not deterministic and an absent 'expire' value is now returned as null instead of the 'now' timestamp.
 - Implemented %{UNIT}T
 - Implemented converters between several closely related formats (BYTES/BYTESCLF, time related formats)
+- Token based parsers can output multiple values for the same parameter.
+- Implemented all < and > directives for Apache logformat
 
-INCOMPATIBLE CHANGES WITH THE 2.X VERSION:
+**INCOMPATIBLE CHANGES WITH THE 2.X VERSION**:
 - %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
 - %D changed from "server.process.time" to "response.server.processing.time"
 - %{msec_frac}t" changed from "request.receive.time.begin.msec_frac" to "request.receive.time.msec_frac"

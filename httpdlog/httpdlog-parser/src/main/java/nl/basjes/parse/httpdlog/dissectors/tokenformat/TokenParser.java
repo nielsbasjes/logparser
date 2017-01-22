@@ -65,9 +65,7 @@ public class TokenParser {
     // ---------------------------------------
 
     private final String logFormatToken;
-    private final String valueName;
-    private final String valueType;
-    private final EnumSet<Casts> casts;
+    private List<TokenOutputField> outputFields = new ArrayList<>();
     private final String regex;
     private final int prio;
     protected String warningMessageWhenUsed;
@@ -99,12 +97,45 @@ public class TokenParser {
             final int nPrio,
            final Dissector nCustomDissector) {
         logFormatToken = nLogFormatToken;
-        valueName = nValueName;
-        valueType = nValueType;
-        casts = nCasts;
         regex = nRegex;
         prio = nPrio;
         customDissector = nCustomDissector;
+        addOutputField(nValueType, nValueName, nCasts);
+    }
+
+    public TokenParser(final String nLogFormatToken,
+                       final String nRegex) {
+        this(nLogFormatToken, nRegex, 0, null);
+    }
+
+    public TokenParser(final String nLogFormatToken,
+                       final String nRegex,
+                       final int nPrio) {
+        this(nLogFormatToken, nRegex, nPrio, null);
+    }
+
+    public TokenParser(final String nLogFormatToken,
+                       final String nRegex,
+                       final int nPrio,
+                       final Dissector nCustomDissector) {
+        logFormatToken = nLogFormatToken;
+        regex = nRegex;
+        prio = nPrio;
+        customDissector = nCustomDissector;
+    }
+
+    public TokenParser addOutputField(String type, String name, EnumSet<Casts> casts) {
+        outputFields.add(new TokenOutputField(type, name, casts));
+        return this;
+    }
+
+    public TokenParser addOutputFields(List<TokenOutputField> nOutputFields) {
+        this.outputFields.addAll(nOutputFields);
+        return this;
+    }
+
+    public List<TokenOutputField> getOutputFields() {
+        return outputFields;
     }
 
     // --------------------------------------------
@@ -116,18 +147,6 @@ public class TokenParser {
 
     public String getLogFormatToken() {
         return logFormatToken;
-    }
-
-    public String getValueName() {
-        return valueName;
-    }
-
-    public String getValueType() {
-        return valueType;
-    }
-
-    public EnumSet<Casts> getCasts() {
-        return casts;
     }
 
     public String getRegex() {
@@ -151,20 +170,22 @@ public class TokenParser {
         }
 
         Token token = new Token(
-                valueName,
-                valueType,
-                casts,
                 regex,
-                pos, logFormatToken.length(),
-                prio);
+                pos,
+                logFormatToken.length(),
+                prio)
+            .addOutputFields(outputFields);
 
         if (warningMessageWhenUsed != null) {
             token.setWarningMessageWhenUsed(warningMessageWhenUsed);
         }
 
-        if (!addCustomDissector(token, valueType, valueName)) {
+        if (!addCustomDissector(token,
+            outputFields.get(0).getType(),
+            outputFields.get(0).getName())) {
             return null;
         }
+
         return token;
     }
 

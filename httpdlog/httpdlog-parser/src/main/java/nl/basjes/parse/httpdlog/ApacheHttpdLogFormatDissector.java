@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -196,33 +197,35 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // %a Remote IP-address
-        parsers.add(new TokenParser("%a",
+        parsers.addAll(createFirstAndLastTokenParsers("%a",
                 "connection.client.ip", "IP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // %{c}a Underlying peer IP address of the connection (see the mod_remoteip module).
-        parsers.add(new TokenParser("%{c}a",
+        parsers.addAll(createFirstAndLastTokenParsers("%{c}a",
                 "connection.client.peerip", "IP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // -------
         // %A Local IP-address
-        parsers.add(new TokenParser("%A",
+        parsers.addAll(createFirstAndLastTokenParsers("%A",
                 "connection.server.ip", "IP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_CLF_IP));
 
         // -------
         // %B Size of response in bytes, excluding HTTP headers.
-        parsers.add(new TokenParser("%B",
+        parsers.addAll(createFirstAndLastTokenParsers("%B",
                 "response.body.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %b Size of response in bytes, excluding HTTP headers. In CLF format,
         // i.e. a '-' rather than a 0 when no bytes are sent.
-        parsers.add(new TokenParser("%b",
+        parsers.addAll(createFirstAndLastTokenParsers("%b",
                 "response.body.bytes", "BYTESCLF",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
+
+//        TODO: UNDO: %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
 
         // -------
         // %{Foobar}C The contents of cookie Foobar in the request sent to the server.
@@ -237,19 +240,19 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // %f Filename
-        parsers.add(new TokenParser("%f",
+        parsers.addAll(createFirstAndLastTokenParsers("%f",
                 "server.filename", "FILENAME",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
         // -------
 
         // %h Remote host
-        parsers.add(new TokenParser("%h",
+        parsers.addAll(createFirstAndLastTokenParsers("%h",
                 "connection.client.host", "IP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %H The request protocol
-        parsers.add(new TokenParser("%H",
+        parsers.addAll(createFirstAndLastTokenParsers("%H",
                 "request.protocol", "PROTOCOL",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
@@ -268,27 +271,27 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // 2' the second, etc...;
         // otherwise this is always 0 (indicating the initial request).
         // Available in versions 2.2.11 and later.
-        parsers.add(new TokenParser("%k",
+        parsers.addAll(createFirstAndLastTokenParsers("%k",
                 "connection.keepalivecount", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %l Remote logname (from identd, if supplied). This will return a dash
         // unless mod_ident is present and IdentityCheck is set On.
-        parsers.add(new TokenParser("%l",
+        parsers.addAll(createFirstAndLastTokenParsers("%l",
                 "connection.client.logname", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
         // %L The request log ID from the error log (or '-' if nothing has been logged to the error log for this request).
         // Look for the matching error log line to see what request caused what error.
-        parsers.add(new TokenParser("%L",
+        parsers.addAll(createFirstAndLastTokenParsers("%L",
                 "request.errorlogid", "STRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %m The request method
-        parsers.add(new TokenParser("%m",
+        parsers.addAll(createFirstAndLastTokenParsers("%m",
                 "request.method", "HTTP.METHOD",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
@@ -306,7 +309,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // %p The canonical port of the server serving the request
-        parsers.add(new TokenParser("%p",
+        parsers.addAll(createFirstAndLastTokenParsers("%p",
                 "request.server.port.canonical", "PORT",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
@@ -314,21 +317,21 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %{format}p The canonical port of the server serving the request or
         // the server's actual port or the client's actual port. Valid formats
         // are canonical, local, or remote.
-        parsers.add(new TokenParser("%{canonical}p",
+        parsers.addAll(createFirstAndLastTokenParsers("%{canonical}p",
                 "connection.server.port.canonical", "PORT",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{local}p",
+        parsers.addAll(createFirstAndLastTokenParsers("%{local}p",
                 "connection.server.port", "PORT",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{remote}p",
+        parsers.addAll(createFirstAndLastTokenParsers("%{remote}p",
                 "connection.client.port", "PORT",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %P The process ID of the child that serviced the request.
-        parsers.add(new TokenParser("%P",
+        parsers.addAll(createFirstAndLastTokenParsers("%P",
                 "connection.server.child.processid", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
@@ -336,51 +339,47 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %{format}P The process ID or thread id of the child that serviced the
         // request. Valid formats are pid, tid, and hextid. hextid requires
         // APR 1.2.0 or higher.
-        parsers.add(new TokenParser("%{pid}P",
+        parsers.addAll(createFirstAndLastTokenParsers("%{pid}P",
                 "connection.server.child.processid", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{tid}P",
+        parsers.addAll(createFirstAndLastTokenParsers("%{tid}P",
                 "connection.server.child.threadid", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{hextid}P",
+        parsers.addAll(createFirstAndLastTokenParsers("%{hextid}P",
                 "connection.server.child.hexthreadid", "NUMBER",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_HEXNUMBER));
 
         // -------
         // %q The query string (prepended with a ? if a query string exists,
         // otherwise an empty string)
-        parsers.add(new TokenParser("%q",
+        parsers.addAll(createFirstAndLastTokenParsers("%q",
                 "request.querystring", "HTTP.QUERYSTRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %r First line of request
-        parsers.add(new TokenParser("%r",
+        parsers.addAll(createFirstAndLastTokenParsers("%r",
                 "request.firstline", "HTTP.FIRSTLINE",
                 Casts.STRING_ONLY, HttpFirstLineDissector.FIRSTLINE_REGEX));
 
         // -------
         // %R The handler generating the response (if any).
-        parsers.add(new TokenParser("%R",
+        parsers.addAll(createFirstAndLastTokenParsers("%R",
                 "request.handler", "STRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // %s Status. For requests that got internally redirected, this is the
         // status of the *original* request --- %>s for the last.
-        parsers.add(new TokenParser("%s",
-                "request.status.original", "STRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
-
-        parsers.add(new TokenParser("%>s",
-                "request.status.last", "STRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
+        parsers.addAll(createFirstAndLastTokenParsers("%s",
+            "request.status", "STRING",
+            Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING, 0));
 
         // -------
         // %t Time the request was received (standard english format)
-        parsers.add(new TokenParser("%t",
+        parsers.addAll(createFirstAndLastTokenParsers("%t",
                 "request.receive.time", "TIME.STAMP",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STANDARD_TIME_US));
 
@@ -420,118 +419,119 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // You can use multiple %{format}t tokens instead.
 
         // sec
-        parsers.add(new TokenParser("%{sec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{sec}t",
             "request.receive.time.sec", "TIME.SECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{begin:sec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{begin:sec}t",
             "request.receive.time.begin.sec", "TIME.SECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{end:sec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{end:sec}t",
             "request.receive.time.end.sec", "TIME.SECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // msec
-        parsers.add(new TokenParser("%{msec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{msec}t",
                 "request.receive.time.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{begin:msec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{begin:msec}t",
                 "request.receive.time.begin.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{end:msec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{end:msec}t",
                 "request.receive.time.end.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // usec
-        parsers.add(new TokenParser("%{usec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{usec}t",
                 "request.receive.time.usec", "TIME.EPOCH.USEC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{begin:usec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{begin:usec}t",
                 "request.receive.time.begin.usec", "TIME.EPOCH.USEC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{end:usec}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{end:usec}t",
                 "request.receive.time.end.usec", "TIME.EPOCH.USEC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // msec_frac
-        parsers.add(new TokenParser("%{msec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{msec_frac}t",
                 "request.receive.time.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{begin:msec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{begin:msec_frac}t",
                 "request.receive.time.begin.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{end:msec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{end:msec_frac}t",
                 "request.receive.time.end.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // usec_frac
-        parsers.add(new TokenParser("%{usec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{usec_frac}t",
                 "request.receive.time.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{begin:usec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{begin:usec_frac}t",
                 "request.receive.time.begin.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-        parsers.add(new TokenParser("%{end:usec_frac}t",
+        parsers.addAll(createFirstAndLastTokenParsers("%{end:usec_frac}t",
                 "request.receive.time.end.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %T The time taken to serve the request, in seconds.
-        parsers.add(new TokenParser("%T",
+        parsers.addAll(createFirstAndLastTokenParsers("%T",
                 "response.server.processing.time", "SECONDS",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %D The time taken to serve the request, in microseconds.
-        parsers.add(new TokenParser("%D",
+        parsers.addAll(createFirstAndLastTokenParsers("%D",
             "response.server.processing.time", "MICROSECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+//        TODO: UNDO: %D changed from "server.process.time" to "response.server.processing.time"
 
         // -------
         // %{UNIT}T The time taken to serve the request, in a time unit given by UNIT.
         // Valid units are ms for milliseconds, us for microseconds, and s for seconds.
         // Using s gives the same result as %T without any format;
         // Using us gives the same result as %D.
-        parsers.add(new TokenParser("%{us}T",
+        parsers.addAll(createFirstAndLastTokenParsers("%{us}T",
             "response.server.processing.time", "MICROSECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-        parsers.add(new TokenParser("%{ms}T",
+        parsers.addAll(createFirstAndLastTokenParsers("%{ms}T",
             "response.server.processing.time", "MILLISECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-        parsers.add(new TokenParser("%{s}T",
+        parsers.addAll(createFirstAndLastTokenParsers("%{s}T",
             "response.server.processing.time", "SECONDS",
             Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
         // -------
         // %u Remote user (from auth; may be bogus if return status (%s) is 401)
-        parsers.add(new TokenParser("%u",
+        parsers.addAll(createFirstAndLastTokenParsers("%u",
                 "connection.client.user", "STRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
         // %U The URL path requested, not including any query string.
-        parsers.add(new TokenParser("%U",
+        parsers.addAll(createFirstAndLastTokenParsers("%U",
                 "request.urlpath", "URI", // FIXME: This is wrong
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %v The canonical ServerName of the server serving the request.
-        parsers.add(new TokenParser("%v",
+        parsers.addAll(createFirstAndLastTokenParsers("%v",
                 "connection.server.name.canonical", "STRING",
                 Casts.STRING_ONLY,  TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %V The server name according to the UseCanonicalName setting.
-        parsers.add(new TokenParser("%V",
+        parsers.addAll(createFirstAndLastTokenParsers("%V",
                 "connection.server.name", "STRING",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
@@ -542,7 +542,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // - = connection will be closed after the response is sent.
         // (This directive was %c in late versions of Apache 1.3, but this
         // conflicted with the historical ssl %{var}c syntax.)
-        parsers.add(new TokenParser("%X",
+        parsers.addAll(createFirstAndLastTokenParsers("%X",
                 "response.connection.status", "HTTP.CONNECTSTATUS",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
@@ -550,7 +550,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %I Bytes received, including request and headers, cannot be zero. You
         // need to enable mod_logio to use this.
         // NOTE: In reality this CAN ben 0 (in case of HTTP 408 error code)
-        parsers.add(new TokenParser("%I",
+        parsers.addAll(createFirstAndLastTokenParsers("%I",
                 "request.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
@@ -558,14 +558,14 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %O Bytes sent, including headers, cannot be zero. You need to enable
         // mod_logio to use this.
         // NOTE: In reality this CAN ben 0 (in case of HTTP 408 error code)
-        parsers.add(new TokenParser("%O",
+        parsers.addAll(createFirstAndLastTokenParsers("%O",
                 "response.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
 
         // -------
         // %S Bytes transferred (received and sent), including request and headers, cannot be zero.
         // This is the combination of %I and %O. You need to enable mod_logio to use this.
-        parsers.add(new TokenParser("%S",
+        parsers.addAll(createFirstAndLastTokenParsers("%S",
                 "total.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
 
@@ -585,19 +585,87 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // Some explicit type overrides.
         // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
-        parsers.add(new TokenParser("%{cookie}i",
+        parsers.addAll(createFirstAndLastTokenParsers("%{cookie}i",
                 "request.cookies",    "HTTP.COOKIES",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{set-cookie}o",
+        parsers.addAll(createFirstAndLastTokenParsers("%{set-cookie}o",
                 "response.cookies",   "HTTP.SETCOOKIES",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{user-agent}i",
+        parsers.addAll(createFirstAndLastTokenParsers("%{user-agent}i",
                 "request.user-agent", "HTTP.USERAGENT",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
-        parsers.add(new TokenParser("%{referer}i",
+        parsers.addAll(createFirstAndLastTokenParsers("%{referer}i",
                 "request.referer",    "HTTP.URI",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING, 1));
 
         return parsers;
     }
+
+
+    private List<TokenParser> createFirstAndLastTokenParsers(
+        final String nLogFormatToken,
+        final String nValueName,
+        final String nValueType,
+        final EnumSet<Casts> nCasts,
+        final String nRegex) {
+        return createFirstAndLastTokenParsers(nLogFormatToken, nValueName, nValueType, nCasts, nRegex, 0);
+    }
+
+    private List<TokenParser> createFirstAndLastTokenParsers(
+        final String nLogFormatToken,
+        final String nValueName,
+        final String nValueType,
+        final EnumSet<Casts> nCasts,
+        final String nRegex,
+        final int nPrio) {
+        List<TokenParser> parsers = new ArrayList<>(3);
+
+        // Quote from http://httpd.apache.org/docs/current/mod/mod_log_config.html#modifiers
+        //      The modifiers "<" and ">" can be used for requests that have been internally redirected to
+        //      choose whether the original or final (respectively) request should be consulted.
+        //      By default, the % directives %s, %U, %T, %D, and %r look at the original request
+        //      while all others look at the final request.
+        //      So for example, %>s can be used to record the final status of the request and %<u can be used
+        //      to record the original authenticated user on a request that is internally redirected to an
+        //      unauthenticated resource.
+
+        switch(nLogFormatToken) {
+            case "%s":
+            case "%U":
+            case "%T":
+            case "%{us}T":
+            case "%{ms}T":
+            case "%{s}T":
+            case "%D":
+            case "%r":
+                // Quote: By default, the % directives %s, %U, %T, %D, and %r look at the original request
+                // So '%X' is the same value as '%<X' hence we output BOTH
+                parsers.add(new TokenParser(nLogFormatToken, nRegex, nPrio)
+                    .addOutputField(nValueType, nValueName,          nCasts)
+                    .addOutputField(nValueType, nValueName + ".original", nCasts)
+                );
+
+                break;
+            default:
+                // Quote: By default, ... all others look at the final request.
+                // So '%X' is the same value as '%>X' hence we output BOTH
+                parsers.add(new TokenParser(nLogFormatToken, nRegex, nPrio)
+                    .addOutputField(nValueType, nValueName,           nCasts)
+                    .addOutputField(nValueType, nValueName + ".last", nCasts)
+                );
+                break;
+        }
+
+        parsers.add(new TokenParser(nLogFormatToken.replaceFirst("%", "%<"), nRegex, nPrio)
+            .addOutputField(nValueType, nValueName + ".original", nCasts)
+        );
+
+        parsers.add(new TokenParser(nLogFormatToken.replaceFirst("%", "%>"), nRegex, nPrio)
+            .addOutputField(nValueType, nValueName + ".last", nCasts)
+        );
+
+        return parsers;
+    }
+
+
 }
