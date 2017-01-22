@@ -133,8 +133,6 @@ public class HttpdLogFormatDissector extends Dissector {
         NGINX
     }
 
-    // TODO for NGINX support: Actually implement pattern matching (OR make it explicit...).
-    @SuppressWarnings("UnusedParameters")
     private LogFormatType determineMostLikelyLogFormat(final String logFormat) {
         if (logFormat.indexOf('%') != -1) {
             return LogFormatType.APACHE;

@@ -319,8 +319,6 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
             "connection.client.proxy.host", "IP",
             Casts.STRING_OR_LONG, FORMAT_CLF_IP));
 
-        // TODO: Consider renaming 'host' to 'ip'
-
         // -------
         // $remote_addr
         // client address
