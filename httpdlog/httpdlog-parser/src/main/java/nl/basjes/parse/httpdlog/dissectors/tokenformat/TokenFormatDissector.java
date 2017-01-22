@@ -56,8 +56,6 @@ public abstract class TokenFormatDissector extends Dissector {
 
     private List<String> outputTypes;
 
-    public static final String FIXED_STRING_TYPE = "NONE";
-
     // --------------------------------------------
     public static class FixedStringTokenParser extends TokenParser {
         public FixedStringTokenParser(final String nLogFormatToken, final String nRegEx) {
@@ -71,14 +69,12 @@ public abstract class TokenFormatDissector extends Dissector {
                 return null;
             }
 
-            Token token = new FixedStringToken(
+            return new FixedStringToken(
                 getRegex(),
                 pos,
                 getLogFormatToken().length(),
                 0)
                 .addOutputFields(getOutputFields());
-
-            return token;
         }
     }
 
@@ -86,8 +82,6 @@ public abstract class TokenFormatDissector extends Dissector {
         public FixedStringToken(String nRegex, int nStartPos, int nLength, int nPrio) {
             super(nRegex, nStartPos, nLength, nPrio);
         }
-
-
     }
 
     // --------------------------------------------
@@ -139,12 +133,12 @@ public abstract class TokenFormatDissector extends Dissector {
         outputTypes = new ArrayList<>();
 
         for (final Token token : logFormatTokens) {
+            if (token instanceof FixedStringToken) {
+                continue;
+            }
+
             List<TokenOutputField> outputFields = token.getOutputFields();
             if (!outputFields.isEmpty()) {
-                if (FIXED_STRING_TYPE.equals(outputFields.get(0).getType())) {
-                    continue;
-                }
-
                 for (TokenOutputField tokenOutputField: outputFields) {
                     outputTypes.add(tokenOutputField.getType() + ':' + tokenOutputField.getName());
                 }
