@@ -37,7 +37,7 @@ public class ValueConvertTest {
     @Test
     public void verifyTypeConversionStoM() {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("something", new SecondsToMilliseconds())
+            .withDissector("something", new SecondsToMilliseconds())
             .withDissector(new MillisecondsToSeconds())
             .withInput("12345") // Which is in seconds because that dissector is 'first'
             .expect("SECONDS:something", "12345")
@@ -49,7 +49,7 @@ public class ValueConvertTest {
     @Test
     public void verifyTypeConversionMtoS() {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("something", new MillisecondsToSeconds())
+            .withDissector("something", new MillisecondsToSeconds())
             .withDissector(new SecondsToMilliseconds())
             .withInput("12345000") // Which is in MILLIseconds because that dissector is 'first'
             .expect("SECONDS:something", "12345")
@@ -61,7 +61,7 @@ public class ValueConvertTest {
     @Test
     public void verifyTypeConversionPossibleFields() {
         List<String> possible = DissectorTester.create()
-            .withDissectorUnderDummyRoot("something", new MillisecondsToSeconds())
+            .withDissector("something", new MillisecondsToSeconds())
             .withDissector(new SecondsToMilliseconds())
             .withInput("12345000") // Which is in MILLIseconds because that dissector is 'first'
             .getPossible();

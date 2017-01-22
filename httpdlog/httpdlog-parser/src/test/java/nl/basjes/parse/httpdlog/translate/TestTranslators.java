@@ -18,9 +18,6 @@
 package nl.basjes.parse.httpdlog.translate;
 
 import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
-import nl.basjes.parse.httpdlog.dissectors.RequestCookieListDissector;
-import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieDissector;
-import nl.basjes.parse.httpdlog.dissectors.ResponseSetCookieListDissector;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertCLFIntoNumber;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
 import org.junit.Test;
@@ -30,7 +27,7 @@ public class TestTranslators {
     @Test
     public void testCLFToNumberMin() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
             .withInput(null) // A '-' in the input file goes into the dissector as a null value
             .expect("OUT:root", 0L)
             .checkExpectations();
@@ -39,7 +36,7 @@ public class TestTranslators {
     @Test
     public void testCLFToNumber0() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
             .withInput("0")
             .expect("OUT:root", 0L)
             .checkExpectations();
@@ -48,7 +45,7 @@ public class TestTranslators {
     @Test
     public void testCLFToNumber1() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
             .withInput("1")
             .expect("OUT:root", 1L)
             .checkExpectations();
@@ -57,7 +54,7 @@ public class TestTranslators {
     @Test
     public void testNumberToCLF0() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("root", new ConvertNumberIntoCLF("IN","OUT"))
+            .withDissector("root", new ConvertNumberIntoCLF("IN","OUT"))
             .withInput("0")
             .expect("OUT:root", (String)null)
             .checkExpectations();
@@ -66,7 +63,7 @@ public class TestTranslators {
     @Test
     public void testNumberToCLF1() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("root", new ConvertNumberIntoCLF("IN","OUT"))
+            .withDissector("root", new ConvertNumberIntoCLF("IN","OUT"))
             .withInput("1")
             .expect("OUT:root", 1L)
             .checkExpectations();

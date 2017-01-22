@@ -25,7 +25,7 @@ public class TestCookieDissector {
     @Test
     public void testRequestCookies() throws Exception {
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("cookies", new RequestCookieListDissector())
+            .withDissector("cookies", new RequestCookieListDissector())
 
             .withInput("" +
                 "NBA-0; " +
@@ -44,7 +44,7 @@ public class TestCookieDissector {
     public void testResponseSetCookies() throws Exception {
 
         DissectorTester.create()
-            .withDissectorUnderDummyRoot("cookies", new ResponseSetCookieListDissector())
+            .withDissector("cookies", new ResponseSetCookieListDissector())
             .withDissector(new ResponseSetCookieDissector())
 
             .withInput("" +

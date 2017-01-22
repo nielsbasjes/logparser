@@ -59,4 +59,26 @@ public class TestHttpFirstLineDissector {
             .expect("HTTP.PROTOCOL.VERSION:protocol.version", "1.1")
             .checkExpectations();
     }
+
+    @Test
+    public void testProtocol() throws Exception {
+        DissectorTester.create()
+            .withDissector("protocol", new HttpFirstLineProtocolDissector())
+            .withInput("FOO/1.2")
+            .expect("HTTP.PROTOCOL:protocol",                 "FOO")
+            .expect("HTTP.PROTOCOL.VERSION:protocol.version", "1.2")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testChoppedProtocol() throws Exception {
+        DissectorTester.create()
+            .withDissector("protocol", new HttpFirstLineProtocolDissector())
+            .withInput("FOO")
+            .expect("HTTP.PROTOCOL:protocol",                 (String)null)
+            .expect("HTTP.PROTOCOL.VERSION:protocol.version", (String)null)
+            .checkExpectations();
+    }
+
+
 }

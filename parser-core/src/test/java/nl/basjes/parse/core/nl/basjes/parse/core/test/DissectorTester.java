@@ -77,7 +77,7 @@ public class DissectorTester {
      * @param dissector The first REAL dissector for this test
      * @return This DissectorTester
      */
-    public DissectorTester withDissectorUnderDummyRoot(String fieldName, Dissector dissector) {
+    public DissectorTester withDissector(String fieldName, Dissector dissector) {
         return withDissector(new DummyDissector(dissector.getInputType(), fieldName))
                 .withDissector(dissector);
     }
