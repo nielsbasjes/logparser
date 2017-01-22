@@ -28,7 +28,7 @@ public class TestUltimateDummyDissector {
             .expect("ANY:any",        "42")
             .expect("ANY:any",        42L)
             .expect("ANY:any",        42D)
-            .expect("STRING:string",  "42")
+            .expect("STRING:string",  "FortyTwo")
             .expectAbsentLong("STRING:string")
             .expectAbsentDouble("STRING:string")
             .expect("INT:int",        "42")

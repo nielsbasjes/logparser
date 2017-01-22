@@ -135,7 +135,7 @@ public class TestApacheHttpdLogfileInputFormat {
             assertEquals("42",          record.getString("ANY:any"));             // any_string
             assertEquals(42L,           record.getLong("ANY:any").longValue());   // any_long
             assertEquals(42D,           record.getDouble("ANY:any") ,0.1D);       // any_double
-            assertEquals("42",          record.getString("STRING:string"));       // string_string
+            assertEquals("FortyTwo",    record.getString("STRING:string"));       // string_string
             assertEquals(null,          record.getLong("STRING:string")  );       // string_long
             assertEquals(null,          record.getDouble("STRING:string"));       // string_double
             assertEquals("42",          record.getString("INT:int"));             // int_string

@@ -60,7 +60,7 @@ public class UltimateDummyDissector extends SimpleDissector {
     @Override
     public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
         parsable.addDissection(inputname, "ANY",    "any",    "42");
-        parsable.addDissection(inputname, "STRING", "string", "42");
+        parsable.addDissection(inputname, "STRING", "string", "FortyTwo");
         parsable.addDissection(inputname, "INT",    "int",    42);
         parsable.addDissection(inputname, "LONG",   "long",   42L);
         parsable.addDissection(inputname, "FLOAT",  "float",  42F);

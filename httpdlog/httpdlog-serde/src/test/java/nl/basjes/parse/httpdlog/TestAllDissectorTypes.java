@@ -77,7 +77,7 @@ public class TestAllDissectorTypes {
         assertEquals(42L,             rowArray.get(++index)); // any_long
         assertEquals(42D,             rowArray.get(++index)); // any_double
 
-        assertEquals("42",            rowArray.get(++index)); // string_string
+        assertEquals("FortyTwo",      rowArray.get(++index)); // string_string
         assertEquals(null,            rowArray.get(++index)); // string_long
         assertEquals(null,            rowArray.get(++index)); // string_double
 
