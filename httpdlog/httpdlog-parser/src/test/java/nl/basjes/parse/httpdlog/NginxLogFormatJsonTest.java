@@ -17,8 +17,8 @@
 
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
-import nl.basjes.parse.core.nl.basjes.parse.core.test.TestRecord;
+import nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.TestRecord;
 import org.junit.Test;
 
 public class NginxLogFormatJsonTest {

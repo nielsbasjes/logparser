@@ -17,8 +17,8 @@
 package nl.basjes.parse.core.reference;
 
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
-import nl.basjes.parse.core.nl.basjes.parse.core.test.TestRecord;
+import nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.TestRecord;
 import org.junit.Test;
 
 public class ReferenceTest {

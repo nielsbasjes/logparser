@@ -17,7 +17,7 @@
 
 package nl.basjes.parse.httpdlog;
 
-import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.DissectorTester;
 import org.junit.Test;
 
 import java.util.List;

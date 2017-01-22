@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.basjes.parse.core.nl.basjes.parse.core.test;
+package nl.basjes.parse.core.test;
 
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;

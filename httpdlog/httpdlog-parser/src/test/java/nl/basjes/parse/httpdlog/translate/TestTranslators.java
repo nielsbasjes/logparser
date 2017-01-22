@@ -17,7 +17,7 @@
 
 package nl.basjes.parse.httpdlog.translate;
 
-import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertCLFIntoNumber;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
 import org.junit.Test;

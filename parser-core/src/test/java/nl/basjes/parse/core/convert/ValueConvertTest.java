@@ -23,7 +23,7 @@ import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
-import nl.basjes.parse.core.nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.DissectorTester;
 import org.junit.Test;
 
 import java.util.EnumSet;

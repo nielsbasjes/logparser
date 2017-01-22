@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.basjes.parse.core.nl.basjes.parse.core.test;
+package nl.basjes.parse.core.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
