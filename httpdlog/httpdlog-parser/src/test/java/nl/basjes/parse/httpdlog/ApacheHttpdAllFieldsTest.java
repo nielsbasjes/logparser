@@ -94,6 +94,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%>H",                  "PROTOCOL:request.protocol.last" );
 
         verifyFieldAvailability("%{FooBar}i",           "HTTP.HEADER:request.header.foobar");
+        verifyFieldAvailability("%{FooBar}^ti",         "HTTP.TRAILER:request.trailer.foobar");
 
         verifyFieldAvailability("%k",                   "NUMBER:connection.keepalivecount",
                                                         "NUMBER:connection.keepalivecount.last");
@@ -117,6 +118,7 @@ public class ApacheHttpdAllFieldsTest {
 
         verifyFieldAvailability("%{FooBar}n",           "STRING:server.module_note.foobar");
         verifyFieldAvailability("%{FooBar}o",           "HTTP.HEADER:response.header.foobar");
+        verifyFieldAvailability("%{FooBar}^to",         "HTTP.TRAILER:response.trailer.foobar");
 
         verifyFieldAvailability("%p",                   "PORT:request.server.port.canonical",
                                                         "PORT:request.server.port.canonical.last");

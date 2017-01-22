@@ -16,6 +16,7 @@ v3.0
 - Implemented converters between several closely related formats (BYTES/BYTESCLF, time related formats)
 - Token based parsers can output multiple values for the same parameter.
 - Implemented all < and > directives for Apache logformat
+- Implemented %{VARNAME}^ti and %{VARNAME}^to
 
 **RELEVANT CHANGES WITH THE 2.X VERSION**:
 These fields are now reported a deprecated.

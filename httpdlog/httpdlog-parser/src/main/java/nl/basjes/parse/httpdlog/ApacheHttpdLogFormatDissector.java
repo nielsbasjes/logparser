@@ -269,6 +269,12 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
+        // %{VARNAME}^ti The contents of VARNAME: trailer line(s) in the request sent to the server.
+        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^ti",
+                "request.trailer.", "HTTP.TRAILER",
+                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+
+        // -------
         // %k Number of keepalive requests handled on this connection.
         // Interesting if KeepAlive is being used, so that, for example,
         // a '1' means the first keepalive request after the initial one, '
@@ -309,6 +315,12 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %{Foobar}o The contents of Foobar: header line(s) in the response.
         parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-]*)\\}o",
                 "response.header.", "HTTP.HEADER",
+                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+
+        // -------
+        // %{VARNAME}^to The contents of VARNAME: trailer line(s) in the response sent from the server.
+        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^to",
+                "response.trailer.", "HTTP.TRAILER",
                 Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // -------
@@ -547,7 +559,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // %U The URL path requested, not including any query string.
         parsers.addAll(createFirstAndLastTokenParsers("%U",
-                "request.urlpath", "URI", // FIXME: This is wrong
+                "request.urlpath", "URI",
                 Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
@@ -595,20 +607,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.addAll(createFirstAndLastTokenParsers("%S",
                 "total.bytes", "BYTES",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NON_ZERO_NUMBER));
-
-        // -------
-        // %{VARNAME}^ti The contents of VARNAME: trailer line(s) in the request sent to the server.
-        // TODO: Implement %{VARNAME}^ti
-//        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^ti",
-//            "request.trailer.", "STRING",
-//            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
-
-        // -------
-        // %{VARNAME}^to The contents of VARNAME: trailer line(s) in the response sent from the server.
-        // TODO: Implement %{VARNAME}^to
-//        parsers.add(new NamedTokenParser("\\%\\{([a-z0-9\\-_]*)\\}\\^ti",
-//            "response.trailer.", "STRING",
-//            Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
 
         // Some explicit type overrides.
         // The '1' at the end indicates this is more important than the default TokenParser (which has an implicit 0).
