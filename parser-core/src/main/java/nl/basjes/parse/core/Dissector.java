@@ -169,4 +169,9 @@ public abstract class Dissector {
         // Usually only implemented in very dynamic dissectors (like custom timestamp format)
         throw new InvalidDissectorException("The InputType of " + this.getClass().getCanonicalName() + " cannot be changed");
     }
+
+    @Override
+    public String toString() {
+        return "{ " + this.getClass().getSimpleName() + " : " + getInputType() + " --> " + getPossibleOutput() + " }";
+    }
 }
