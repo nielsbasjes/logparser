@@ -80,5 +80,24 @@ public class TestHttpFirstLineDissector {
             .checkExpectations();
     }
 
+    @Test
+    public void testEmptyProtocol1() throws Exception {
+        DissectorTester.create()
+            .withDissector("protocol", new HttpFirstLineProtocolDissector())
+            .withInput("")
+            .expectAbsentString("HTTP.PROTOCOL:protocol")
+            .expectAbsentString("HTTP.PROTOCOL.VERSION:protocol.version")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testEmptyProtocol2() throws Exception {
+        DissectorTester.create()
+            .withDissector("protocol", new HttpFirstLineProtocolDissector())
+            .withInput("-")
+            .expectAbsentString("HTTP.PROTOCOL:protocol")
+            .expectAbsentString("HTTP.PROTOCOL.VERSION:protocol.version")
+            .checkExpectations();
+    }
 
 }
