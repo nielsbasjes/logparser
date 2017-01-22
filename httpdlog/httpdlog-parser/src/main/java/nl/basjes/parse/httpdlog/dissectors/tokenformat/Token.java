@@ -50,18 +50,6 @@ public class Token {
         prio = nPrio;
     }
 
-    public Token(
-            final String nName,
-            final String nType,
-            final EnumSet<Casts> nCasts,
-            final String nRegex,
-            final int nStartPos,
-            final int nLength,
-            final int nPrio) {
-        this(nRegex, nStartPos, nLength, nPrio);
-        addOutputField(nType, nName, nCasts);
-    }
-
     public Token addOutputField(String type, String name, EnumSet<Casts> casts) {
         outputFields.add(new TokenOutputField(type, name, casts));
         return this;
