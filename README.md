@@ -10,7 +10,7 @@ These configuration options are the schema of the access loglines.
 
 So we are using the LogFormat that wrote the file as the input parameter for the parser that reads the same file.
 In addition to the config options specified in the Apache HTTPD manual under
-[Custom Log Formats](http://httpd.apache.org/docs/2.2/mod/mod_log_config.html) the following are also recognized:
+[Custom Log Formats](http://httpd.apache.org/docs/current/mod/mod_log_config.html) the following are also recognized:
 
 * common
 * combined
@@ -146,7 +146,7 @@ Special Dissectors
 If you have a log field / request header that gets filled using mod_unique_id you can now peek inside
 the values that were used to construct this.
 
-**NOTE: http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html clearly states**
+**NOTE: http://httpd.apache.org/docs/current/mod/mod_unique_id.html clearly states**
 
      it should be emphasized that applications should not dissect the encoding.
      Applications should treat the entire encoded UNIQUE_ID as an opaque token,

@@ -190,7 +190,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         List<TokenParser> parsers = new ArrayList<>(60);
 
         // Quote from
-        // http://httpd.apache.org/docs/2.2/mod/mod_log_config.html#logformat
+        // http://httpd.apache.org/docs/current/mod/mod_log_config.html#logformat
         // Format String Description
         // -------
         // %% The percent sign

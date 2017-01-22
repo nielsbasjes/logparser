@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * The documentation of mod_unique_id clearly states:
- * http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html
+ * http://httpd.apache.org/docs/current/mod/mod_unique_id.html
  * ... it should be emphasized that applications should not dissect the encoding. ...
  * Applications should treat the entire encoded UNIQUE_ID as an opaque token,
  * which can be compared against other UNIQUE_IDs for equality only.
@@ -165,7 +165,7 @@ public class ModUniqueIdDissector extends Dissector {
             return null;
         }
 
-        // http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html
+        // http://httpd.apache.org/docs/current/mod/mod_unique_id.html
         // The UNIQUE_ID environment variable is constructed by encoding the 144-bit
         // (32-bit IP address, 32 bit pid, 32 bit time stamp, 16 bit counter, 32 bit thread index)
         // quadruple using the alphabet [A-Za-z0-9@-] in a manner similar to MIME base64 encoding,
@@ -212,7 +212,7 @@ public class ModUniqueIdDissector extends Dissector {
 
         UniqueIdRec result = new UniqueIdRec();
 
-//        http://httpd.apache.org/docs/2.2/mod/mod_unique_id.html
+//        http://httpd.apache.org/docs/current/mod/mod_unique_id.html
 
 //         we will use a Unix timestamp (seconds since January 1, 1970 UTC)
 //      (32-bit IP address, 32 bit pid, 32 bit time stamp, 16 bit counter, 32 bit thread index)
