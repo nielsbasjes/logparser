@@ -17,13 +17,23 @@
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 
 public class TokenOutputField {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TokenOutputField.class);
+
     private final String type;
     private final String name;
     private final EnumSet<Casts> casts;
+
+    /**
+     * If this is not null the string is the name of the replacement field
+     */
+    private String deprecated = null;
 
     public TokenOutputField(String type, String name, EnumSet<Casts> casts) {
         // RFC 2616 Section 4.2 states: "Field names are case-insensitive."
@@ -44,9 +54,30 @@ public class TokenOutputField {
         return casts;
     }
 
+    public TokenOutputField deprecateFor(String deprecatedFor) {
+        deprecated = deprecatedFor;
+        return this;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated != null;
+    }
+
+    public void wasUsed() {
+        if (deprecated != null) {
+            LOG.error("------------------------------------------------------------------------");
+            LOG.error("The field \"{}:{}\" is deprecated. Use \"{}\" instead.", type, name, deprecated);
+            LOG.error("------------------------------------------------------------------------");
+        }
+    }
+
     @Override
     public String toString() {
-        return "{ "+getType()+':'+getName()+" --> "+casts+" }";
+        String msg = "{ "+getType()+':'+getName()+" --> "+casts+" }";
+        if (deprecated != null) {
+            return "DEPRECATED: " + msg;
+        }
+        return msg;
     }
 }
 

@@ -165,6 +165,7 @@ public abstract class TokenFormatDissector extends Dissector {
         for (Token token: logFormatTokens) {
             for (TokenOutputField tokenOutputField: token.getOutputFields()) {
                 if (outputName.equals(tokenOutputField.getName())) {
+                    tokenOutputField.wasUsed();
                     return tokenOutputField.getCasts();
                 }
             }

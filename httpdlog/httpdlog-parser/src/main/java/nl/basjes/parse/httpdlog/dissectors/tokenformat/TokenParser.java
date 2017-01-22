@@ -129,6 +129,16 @@ public class TokenParser {
         return this;
     }
 
+    public TokenParser addOutputField(String type, String name, EnumSet<Casts> casts, String deprecateFor) {
+        outputFields.add(new TokenOutputField(type, name, casts).deprecateFor(deprecateFor));
+        return this;
+    }
+
+    public TokenParser addOutputField(TokenOutputField outputField) {
+        this.outputFields.add(outputField);
+        return this;
+    }
+
     public TokenParser addOutputFields(List<TokenOutputField> nOutputFields) {
         this.outputFields.addAll(nOutputFields);
         return this;
