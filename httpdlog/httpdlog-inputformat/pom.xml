@@ -49,6 +49,14 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>nl.basjes.parse</groupId>
+      <artifactId>parser-core</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
