@@ -17,7 +17,8 @@ v3.0
 - Token based parsers can output multiple values for the same parameter.
 - Implemented all < and > directives for Apache logformat
 
-**INCOMPATIBLE CHANGES WITH THE 2.X VERSION**:
+**RELEVANT CHANGES WITH THE 2.X VERSION**:
+These fields are now reported a deprecated.
 - %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
 - %D changed from "server.process.time" to "response.server.processing.time"
 - %{msec_frac}t" changed from "request.receive.time.begin.msec_frac" to "request.receive.time.msec_frac"

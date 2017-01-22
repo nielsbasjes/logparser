@@ -202,6 +202,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<{end:sec}t",         "TIME.SECONDS:request.receive.time.end.sec.original" );
         verifyFieldAvailability("%>{end:sec}t",         "TIME.SECONDS:request.receive.time.end.sec.last" );
 
+        verifyFieldAvailability("%{msec}t Deprecated",  "TIME.EPOCH:request.receive.time.begin.msec"      );
         verifyFieldAvailability("%{msec}t",             "TIME.EPOCH:request.receive.time.msec",
                                                         "TIME.EPOCH:request.receive.time.msec.last");
         verifyFieldAvailability("%<{msec}t",            "TIME.EPOCH:request.receive.time.msec.original" );
@@ -217,6 +218,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<{end:msec}t",        "TIME.EPOCH:request.receive.time.end.msec.original" );
         verifyFieldAvailability("%>{end:msec}t",        "TIME.EPOCH:request.receive.time.end.msec.last" );
 
+        verifyFieldAvailability("%{usec}t Deprecated",  "TIME.EPOCH.USEC:request.receive.time.begin.usec");
         verifyFieldAvailability("%{usec}t",             "TIME.EPOCH.USEC:request.receive.time.usec",
                                                         "TIME.EPOCH.USEC:request.receive.time.usec.last");
         verifyFieldAvailability("%<{usec}t",            "TIME.EPOCH.USEC:request.receive.time.usec.original" );
@@ -232,6 +234,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<{end:usec}t",        "TIME.EPOCH.USEC:request.receive.time.end.usec.original" );
         verifyFieldAvailability("%>{end:usec}t",        "TIME.EPOCH.USEC:request.receive.time.end.usec.last" );
 
+        verifyFieldAvailability("%{msec_frac}t Deprecated", "TIME.EPOCH:request.receive.time.begin.msec_frac" );
         verifyFieldAvailability("%{msec_frac}t",        "TIME.EPOCH:request.receive.time.msec_frac",
                                                         "TIME.EPOCH:request.receive.time.msec_frac.last");
         verifyFieldAvailability("%<{msec_frac}t",       "TIME.EPOCH:request.receive.time.msec_frac.original" );
@@ -247,6 +250,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<{end:msec_frac}t",   "TIME.EPOCH:request.receive.time.end.msec_frac.original" );
         verifyFieldAvailability("%>{end:msec_frac}t",   "TIME.EPOCH:request.receive.time.end.msec_frac.last" );
 
+        verifyFieldAvailability("%{usec_frac}t Deprecated", "TIME.EPOCH.USEC_FRAC:request.receive.time.begin.usec_frac" );
         verifyFieldAvailability("%{usec_frac}t",        "TIME.EPOCH.USEC_FRAC:request.receive.time.usec_frac",
                                                         "TIME.EPOCH.USEC_FRAC:request.receive.time.usec_frac.last");
         verifyFieldAvailability("%<{usec_frac}t",       "TIME.EPOCH.USEC_FRAC:request.receive.time.usec_frac.original" );

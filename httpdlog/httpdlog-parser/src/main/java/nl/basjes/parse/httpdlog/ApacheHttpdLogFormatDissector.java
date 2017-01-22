@@ -22,6 +22,7 @@ import nl.basjes.parse.httpdlog.dissectors.StrfTimeStampDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.NamedTokenParser;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.ParameterizedTokenParser;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
+import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenOutputField;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,18 +222,14 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // %b Size of response in bytes, excluding HTTP headers. In CLF format,
         // i.e. a '-' rather than a 0 when no bytes are sent.
-        parsers.add(new TokenParser("%b", TokenParser.FORMAT_CLF_NUMBER, 0)
-            .addOutputField("BYTESCLF", "response.body.bytes",          Casts.STRING_OR_LONG )
-            .addOutputField("BYTESCLF", "response.body.bytes.last",     Casts.STRING_OR_LONG )
-            // Still support the deprecated old style
-            .addOutputField("BYTES",    "response.body.bytesclf",       Casts.STRING_OR_LONG, "BYTESCLF:response.body.bytes")
-        );
-        parsers.add(new TokenParser("%<b", TokenParser.FORMAT_CLF_NUMBER, 0)
-            .addOutputField("BYTESCLF", "response.body.bytes.original", Casts.STRING_OR_LONG )
-        );
-        parsers.add(new TokenParser("%>b", TokenParser.FORMAT_CLF_NUMBER, 0)
-            .addOutputField("BYTESCLF", "response.body.bytes.last",     Casts.STRING_OR_LONG )
-        );
+        parsers.addAll(createFirstAndLastTokenParsers("%b",
+            "response.body.bytes", "BYTESCLF",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
+
+        // Additional support for the deprecated old output
+        addExtraOutput(parsers, "%b",
+            new TokenOutputField("BYTES", "response.body.bytesclf", Casts.STRING_OR_LONG)
+            .deprecateFor("BYTESCLF:response.body.bytes"));
 
         // -------
         // %{Foobar}C The contents of cookie Foobar in the request sent to the server.
@@ -443,6 +440,11 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 "request.receive.time.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
+        // Additional support for the deprecated old output
+        addExtraOutput(parsers, "%{msec}t",
+            new TokenOutputField("TIME.EPOCH", "request.receive.time.begin.msec", Casts.STRING_OR_LONG)
+                .deprecateFor("TIME.EPOCH:request.receive.time.msec"));
+
         parsers.addAll(createFirstAndLastTokenParsers("%{begin:msec}t",
                 "request.receive.time.begin.msec", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
@@ -455,6 +457,11 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.addAll(createFirstAndLastTokenParsers("%{usec}t",
                 "request.receive.time.usec", "TIME.EPOCH.USEC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // Additional support for the deprecated old output
+        addExtraOutput(parsers, "%{usec}t",
+            new TokenOutputField("TIME.EPOCH.USEC", "request.receive.time.begin.usec", Casts.STRING_OR_LONG)
+                .deprecateFor("TIME.EPOCH.USEC:request.receive.time.usec"));
 
         parsers.addAll(createFirstAndLastTokenParsers("%{begin:usec}t",
                 "request.receive.time.begin.usec", "TIME.EPOCH.USEC",
@@ -469,6 +476,10 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
                 "request.receive.time.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
+        addExtraOutput(parsers, "%{msec_frac}t",
+            new TokenOutputField("TIME.EPOCH", "request.receive.time.begin.msec_frac", Casts.STRING_OR_LONG)
+                .deprecateFor("TIME.EPOCH:request.receive.time.msec_frac"));
+
         parsers.addAll(createFirstAndLastTokenParsers("%{begin:msec_frac}t",
                 "request.receive.time.begin.msec_frac", "TIME.EPOCH",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
@@ -481,6 +492,11 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         parsers.addAll(createFirstAndLastTokenParsers("%{usec_frac}t",
                 "request.receive.time.usec_frac", "TIME.EPOCH.USEC_FRAC",
                 Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
+
+        // Additional support for the deprecated old output
+        addExtraOutput(parsers, "%{usec_frac}t",
+            new TokenOutputField("TIME.EPOCH.USEC_FRAC", "request.receive.time.begin.usec_frac", Casts.STRING_OR_LONG)
+                .deprecateFor("TIME.EPOCH.USEC_FRAC:request.receive.time.usec_frac"));
 
         parsers.addAll(createFirstAndLastTokenParsers("%{begin:usec_frac}t",
                 "request.receive.time.begin.usec_frac", "TIME.EPOCH.USEC_FRAC",
@@ -498,18 +514,14 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // %D The time taken to serve the request, in microseconds.
-        parsers.add(new TokenParser("%D", TokenParser.FORMAT_NUMBER, 0)
-            .addOutputField("MICROSECONDS", "response.server.processing.time",          Casts.STRING_OR_LONG )
-            .addOutputField("MICROSECONDS", "response.server.processing.time.original", Casts.STRING_OR_LONG )
+        parsers.addAll(createFirstAndLastTokenParsers("%D",
+            "response.server.processing.time", "MICROSECONDS",
+            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
 
-            .addOutputField("MICROSECONDS", "server.process.time", Casts.STRING_OR_LONG, "MICROSECONDS:response.server.processing.time")
-        );
-        parsers.add(new TokenParser("%<D", TokenParser.FORMAT_NUMBER, 0)
-            .addOutputField("MICROSECONDS", "response.server.processing.time.original", Casts.STRING_OR_LONG )
-        );
-        parsers.add(new TokenParser("%>D", TokenParser.FORMAT_NUMBER, 0)
-            .addOutputField("MICROSECONDS", "response.server.processing.time.last",     Casts.STRING_OR_LONG )
-        );
+        // Additional support for the deprecated old output
+        addExtraOutput(parsers, "%D",
+            new TokenOutputField("MICROSECONDS", "server.process.time", Casts.STRING_OR_LONG)
+            .deprecateFor("MICROSECONDS:response.server.processing.time"));
 
         // -------
         // %{UNIT}T The time taken to serve the request, in a time unit given by UNIT.
@@ -616,6 +628,16 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         return parsers;
     }
 
+    private void addExtraOutput(List<TokenParser> parsers,
+                                    final String nLogFormatToken,
+                                     TokenOutputField tokenOutputField) {
+        for (TokenParser tokenParser:parsers) {
+            if (tokenParser.getLogFormatToken().equals(nLogFormatToken)){
+                tokenParser.addOutputField(tokenOutputField);
+                return;
+            }
+        }
+    }
 
     private List<TokenParser> createFirstAndLastTokenParsers(
         final String nLogFormatToken,
