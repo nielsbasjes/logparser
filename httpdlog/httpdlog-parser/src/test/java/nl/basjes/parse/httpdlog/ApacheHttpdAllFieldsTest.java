@@ -38,6 +38,16 @@ public class ApacheHttpdAllFieldsTest {
     }
 
     @Test
+    public void checkDeprecationMessage() throws Exception {
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector("%b %D Deprecated"))
+            .withInput("1 2 Deprecated")
+            .expect("BYTES:response.body.bytesclf",       "1")
+            .expect("MICROSECONDS:server.process.time",   "2")
+            .checkExpectations();
+    }
+
+    @Test
     public void testAllFieldsAvailability() throws Exception {
         verifyFieldAvailability("%a",                   "IP:connection.client.ip",
                                                         "IP:connection.client.ip.last");
@@ -59,6 +69,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<B",                  "BYTES:response.body.bytes.original" );
         verifyFieldAvailability("%>B",                  "BYTES:response.body.bytes.last" );
 
+        verifyFieldAvailability("%b Deprecated",        "BYTES:response.body.bytesclf");
         verifyFieldAvailability("%b",                   "BYTESCLF:response.body.bytes",
                                                         "BYTESCLF:response.body.bytes.last");
         verifyFieldAvailability("%<b",                  "BYTESCLF:response.body.bytes.original" );
@@ -100,7 +111,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%>L",                  "STRING:request.errorlogid.last" );
 
         verifyFieldAvailability("%m",                   "HTTP.METHOD:request.method",
-            "HTTP.METHOD:request.method.last");
+                                                        "HTTP.METHOD:request.method.last");
         verifyFieldAvailability("%<m",                  "HTTP.METHOD:request.method.original" );
         verifyFieldAvailability("%>m",                  "HTTP.METHOD:request.method.last" );
 
@@ -256,6 +267,7 @@ public class ApacheHttpdAllFieldsTest {
         verifyFieldAvailability("%<T",                  "SECONDS:response.server.processing.time.original" );
         verifyFieldAvailability("%>T",                  "SECONDS:response.server.processing.time.last" );
 
+        verifyFieldAvailability("%D Deprecated",        "MICROSECONDS:server.process.time");
         verifyFieldAvailability("%D",                   "MICROSECONDS:response.server.processing.time",
                                                         "MICROSECONDS:response.server.processing.time.original");
         verifyFieldAvailability("%<D",                  "MICROSECONDS:response.server.processing.time.original" );

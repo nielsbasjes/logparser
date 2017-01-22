@@ -221,11 +221,18 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // -------
         // %b Size of response in bytes, excluding HTTP headers. In CLF format,
         // i.e. a '-' rather than a 0 when no bytes are sent.
-        parsers.addAll(createFirstAndLastTokenParsers("%b",
-                "response.body.bytes", "BYTESCLF",
-                Casts.STRING_OR_LONG, TokenParser.FORMAT_CLF_NUMBER));
-
-//        TODO: UNDO: %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
+        parsers.add(new TokenParser("%b", TokenParser.FORMAT_CLF_NUMBER, 0)
+            .addOutputField("BYTESCLF", "response.body.bytes",          Casts.STRING_OR_LONG )
+            .addOutputField("BYTESCLF", "response.body.bytes.last",     Casts.STRING_OR_LONG )
+            // Still support the deprecated old style
+            .addOutputField("BYTES",    "response.body.bytesclf",       Casts.STRING_OR_LONG, "BYTESCLF:response.body.bytes")
+        );
+        parsers.add(new TokenParser("%<b", TokenParser.FORMAT_CLF_NUMBER, 0)
+            .addOutputField("BYTESCLF", "response.body.bytes.original", Casts.STRING_OR_LONG )
+        );
+        parsers.add(new TokenParser("%>b", TokenParser.FORMAT_CLF_NUMBER, 0)
+            .addOutputField("BYTESCLF", "response.body.bytes.last",     Casts.STRING_OR_LONG )
+        );
 
         // -------
         // %{Foobar}C The contents of cookie Foobar in the request sent to the server.
@@ -491,10 +498,18 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
         // -------
         // %D The time taken to serve the request, in microseconds.
-        parsers.addAll(createFirstAndLastTokenParsers("%D",
-            "response.server.processing.time", "MICROSECONDS",
-            Casts.STRING_OR_LONG, TokenParser.FORMAT_NUMBER));
-//        TODO: UNDO: %D changed from "server.process.time" to "response.server.processing.time"
+        parsers.add(new TokenParser("%D", TokenParser.FORMAT_NUMBER, 0)
+            .addOutputField("MICROSECONDS", "response.server.processing.time",          Casts.STRING_OR_LONG )
+            .addOutputField("MICROSECONDS", "response.server.processing.time.original", Casts.STRING_OR_LONG )
+
+            .addOutputField("MICROSECONDS", "server.process.time", Casts.STRING_OR_LONG, "MICROSECONDS:response.server.processing.time")
+        );
+        parsers.add(new TokenParser("%<D", TokenParser.FORMAT_NUMBER, 0)
+            .addOutputField("MICROSECONDS", "response.server.processing.time.original", Casts.STRING_OR_LONG )
+        );
+        parsers.add(new TokenParser("%>D", TokenParser.FORMAT_NUMBER, 0)
+            .addOutputField("MICROSECONDS", "response.server.processing.time.last",     Casts.STRING_OR_LONG )
+        );
 
         // -------
         // %{UNIT}T The time taken to serve the request, in a time unit given by UNIT.
