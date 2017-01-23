@@ -2,7 +2,7 @@ Apache HTTPD & NGINX access log parser
 ======================================
 [![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-This is a Logparsing framework intended to make parsing Apache HTTPD and NGINX access log files much easier.
+This is a Logparsing framework intended to make parsing [Apache HTTPD](https://httpd.apache.org/) and [NGINX](https://nginx.org/) access log files much easier.
 
 The basic idea is that you should be able to have a parser that you can construct by simply
 telling it with what configuration options the line was written.
@@ -18,7 +18,9 @@ In addition to the config options specified in the Apache HTTPD manual under
 * referer
 * agent
 
-**Special notes about %{format}t**
+For Nginx the log_format tokens are specified [here](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) and [here](http://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
+
+**Special notes about the Apache HTTPD token %{format}t**
 ===
 
 Quote from [Apache HTTPD manual](http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats)
@@ -30,6 +32,7 @@ It cannot be extracted. A simple workaround for this limitation: replace the **%
 You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
 * **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
 * **Version 3.0 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
+This means that many fields are supported, but not all. Check the implementation in the [StrfTimeStampDissector](/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeStampDissector.java#L140) class to see which are and are not supported.
 
 **Limitation**: Only a single %{format}t entry is supported per line.
 Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
@@ -44,7 +47,7 @@ In this case where all %{format}t fields are only separated by fixed text you ca
     "%{%d/%b/%Y %T}t.%{msec_frac}t %{%z}t"
     "%{%d/%b/%Y %T.msec_frac %z}t"
 
-The msec_frac has been added to this parser so the above now works as expected.
+Although the latter is NOT supported by Apache HTTPD this IS supported by this logparser so the above works as expected.
 
 
 Analyze almost anything
