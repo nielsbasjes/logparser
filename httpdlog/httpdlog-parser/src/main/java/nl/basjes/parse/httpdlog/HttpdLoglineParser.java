@@ -53,6 +53,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     public static void logVersion(){
         String[] lines = {
+            "Apache HTTPD & NGINX Access log parsing made easy",
             "For more information: https://github.com/nielsbasjes/logparser",
             "Copyright (C) 2011-2017 Niels Basjes - License Apache 2.0"
         };
@@ -88,7 +89,8 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
     // --------------------------------------------
 
     public static String getVersion() {
-        return "HTTPD access log parser " + getProjectVersion() + " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
+        return "LogParser " + getProjectVersion() +
+            " (" + getGitCommitIdDescribeShort() + " @ " + getBuildTimestamp() + ")";
     }
 
     public HttpdLoglineParser(
