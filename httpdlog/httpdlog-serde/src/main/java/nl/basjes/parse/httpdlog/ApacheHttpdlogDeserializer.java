@@ -74,7 +74,7 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
  *      )
  * ROW FORMAT SERDE 'nl.basjes.parse.apachehttpdlog.ApacheHttpdlogDeserializer'
  * WITH SERDEPROPERTIES (
- *       "logformat"       = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" %T %V"
+ *       "logformat"       = "%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" %T %V"
  *      ,"map:request.firstline.uri.query.g" = "HTTP.URI"
  *      ,"map:request.firstline.uri.query.r" = "HTTP.URI"
  *
