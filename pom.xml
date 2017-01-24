@@ -288,6 +288,7 @@
             <!-- File generated during build -->
             <exclude>**/target/**</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
+            <exclude>docker/_m2/**</exclude>
           </excludes>
         </configuration>
       </plugin>
