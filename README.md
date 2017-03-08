@@ -1,6 +1,6 @@
 Apache HTTPD & NGINX access log parser
 ======================================
-[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![If this project has business value for you then don't hesitate to support me with a small donation.](Donations.svg)](https://www.paypal.me/nielsbasjes)
 
 This is a Logparsing framework intended to make parsing [Apache HTTPD](https://httpd.apache.org/) and [NGINX](https://nginx.org/) access log files much easier.
 
@@ -175,6 +175,12 @@ To workaround these problems you can easily start the parser with a two line log
 
 This *ENABLE JETTY FIX* is a 'magic' value that causes the underlying parser to enable the workaround for both of these problems.
 In order for this to work correctly the useragent field must look exactly like this: *"%{User-Agent}i"*
+
+Donations
+===
+If this project has business value for you then don't hesitate to support me with a small donation.
+
+[![Donations via PayPal](Donations.svg)](https://www.paypal.me/nielsbasjes)
 
 License
 ===
