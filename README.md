@@ -1,6 +1,6 @@
 Apache HTTPD & NGINX access log parser
 ======================================
-[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![If this project has business value for you then don't hesitate to support me with a small donation.](Donations.png)](https://www.paypal.me/nielsbasjes)
+[![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser) [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![If this project has business value for you then don't hesitate to support me with a small donation.](https://img.shields.io/badge/Donations-via%20Paypal-blue.svg)](https://www.paypal.me/nielsbasjes)
 
 This is a Logparsing framework intended to make parsing [Apache HTTPD](https://httpd.apache.org/) and [NGINX](https://nginx.org/) access log files much easier.
 
@@ -180,7 +180,7 @@ Donations
 ===
 If this project has business value for you then don't hesitate to support me with a small donation.
 
-[![Donations via PayPal](Donations.png)](https://www.paypal.me/nielsbasjes)
+[![Donations via PayPal](https://img.shields.io/badge/Donations-via%20Paypal-blue.svg)](https://www.paypal.me/nielsbasjes)
 
 License
 ===
