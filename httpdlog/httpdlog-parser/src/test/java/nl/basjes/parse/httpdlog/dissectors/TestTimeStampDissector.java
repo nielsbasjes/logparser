@@ -356,4 +356,16 @@ public class TestTimeStampDissector {
             .checkExpectations();
     }
 
+    @Test
+    public void testReportedSpecialTime() throws Exception {
+        String logline = "28/feb/2017:03:39:40 +0800";
+        String logformat = "%{%d/%b/%Y:%H:%M:%S %z}t";
+
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1488224380000")
+            .checkExpectations();
+    }
+
 }
