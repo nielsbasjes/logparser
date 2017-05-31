@@ -23,12 +23,14 @@ import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HttpUriDissector extends Dissector {
@@ -132,6 +134,10 @@ public class HttpUriDissector extends Dissector {
 
     // Match % encoded chars that are NOT followed by hex chars (may be at the end of the string)
     private static final Pattern BAD_EXCAPE_PATTERN = Pattern.compile("%([^0-9a-fA-F]|[0-9a-fA-F][^0-9a-fA-F]|.$|$)");
+    private static final Pattern EQUALS_HASH_PATTERN = Pattern.compile("=#");
+    private static final Pattern HASH_AMP_PATTERN = Pattern.compile("#&");
+    private static final Pattern DOUBLE_HASH_PATTERN = Pattern.compile("#(.*)#");
+    private static final Pattern ALMOST_HTML_ENCODED = Pattern.compile("([^&])(#x[0-9a-fA-F][0-9a-fA-F];)");
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
@@ -172,6 +178,25 @@ public class HttpUriDissector extends Dissector {
         // So any % that is not followed by a two 'hex' letters is fixed
         uriString = BAD_EXCAPE_PATTERN.matcher(uriString).replaceAll("%25$1");
         uriString = BAD_EXCAPE_PATTERN.matcher(uriString).replaceAll("%25$1");
+
+        // We have URIs with fragments like this:
+        //    /path/?_requestid=1234#x3D;12341234&Referrer&#x3D;blablabla
+        // So first we repair the broken encoded char
+        uriString = ALMOST_HTML_ENCODED.matcher(uriString).replaceAll("$1&$2");
+        uriString = StringEscapeUtils.unescapeHtml4(uriString);
+        // And we see URIs with this:
+        //    /path/?Referrer=ADV1234#&f=API&subid=#&name=12341234
+        uriString = EQUALS_HASH_PATTERN.matcher(uriString).replaceAll("=");
+        uriString = HASH_AMP_PATTERN.matcher(uriString).replaceAll("&");
+
+        // If we still have multiple '#' in here we replace them with something else: '~'
+        while (true) {
+            Matcher doubleHashMatcher = DOUBLE_HASH_PATTERN.matcher(uriString);
+            if (!doubleHashMatcher.find()) {
+                break;
+            }
+            uriString = doubleHashMatcher.replaceAll("~$1#");
+        }
 
         boolean isUrl = true;
         URI uri;

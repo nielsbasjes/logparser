@@ -197,4 +197,18 @@ public class TestHttpUriDissector {
             .checkExpectations();
     }
 
+    @Test
+    public void testDoubleHashes() throws Exception {
+        DissectorTester.create()
+            .withDissector(new HttpUriDissector())
+
+            .withInput("https://www.basjes.nl/#foo#bar#bazz#bla#bla#")
+            .withInput("https://www.basjes.nl/path/?s2a=&Referrer=ADV1234#product_title&f=API&subid=?s2a=#product_title&name=12341234")
+            .withInput("https://www.basjes.nl/path/?Referrer=ADV1234#&f=API&subid=#&name=12341234")
+            .withInput("https://www.basjes.nl/path?sort&#x3D;price&filter&#x3D;new&sortOrder&#x3D;asc")
+            .withInput("https://www.basjes.nl/login.html?redirectUrl=https%3A%2F%2Fwww.basjes.nl%2Faccount%2Findex.html&_requestid=1234#x3D;12341234&Referrer&#x3D;ENTblablabla")
+            .expect("HTTP.HOST:host", "www.basjes.nl")
+            .checkExpectations();
+    }
+
 }

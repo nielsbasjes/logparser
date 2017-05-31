@@ -34,11 +34,11 @@
     <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
 
     <hadoop.version>2.7.2</hadoop.version>
-    <hive.version>2.1.0</hive.version>
+    <hive.version>2.1.1</hive.version>
     <pig.version>0.16.0</pig.version>
 
     <!-- Used for testing the plugin loading -->
-    <yauaa.version>1.0</yauaa.version>
+    <yauaa.version>1.3</yauaa.version>
 
     <rat.version>0.9</rat.version>
 
