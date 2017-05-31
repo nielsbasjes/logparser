@@ -17,16 +17,13 @@
 package nl.basjes.parse.core.test;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A dummy dissector to ensure retrieving all types works in the various wrappers

@@ -17,8 +17,6 @@
 package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
 import nl.basjes.parse.core.Casts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.regex.Matcher;
@@ -29,7 +27,6 @@ import java.util.regex.Pattern;
  */
 public class NamedTokenParser extends TokenParser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NamedTokenParser.class);
     private final Pattern pattern;
 
     // --------------------------------------------

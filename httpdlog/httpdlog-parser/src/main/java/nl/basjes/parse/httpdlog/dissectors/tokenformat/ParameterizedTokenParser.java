@@ -19,8 +19,6 @@ package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,7 +34,6 @@ import java.util.regex.Pattern;
  */
 public class ParameterizedTokenParser extends TokenParser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParameterizedTokenParser.class);
     private final Pattern pattern;
 
     // --------------------------------------------
