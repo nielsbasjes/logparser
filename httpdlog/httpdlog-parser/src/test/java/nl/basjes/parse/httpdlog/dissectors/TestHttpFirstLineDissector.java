@@ -48,6 +48,16 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
+    public void testInvalidFirstLine() throws Exception {
+        DissectorTester.create()
+            .withDissector(new HttpFirstLineDissector())
+            .withInput("\\x16\\x03\\x01")
+            .expectAbsentString("HTTP.METHOD:method")
+            .expectAbsentString("HTTP.URI:uri")
+            .checkExpectations();
+    }
+
+    @Test
     public void testStrangeCommandVersionControl() throws Exception {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())

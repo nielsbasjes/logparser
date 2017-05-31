@@ -1,5 +1,10 @@
 This is intended as an overview of the major changes
 
+v3.1
+===
+- Handle illegal data: Double # in the URL
+- Handle illegal data: Firstline is rubbish (Reported by Yong Zhang - java8964).
+
 v3.0
 ===
 - Accept the NGinx logformat.
