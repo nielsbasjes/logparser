@@ -144,7 +144,7 @@
     </profile>
 
     <profile>
-      <id>ReportCoverage</id>
+      <id>EnableReportPlugins</id>
       <build>
         <plugins>
           <plugin>
