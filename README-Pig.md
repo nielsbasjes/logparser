@@ -7,9 +7,9 @@ The framework needs two things:
 
 Usage (Pig)
 ===
-You simply register the httpdlog-pigloader-3.0-udf.jar
+You simply register the httpdlog-pigloader-*-udf.jar
 
-    REGISTER httpdlog-pigloader-*.jar
+    REGISTER httpdlog-pigloader-*-udf.jar
 
 **Step 1: What CAN we get from this line?**
 
