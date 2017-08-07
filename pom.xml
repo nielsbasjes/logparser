@@ -32,6 +32,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+    <checkstyle.version>8.1</checkstyle.version>
 
     <hadoop.version>2.7.2</hadoop.version>
     <hive.version>2.1.1</hive.version>
@@ -174,6 +175,11 @@
               <groupId>nl.basjes.parse.devtools</groupId>
               <artifactId>devtools</artifactId>
               <version>${project.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
             </dependency>
           </dependencies>
           <configuration>

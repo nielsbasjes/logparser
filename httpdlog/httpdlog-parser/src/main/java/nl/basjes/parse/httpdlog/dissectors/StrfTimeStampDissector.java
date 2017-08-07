@@ -233,7 +233,7 @@ public class StrfTimeStampDissector extends Dissector {
         return resultSet;
     }
 
-    private List<String> mapStrftimeToJodatime(List<String> dateTimeFormats, String strftimeField, String ... jodaFields)
+    private List<String> mapStrftimeToJodatime(List<String> dateTimeFormats, String strftimeField, String... jodaFields)
         throws InvalidDissectorException {
         List<String> result = new ArrayList<>(dateTimeFormats.size());
         for (String dateTimeFormat: dateTimeFormats) {
