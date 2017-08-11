@@ -468,6 +468,22 @@ public class ApacheHttpdLogParserTest {
         parser.parse(new EmptyTestRecord(), line_408);
     }
 
+    @Test(expected = MissingDissectorsException.class)
+    public void testFailOnMissingDissectors() throws Exception {
+        String line = "[09/Aug/2016:22:57:59 +0200]";
+
+        String[] params = {
+            "STRING:request.firstline.uri.query.foo",
+        };
+
+        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t");
+        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
+
+        parser.failOnMissingDissectors();
+
+        parser.parse(new EmptyTestRecord(), line);
+    }
+
     @Test
     public void testIgnoreMissingDissectors() throws Exception {
         String line = "[09/Aug/2016:22:57:59 +0200]";
