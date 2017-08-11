@@ -28,6 +28,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -128,9 +129,7 @@ public class Parser<RECORD> {
     public final void addDissectors(final List<Dissector> dissectors) {
         assembled = false;
         if (dissectors != null) {
-            for (Dissector dissector : dissectors) {
-                allDissectors.add(dissector);
-            }
+            allDissectors.addAll(dissectors);
         }
     }
 
@@ -450,7 +449,7 @@ public class Parser<RECORD> {
     /*
      * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final String fieldValue) {
-        addParseTarget(method, Arrays.asList(new String[]{fieldValue}));
+        addParseTarget(method, Collections.singletonList(fieldValue));
     }
 
     /*
