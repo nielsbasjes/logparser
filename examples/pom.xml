@@ -28,7 +28,7 @@
   <groupId>nl.basjes.parse.httpdlog.examples</groupId>
   <artifactId>httpdlog-examples</artifactId>
   <packaging>pom</packaging>
-  <name>Parser - Apache HTTPD - Examples (group)</name>
+  <name>Parser - Examples -</name>
 
   <build>
     <plugins>

@@ -28,7 +28,7 @@
   <groupId>nl.basjes.parse.utils</groupId>
   <artifactId>parse-utils</artifactId>
   <packaging>pom</packaging>
-  <name>Parser - Utils (group)</name>
+  <name>Parser - Utils -</name>
 
   <build>
     <plugins>

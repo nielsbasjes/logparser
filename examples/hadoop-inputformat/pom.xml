@@ -23,7 +23,7 @@
     <version>3.2-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-inputformat-testclient</artifactId>
-  <name>Parser - Apache HTTPD - Examples - Hadoop</name>
+  <name>Parser - Examples - Hadoop</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

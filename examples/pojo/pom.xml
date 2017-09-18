@@ -25,7 +25,7 @@
     <version>3.2-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-testclient</artifactId>
-  <name>Parser - Apache HTTPD - Examples - Java</name>
+  <name>Parser - Examples - Java</name>
 
   <dependencies>
     <dependency>

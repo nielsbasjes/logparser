@@ -23,7 +23,7 @@
   <artifactId>parser-parent</artifactId>
   <version>3.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Parser (group)</name>
+  <name>Parser -</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
   <url>https://github.com/nielsbasjes/logparser</url>
 

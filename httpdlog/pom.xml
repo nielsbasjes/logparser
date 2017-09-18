@@ -28,7 +28,7 @@
   <groupId>nl.basjes.parse.httpdlog</groupId>
   <artifactId>httpdlog</artifactId>
   <packaging>pom</packaging>
-  <name>Parser - Apache HTTPD (group)</name>
+  <name>Parser - Apache HTTPD -</name>
 
   <modules>
     <module>httpdlog-parser</module>

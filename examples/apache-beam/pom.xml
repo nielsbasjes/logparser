@@ -26,8 +26,8 @@
     <version>3.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>logparser-apache-beam</artifactId>
-  <name>Parser - Apache HTTPD - Examples - Apache Beam DoFn</name>
+  <artifactId>apache-beam</artifactId>
+  <name>Parser - Examples - Apache Beam</name>
 
   <properties>
     <avro.version>1.8.2</avro.version>
