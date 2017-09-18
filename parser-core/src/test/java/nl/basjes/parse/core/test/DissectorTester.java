@@ -95,33 +95,51 @@ public class DissectorTester {
         return this;
     }
 
-    public DissectorTester expect(String fieldname, String expected) {
-        expectedStrings.put(fieldname, expected);
+    private void addStringSetter(String fieldname) {
         try {
             parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return this;
     }
 
-    public DissectorTester expect(String fieldname, Long expected) {
-        expectedLongs.put(fieldname, expected);
+    private void addLongSetter(String fieldname) {
         try {
             parser.addParseTarget(TestRecord.class.getMethod("setLongValue", String.class, Long.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return this;
     }
 
-    public DissectorTester expect(String fieldname, Double expected) {
-        expectedDoubles.put(fieldname, expected);
+    private void addDoubleSetter(String fieldname) {
         try {
             parser.addParseTarget(TestRecord.class.getMethod("setDoubleValue", String.class, Double.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    public DissectorTester expect(String fieldname, String expected) {
+        expectedStrings.put(fieldname, expected);
+        addStringSetter(fieldname);
+        return this;
+    }
+
+    public DissectorTester expect(String fieldname, Long expected) {
+        expectedLongs.put(fieldname, expected);
+        addLongSetter(fieldname);
+        return this;
+    }
+
+    public DissectorTester expect(String fieldname, Double expected) {
+        expectedDoubles.put(fieldname, expected);
+        addDoubleSetter(fieldname);
+        return this;
+    }
+
+    public DissectorTester expectNull(String fieldname) {
+        expectedStrings.put(fieldname, null);
+        addStringSetter(fieldname);
         return this;
     }
 
@@ -137,16 +155,19 @@ public class DissectorTester {
 
     public DissectorTester expectAbsentString(String fieldname) {
         expectedAbsentStrings.add(fieldname);
+        addStringSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectAbsentLong(String fieldname) {
         expectedAbsentLongs.add(fieldname);
+        addLongSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectAbsentDouble(String fieldname) {
         expectedAbsentDoubles.add(fieldname);
+        addDoubleSetter(fieldname);
         return this;
     }
 

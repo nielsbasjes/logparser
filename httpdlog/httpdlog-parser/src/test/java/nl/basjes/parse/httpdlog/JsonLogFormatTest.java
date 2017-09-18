@@ -54,25 +54,25 @@ public class JsonLogFormatTest {
             tester.withInput(logline);
         }
 
-        tester.expectValuePresent("TIME.LOCALIZEDSTRING:request.receive.time");
-        tester.expectValuePresent("STRING:connection.server.name");
-        tester.expectValuePresent("NUMBER:connection.client.logname");
-        tester.expectValuePresent("STRING:connection.client.user");
-        tester.expectValuePresent("HTTP.HEADER:request.header.x-forwarded-for");
-        tester.expectValuePresent("HTTP.URI:request.referer");
-        tester.expectValuePresent("HTTP.USERAGENT:request.user-agent");
-        tester.expectValuePresent("HTTP.HEADER:request.header.host");
-        tester.expectValuePresent("HTTP.FIRSTLINE:request.firstline");
-        tester.expectValuePresent("HTTP.METHOD:request.firstline.method");
-        tester.expectValuePresent("HTTP.URI:request.firstline.uri");
-        tester.expectValuePresent("HTTP.PROTOCOL:request.firstline.protocol");
-        tester.expectValuePresent("HTTP.PROTOCOL.VERSION:request.firstline.protocol.version");
-        tester.expectValuePresent("STRING:request.status.last");
-        tester.expectValuePresent("BYTES:response.body.bytes");
-        tester.expectValuePresent("MICROSECONDS:response.server.processing.time");
-        tester.expectValuePresent("HTTP.QUERYSTRING:request.firstline.uri.query");
-        tester.expectValuePresent("HTTP.PATH:request.firstline.uri.path");
-        tester.expectValuePresent("HTTP.REF:request.firstline.uri.ref");
+        tester.expectValuePresent("TIME.LOCALIZEDSTRING:request.receive.time")
+              .expectValuePresent("STRING:connection.server.name")
+              .expectValuePresent("NUMBER:connection.client.logname")
+              .expectValuePresent("STRING:connection.client.user")
+              .expectValuePresent("HTTP.HEADER:request.header.x-forwarded-for")
+              .expectValuePresent("HTTP.URI:request.referer")
+              .expectValuePresent("HTTP.USERAGENT:request.user-agent")
+              .expectValuePresent("HTTP.HEADER:request.header.host")
+              .expectValuePresent("HTTP.FIRSTLINE:request.firstline")
+              .expectValuePresent("HTTP.METHOD:request.firstline.method")
+              .expectValuePresent("HTTP.URI:request.firstline.uri")
+              .expectValuePresent("HTTP.PROTOCOL:request.firstline.protocol")
+              .expectValuePresent("HTTP.PROTOCOL.VERSION:request.firstline.protocol.version")
+              .expectValuePresent("STRING:request.status.last")
+              .expectValuePresent("BYTES:response.body.bytes")
+              .expectValuePresent("MICROSECONDS:response.server.processing.time")
+              .expectValuePresent("HTTP.QUERYSTRING:request.firstline.uri.query")
+              .expectValuePresent("HTTP.PATH:request.firstline.uri.path")
+              .expectValuePresent("HTTP.REF:request.firstline.uri.ref");
 
         for (String path: parser.getPossiblePaths()){
             tester.expectPossible(path);

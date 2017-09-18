@@ -474,6 +474,7 @@ public class ApacheHttpdLogParserTest {
 
         String[] params = {
             "STRING:request.firstline.uri.query.foo",
+            "TIME.EPOCH:request.receive.time.epoch",
         };
 
         Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t");
@@ -490,6 +491,7 @@ public class ApacheHttpdLogParserTest {
 
         String[] params = {
             "STRING:request.firstline.uri.query.foo",
+            "TIME.EPOCH:request.receive.time.epoch",
         };
 
         Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t");

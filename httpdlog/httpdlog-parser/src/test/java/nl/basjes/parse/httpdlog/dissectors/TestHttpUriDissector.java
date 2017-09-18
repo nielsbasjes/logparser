@@ -30,12 +30,12 @@ public class TestHttpUriDissector {
             .withInput("http://www.example.com/some/thing/else/index.html?foofoo=bar%20bar")
 
             .expect("HTTP.PROTOCOL:protocol",    "http")
-            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectNull("HTTP.USERINFO:userinfo")
             .expect("HTTP.HOST:host",            "www.example.com")
             .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&foofoo=bar%20bar")
-            .expectAbsentString("HTTP.REF:ref")
+            .expectNull("HTTP.REF:ref")
             .checkExpectations();
     }
 
@@ -47,12 +47,12 @@ public class TestHttpUriDissector {
             .withInput("http://www.example.com/some/thing/else/index.html&aap=noot?foofoo=barbar&")
 
             .expect("HTTP.PROTOCOL:protocol",    "http")
-            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectNull("HTTP.USERINFO:userinfo")
             .expect("HTTP.HOST:host",            "www.example.com")
             .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&aap=noot&foofoo=barbar&")
-            .expectAbsentString("HTTP.REF:ref")
+            .expectNull("HTTP.REF:ref")
             .checkExpectations();
     }
 
@@ -64,7 +64,7 @@ public class TestHttpUriDissector {
             .withInput("http://www.example.com:8080/some/thing/else/index.html&aap=noot?foofoo=barbar&#blabla")
 
             .expect("HTTP.PROTOCOL:protocol",    "http")
-            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectNull("HTTP.USERINFO:userinfo")
             .expect("HTTP.HOST:host",            "www.example.com")
             .expect("HTTP.PORT:port",            "8080")
             .expect("HTTP.PATH:path",            "/some/thing/else/index.html")
@@ -115,12 +115,12 @@ public class TestHttpUriDissector {
             .withInput("android-app://com.google.android.googlequicksearchbox")
 
             .expect("HTTP.PROTOCOL:protocol",    "android-app")
-            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectNull("HTTP.USERINFO:userinfo")
             .expect("HTTP.HOST:host",            "com.google.android.googlequicksearchbox")
             .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "")
             .expect("HTTP.QUERYSTRING:query",    "")
-            .expectAbsentString("HTTP.REF:ref")
+            .expectNull("HTTP.REF:ref")
             .checkExpectations();
     }
 
@@ -132,12 +132,12 @@ public class TestHttpUriDissector {
             .withInput("android-app://com.google.android.googlequicksearchbox/https/www.google.com")
 
             .expect("HTTP.PROTOCOL:protocol",    "android-app")
-            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectNull("HTTP.USERINFO:userinfo")
             .expect("HTTP.HOST:host",            "com.google.android.googlequicksearchbox")
             .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "/https/www.google.com")
             .expect("HTTP.QUERYSTRING:query",    "")
-            .expectAbsentString("HTTP.REF:ref")
+            .expectNull("HTTP.REF:ref")
             .checkExpectations();
     }
 
@@ -193,7 +193,7 @@ public class TestHttpUriDissector {
             .expect("HTTP.PATH:path",            "/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&Linkid=%25%25%3dv(%40Foo)%3d%25%25%25&emcid=B%25ar")
             .expect("STRING:query.linkid",       "%%=v(@Foo)=%%%")
-            .expectAbsentString("HTTP.REF:ref")
+            .expectNull("HTTP.REF:ref")
             .checkExpectations();
     }
 
