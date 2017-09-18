@@ -268,6 +268,20 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>${rat.version}</version>
         <inherited>false</inherited>
+        <!-- https://issues.apache.org/jira/browse/RAT-158 -->
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-core</artifactId>
+            <version>1.6</version>
+            <exclusions>
+              <exclusion>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <phase>test</phase>
