@@ -49,7 +49,7 @@
       <property name="checkFormat" value="$1"/>
     </module>
 
-    <module name="FileContentsHolder"/>
+    <!--<module name="FileContentsHolder"/>-->
 
     <!-- Checks for Javadoc comments. -->
     <!-- See http://checkstyle.sf.net/config_javadoc.html -->
