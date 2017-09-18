@@ -91,10 +91,14 @@ Building
 Simply type : mvn package
 and the whole thing should build.
 
-Java, Hadoop, PIG & Hive
+Java, Apache {Hadoop, PIG, Hive, Flink, Beam}
 ===
 I'm a big user of bigdata tools like Apache Pig, Hadoop, Hive, etc. .
 So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
+
+For tools like Apache Flink and Apache Beam there is example code that is also used to verify that the build still works on those systems.
+* [Apache Flink](examples/apache-flink/src/test/java/nl/basjes/parse/httpdlog/flink)
+* [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
 
 Usage (Overview)
 ===
@@ -122,7 +126,7 @@ The 'type' is really a 'what is the format of this string' indicator. Because th
 The 'name' is the "breadbrumb" towards the point in the tree where this is located.
 
 A 'Dissector' is a class that can cut a specific type (format) into a bunch of new parts that each extend the base name and have their own type.
-Because internal parser is constructed at the start of running a parser this tree has some dynamic properties.
+Because an internal parser is constructed at the start of running a parser this tree has some dynamic properties.
 To start only the tree is constructed for the elements actually requested. This is done to avoid 'dissecting' something that is not wanted.
 So the parser will have a different structure depending on the requested output.
 
