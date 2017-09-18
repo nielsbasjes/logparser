@@ -62,6 +62,7 @@
     <module>pojo</module>
     <module>pig</module>
     <module>hadoop-inputformat</module>
+    <module>apache-beam</module>
   </modules>
 
 </project>
