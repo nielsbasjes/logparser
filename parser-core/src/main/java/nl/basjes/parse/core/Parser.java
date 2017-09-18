@@ -42,7 +42,7 @@ import java.util.TreeMap;
 
 public class Parser<RECORD> implements Serializable {
 
-    private static class DissectorPhase {
+    private static class DissectorPhase implements Serializable {
         DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
             this.inputType  = inputType;
             this.outputType = outputType;

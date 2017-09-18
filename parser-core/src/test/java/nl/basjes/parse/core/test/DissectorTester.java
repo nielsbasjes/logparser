@@ -24,9 +24,11 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -42,11 +44,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class DissectorTester {
+public class DissectorTester implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DissectorTester.class);
 
-    boolean verbose = false;
+    private boolean verbose = false;
     private List<String> inputValues = new ArrayList<>();
     private Map<String, String> expectedStrings = new TreeMap<>();
     private Map<String, Long> expectedLongs = new TreeMap<>();
@@ -182,6 +184,11 @@ public class DissectorTester {
     }
 
     public DissectorTester checkExpectations() {
+        DissectorTester tester = SerializationUtils.clone(this);
+        return tester.checkExpectationsDirect();
+    }
+
+    private DissectorTester checkExpectationsDirect() {
         if (expectedStrings.isEmpty() &&
             expectedLongs.isEmpty() &&
             expectedDoubles.isEmpty() &&
