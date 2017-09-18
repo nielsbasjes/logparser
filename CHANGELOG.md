@@ -3,6 +3,8 @@ This is intended as an overview of the major changes
 v3.2
 ===
 - Parser instance is now serializable.
+- Added example on using with Apache Flink
+- Added example on using with Apache Beam
 
 v3.1
 ===
