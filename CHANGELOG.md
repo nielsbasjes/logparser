@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v3.2
+===
+- Parser instance is now serializable.
+
 v3.1
 ===
 - Handle illegal data: Double # in the URL

@@ -39,8 +39,8 @@ public class TimeStampDissector extends Dissector {
 
     // --------------------------------------------
 
-    private DateTimeFormatter formatter;
-    private DateTimeFormatter asParsedFormatter;
+    private transient DateTimeFormatter formatter;
+    private transient DateTimeFormatter asParsedFormatter;
     private String dateTimePattern;
 
     @SuppressWarnings("UnusedDeclaration")

@@ -24,6 +24,7 @@ import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,10 +36,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class Parser<RECORD> {
+public class Parser<RECORD> implements Serializable {
 
     private static class DissectorPhase {
         DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
@@ -69,11 +71,17 @@ public class Parser<RECORD> {
     private Set<String> usefulIntermediateFields = null;
     private String rootType;
 
+    // NOTE: The Method is NOT serializable. So after deserialization the 'assembled' is false
+    //       and we 're-find' all methods using their names and parameter lists.
+
     // The target methods in the record class that will want to receive the values
-    private final Map<String, Set<Method>> targets = new TreeMap<>();
+    private transient Map<String, Set<Method>> targets = new TreeMap<>();
+    // Each method is a list of String: method name followed by the class names of each parameter.
+    private final Map<String, Set<List<String>>> targetsMethodNames = new TreeMap<>();
+    private transient boolean assembled = false;
+
     private final Map<String, EnumSet<Casts>> castsOfTargets = new TreeMap<>();
 
-    private boolean assembled = false;
 
     // --------------------------------------------
 
@@ -218,6 +226,45 @@ public class Parser<RECORD> {
             return; // nothing to do.
         }
 
+        if (targets == null) {
+            // This happens only AFTER deserialization.
+            targets = new HashMap<>(targetsMethodNames.size());
+
+            for (Entry<String, Set<List<String>>> entry:targetsMethodNames.entrySet()) {
+
+                String fieldName = entry.getKey();
+                Set<List<String>> methodSet = entry.getValue();
+
+                Set<Method> fieldTargets = targets.get(fieldName);
+                if (fieldTargets == null) {
+                    fieldTargets = new HashSet<>();
+                    targets.put(fieldName, fieldTargets);
+                }
+
+                for(List<String> methodString: methodSet) {
+                    Method method;
+                    String methodName = methodString.get(0);
+                    int numberOfParameters = methodString.size()-1;
+                    Class<?>[] parameters = new Class[numberOfParameters];
+                    try {
+                        parameters[0] = Class.forName(methodString.get(1));
+                        if (numberOfParameters == 2) {
+                            parameters[1] = Class.forName(methodString.get(2));
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace(); // FIXME
+                    }
+                    try {
+                        method = recordClass.getMethod(methodName, parameters);
+                        fieldTargets.add(method);
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace(); // FIXME
+                    }
+                }
+                targets.put(fieldName, fieldTargets);
+            }
+        }
+
         // In some cases a dissector may need to create a special 'extra' dissector.
         // Which in some cases this is a recursive problem
         Set<Dissector> doneDissectors = new HashSet<>(allDissectors.size() + 10);
@@ -277,6 +324,10 @@ public class Parser<RECORD> {
             for (DissectorPhase dissectorPhase : dissectorPhases) {
                 dissectorPhase.instance.prepareForRun();
             }
+        }
+
+        if (compiledDissectors == null || compiledDissectors.isEmpty()) {
+            throw new MissingDissectorsException("There are no dissectors at all which makes this a completely useless parser.");
         }
 
         if (failOnMissingDissectors) {
@@ -448,6 +499,43 @@ public class Parser<RECORD> {
 
     /*
      * When there is a need to add a target callback manually use this method. */
+    public void addParseTarget(final String setterMethodName, final String fieldValue) throws NoSuchMethodException {
+        Method method;
+
+        try {
+            method = recordClass.getMethod(setterMethodName, String.class);
+        } catch (NoSuchMethodException a) {
+            try {
+                method = recordClass.getMethod(setterMethodName, String.class, String.class);
+            } catch (NoSuchMethodException b) {
+                try {
+                    method = recordClass.getMethod(setterMethodName, String.class, Long.class);
+                } catch (NoSuchMethodException c) {
+                    try {
+                        method = recordClass.getMethod(setterMethodName, String.class, Double.class);
+                    } catch (NoSuchMethodException d) {
+                        try {
+                            method = recordClass.getMethod(setterMethodName, Long.class);
+                        } catch (NoSuchMethodException e) {
+                            try {
+                                method = recordClass.getMethod(setterMethodName, Double.class);
+                            } catch (NoSuchMethodException f) {
+                                throw new NoSuchMethodException(
+                                    "Unable to find any valid form of the method " + setterMethodName +
+                                        " in the class " + recordClass.getCanonicalName());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        addParseTarget(method, Collections.singletonList(fieldValue));
+    }
+
+
+    /*
+     * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final String fieldValue) {
         addParseTarget(method, Collections.singletonList(fieldValue));
     }
@@ -485,9 +573,23 @@ public class Parser<RECORD> {
                 Set<Method> fieldTargets = targets.get(cleanedFieldValue);
                 if (fieldTargets == null) {
                     fieldTargets = new HashSet<>();
+                    targets.put(cleanedFieldValue, fieldTargets);
                 }
                 fieldTargets.add(method);
                 targets.put(cleanedFieldValue, fieldTargets);
+
+                // We have 1 real target
+                Set<List<String>> fieldTargetNames = targetsMethodNames.get(cleanedFieldValue);
+                if (fieldTargetNames == null) {
+                    fieldTargetNames = new HashSet<>();
+                }
+                List<String> methodList = new ArrayList<>();
+                methodList.add(method.getName());
+                for (Class<?> clazz: method.getParameterTypes()) {
+                    methodList.add(clazz.getCanonicalName());
+                }
+                fieldTargetNames.add(methodList);
+                targetsMethodNames.put(cleanedFieldValue, fieldTargetNames);
             }
         } else {
             throw new InvalidFieldMethodSignature(method);
@@ -507,7 +609,7 @@ public class Parser<RECORD> {
     }
 
     public void addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
-        for (Map.Entry<String, Set<String>> entry: additionalTypeRemappings.entrySet()){
+        for (Entry<String, Set<String>> entry: additionalTypeRemappings.entrySet()){
             String input = entry.getKey();
             for (String newType: entry.getValue()) {
                 addTypeRemapping(input, newType, Casts.STRING_ONLY);
@@ -789,7 +891,7 @@ public class Parser<RECORD> {
 
         findAdditionalPossiblePaths(pathNodes, paths, "", rootType, maxDepth, "");
 
-        for (Map.Entry<String, Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
+        for (Entry<String, Set<String>> typeRemappingSet: typeRemappings.entrySet()) {
             for (String typeRemapping: typeRemappingSet.getValue()) {
 
                 String remappedPath = typeRemapping + ':' + typeRemappingSet.getKey();

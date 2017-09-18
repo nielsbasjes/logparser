@@ -21,12 +21,13 @@ import nl.basjes.parse.core.Dissector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class Token {
+public class Token implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(Token.class);
 
     private List<TokenOutputField> outputFields = new ArrayList<>();

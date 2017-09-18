@@ -21,6 +21,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.EnumSet;
 import java.util.List;
@@ -58,7 +59,7 @@ import java.util.List;
  * {@link nl.basjes.parse.core.Parsable#addDissection(String, String, String, String)}</li>
  * </ul>
  */
-public abstract class Dissector {
+public abstract class Dissector implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Dissector.class);
 
