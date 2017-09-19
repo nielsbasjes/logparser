@@ -16,7 +16,7 @@
  */
 package nl.basjes.parse.httpdlog.beam.avro;
 
-import nl.basjes.parse.httpdlog.beam.TestUtils;
+import nl.basjes.parse.httpdlog.beam.TestCase;
 import nl.basjes.parse.record.Click;
 
 public class ExpectedClick {
@@ -24,15 +24,15 @@ public class ExpectedClick {
     public static Click create(){
         Click.Builder builder = Click.newBuilder();
 
-        builder.setTimestamp(                        TestUtils.getExpectedRequestReceiveTimeEpoch());
-        builder.getDeviceBuilder().setScreenWidth(   TestUtils.getExpectedScreenWidth());
-        builder.getDeviceBuilder().setScreenHeight(  TestUtils.getExpectedScreenHeight());
-        builder.getDeviceBuilder().setDeviceClass(   TestUtils.getExpectedDevice_class());
-        builder.getDeviceBuilder().setDeviceBrand(   TestUtils.getExpectedDevice_brand());
-        builder.getBrowserBuilder().setAgentClass(   TestUtils.getExpectedAgent_class());
-        builder.getBrowserBuilder().setAgentName(    TestUtils.getExpectedAgent_name());
-        builder.getBrowserBuilder().setAgentVersion( TestUtils.getExpectedAgent_version());
-        builder.getVisitorBuilder().setIp(           TestUtils.getExpectedConnectionClientHost());
+        builder.setTimestamp(                        TestCase.getExpectedRequestReceiveTimeEpoch());
+        builder.getDeviceBuilder().setScreenWidth(   TestCase.getExpectedScreenWidth());
+        builder.getDeviceBuilder().setScreenHeight(  TestCase.getExpectedScreenHeight());
+        builder.getDeviceBuilder().setDeviceClass(   TestCase.getExpectedDevice_class());
+        builder.getDeviceBuilder().setDeviceBrand(   TestCase.getExpectedDevice_brand());
+        builder.getBrowserBuilder().setAgentClass(   TestCase.getExpectedAgent_class());
+        builder.getBrowserBuilder().setAgentName(    TestCase.getExpectedAgent_name());
+        builder.getBrowserBuilder().setAgentVersion( TestCase.getExpectedAgent_version());
+        builder.getVisitorBuilder().setIp(           TestCase.getExpectedConnectionClientHost());
         return builder.build();
     }
 

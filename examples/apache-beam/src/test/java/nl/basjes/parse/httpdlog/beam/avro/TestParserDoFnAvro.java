@@ -23,7 +23,7 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
-import nl.basjes.parse.httpdlog.beam.TestUtils;
+import nl.basjes.parse.httpdlog.beam.TestCase;
 import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
 import nl.basjes.parse.record.Click;
 import nl.basjes.parse.useragent.dissector.UserAgentDissector;
@@ -75,7 +75,7 @@ public class TestParserDoFnAvro implements Serializable {
 
         @Setup
         public void setup() throws NoSuchMethodException {
-            parser = new HttpdLoglineParser<>(ClickSetter.class, TestUtils.getLogFormat());
+            parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat());
 
             parser.addDissector(new ScreenResolutionDissector());
             parser.addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION");
@@ -102,7 +102,7 @@ public class TestParserDoFnAvro implements Serializable {
 
     @Test
     public void testClassDefinitionAvro() throws Exception {
-        List<String> logLines = Collections.singletonList(TestUtils.getInputLine());
+        List<String> logLines = Collections.singletonList(TestCase.getInputLine());
 
         // Apply Create, passing the list and the coder, to create the PCollection.
         PCollection<String> input = pipeline.apply(Create.of(logLines)).setCoder(StringUtf8Coder.of());

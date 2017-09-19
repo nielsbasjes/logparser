@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.beam.TestUtils.*;
+import static nl.basjes.parse.httpdlog.beam.TestCase.*;
 import static org.junit.Assert.assertEquals;
 
 @ToString

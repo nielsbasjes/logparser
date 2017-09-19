@@ -21,7 +21,7 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-import nl.basjes.parse.httpdlog.beam.TestUtils;
+import nl.basjes.parse.httpdlog.beam.TestCase;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
@@ -44,7 +44,7 @@ public class TestParserDoFnInline implements Serializable {
 
     @Test
     public void testInlineDefinition() throws Exception {
-        List<String> logLines = Collections.singletonList(TestUtils.getInputLine());
+        List<String> logLines = Collections.singletonList(TestCase.getInputLine());
 
         // Apply Create, passing the list and the coder, to create the PCollection.
         PCollection<String> input = pipeline.apply(Create.of(logLines)).setCoder(StringUtf8Coder.of());
@@ -56,7 +56,7 @@ public class TestParserDoFnInline implements Serializable {
 
                     @Setup
                     public void setup() throws NoSuchMethodException {
-                        parser = TestUtils.createTestParser();
+                        parser = TestCase.createTestParser();
                     }
 
                     @ProcessElement
