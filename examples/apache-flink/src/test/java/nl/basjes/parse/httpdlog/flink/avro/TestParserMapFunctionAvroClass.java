@@ -21,7 +21,7 @@ import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
-import nl.basjes.parse.httpdlog.flink.TestUtils;
+import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.record.Click;
 import nl.basjes.parse.useragent.dissector.UserAgentDissector;
 import org.apache.commons.lang3.builder.Builder;
@@ -69,7 +69,7 @@ public class TestParserMapFunctionAvroClass implements Serializable {
 
         @Override
         public void open(Configuration parameters) throws NoSuchMethodException {
-            parser = new HttpdLoglineParser<>(ClickSetter.class, TestUtils.getLogFormat());
+            parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat());
 
             parser.addDissector(new ScreenResolutionDissector());
             parser.addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION");
@@ -93,7 +93,7 @@ public class TestParserMapFunctionAvroClass implements Serializable {
         // set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
-        DataSet<String> input = env.fromElements(TestUtils.getInputLine());
+        DataSet<String> input = env.fromElements(TestCase.getInputLine());
 
         DataSet<Click> filledTestRecords = input
             .map(new MyParserMapper())

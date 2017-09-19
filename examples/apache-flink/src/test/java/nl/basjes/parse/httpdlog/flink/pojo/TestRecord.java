@@ -25,20 +25,20 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedAgent_class;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedAgent_name;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedAgent_version;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedBui;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedConnectionClientHost;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedDevice_brand;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedDevice_class;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedGoogleQuery;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedReferrer;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedRequestReceiveTime;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedRequestUseragent;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedScreenHeight;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedScreenResolution;
-import static nl.basjes.parse.httpdlog.flink.TestUtils.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAgent_class;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAgent_name;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAgent_version;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedBui;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedDevice_brand;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedDevice_class;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedGoogleQuery;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedReferrer;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestReceiveTime;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestUseragent;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenHeight;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenResolution;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenWidth;
 import static org.junit.Assert.assertEquals;
 
 @ToString

@@ -18,7 +18,7 @@
 package nl.basjes.parse.httpdlog.flink.pojo;
 
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.httpdlog.flink.TestUtils;
+import nl.basjes.parse.httpdlog.flink.TestCase;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
@@ -37,7 +37,7 @@ public class TestParserMapFunctionInline implements Serializable {
         // set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
-        DataSet<String> input = env.fromElements(TestUtils.getInputLine());
+        DataSet<String> input = env.fromElements(TestCase.getInputLine());
 
         DataSet<TestRecord> filledTestRecords = input
             .map(new RichMapFunction<String, TestRecord>() {
@@ -45,7 +45,7 @@ public class TestParserMapFunctionInline implements Serializable {
 
             @Override
             public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
-                parser = TestUtils.createTestParser();
+                parser = TestCase.createTestParser();
             }
 
             @Override
