@@ -119,23 +119,29 @@ Have a look at the 'examples/pojo' directory for a working example.
 
 You create an instance of the parser
 
-        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
+    Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
 
 And then call the parse method repeatedly for each line.
 There are two ways to do this:
 1) Let the parser create and a new instance of "MyRecord" for each parsed line (think about the GC consequences!!):
 
-        MyRecord record = parser.parse(logline);
+    MyRecord record = parser.parse(logline);
  
 2) Reuse the same instance.
 So you do this only once:
 
-        MyRecord record = new MyRecord(); 
+    MyRecord record = new MyRecord(); 
 
 And then for each logline:
 
-        record.clear(); // Which is up to you to implement to 'reset' the record instance to it's initial/empty state.
-        parser.parse(record, logline);
+    record.clear(); // Which is up to you to implement to 'reset' the record instance to it's initial/empty state.
+    parser.parse(record, logline);
+
+Project Lombok
+===
+In case you like to use project Lombok to generate your getters and setters then using the annotations looks something like this:
+
+    @Getter @Setter(onMethod=@__(@Field("HTTP.COOKIE:request.cookies.foo"))) private String foo = null;
 
 License
 ===
