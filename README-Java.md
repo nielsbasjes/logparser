@@ -143,6 +143,8 @@ In case you like to use project Lombok to generate your getters and setters then
 
     @Getter @Setter(onMethod=@__(@Field("HTTP.COOKIE:request.cookies.foo"))) private String foo = null;
 
+To avoid weird effects please install the "Lombok Plugin" in IntelliJ IDEA to use this.
+
 License
 ===
     Licensed under the Apache License, Version 2.0 (the "License");
