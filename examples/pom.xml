@@ -59,9 +59,9 @@
   </build>
 
   <modules>
-    <module>pojo</module>
-    <module>pig</module>
-    <module>hadoop-inputformat</module>
+    <module>java-pojo</module>
+    <module>apache-pig</module>
+    <module>apache-hadoop-mapreduce</module>
     <module>apache-flink</module>
     <module>apache-beam</module>
     <module>apache-storm</module>

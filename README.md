@@ -96,10 +96,6 @@ Java, Apache {Hadoop, PIG, Hive, Flink, Beam}
 I'm a big user of bigdata tools like Apache Pig, Hadoop, Hive, etc. .
 So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
 
-For tools like Apache Flink and Apache Beam there is example code that is also used to verify that the build still works on those systems.
-* [Apache Flink](examples/apache-flink/src/test/java/nl/basjes/parse/httpdlog/flink)
-* [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
-
 Usage (Overview)
 ===
 The framework needs two things:
@@ -117,6 +113,12 @@ The languages that are supported in this version:
 * [Java](README-Java.md)
 * [Apache Pig](README-Pig.md)
 * [Apache Hive](README-Hive.md)
+
+For tools like Apache Flink, Beam and Storm there is only example code that is also used to verify that the build 
+still works on those systems.
+* [Apache Flink](examples/apache-flink/src/test/java/nl/basjes/parse/httpdlog/flink)
+* [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
+* [Apache Storm](examples/apache-storm/src/test/java/nl/basjes/parse/httpdlog/storm)
 
 Internal structure and type remapping
 ===

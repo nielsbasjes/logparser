@@ -15,62 +15,59 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
     <version>3.2-SNAPSHOT</version>
   </parent>
-  <artifactId>PigDemo</artifactId>
-  <name>Parser - Examples - Pig</name>
+  <artifactId>apache-hadoop-mapreduce</artifactId>
+  <name>Parser - Examples - Apache Hadoop MapReduce</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mainClass>nl.basjes.hadoop.io.input.Wordcount</mainClass>
+  </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-    <!--Needed for the pig script-->
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
-      <artifactId>httpdlog-pigloader</artifactId>
       <version>${project.version}</version>
+      <artifactId>httpdlog-inputformat</artifactId>
     </dependency>
-
-    <!--For the custom dissector we actually would only need this-->
-    <!--<dependency>-->
-      <!--<groupId>nl.basjes.parse</groupId>-->
-      <!--<artifactId>parser-core</artifactId>-->
-      <!--<version>${project.version}</version>-->
-    <!--</dependency>-->
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.21</version>
-    </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
-
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/assembly.xml</descriptor>
-          </descriptors>
-          <archive>
-            <addMavenDescriptor>false</addMavenDescriptor>
-          </archive>
-        </configuration>
+        <version>2.2.1</version>
         <executions>
           <execution>
-            <id>make-assembly</id>
+            <id>make-super-jar</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/job.xml</descriptor>
+              </descriptors>
+              <archive>
+                <addMavenDescriptor>true</addMavenDescriptor>
+                <manifest>
+                  <mainClass>${mainClass}</mainClass>
+                </manifest>
+              </archive>
+            </configuration>
           </execution>
         </executions>
       </plugin>
