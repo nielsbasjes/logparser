@@ -125,12 +125,12 @@ And then call the parse method repeatedly for each line.
 There are two ways to do this:
 1) Let the parser create and a new instance of "MyRecord" for each parsed line (think about the GC consequences!!):
 
-    MyRecord record = parser.parse(logline);
+       MyRecord record = parser.parse(logline);
  
 2) Reuse the same instance.
 So you do this only once:
 
-    MyRecord record = new MyRecord(); 
+       MyRecord record = new MyRecord(); 
 
 And then for each logline:
 
