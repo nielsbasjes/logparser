@@ -21,14 +21,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse</groupId>
   <artifactId>parser-parent</artifactId>
-  <version>3.2-SNAPSHOT</version>
+  <version>4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parser -</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
   <url>https://github.com/nielsbasjes/logparser</url>
 
   <properties>
-    <jdkLevel>1.7</jdkLevel>
+    <jdkLevel>1.8</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     <checkstyle-plugin.version>2.17</checkstyle-plugin.version>

@@ -20,7 +20,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>3.2-SNAPSHOT</version>
+    <version>4.0-SNAPSHOT</version>
   </parent>
   <artifactId>apache-hadoop-mapreduce</artifactId>
   <name>Parser - Examples - Apache Hadoop MapReduce</name>

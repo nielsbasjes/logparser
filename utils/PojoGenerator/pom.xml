@@ -23,7 +23,7 @@
   <parent>
     <groupId>nl.basjes.parse.utils</groupId>
     <artifactId>parse-utils</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>4.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>PojoGenerator</artifactId>
