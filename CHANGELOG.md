@@ -5,6 +5,7 @@ v3.2
 - Parser instance is now serializable.
 - Added example on using with Apache Flink
 - Added example on using with Apache Beam
+- Rewrote Apache Storm code and move to examples
 
 v3.1
 ===

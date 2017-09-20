@@ -22,7 +22,7 @@
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
     <version>3.2-SNAPSHOT</version>
   </parent>
-  <artifactId>httpdlog-inputformat-testclient</artifactId>
+  <artifactId>httpdlog-inputformat</artifactId>
   <name>Parser - Examples - Hadoop</name>
 
   <properties>
