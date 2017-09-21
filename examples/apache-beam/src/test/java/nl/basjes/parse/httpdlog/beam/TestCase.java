@@ -20,9 +20,6 @@ package nl.basjes.parse.httpdlog.beam;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.beam.pojo.TestRecord;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public final class TestCase {
 
