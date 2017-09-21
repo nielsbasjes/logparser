@@ -107,7 +107,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
         // The pieces we have to get there
         addDissector(new HttpdLogFormatDissector(logformat));
         addDissector(new TimeStampDissector("TIME.STAMP", timestampFormat));
-        addDissector(new TimeStampDissector("TIME.ISO8601", "yyyy-MM-dd'T'HH:mm:ssZZ"));
+        addDissector(new TimeStampDissector("TIME.ISO8601", "yyyy-MM-dd'T'HH:mm:ssXXX"));
         addDissector(new HttpFirstLineDissector());
         addDissector(new HttpFirstLineProtocolDissector());
         addDissector(new HttpUriDissector());

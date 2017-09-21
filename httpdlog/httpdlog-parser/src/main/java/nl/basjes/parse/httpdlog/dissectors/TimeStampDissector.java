@@ -21,11 +21,17 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -40,7 +46,6 @@ public class TimeStampDissector extends Dissector {
     // --------------------------------------------
 
     private transient DateTimeFormatter formatter;
-    private transient DateTimeFormatter asParsedFormatter;
     private String dateTimePattern;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -75,8 +80,11 @@ public class TimeStampDissector extends Dissector {
 
     public void setDateTimePattern(String newDateTimePattern) {
         dateTimePattern = newDateTimePattern;
-        formatter = DateTimeFormat.forPattern(dateTimePattern).withZone(DateTimeZone.UTC);
-        asParsedFormatter = formatter.withOffsetParsed();
+        formatter = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern(dateTimePattern)
+            .toFormatter()
+            .withLocale(Locale.getDefault());
     }
 
     @Override
@@ -340,8 +348,8 @@ public class TimeStampDissector extends Dissector {
 
     // --------------------------------------------
 
-    private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter ISO_TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss");
+    private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter ISO_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
     public void dissect(final Parsable<?> parsable, final String inputname) throws DissectionFailure {
@@ -349,147 +357,154 @@ public class TimeStampDissector extends Dissector {
         dissect(field, parsable, inputname);
     }
 
+    private static final TemporalField WEEK_OF_WEEK_BASED_YEAR = WeekFields.ISO.weekOfWeekBasedYear();
+    private static final TemporalField YEAR_OF_WEEK_BASED_YEAR = WeekFields.ISO.weekBasedYear();
+
     protected void dissect(ParsedField field, final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
             return; // Nothing to do here
         }
 
-        fieldValue = fieldValue.toLowerCase(Locale.getDefault());
+//        fieldValue = fieldValue.toLowerCase(Locale.getDefault());
 
         if (wantAnyAsParsed || wantAnyTZIndependent) {
             // YUCK ! Parsing the same thing TWICE just for the Zone ?!?!?
 
-            DateTime dateTime;
+            ZonedDateTime dateTime;
             try {
-                dateTime = asParsedFormatter.parseDateTime(fieldValue);
-            } catch (IllegalArgumentException iae) {
-                throw new DissectionFailure(iae.getMessage(), iae);
+                dateTime = formatter.parse(fieldValue, ZonedDateTime::from);
+            } catch (DateTimeParseException dtpe) {
+                throw new DissectionFailure(dtpe.getMessage()+
+                    "\n123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_" +
+                    "\n"+fieldValue+"\n"+dateTimePattern, dtpe);
             }
 
-            DateTimeZone zone = dateTime.getZone();
-            DateTimeFormatter asParsedWithZoneFormatter = asParsedFormatter.withZone(zone);
-            dateTime = asParsedWithZoneFormatter.parseDateTime(fieldValue);
+            ZoneId zone = dateTime.getZone();
+            DateTimeFormatter asParsedWithZoneFormatter = formatter.withZone(zone);
+            dateTime = asParsedWithZoneFormatter.parse(fieldValue, ZonedDateTime::from);
 
             // As parsed
             if (wantDay) {
                 parsable.addDissection(inputname, "TIME.DAY", "day",
-                        dateTime.dayOfMonth().get());
+                        dateTime.getDayOfMonth());
             }
             if (wantMonthname) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname",
-                        dateTime.monthOfYear().getAsText(Locale.getDefault()));
+                        dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
             }
             if (wantMonth) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month",
-                        dateTime.monthOfYear().get());
+                        dateTime.getMonth().getValue());
             }
             if (wantWeekOfWeekYear) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear",
-                        dateTime.weekOfWeekyear().get());
+                        dateTime.get(WEEK_OF_WEEK_BASED_YEAR));
             }
             if (wantWeekYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear",
-                        dateTime.weekyear().get());
+                        dateTime.get(YEAR_OF_WEEK_BASED_YEAR));
             }
             if (wantYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year",
-                        dateTime.year().get());
+                        dateTime.getYear());
             }
             if (wantHour) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour",
-                        dateTime.hourOfDay().get());
+                        dateTime.getHour());
             }
             if (wantMinute) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute",
-                        dateTime.minuteOfHour().get());
+                        dateTime.getMinute());
             }
             if (wantSecond) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second",
-                        dateTime.secondOfMinute().get());
+                        dateTime.getSecond());
             }
             if (wantMillisecond) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond",
-                        dateTime.millisOfSecond().get());
+                        dateTime.getNano() * 1000000);
             }
             if (wantDate) {
                 parsable.addDissection(inputname, "TIME.DATE", "date",
-                        ISO_DATE_FORMATTER.print(dateTime));
+                    dateTime.format(ISO_DATE_FORMATTER));
             }
 
             if (wantTime) {
                 parsable.addDissection(inputname, "TIME.TIME", "time",
-                    ISO_TIME_FORMATTER.print(dateTime));
+                    dateTime.format(ISO_TIME_FORMATTER));
             }
 
             // Timezone independent
             if (wantTimezone) {
                 parsable.addDissection(inputname, "TIME.TIMEZONE", "timezone",
-                        dateTime.getZone().getID());
+                        dateTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault()));
             }
             if (wantEpoch) {
                 parsable.addDissection(inputname, "TIME.EPOCH", "epoch",
-                        dateTime.getMillis());
+                    (dateTime.toEpochSecond() * 1000) + (dateTime.getNano() / 1000000));
             }
         }
 
         if (wantAnyUTC) {
             // In UTC timezone
-            DateTime dateTime;
+            ZonedDateTime dateTime;
             try {
-                dateTime = formatter.parseDateTime(fieldValue);
+                dateTime = formatter.parse(fieldValue, OffsetDateTime::from).atZoneSameInstant(ZoneOffset.UTC);
             } catch (IllegalArgumentException iae) {
-                throw new DissectionFailure(iae.getMessage(), iae);
+                throw new DissectionFailure(iae.getMessage()+
+                    "\n123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_" +
+                    "\n"+fieldValue+"\n"+dateTimePattern, iae);
             }
 
             if (wantDayUTC) {
                 parsable.addDissection(inputname, "TIME.DAY", "day_utc",
-                        dateTime.dayOfMonth().get());
+                        dateTime.getDayOfMonth());
             }
             if (wantMonthnameUTC) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_utc",
-                        dateTime.monthOfYear().getAsText(Locale.getDefault()));
+                        dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
             }
             if (wantMonthUTC) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month_utc",
-                        dateTime.monthOfYear().get());
+                        dateTime.getMonthValue());
             }
             if (wantWeekOfWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear_utc",
-                        dateTime.weekOfWeekyear().get());
+                        dateTime.get(WEEK_OF_WEEK_BASED_YEAR));
             }
             if (wantWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear_utc",
-                        dateTime.weekyear().get());
+                        dateTime.get(YEAR_OF_WEEK_BASED_YEAR));
             }
             if (wantYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year_utc",
-                        dateTime.year().get());
+                        dateTime.getYear());
             }
             if (wantHourUTC) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour_utc",
-                        dateTime.hourOfDay().get());
+                        dateTime.getHour());
             }
             if (wantMinuteUTC) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute_utc",
-                        dateTime.minuteOfHour().get());
+                        dateTime.getMinute());
             }
             if (wantSecondUTC) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second_utc",
-                        dateTime.secondOfMinute().get());
+                        dateTime.getSecond());
             }
             if (wantMillisecondUTC) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond_utc",
-                        dateTime.millisOfSecond().get());
+                        dateTime.getNano() * 1000000);
             }
             if (wantDateUTC) {
                 parsable.addDissection(inputname, "TIME.DATE", "date_utc",
-                    ISO_DATE_FORMATTER.print(dateTime));
+                    dateTime.format(ISO_DATE_FORMATTER));
             }
 
             if (wantTimeUTC) {
                 parsable.addDissection(inputname, "TIME.TIME", "time_utc",
-                    ISO_TIME_FORMATTER.print(dateTime));
+                    dateTime.format(ISO_TIME_FORMATTER));
             }
 
         }
