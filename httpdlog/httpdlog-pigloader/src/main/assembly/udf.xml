@@ -30,7 +30,6 @@
       <scope>runtime</scope>
       <excludes>
         <exclude>commons-lang:commons-lang</exclude>
-        <exclude>joda-time:joda-time</exclude>
         <exclude>org.slf4j:slf4j-api</exclude>
       </excludes>
     </dependencySet>
