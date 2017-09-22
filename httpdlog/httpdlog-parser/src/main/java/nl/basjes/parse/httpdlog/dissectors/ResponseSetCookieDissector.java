@@ -141,8 +141,8 @@ public class ResponseSetCookieDissector extends Dissector {
     // --------------------------------------------
 
     private static final DateTimeFormatter[] DATE_FORMATS = {
-        DateTimeFormatter.ofPattern("EEE',' dd-MMM-yyyy HH:mm:ss 'GMT'").withZone(ZoneOffset.UTC),
-        DateTimeFormatter.ofPattern("EEE',' dd MMM yyyy HH:mm:ss 'GMT'").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("EEE',' dd-MMM-yyyy HH:mm:ss zzz").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("EEE',' dd MMM yyyy HH:mm:ss zzz").withZone(ZoneOffset.UTC),
         DateTimeFormatter.ofPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'Z")  .withZone(ZoneOffset.UTC),
     };
 
