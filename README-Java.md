@@ -17,14 +17,6 @@ First you put something like this in your pom.xml file:
         <version>3.1</version>
     </dependency>
 
-In addition you need joda-time 1.6 or newer.
-
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.9.1</version>
-    </dependency>
-
 I assume we have a logformat variable that looks something like this:
 
     String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";

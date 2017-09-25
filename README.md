@@ -37,6 +37,7 @@ You will then get this timestamp field as if it was a request header: HTTP.HEADE
 * **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
 * **Version 3.0 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
 This means that many fields are supported, but not all. Check the implementation in the [StrfTimeStampDissector](/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeStampDissector.java#L140) class to see which are and are not supported.
+* **Version 4.0 and newer**: Switched to parsing using native java 8 time library supports a few fields differently.
 
 **Limitation**: Only a single %{format}t entry is supported per line.
 Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
@@ -76,14 +77,6 @@ So using it in a Java based project is as simple as adding this to your dependen
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
         <version>3.1</version>
-    </dependency>
-
-In addition you need joda-time 1.6 or newer.
-
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>1.6</version>
     </dependency>
 
 Building

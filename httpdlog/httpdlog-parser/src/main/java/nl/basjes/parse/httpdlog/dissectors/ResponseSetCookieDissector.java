@@ -21,10 +21,10 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -141,15 +141,15 @@ public class ResponseSetCookieDissector extends Dissector {
     // --------------------------------------------
 
     private static final DateTimeFormatter[] DATE_FORMATS = {
-        DateTimeFormat.forPattern("EEE',' dd-MMM-yyyy HH:mm:ss 'GMT'").withZone(DateTimeZone.UTC),
-        DateTimeFormat.forPattern("EEE',' dd MMM yyyy HH:mm:ss 'GMT'").withZone(DateTimeZone.UTC),
-        DateTimeFormat.forPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'Z")  .withZone(DateTimeZone.UTC),
+        DateTimeFormatter.ofPattern("EEE',' dd-MMM-yyyy HH:mm:ss zzz").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("EEE',' dd MMM yyyy HH:mm:ss zzz").withZone(ZoneOffset.UTC),
+        DateTimeFormatter.ofPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'Z")  .withZone(ZoneOffset.UTC),
     };
 
     private Long parseExpire(String expireString) {
         for (DateTimeFormatter dateFormat: DATE_FORMATS) {
             try {
-                return dateFormat.parseDateTime(expireString).getMillis();
+                return dateFormat.parse(expireString, ZonedDateTime::from).toEpochSecond() * 1000;
             } catch (IllegalArgumentException iae) {
                 // Ignore and continue
             }

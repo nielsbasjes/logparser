@@ -43,13 +43,6 @@
     </dependency>
 
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>1.6</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>nl.basjes.parse</groupId>
       <artifactId>parser-core</artifactId>
       <version>${project.version}</version>

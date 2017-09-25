@@ -30,6 +30,10 @@
   <name>Parser - Apache HTTPD - Parser</name>
   <url>http://niels.basjes.nl</url>
 
+  <properties>
+    <antlr.version>4.7</antlr.version>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -53,16 +57,15 @@
     </dependency>
 
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.9.4</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>${antlr.version}</version>
     </dependency>
 
   </dependencies>
@@ -147,6 +150,57 @@
                 <source>${project.build.directory}/generated-sources/java/</source>
               </sources>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Some of the dependencies (Antlr4) have proven to be problematic for    -->
+      <!-- downstream users who need different versions of these in the same application.    -->
+      <!-- So for only these we include and relocate the used classes into the main jar. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.0.0</version>
+
+        <configuration>
+          <minimizeJar>true</minimizeJar>
+          <relocations>
+            <relocation>
+              <pattern>org.antlr</pattern>
+              <shadedPattern>nl.basjes.parse.httpdlog.shaded.org.antlr</shadedPattern>
+            </relocation>
+          </relocations>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>inject-problematic-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.antlr:antlr4-runtime</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>${antlr.version}</version>
+        <executions>
+          <execution>
+            <id>antlr</id>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

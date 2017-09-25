@@ -96,12 +96,6 @@
       <artifactId>httpdlog-inputformat</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.9.4</version>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>nl.basjes.parse.useragent</groupId>

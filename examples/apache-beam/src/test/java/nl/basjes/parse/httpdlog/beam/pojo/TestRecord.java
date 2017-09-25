@@ -25,7 +25,20 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.beam.TestCase.*;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_class;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_name;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_version;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedBui;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDevice_brand;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDevice_class;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedGoogleQuery;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedReferrer;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTime;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestUseragent;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenResolution;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
 import static org.junit.Assert.assertEquals;
 
 @ToString
