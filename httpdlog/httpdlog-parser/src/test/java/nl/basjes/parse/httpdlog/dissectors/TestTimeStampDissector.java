@@ -383,7 +383,7 @@ public class TestTimeStampDissector {
 
     @Test
     public void testAllStrfFieldsLowValues() {
-        ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2001, 1, 2, 3, 4, 5, 67890123), ZoneId.of("CET"));
+        ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2001, 1, 2, 3, 4, 5, 678901234), ZoneId.of("CET"));
 
         checkStrfField(dateTime, "%a", "Tue");          // The abbreviated name of the day of the week according to the current locale.
         checkStrfField(dateTime, "%A", "Tuesday");      // The full name of the day of the week according to the current locale.
@@ -416,11 +416,16 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%Y", "2001");         // The year as a decimal number including the century.
         checkStrfField(dateTime, "%z", "+0100");        // The +hhmm or -hhmm numeric timezone.
         checkStrfField(dateTime, "%Z", "CET");          // The timezone name or abbreviation.
+        checkStrfField(dateTime, "msec_frac", "678");   // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "usec_frac", "678901");// Apache HTTPD specific: microseconds fraction
+
+        checkStrfField(dateTime, "%F %T.msec_frac %z", "2001-01-02 03:04:05.678 +0100");
+        checkStrfField(dateTime, "%F %T.usec_frac %z", "2001-01-02 03:04:05.678901 +0100");
     }
 
     @Test
     public void testAllStrfFieldsHighValues() {
-        ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2017, 11, 12, 23, 14, 15, 67890123), ZoneId.of("CET"));
+        ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2017, 11, 12, 23, 14, 15, 678901234), ZoneId.of("CET"));
 
         checkStrfField(dateTime, "%a", "Sun");          // The abbreviated name of the day of the week according to the current locale.
         checkStrfField(dateTime, "%A", "Sunday");       // The full name of the day of the week according to the current locale.
@@ -453,6 +458,11 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%Y", "2017");         // The year as a decimal number including the century.
         checkStrfField(dateTime, "%z", "+0100");        // The +hhmm or -hhmm numeric timezone.
         checkStrfField(dateTime, "%Z", "CET");          // The timezone name or abbreviation.
+        checkStrfField(dateTime, "msec_frac", "678");   // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "usec_frac", "678901");// Apache HTTPD specific: microseconds fraction
+
+        checkStrfField(dateTime, "%F %T.msec_frac %z", "2017-11-12 23:14:15.678 +0100");
+        checkStrfField(dateTime, "%F %T.usec_frac %z", "2017-11-12 23:14:15.678901 +0100");
     }
 
 

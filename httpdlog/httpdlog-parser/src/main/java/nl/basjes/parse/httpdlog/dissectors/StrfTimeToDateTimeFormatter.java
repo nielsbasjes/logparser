@@ -119,13 +119,13 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
     @Override
     public void enterMsecFrac(StrfTimeParser.MsecFracContext ctx) {
         // Apache HTTPD specific: milliseconds fraction
-        builder.appendValue(ChronoField.MILLI_OF_SECOND);
+        builder.appendValue(ChronoField.MILLI_OF_SECOND, 3);
     }
 
     @Override
     public void enterUsecFrac(StrfTimeParser.UsecFracContext ctx) {
         // Apache HTTPD specific: microseconds fraction
-        builder.appendValue(ChronoField.MICRO_OF_SECOND);
+        builder.appendValue(ChronoField.MICRO_OF_SECOND, 6);
     }
 
     @Override
