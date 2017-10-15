@@ -181,7 +181,11 @@ public class ApacheHttpdLogfileRecordReader extends
         if (outputAllPossibleFields) {
             return allCasts.get(name);
         }
-        return getParser().getCasts(name);
+        try {
+            return getParser().getCasts(name);
+        } catch (MissingDissectorsException | InvalidDissectorException e) {
+            throw new IOException("Fatal error in the parser", e);
+        }
     }
 
     public Parser<ParsedRecord> getParser() throws IOException {

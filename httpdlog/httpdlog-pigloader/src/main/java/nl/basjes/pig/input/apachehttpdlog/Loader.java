@@ -23,6 +23,8 @@ import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parser;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
+import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -205,49 +207,51 @@ public class Loader
     public Tuple getNext()
             throws IOException {
         Tuple tuple = null;
+        try {
+            if (isBuildingExample) {
+                isBuildingExample = false; // Terminate on the next iteration
+                return tupleFactory.newTuple(createPigExample());
+            }
 
-        if (isBuildingExample) {
-            isBuildingExample = false; // Terminate on the next iteration
-            return tupleFactory.newTuple(createPigExample());
-        }
+            boolean notDone = reader.nextKeyValue();
+            if (!notDone) {
+                return null;
+            }
 
-        boolean notDone = reader.nextKeyValue();
-        if (!notDone) {
-            return null;
-        }
+            ParsedRecord value = reader.getCurrentValue();
 
-        ParsedRecord value = reader.getCurrentValue();
+            if (value != null) {
+                List<Object> values = new ArrayList<>();
+                if (onlyWantListOfFields) {
+                    values.add(value.getString(ApacheHttpdLogfileRecordReader.FIELDS));
+                } else {
+                    for (String fieldName : requestedFields) {
+                        if (fieldName.endsWith(".*")) {
+                            values.add(value.getStringSet(fieldName));
+                            continue;
+                        } else {
+                            EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
 
-        if (value != null) {
-            List<Object> values = new ArrayList<>();
-            if (onlyWantListOfFields) {
-                values.add(value.getString(ApacheHttpdLogfileRecordReader.FIELDS));
-            } else {
-                for (String fieldName : requestedFields) {
-                    if (fieldName.endsWith(".*")) {
-                        values.add(value.getStringSet(fieldName));
-                        continue;
-                    } else {
-                        EnumSet<Casts> casts = reader.getParser().getCasts(fieldName);
+                            if (casts != null) {
+                                if (casts.contains(Casts.LONG)) {
+                                    values.add(value.getLong(fieldName));
+                                    continue;
+                                }
 
-                        if (casts != null) {
-                            if (casts.contains(Casts.LONG)) {
-                                values.add(value.getLong(fieldName));
-                                continue;
-                            }
-
-                            if (casts.contains(Casts.DOUBLE)) {
-                                values.add(value.getDouble(fieldName));
-                                continue;
+                                if (casts.contains(Casts.DOUBLE)) {
+                                    values.add(value.getDouble(fieldName));
+                                    continue;
+                                }
                             }
                         }
+                        values.add(value.getString(fieldName));
                     }
-                    values.add(value.getString(fieldName));
                 }
+                tuple = tupleFactory.newTuple(values);
             }
-            tuple = tupleFactory.newTuple(values);
+        } catch (InvalidDissectorException | MissingDissectorsException e) {
+            throw new IOException("Fatal error in the parser", e);
         }
-
         return tuple;
     }
 
@@ -255,7 +259,7 @@ public class Loader
 
     private static final String MULTI_COMMENT = "  -- If you only want a single field replace * with name and change type to chararray";
 
-    private String createPigExample() throws IOException {
+    private String createPigExample() throws IOException, MissingDissectorsException, InvalidDissectorException {
         StringBuilder sb = new StringBuilder(1024);
         String fieldName = requestedFields.get(0);
 

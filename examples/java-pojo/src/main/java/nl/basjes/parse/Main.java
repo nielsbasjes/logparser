@@ -32,7 +32,7 @@ public final class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    private void printAllPossibles(String logformat) throws NoSuchMethodException {
+    private void printAllPossibles(String logformat) throws NoSuchMethodException, MissingDissectorsException, InvalidDissectorException {
         // To figure out what values we CAN get from this line we instantiate the parser with a dummy class
         // that does not have ANY @Field annotations.
         Parser<Object> dummyParser= new HttpdLoglineParser<>(Object.class, logformat);

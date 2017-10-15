@@ -106,13 +106,8 @@ public class Parser<RECORD> implements Serializable {
      * @param name The name of the path for which you want the casts
      * @return The set of casts that are valid for this name. Null if this name is unknown.
      */
-    public EnumSet<Casts> getCasts(String name) {
-        try {
-            assembleDissectors();
-        } catch (MissingDissectorsException
-                |InvalidDissectorException e) {
-            e.printStackTrace();
-        }
+    public EnumSet<Casts> getCasts(String name) throws MissingDissectorsException, InvalidDissectorException {
+        assembleDissectors();
         return castsOfTargets.get(name);
     }
 
