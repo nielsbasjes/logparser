@@ -152,11 +152,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                 String mapField = key.substring(MAP_FIELD_LENGTH);
                 String mapType  = (String)property.getValue();
 
-                Set<String> remapping = typeRemappings.get(mapField);
-                if (remapping == null) {
-                    remapping = new HashSet<>();
-                    typeRemappings.put(mapField, remapping);
-                }
+                Set<String> remapping = typeRemappings.computeIfAbsent(mapField, k -> new HashSet<>());
                 remapping.add(mapType);
                 LOG.info("Add mapping for field \"{}\" to type \"{}\"", mapField, mapType);
                 continue;

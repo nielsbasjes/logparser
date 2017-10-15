@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -311,7 +310,7 @@ public abstract class TokenFormatDissector extends Dissector {
         // We now have a full list of all matched tokens
         // ---------------------------------------
         // We sort them by position of the token in the format specifier
-        Collections.sort(tokens, new TokenSorterByStartPos());
+        tokens.sort(new TokenSorterByStartPos());
 
         // First we take out the duplicates with a lower prio(=relevance score)
         final List<Token> kickTokens = new ArrayList<>(50);

@@ -235,11 +235,7 @@ public class Parser<RECORD> implements Serializable {
                 String fieldName = entry.getKey();
                 Set<List<String>> methodSet = entry.getValue();
 
-                Set<Method> fieldTargets = targets.get(fieldName);
-                if (fieldTargets == null) {
-                    fieldTargets = new HashSet<>();
-                    targets.put(fieldName, fieldTargets);
-                }
+                Set<Method> fieldTargets = targets.computeIfAbsent(fieldName, k -> new HashSet<>());
 
                 for(List<String> methodString: methodSet) {
                     Method method;
@@ -570,11 +566,7 @@ public class Parser<RECORD> implements Serializable {
                 }
 
                 // We have 1 real target
-                Set<Method> fieldTargets = targets.get(cleanedFieldValue);
-                if (fieldTargets == null) {
-                    fieldTargets = new HashSet<>();
-                    targets.put(cleanedFieldValue, fieldTargets);
-                }
+                Set<Method> fieldTargets = targets.computeIfAbsent(cleanedFieldValue, k -> new HashSet<>());
                 fieldTargets.add(method);
                 targets.put(cleanedFieldValue, fieldTargets);
 
@@ -627,11 +619,7 @@ public class Parser<RECORD> implements Serializable {
         String theInput = input.trim().toLowerCase(Locale.ENGLISH);
         String theType = newType.trim().toUpperCase(Locale.ENGLISH);
 
-        Set<String> mappingsForInput = typeRemappings.get(theInput);
-        if (mappingsForInput == null) {
-            mappingsForInput = new HashSet<>();
-            typeRemappings.put(theInput, mappingsForInput);
-        }
+        Set<String> mappingsForInput = typeRemappings.computeIfAbsent(theInput, k -> new HashSet<>());
 
         if (!mappingsForInput.contains(theType)) {
             mappingsForInput.add(theType);

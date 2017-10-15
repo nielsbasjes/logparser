@@ -110,11 +110,7 @@ public class Loader
                 String mapField = mapParams[1];
                 String mapType = mapParams[2];
 
-                Set<String> remapping = typeRemappings.get(mapField);
-                if (remapping == null) {
-                    remapping = new HashSet<>();
-                    typeRemappings.put(mapField, remapping);
-                }
+                Set<String> remapping = typeRemappings.computeIfAbsent(mapField, k -> new HashSet<>());
                 remapping.add(mapType);
                 LOG.debug("Add mapping for field \"{}\" to type \"{}\"", mapField, mapType);
                 continue;

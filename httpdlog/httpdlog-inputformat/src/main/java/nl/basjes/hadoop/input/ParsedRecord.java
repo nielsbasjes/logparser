@@ -178,7 +178,7 @@ public class ParsedRecord implements Writable {
      */
     public void declareRequestedFieldname(String name) {
         if (name.endsWith(".*")) {
-            stringSetValues.put(name, new HashMap<String, String>());
+            stringSetValues.put(name, new HashMap<>());
             stringSetPrefixes.put(name.substring(0, name.length() - 1), name);
         }
     }

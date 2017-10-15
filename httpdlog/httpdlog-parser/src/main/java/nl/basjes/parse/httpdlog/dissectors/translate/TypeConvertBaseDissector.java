@@ -28,7 +28,7 @@ public abstract class TypeConvertBaseDissector extends SimpleDissector {
     protected String inputType;
     protected String outputType;
     public TypeConvertBaseDissector() {
-        super(null, new HashMap<String, EnumSet<Casts>>());
+        super(null, new HashMap<>());
     }
 
     private static HashMap<String, EnumSet<Casts>> fillOutputConfig(String outputType, EnumSet<Casts> casts) {
