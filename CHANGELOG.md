@@ -7,6 +7,7 @@ v4.0
 - Added example on using with Apache Flink
 - Added example on using with Apache Beam
 - Rewrote Apache Storm code and move to examples
+- Many changes in Exception handling
 
 v3.1
 ===

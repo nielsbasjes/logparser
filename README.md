@@ -76,7 +76,7 @@ So using it in a Java based project is as simple as adding this to your dependen
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>3.1</version>
+        <version>4.0</version>
     </dependency>
 
 Building
