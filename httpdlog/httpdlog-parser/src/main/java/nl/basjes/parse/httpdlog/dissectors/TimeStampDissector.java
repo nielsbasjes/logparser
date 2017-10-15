@@ -45,6 +45,7 @@ public class TimeStampDissector extends Dissector {
 
     private transient DateTimeFormatter formatter;
     private String dateTimePattern;
+    private Locale locale = Locale.UK; // The default Locale that follows the ISO-8601 WeekFields
 
     @SuppressWarnings("UnusedDeclaration")
     public TimeStampDissector() {
@@ -65,7 +66,15 @@ public class TimeStampDissector extends Dissector {
         }
     }
 
-    // --------------------------------------------
+    public TimeStampDissector setLocale(Locale newLocale) {
+        this.locale = newLocale;
+        return this;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+// --------------------------------------------
 
     @Override
     public boolean initializeFromSettingsParameter(String settings) {
@@ -89,7 +98,8 @@ public class TimeStampDissector extends Dissector {
             formatter = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
                 .appendPattern(dateTimePattern)
-                .toFormatter();
+                .toFormatter()
+                .withLocale(locale);
         }
         return formatter;
     }
@@ -99,6 +109,7 @@ public class TimeStampDissector extends Dissector {
         TimeStampDissector newTimeStampDissector = (TimeStampDissector) newInstance;
         newTimeStampDissector.setInputType(inputType);
         newTimeStampDissector.setDateTimePattern(dateTimePattern);
+        newTimeStampDissector.setLocale(locale);
     }
 
     // --------------------------------------------
@@ -384,7 +395,7 @@ public class TimeStampDissector extends Dissector {
             // Timezone independent
             if (wantTimezone) {
                 parsable.addDissection(inputname, "TIME.TIMEZONE", "timezone",
-                    dateTime.getZone().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+                    dateTime.getZone().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantEpoch) {
                 parsable.addDissection(inputname, "TIME.EPOCH", "epoch",
@@ -401,7 +412,7 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantMonthname) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname",
-                        localDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+                        localDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantMonth) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month",
@@ -409,11 +420,11 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantWeekOfWeekYear) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear",
-                        localDateTime.get(WeekFields.of(Locale.ENGLISH).weekOfWeekBasedYear()));
+                        localDateTime.get(WeekFields.of(locale).weekOfWeekBasedYear()));
             }
             if (wantWeekYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear",
-                        localDateTime.get(WeekFields.of(Locale.ENGLISH).weekBasedYear()));
+                        localDateTime.get(WeekFields.of(locale).weekBasedYear()));
             }
             if (wantYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year",
@@ -457,7 +468,7 @@ public class TimeStampDissector extends Dissector {
             }
             if (wantMonthnameUTC) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_utc",
-                        zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+                        zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantMonthUTC) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month_utc",

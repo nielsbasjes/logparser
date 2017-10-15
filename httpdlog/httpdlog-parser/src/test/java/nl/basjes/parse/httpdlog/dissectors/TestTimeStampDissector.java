@@ -26,12 +26,22 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class TestTimeStampDissector {
+
+    @Test
+    public void ensureDefaultLocaleFollowsISOWeekFields() {
+        WeekFields localeWeekFields = WeekFields.of(new TimeStampDissector().getLocale());
+        WeekFields isoWeekFields    = WeekFields.ISO;
+        assertEquals(localeWeekFields.getFirstDayOfWeek() ,isoWeekFields.getFirstDayOfWeek());
+        assertEquals(localeWeekFields.getMinimalDaysInFirstWeek() ,isoWeekFields.getMinimalDaysInFirstWeek());
+    }
 
     @Test
     public void testTimeStampDissector() throws Exception {
@@ -253,8 +263,7 @@ public class TestTimeStampDissector {
             .expect("TIME.MONTH:request.receive.time.month"                    ,"12")
             .expect("TIME.MONTHNAME:request.receive.time.monthname"            ,"December")
             .expect("TIME.YEAR:request.receive.time.weekyear"                  ,"2016")
-            // TODO: Check if the change in weekofweekyear is correct (joda -> java).
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"52")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"51")
             .expect("TIME.DAY:request.receive.time.day"                        ,"21")
             .expect("TIME.HOUR:request.receive.time.hour"                      ,"20")
             .expect("TIME.MINUTE:request.receive.time.minute"                  ,"50")
@@ -295,8 +304,7 @@ public class TestTimeStampDissector {
             .expect("TIME.MONTH:request.receive.time.month"                    ,"12")
             .expect("TIME.MONTHNAME:request.receive.time.monthname"            ,"December")
             .expect("TIME.YEAR:request.receive.time.weekyear"                  ,"2016")
-            // TODO: Check if the change in weekofweekyear is correct (joda -> java).
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"52")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"51")
             .expect("TIME.DAY:request.receive.time.day"                        ,"22")
             .expect("TIME.HOUR:request.receive.time.hour"                      ,"0")
             .expect("TIME.MINUTE:request.receive.time.minute"                  ,"9")
@@ -333,7 +341,6 @@ public class TestTimeStampDissector {
 
     @Test
     public void testSpecialTimeLeadingSpaces2a() throws Exception {
-        // TODO: Check if the change in weekbased year is correct (joda -> java).
         String logline = "127.0.0.1 - - [01/Jan/2017:13:01:21 +0100] \"GET / HTTP/1.1\" 200 3525 \"01/01/17 2017-01-01 13:01 13:01:21 01:01:21 PM Sun Sunday Jan January 01 2017 Jan 13 01 001 13  1 01 01 PM 21 7 2017 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
         String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
