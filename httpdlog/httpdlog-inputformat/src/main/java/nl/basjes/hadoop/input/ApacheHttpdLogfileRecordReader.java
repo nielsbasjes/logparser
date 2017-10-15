@@ -75,18 +75,23 @@ public class ApacheHttpdLogfileRecordReader extends
     public ApacheHttpdLogfileRecordReader(String logformat,
             Set<String> requestedFields,
             Map<String, Set<String>> typeRemappings,
-            List<Dissector> additionalDissectors) {
+            List<Dissector> additionalDissectors) throws IOException {
         setLogFormat(logformat);
         // Mappings and additional parsers MUST come before the requested fields
         this.typeRemappings = typeRemappings;
         this.additionalDissectors = additionalDissectors;
         addRequestedFields(requestedFields);
+
     }
 
-    private void addRequestedFields(Set<String> newRequestedFields) {
+    private void addRequestedFields(Set<String> newRequestedFields) throws IOException {
         requestedFields.addAll(newRequestedFields);
         fieldList = new ArrayList<>(requestedFields);
-        setupFields();
+        try {
+            setupFields();
+        } catch (NoSuchMethodException | MissingDissectorsException | InvalidDissectorException e) {
+            throw new IOException("RecordReader initialization failed", e);
+        }
     }
 
     private void setLogFormat(String newLogformat) {
@@ -139,7 +144,11 @@ public class ApacheHttpdLogfileRecordReader extends
             }
         }
 
-        setupFields();
+        try {
+            setupFields();
+        } catch (NoSuchMethodException | MissingDissectorsException | InvalidDissectorException e) {
+            throw new IOException("RecordReader initialization failed", e);
+        }
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat)  {
@@ -150,25 +159,21 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     private Map<String, EnumSet<Casts>> allCasts;
-    private void setupFields() {
+    private void setupFields() throws MissingDissectorsException, InvalidDissectorException, NoSuchMethodException, IOException {
         if (fieldList == null || fieldList.isEmpty()) {
             return; // Nothing to do here
         }
-        try {
-            String firstField = fieldList.get(0);
-            if (fieldList.size() == 1 &&
-                firstField.toLowerCase().trim().equals(FIELDS)) {
-                outputAllPossibleFields = true;
-                allPossiblePaths = getParser().getPossiblePaths();
-                allPossiblePathsFieldName = firstField;
-                Parser<ParsedRecord> newParser = instantiateParser(logformat);
-                newParser.addParseTarget(ParsedRecord.class.getMethod("set",
-                        String.class, String.class), allPossiblePaths);
-                newParser.addTypeRemappings(typeRemappings);
-                allCasts = newParser.getAllCasts();
-            }
-        } catch (NoSuchMethodException | IOException e) {
-            e.printStackTrace();
+        String firstField = fieldList.get(0);
+        if (fieldList.size() == 1 &&
+            firstField.toLowerCase().trim().equals(FIELDS)) {
+            outputAllPossibleFields = true;
+            allPossiblePaths = getParser().getPossiblePaths();
+            allPossiblePathsFieldName = firstField;
+            Parser<ParsedRecord> newParser = instantiateParser(logformat);
+            newParser.addParseTarget(ParsedRecord.class.getMethod("set",
+                    String.class, String.class), allPossiblePaths);
+            newParser.addTypeRemappings(typeRemappings);
+            allCasts = newParser.getAllCasts();
         }
     }
 

@@ -116,13 +116,8 @@ public class Parser<RECORD> implements Serializable {
         return castsOfTargets.get(name);
     }
 
-    public Map<String, EnumSet<Casts>> getAllCasts() {
-        try {
-            assembleDissectors();
-        } catch (MissingDissectorsException
-                |InvalidDissectorException e) {
-            e.printStackTrace();
-        }
+    public Map<String, EnumSet<Casts>> getAllCasts() throws MissingDissectorsException, InvalidDissectorException {
+        assembleDissectors();
         return castsOfTargets;
     }
 
@@ -248,13 +243,13 @@ public class Parser<RECORD> implements Serializable {
                             parameters[1] = Class.forName(methodString.get(2));
                         }
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace(); // FIXME
+                        throw new InvalidDissectorException("Unable to locate class", e);
                     }
                     try {
                         method = recordClass.getMethod(methodName, parameters);
                         fieldTargets.add(method);
                     } catch (NoSuchMethodException e) {
-                        e.printStackTrace(); // FIXME
+                        throw new InvalidDissectorException("Unable to locate method " + methodName, e);
                     }
                 }
                 targets.put(fieldName, fieldTargets);

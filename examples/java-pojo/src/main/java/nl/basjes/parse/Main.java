@@ -32,7 +32,7 @@ public final class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    private void printAllPossibles(String logformat) {
+    private void printAllPossibles(String logformat) throws NoSuchMethodException {
         // To figure out what values we CAN get from this line we instantiate the parser with a dummy class
         // that does not have ANY @Field annotations.
         Parser<Object> dummyParser= new HttpdLoglineParser<>(Object.class, logformat);
@@ -44,12 +44,7 @@ public final class Main {
         // Simply calling getPossiblePaths does not build the actual parser.
         // Because we want this for all possibilities yet we are never actually going to use this instance of the parser
         // We simply give it a random method with the right signature and tell it we want all possible paths
-        try {
-            dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            return;
-        }
+        dummyParser.addParseTarget(String.class.getMethod("indexOf", String.class), possiblePaths);
 
         LOG.info("==================================");
         LOG.info("Possible output:");
@@ -59,7 +54,7 @@ public final class Main {
         LOG.info("==================================");
     }
 
-    private void run() throws InvalidDissectorException, MissingDissectorsException {
+    private void run() throws InvalidDissectorException, MissingDissectorsException, NoSuchMethodException, DissectionFailure {
 
         // This format and logline originate from here:
         // http://stackoverflow.com/questions/20349184/java-parse-log-file
@@ -90,17 +85,12 @@ public final class Main {
         MyRecord record = new MyRecord();
 
         LOG.info("==================================================================================");
-        try {
-            parser.parse(record, logline);
-            LOG.info(record.toString());
-
-        } catch (DissectionFailure dissectionFailure) {
-            dissectionFailure.printStackTrace();
-        }
+        parser.parse(record, logline);
+        LOG.info(record.toString());
         LOG.info("==================================================================================");
     }
 
-    public static void main(final String[] args) throws MissingDissectorsException, InvalidDissectorException {
+    public static void main(final String[] args) throws Exception {
         new Main().run();
     }
 

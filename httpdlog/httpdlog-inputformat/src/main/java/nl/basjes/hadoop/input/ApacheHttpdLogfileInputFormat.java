@@ -29,6 +29,7 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -92,7 +93,11 @@ public class ApacheHttpdLogfileInputFormat extends
     // --------------------------------------------
 
     public ApacheHttpdLogfileRecordReader createRecordReader() {
-        return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings(), getAdditionalDissectors());
+        try {
+            return new ApacheHttpdLogfileRecordReader(getLogFormat(), getRequestedFields(), getTypeRemappings(), getAdditionalDissectors());
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public ApacheHttpdLogfileRecordReader getRecordReader() {

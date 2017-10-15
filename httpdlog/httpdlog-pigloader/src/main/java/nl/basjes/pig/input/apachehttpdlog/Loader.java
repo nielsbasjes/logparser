@@ -135,13 +135,13 @@ public class Loader
                     }
                     additionalDissectors.add(instance);
                 } catch (ClassNotFoundException e) {
-                    throw new IllegalArgumentException("Found load with bad specification: No such class:" + param);
+                    throw new IllegalArgumentException("Found load with bad specification: No such class:" + param, e);
                 } catch (NoSuchMethodException e) {
-                    throw new IllegalArgumentException("Found load with bad specification: Class does not have the required constructor");
+                    throw new IllegalArgumentException("Found load with bad specification: Class does not have the required constructor", e);
                 } catch (InvocationTargetException | InstantiationException e) {
-                    e.printStackTrace();
+                    throw new IllegalArgumentException("Unable to load specified dissector", e);
                 } catch (IllegalAccessException e) {
-                    throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public");
+                    throw new IllegalArgumentException("Found load with bad specification: Required constructor is not public", e);
                 }
                 LOG.debug("Loaded additional dissector: {}(\"{}\")", dissectorClassName, dissectorParam);
                 continue;

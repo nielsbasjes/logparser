@@ -102,6 +102,7 @@ public class DissectorTester implements Serializable {
             parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
@@ -110,6 +111,7 @@ public class DissectorTester implements Serializable {
             parser.addParseTarget(TestRecord.class.getMethod("setLongValue", String.class, Long.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
@@ -118,6 +120,7 @@ public class DissectorTester implements Serializable {
             parser.addParseTarget(TestRecord.class.getMethod("setDoubleValue", String.class, Double.class), fieldname);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
