@@ -65,7 +65,7 @@ public class TestParserDoFnInline implements Serializable {
                     }
                 }));
 
-        TestRecord expected = TestRecord.setFullValid(new TestRecord());
+        TestRecord expected = new TestRecord().setFullValid();
 
         PAssert.that(filledTestRecords).containsInAnyOrder(expected);
 

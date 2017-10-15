@@ -86,7 +86,7 @@ public class TestParserDoFnAvroInline implements Serializable {
                     private Parser<ClickSetter> parser;
 
                     @Setup
-                    public void setup() throws NoSuchMethodException {
+                    public void setup() {
                         parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat());
 
                         parser.addDissector(new ScreenResolutionDissector());

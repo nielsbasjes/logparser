@@ -36,13 +36,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--For the custom dissector we actually would only need this-->
-    <!--<dependency>-->
-      <!--<groupId>nl.basjes.parse</groupId>-->
-      <!--<artifactId>parser-core</artifactId>-->
-      <!--<version>${project.version}</version>-->
-    <!--</dependency>-->
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>

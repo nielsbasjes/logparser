@@ -70,7 +70,7 @@ public class TestParserDoFnClass implements Serializable {
             .apply("Extract Elements from logline",
                 ParDo.of(new MyParserDoFn()));
 
-        TestRecord expected = TestRecord.setFullValid(new TestRecord());
+        TestRecord expected = new TestRecord().setFullValid();
 
         PAssert.that(filledTestRecords).containsInAnyOrder(expected);
 

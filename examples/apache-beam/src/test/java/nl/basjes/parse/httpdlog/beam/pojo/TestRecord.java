@@ -61,53 +61,52 @@ public class TestRecord implements Serializable {
     @Getter @Setter private String agent_version        = null;
 
 
-    public static void assertTestRecordIsValid(TestRecord record) {
-        assertEquals(getExpectedConnectionClientHost() ,record.getConnectionClientHost());
-        assertEquals(getExpectedRequestReceiveTime()   ,record.getRequestReceiveTime());
-        assertEquals(getExpectedReferrer()             ,record.getReferrer());
-        assertEquals(getExpectedScreenResolution()     ,record.getScreenResolution());
-        assertEquals(getExpectedScreenWidth()          ,record.getScreenWidth());
-        assertEquals(getExpectedScreenHeight()         ,record.getScreenHeight());
-        assertEquals(getExpectedGoogleQuery()          ,record.getGoogleQuery());
-        assertEquals(getExpectedBui()                  ,record.getBui());
-        assertEquals(getExpectedRequestUseragent()     ,record.getRequestUseragent());
-        assertEquals(getExpectedDevice_class()         ,record.getDevice_class());
-        assertEquals(getExpectedDevice_brand()         ,record.getDevice_brand());
-        assertEquals(getExpectedAgent_class()          ,record.getAgent_class());
-        assertEquals(getExpectedAgent_name()           ,record.getAgent_name());
-        assertEquals(getExpectedAgent_version()        ,record.getAgent_version());
+    public void assertIsValid() {
+        assertEquals(getExpectedConnectionClientHost() ,getConnectionClientHost());
+        assertEquals(getExpectedRequestReceiveTime()   ,getRequestReceiveTime());
+        assertEquals(getExpectedReferrer()             ,getReferrer());
+        assertEquals(getExpectedScreenResolution()     ,getScreenResolution());
+        assertEquals(getExpectedScreenWidth()          ,getScreenWidth());
+        assertEquals(getExpectedScreenHeight()         ,getScreenHeight());
+        assertEquals(getExpectedGoogleQuery()          ,getGoogleQuery());
+        assertEquals(getExpectedBui()                  ,getBui());
+        assertEquals(getExpectedRequestUseragent()     ,getRequestUseragent());
+        assertEquals(getExpectedDevice_class()         ,getDevice_class());
+        assertEquals(getExpectedDevice_brand()         ,getDevice_brand());
+        assertEquals(getExpectedAgent_class()          ,getAgent_class());
+        assertEquals(getExpectedAgent_name()           ,getAgent_name());
+        assertEquals(getExpectedAgent_version()        ,getAgent_version());
     }
 
-    public static TestRecord setFullValid(TestRecord testRecord) {
-        testRecord.setConnectionClientHost (getExpectedConnectionClientHost() );
-        testRecord.setRequestReceiveTime   (getExpectedRequestReceiveTime()   );
-        testRecord.setReferrer             (getExpectedReferrer()             );
-        testRecord.setScreenResolution     (getExpectedScreenResolution()     );
-        testRecord.setScreenWidth          (getExpectedScreenWidth()          );
-        testRecord.setScreenHeight         (getExpectedScreenHeight()         );
-        testRecord.setGoogleQuery          (getExpectedGoogleQuery()          );
-        testRecord.setBui                  (getExpectedBui()                  );
-        testRecord.setRequestUseragent     (getExpectedRequestUseragent()     );
-        testRecord.setDevice_class         (getExpectedDevice_class()         );
-        testRecord.setDevice_brand         (getExpectedDevice_brand()         );
-        testRecord.setAgent_class          (getExpectedAgent_class()          );
-        testRecord.setAgent_name           (getExpectedAgent_name()           );
-        testRecord.setAgent_version        (getExpectedAgent_version()        );
-        return testRecord;
+    public TestRecord setFullValid() {
+        setConnectionClientHost (getExpectedConnectionClientHost() );
+        setRequestReceiveTime   (getExpectedRequestReceiveTime()   );
+        setReferrer             (getExpectedReferrer()             );
+        setScreenResolution     (getExpectedScreenResolution()     );
+        setScreenWidth          (getExpectedScreenWidth()          );
+        setScreenHeight         (getExpectedScreenHeight()         );
+        setGoogleQuery          (getExpectedGoogleQuery()          );
+        setBui                  (getExpectedBui()                  );
+        setRequestUseragent     (getExpectedRequestUseragent()     );
+        setDevice_class         (getExpectedDevice_class()         );
+        setDevice_brand         (getExpectedDevice_brand()         );
+        setAgent_class          (getExpectedAgent_class()          );
+        setAgent_name           (getExpectedAgent_name()           );
+        setAgent_version        (getExpectedAgent_version()        );
+        return this;
     }
 
 
     @Test
     public void checkTestMethodsPass() {
-        TestRecord testRecord = new TestRecord();
-        setFullValid(testRecord);
-        assertTestRecordIsValid(testRecord);
+        TestRecord testRecord = new TestRecord().setFullValid();
+        testRecord.assertIsValid();
     }
 
     @Test(expected = AssertionError.class)
     public void checkTestMethodsFail() {
         TestRecord testRecord = new TestRecord();
-        assertTestRecordIsValid(testRecord);
+        testRecord.assertIsValid();
     }
 
 }

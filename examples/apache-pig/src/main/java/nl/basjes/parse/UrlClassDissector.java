@@ -73,39 +73,31 @@ public class UrlClassDissector extends Dissector {
             return; // Nothing to do here
         }
 
-        // NOTE; This is just a silly example to illustrate what can be done.
-        String result;
-        do {
-            if (fieldValue.startsWith("/1-500e-KWh")) {
-                result = "PowerTick";
-                break;
-            }
-            if (fieldValue.endsWith(".html")) {
-                result = "Page";
-                break;
-            }
-            if (fieldValue.endsWith(".gif")) {
-                result = "Image";
-                break;
-            }
-            if (fieldValue.endsWith(".css")) {
-                result = "StyleSheet";
-                break;
-            }
-            if (fieldValue.endsWith(".js")) {
-                result = "Script";
-                break;
-            }
-            if (fieldValue.endsWith("_form")) {
-                result = "HackAttempt";
-                break;
-            }
-
-            result = "Other";
-        } while (false); // Yeah ...I know ...
-
-        parsable.addDissection(inputname, "HTTP.PATH.CLASS", "class", result);
+        parsable.addDissection(inputname, "HTTP.PATH.CLASS", "class", calculateClass(fieldValue));
     }
     // --------------------------------------------
+
+    private String calculateClass(String fieldValue) {
+        // NOTE; This is just a silly example to illustrate what can be done.
+        if (fieldValue.startsWith("/1-500e-KWh")) {
+            return "PowerTick";
+        }
+        if (fieldValue.endsWith(".html")) {
+            return "Page";
+        }
+        if (fieldValue.endsWith(".gif")) {
+            return "Image";
+        }
+        if (fieldValue.endsWith(".css")) {
+            return "StyleSheet";
+        }
+        if (fieldValue.endsWith(".js")) {
+            return "Script";
+        }
+        if (fieldValue.endsWith("_form")) {
+            return "HackAttempt";
+        }
+        return "Other";
+    }
 
 }
