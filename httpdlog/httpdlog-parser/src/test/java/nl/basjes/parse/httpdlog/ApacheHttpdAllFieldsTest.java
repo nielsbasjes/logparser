@@ -38,7 +38,7 @@ public class ApacheHttpdAllFieldsTest {
     }
 
     @Test
-    public void checkDeprecationMessage() throws Exception {
+    public void checkDeprecationMessage() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%b %D Deprecated"))
             .withInput("1 2 Deprecated")

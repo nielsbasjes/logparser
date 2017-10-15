@@ -43,7 +43,7 @@ public class StrfTimeStampDissector extends Dissector {
         timeStampDissector = new TimeStampDissector();
     }
 
-    public void setDateTimePattern(String newDateTimePattern) throws InvalidDissectorException {
+    public void setDateTimePattern(String newDateTimePattern) {
         if (newDateTimePattern == null) {
             timeStampDissector.setDateTimePattern("");
             return; // Done
@@ -59,12 +59,7 @@ public class StrfTimeStampDissector extends Dissector {
 
     @Override
     public boolean initializeFromSettingsParameter(String settings) {
-        try {
-            setDateTimePattern(settings);
-        } catch (InvalidDissectorException e) {
-            LOG.error(e.getMessage());
-            return false;
-        }
+        setDateTimePattern(settings);
         return true;
     }
 

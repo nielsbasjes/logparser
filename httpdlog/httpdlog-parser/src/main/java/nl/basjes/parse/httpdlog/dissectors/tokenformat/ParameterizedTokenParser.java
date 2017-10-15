@@ -104,7 +104,7 @@ public class ParameterizedTokenParser extends TokenParser {
         }
 
         if (warningMessageWhenUsed != null) {
-            token.setWarningMessageWhenUsed(warningMessageWhenUsed.replaceFirst("\\{\\}", fieldName));
+            token.setWarningMessageWhenUsed(warningMessageWhenUsed.replaceFirst("\\{}", fieldName));
         }
 
         return token;
