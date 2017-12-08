@@ -36,8 +36,8 @@ It cannot be extracted. A simple workaround for this limitation: replace the **%
 You will then get this timestamp field as if it was a request header: HTTP.HEADER:request.header.timestamp
 * **Version 2.6 and newer**: You will receive it as a textual *TIME.LOCALIZEDSTRING:request.header.time* which cannot be extracted any further.
 * **Version 3.0 and newer**: Support for parsing the customized time as long as all elements can be mapped to fields supported by joda-time.
-This means that many fields are supported, but not all. Check the implementation in the [StrfTimeStampDissector](/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeStampDissector.java#L140) class to see which are and are not supported.
-* **Version 4.0 and newer**: Switched to parsing using native java 8 time library supports a few fields differently.
+This means that many fields are supported, but not all. Check the implementation in the [StrfTimeStampDissector](../v3.1/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeStampDissector.java#L140) class to see which are and are not supported.
+* **Version 4.0 and newer**: Switched to parsing using native java 8 time library supports a few fields differently. See [StrfTimeToDateTimeFormatter](/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeToDateTimeFormatter.java#L119).
 
 **Limitation**: Only a single %{format}t entry is supported per line.
 Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
