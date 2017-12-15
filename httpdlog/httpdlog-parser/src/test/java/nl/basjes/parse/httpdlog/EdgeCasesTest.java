@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class EdgeCasesTest {
     @Test
-    public void testInvalidFirstLine() throws Exception {
+    public void testInvalidFirstLine() {
         String logFormat = "%a %{Host}i %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %{Content-length}i %P %A";
         String testLine = "1.2.3.4 - - [03/Apr/2017:03:27:28 -0600] \"\\x16\\x03\\x01\" 404 419 \"-\" \"-\" - 115052 5.6.7.8";
         DissectorTester.create()

@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TestHttpUriDissector {
 
     @Test
-    public void testFullUrl1() throws Exception {
+    public void testFullUrl1() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -40,7 +40,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl2() throws Exception {
+    public void testFullUrl2() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -57,7 +57,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl3() throws Exception {
+    public void testFullUrl3() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -74,7 +74,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl4() throws Exception {
+    public void testFullUrl4() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -91,7 +91,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl5() throws Exception {
+    public void testFullUrl5() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -108,7 +108,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testAndroidApp1() throws Exception {
+    public void testAndroidApp1() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -125,7 +125,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testAndroidApp2() throws Exception {
+    public void testAndroidApp2() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -142,7 +142,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURI() throws Exception {
+    public void testBadURI() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -160,7 +160,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURIEncoding() throws Exception {
+    public void testBadURIEncoding() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -168,10 +168,10 @@ public class TestHttpUriDissector {
             .withInput("/index.html&promo=Give-50%-discount&promo=And-do-%Another-Wrong&last=also bad %#bla%20bla ")
             //                              here ^              and here ^                   and here ^
 
-            .expectAbsentString("HTTP.PROTOCOL:protocol"    )
-            .expectAbsentString("HTTP.USERINFO:userinfo"    )
-            .expectAbsentString("HTTP.HOST:host"            )
-            .expectAbsentString("HTTP.PORT:port"            )
+            .expectAbsentString("HTTP.PROTOCOL:protocol")
+            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectAbsentString("HTTP.HOST:host")
+            .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&promo=Give-50%25-discount&promo=And-do-%25Another-Wrong&last=also%20bad%20%25")
             .expect("HTTP.REF:ref",              "bla bla ")
@@ -179,17 +179,17 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURIMultiPercentEncoding() throws Exception {
+    public void testBadURIMultiPercentEncoding() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
             .withDissector(new QueryStringFieldDissector())
 
             .withInput("/index.html?Linkid=%%%3dv(%40Foo)%3d%%%&emcid=B%ar")
 
-            .expectAbsentString("HTTP.PROTOCOL:protocol"    )
-            .expectAbsentString("HTTP.USERINFO:userinfo"    )
-            .expectAbsentString("HTTP.HOST:host"            )
-            .expectAbsentString("HTTP.PORT:port"            )
+            .expectAbsentString("HTTP.PROTOCOL:protocol")
+            .expectAbsentString("HTTP.USERINFO:userinfo")
+            .expectAbsentString("HTTP.HOST:host")
+            .expectAbsentString("HTTP.PORT:port")
             .expect("HTTP.PATH:path",            "/index.html")
             .expect("HTTP.QUERYSTRING:query",    "&Linkid=%25%25%3dv(%40Foo)%3d%25%25%25&emcid=B%25ar")
             .expect("STRING:query.linkid",       "%%=v(@Foo)=%%%")
@@ -198,7 +198,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testDoubleHashes() throws Exception {
+    public void testDoubleHashes() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -206,7 +206,8 @@ public class TestHttpUriDissector {
             .withInput("https://www.basjes.nl/path/?s2a=&Referrer=ADV1234#product_title&f=API&subid=?s2a=#product_title&name=12341234")
             .withInput("https://www.basjes.nl/path/?Referrer=ADV1234#&f=API&subid=#&name=12341234")
             .withInput("https://www.basjes.nl/path?sort&#x3D;price&filter&#x3D;new&sortOrder&#x3D;asc")
-            .withInput("https://www.basjes.nl/login.html?redirectUrl=https%3A%2F%2Fwww.basjes.nl%2Faccount%2Findex.html&_requestid=1234#x3D;12341234&Referrer&#x3D;ENTblablabla")
+            .withInput("https://www.basjes.nl/login.html?redirectUrl=https%3A%2F%2Fwww.basjes.nl%2Faccount%2Findex.html" +
+                       "&_requestid=1234#x3D;12341234&Referrer&#x3D;ENTblablabla")
             .expect("HTTP.HOST:host", "www.basjes.nl")
             .checkExpectations();
     }

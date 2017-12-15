@@ -64,7 +64,7 @@ public abstract class SimpleDissector extends Dissector {
     }
 
     @Override
-    public void prepareForRun() throws InvalidDissectorException {
+    public void prepareForRun() {
         // Do nothing
     }
 

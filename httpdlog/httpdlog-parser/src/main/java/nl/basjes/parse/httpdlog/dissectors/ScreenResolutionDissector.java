@@ -21,7 +21,6 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -90,7 +89,7 @@ public class ScreenResolutionDissector extends Dissector {
     }
 
     @Override
-    public void prepareForRun() throws InvalidDissectorException {
+    public void prepareForRun() {
         // Nothing to do
     }
 

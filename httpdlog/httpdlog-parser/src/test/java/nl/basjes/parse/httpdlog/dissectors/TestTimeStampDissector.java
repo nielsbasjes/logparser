@@ -27,66 +27,66 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+// CHECKSTYLE.OFF: LineLength
 public class TestTimeStampDissector {
 
     @Test
     public void ensureDefaultLocaleFollowsISOWeekFields() {
         WeekFields localeWeekFields = WeekFields.of(new TimeStampDissector().getLocale());
         WeekFields isoWeekFields    = WeekFields.ISO;
-        assertEquals(localeWeekFields.getFirstDayOfWeek() ,isoWeekFields.getFirstDayOfWeek());
-        assertEquals(localeWeekFields.getMinimalDaysInFirstWeek() ,isoWeekFields.getMinimalDaysInFirstWeek());
+        assertEquals(localeWeekFields.getFirstDayOfWeek(), isoWeekFields.getFirstDayOfWeek());
+        assertEquals(localeWeekFields.getMinimalDaysInFirstWeek(), isoWeekFields.getMinimalDaysInFirstWeek());
     }
 
     @Test
-    public void testTimeStampDissector() throws Exception {
+    public void testTimeStampDissector() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
             .withInput("31/Dec/2012:23:00:44 -0700")
 
-            .expect("TIME.EPOCH:epoch",             "1357020044000"  )
-            .expect("TIME.EPOCH:epoch",             1357020044000L   )
-            .expect("TIME.YEAR:year",               "2012"           )
-            .expect("TIME.YEAR:year",               2012L            )
-            .expect("TIME.MONTH:month",             "12"             )
-            .expect("TIME.MONTH:month",             12L              )
-            .expect("TIME.MONTHNAME:monthname",     "December"       )
-            .expect("TIME.DAY:day",                 "31"             )
-            .expect("TIME.DAY:day",                 31L              )
-            .expect("TIME.HOUR:hour",               "23"             )
-            .expect("TIME.HOUR:hour",               23L              )
-            .expect("TIME.MINUTE:minute",           "0"              )
-            .expect("TIME.MINUTE:minute",           0L               )
-            .expect("TIME.SECOND:second",           "44"             )
-            .expect("TIME.SECOND:second",           44L              )
-            .expect("TIME.DATE:date",               "2012-12-31"     )
-            .expect("TIME.TIME:time",               "23:00:44"       )
-            .expect("TIME.YEAR:year_utc",           "2013"           )
-            .expect("TIME.YEAR:year_utc",           2013L            )
-            .expect("TIME.MONTH:month_utc",         "1"              )
-            .expect("TIME.MONTH:month_utc",         1L               )
-            .expect("TIME.MONTHNAME:monthname_utc", "January"        )
-            .expect("TIME.DAY:day_utc",             "1"              )
-            .expect("TIME.DAY:day_utc",             1L               )
-            .expect("TIME.HOUR:hour_utc",           "6"              )
-            .expect("TIME.HOUR:hour_utc",           6L               )
-            .expect("TIME.MINUTE:minute_utc",       "0"              )
-            .expect("TIME.MINUTE:minute_utc",       0L               )
-            .expect("TIME.SECOND:second_utc",       "44"             )
-            .expect("TIME.SECOND:second_utc",       44L              )
-            .expect("TIME.DATE:date_utc",           "2013-01-01"     )
-            .expect("TIME.TIME:time_utc",           "06:00:44"       )
+            .expect("TIME.EPOCH:epoch",             "1357020044000")
+            .expect("TIME.EPOCH:epoch",             1357020044000L)
+            .expect("TIME.YEAR:year",               "2012")
+            .expect("TIME.YEAR:year",               2012L)
+            .expect("TIME.MONTH:month",             "12")
+            .expect("TIME.MONTH:month",             12L)
+            .expect("TIME.MONTHNAME:monthname",     "December")
+            .expect("TIME.DAY:day",                 "31")
+            .expect("TIME.DAY:day",                 31L)
+            .expect("TIME.HOUR:hour",               "23")
+            .expect("TIME.HOUR:hour",               23L)
+            .expect("TIME.MINUTE:minute",           "0")
+            .expect("TIME.MINUTE:minute",           0L)
+            .expect("TIME.SECOND:second",           "44")
+            .expect("TIME.SECOND:second",           44L)
+            .expect("TIME.DATE:date",               "2012-12-31")
+            .expect("TIME.TIME:time",               "23:00:44")
+            .expect("TIME.YEAR:year_utc",           "2013")
+            .expect("TIME.YEAR:year_utc",           2013L)
+            .expect("TIME.MONTH:month_utc",         "1")
+            .expect("TIME.MONTH:month_utc",         1L)
+            .expect("TIME.MONTHNAME:monthname_utc", "January")
+            .expect("TIME.DAY:day_utc",             "1")
+            .expect("TIME.DAY:day_utc",             1L)
+            .expect("TIME.HOUR:hour_utc",           "6")
+            .expect("TIME.HOUR:hour_utc",           6L)
+            .expect("TIME.MINUTE:minute_utc",       "0")
+            .expect("TIME.MINUTE:minute_utc",       0L)
+            .expect("TIME.SECOND:second_utc",       "44")
+            .expect("TIME.SECOND:second_utc",       44L)
+            .expect("TIME.DATE:date_utc",           "2013-01-01")
+            .expect("TIME.TIME:time_utc",           "06:00:44")
 
             .checkExpectations();
     }
 
     @Test
-    public void testTimeStampDissectorPossibles() throws Exception {
+    public void testTimeStampDissectorPossibles() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
 
@@ -114,7 +114,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrftimeStampDissectorPossibles() throws Exception {
+    public void testStrftimeStampDissectorPossibles() {
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%Y-%m-%dT%H:%M:%S%z}t"))
@@ -148,7 +148,7 @@ public class TestTimeStampDissector {
 
 
     @Test
-    public void testTimeStamUpperLowerCaseVariations() throws Exception {
+    public void testTimeStamUpperLowerCaseVariations() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
 
@@ -161,15 +161,15 @@ public class TestTimeStampDissector {
             .withInput("30/sEP/2016:00:00:06 +0000")
             .withInput("30/SEP/2016:00:00:06 +0000")
 
-            .expect("TIME.YEAR:year_utc",       "2016"  )
-            .expect("TIME.MONTH:month_utc",     "9"     )
-            .expect("TIME.DAY:day_utc",         "30"    )
+            .expect("TIME.YEAR:year_utc",       "2016")
+            .expect("TIME.MONTH:month_utc",     "9")
+            .expect("TIME.DAY:day_utc",         "30")
 
             .checkExpectations();
     }
 
     @Test
-    public void testHandlingOfNotYetImplementedSpecialTimeFormat() throws Exception {
+    public void testHandlingOfNotYetImplementedSpecialTimeFormat() {
         // Test both the original form and the documented workaround.
         String logformat = "%{%Y-%m-%dT%H:%M:%S%z}t | %{timestamp}i";
         String input     = "2012-12-31T23:00:44 -0700 | 2012-12-31T23:00:44 -0700";
@@ -183,7 +183,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormat() throws Exception {
+    public void testSpecialTimeFormat() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%Y-%m-%dT%H:%M:%S%z}t"))
 
@@ -228,7 +228,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatBegin() throws Exception {
+    public void testSpecialTimeFormatBegin() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{begin:%Y-%m-%dT%H:%M:%S%z}t"))
             .withInput("2012-12-31T23:00:44-0700")
@@ -237,7 +237,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatEnd() throws Exception {
+    public void testSpecialTimeFormatEnd() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{end:%Y-%m-%dT%H:%M:%S%z}t"))
             .withInput("2012-12-31T23:00:44-0700")
@@ -246,113 +246,113 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatMultiFields1() throws Exception {
+    public void testSpecialTimeFormatMultiFields1() {
         String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 25 3 2016 +0100";
         String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch"                    ,"1482349825000")
+            .expect("TIME.EPOCH:request.receive.time.epoch",                    "1482349825000")
 
             .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
 
-            .expect("TIME.DATE:request.receive.time.date"                      ,"2016-12-21")
-            .expect("TIME.TIME:request.receive.time.time"                      ,"20:50:25")
-            .expect("TIME.YEAR:request.receive.time.year"                      ,"2016")
-            .expect("TIME.MONTH:request.receive.time.month"                    ,"12")
-            .expect("TIME.MONTHNAME:request.receive.time.monthname"            ,"December")
-            .expect("TIME.YEAR:request.receive.time.weekyear"                  ,"2016")
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"51")
-            .expect("TIME.DAY:request.receive.time.day"                        ,"21")
-            .expect("TIME.HOUR:request.receive.time.hour"                      ,"20")
-            .expect("TIME.MINUTE:request.receive.time.minute"                  ,"50")
-            .expect("TIME.SECOND:request.receive.time.second"                  ,"25")
-            .expect("TIME.MILLISECOND:request.receive.time.millisecond"        ,"0")
+            .expect("TIME.DATE:request.receive.time.date",                      "2016-12-21")
+            .expect("TIME.TIME:request.receive.time.time",                      "20:50:25")
+            .expect("TIME.YEAR:request.receive.time.year",                      "2016")
+            .expect("TIME.MONTH:request.receive.time.month",                    "12")
+            .expect("TIME.MONTHNAME:request.receive.time.monthname",            "December")
+            .expect("TIME.YEAR:request.receive.time.weekyear",                  "2016")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear",            "51")
+            .expect("TIME.DAY:request.receive.time.day",                        "21")
+            .expect("TIME.HOUR:request.receive.time.hour",                      "20")
+            .expect("TIME.MINUTE:request.receive.time.minute",                  "50")
+            .expect("TIME.SECOND:request.receive.time.second",                  "25")
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond",        "0")
 
-            .expect("TIME.DATE:request.receive.time.date_utc"                  ,"2016-12-21")
-            .expect("TIME.TIME:request.receive.time.time_utc"                  ,"19:50:25")
-            .expect("TIME.YEAR:request.receive.time.year_utc"                  ,"2016")
-            .expect("TIME.MONTH:request.receive.time.month_utc"                ,"12")
-            .expect("TIME.MONTHNAME:request.receive.time.monthname_utc"        ,"December")
-            .expect("TIME.YEAR:request.receive.time.weekyear_utc"              ,"2016")
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear_utc"        ,"51")
-            .expect("TIME.DAY:request.receive.time.day_utc"                    ,"21")
-            .expect("TIME.HOUR:request.receive.time.hour_utc"                  ,"19")
-            .expect("TIME.MINUTE:request.receive.time.minute_utc"              ,"50")
-            .expect("TIME.SECOND:request.receive.time.second_utc"              ,"25")
-            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc"    ,"0")
+            .expect("TIME.DATE:request.receive.time.date_utc",                  "2016-12-21")
+            .expect("TIME.TIME:request.receive.time.time_utc",                  "19:50:25")
+            .expect("TIME.YEAR:request.receive.time.year_utc",                  "2016")
+            .expect("TIME.MONTH:request.receive.time.month_utc",                "12")
+            .expect("TIME.MONTHNAME:request.receive.time.monthname_utc",        "December")
+            .expect("TIME.YEAR:request.receive.time.weekyear_utc",              "2016")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear_utc",        "51")
+            .expect("TIME.DAY:request.receive.time.day_utc",                    "21")
+            .expect("TIME.HOUR:request.receive.time.hour_utc",                  "19")
+            .expect("TIME.MINUTE:request.receive.time.minute_utc",              "50")
+            .expect("TIME.SECOND:request.receive.time.second_utc",              "25")
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc",    "0")
 
             .checkExpectations();
     }
 
     @Test
-    public void testSpecialTimeFormatMultiFields2() throws Exception {
+    public void testSpecialTimeFormatMultiFields2() {
         String logline = "127.0.0.1 - - [22/Dec/2016:00:09:54 +0100] \"GET / HTTP/1.1\" 200 3525 \"12/22/16 2016-12-22 00:09 00:09:54 12:09:54 AM Thu Thursday Dec December 22 2016 Dec 00 12 357  0 12 12 09 AM 54 4 2016 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
         String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch"                    ,"1482361794000")
+            .expect("TIME.EPOCH:request.receive.time.epoch",                    "1482361794000")
 
             .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
 
-            .expect("TIME.DATE:request.receive.time.date"                      ,"2016-12-22")
-            .expect("TIME.TIME:request.receive.time.time"                      ,"00:09:54")
-            .expect("TIME.YEAR:request.receive.time.year"                      ,"2016")
-            .expect("TIME.MONTH:request.receive.time.month"                    ,"12")
-            .expect("TIME.MONTHNAME:request.receive.time.monthname"            ,"December")
-            .expect("TIME.YEAR:request.receive.time.weekyear"                  ,"2016")
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear"            ,"51")
-            .expect("TIME.DAY:request.receive.time.day"                        ,"22")
-            .expect("TIME.HOUR:request.receive.time.hour"                      ,"0")
-            .expect("TIME.MINUTE:request.receive.time.minute"                  ,"9")
-            .expect("TIME.SECOND:request.receive.time.second"                  ,"54")
-            .expect("TIME.MILLISECOND:request.receive.time.millisecond"        ,"0")
+            .expect("TIME.DATE:request.receive.time.date",                      "2016-12-22")
+            .expect("TIME.TIME:request.receive.time.time",                      "00:09:54")
+            .expect("TIME.YEAR:request.receive.time.year",                      "2016")
+            .expect("TIME.MONTH:request.receive.time.month",                    "12")
+            .expect("TIME.MONTHNAME:request.receive.time.monthname",            "December")
+            .expect("TIME.YEAR:request.receive.time.weekyear",                  "2016")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear",            "51")
+            .expect("TIME.DAY:request.receive.time.day",                        "22")
+            .expect("TIME.HOUR:request.receive.time.hour",                      "0")
+            .expect("TIME.MINUTE:request.receive.time.minute",                  "9")
+            .expect("TIME.SECOND:request.receive.time.second",                  "54")
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond",        "0")
 
-            .expect("TIME.DATE:request.receive.time.date_utc"                  ,"2016-12-21")
-            .expect("TIME.TIME:request.receive.time.time_utc"                  ,"23:09:54")
-            .expect("TIME.YEAR:request.receive.time.year_utc"                  ,"2016")
-            .expect("TIME.MONTH:request.receive.time.month_utc"                ,"12")
-            .expect("TIME.MONTHNAME:request.receive.time.monthname_utc"        ,"December")
-            .expect("TIME.YEAR:request.receive.time.weekyear_utc"              ,"2016")
-            .expect("TIME.WEEK:request.receive.time.weekofweekyear_utc"        ,"51")
-            .expect("TIME.DAY:request.receive.time.day_utc"                    ,"21")
-            .expect("TIME.HOUR:request.receive.time.hour_utc"                  ,"23")
-            .expect("TIME.MINUTE:request.receive.time.minute_utc"              ,"9")
-            .expect("TIME.SECOND:request.receive.time.second_utc"              ,"54")
-            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc"    ,"0")
+            .expect("TIME.DATE:request.receive.time.date_utc",                  "2016-12-21")
+            .expect("TIME.TIME:request.receive.time.time_utc",                  "23:09:54")
+            .expect("TIME.YEAR:request.receive.time.year_utc",                  "2016")
+            .expect("TIME.MONTH:request.receive.time.month_utc",                "12")
+            .expect("TIME.MONTHNAME:request.receive.time.monthname_utc",        "December")
+            .expect("TIME.YEAR:request.receive.time.weekyear_utc",              "2016")
+            .expect("TIME.WEEK:request.receive.time.weekofweekyear_utc",        "51")
+            .expect("TIME.DAY:request.receive.time.day_utc",                    "21")
+            .expect("TIME.HOUR:request.receive.time.hour_utc",                  "23")
+            .expect("TIME.MINUTE:request.receive.time.minute_utc",              "9")
+            .expect("TIME.SECOND:request.receive.time.second_utc",              "54")
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc",    "0")
 
             .checkExpectations();
     }
 
     @Test
-    public void testSpecialTimeLeadingSpaces1() throws Exception {
+    public void testSpecialTimeLeadingSpaces1() {
         String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 25 3 2016 +0100";
         String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch" ,"1482349825000")
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1482349825000")
             .checkExpectations();
     }
 
     @Test
-    public void testSpecialTimeLeadingSpaces2a() throws Exception {
+    public void testSpecialTimeLeadingSpaces2a() {
         String logline = "127.0.0.1 - - [01/Jan/2017:13:01:21 +0100] \"GET / HTTP/1.1\" 200 3525 \"01/01/17 2017-01-01 13:01 13:01:21 01:01:21 PM Sun Sunday Jan January 01 2017 Jan 13 01 001 13  1 01 01 PM 21 7 2017 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
         String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch" ,"1483272081000")
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1483272081000")
             .checkExpectations();
     }
 
     @Test
-    public void testMultipleSpecialTime() throws Exception {
+    public void testMultipleSpecialTime() {
         // As described here: http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples
         // You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
         // Timestamp including milliseconds
@@ -377,7 +377,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testReportedSpecialTime() throws Exception {
+    public void testReportedSpecialTime() {
         String logline = "28/feb/2017:03:39:40 +0800";
         String logformat = "%{%d/%b/%Y:%H:%M:%S %z}t";
 
@@ -392,39 +392,39 @@ public class TestTimeStampDissector {
     public void testAllStrfFieldsLowValues() {
         ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2001, 1, 2, 3, 4, 5, 678901234), ZoneId.of("CET"));
 
-        checkStrfField(dateTime, "%a", "Tue");          // The abbreviated name of the day of the week according to the current locale.
-        checkStrfField(dateTime, "%A", "Tuesday");      // The full name of the day of the week according to the current locale.
-        checkStrfField(dateTime, "%b", "Jan");          // The abbreviated month name according to the current locale.
-        checkStrfField(dateTime, "%h", "Jan");          // Equivalent to %b.
-        checkStrfField(dateTime, "%B", "January");      // The full month name according to the current locale.;
-        checkStrfField(dateTime, "%d", "02");           // The day of the month as a decimal number (range 01 to 31).
-        checkStrfField(dateTime, "%D", "01/02/01");     // Equivalent to %m/%d/%y. (Yecch—for Americans only)
-        checkStrfField(dateTime, "%e", " 2");           // Like %d, the day of the month as a decimal number, but a leading zero is replaced by a space.
-        checkStrfField(dateTime, "%F", "2001-01-02");   // Equivalent to %Y-%m-%d (the ISO 8601 date format).
-        checkStrfField(dateTime, "%G", "2001");         // The ISO 8601 week-based year (see NOTES) with century as a decimal number.
-        checkStrfField(dateTime, "%g", "01");           // Like %G, but without century, that is, with a 2-digit year (00–99).
-        checkStrfField(dateTime, "%H", "03");           // The hour as a decimal number using a 24-hour clock (range 00 to 23).
-        checkStrfField(dateTime, "%I", "03");           // The hour as a decimal number using a 12-hour clock (range 01 to 12).
-        checkStrfField(dateTime, "%j", "002");          // The day of the year as a decimal number (range 001 to 366).
-        checkStrfField(dateTime, "%k", " 3");           // The hour (24-hour clock) as a decimal number (range 0 to 23); single digits are preceded by a blank. (See also %H)
-        checkStrfField(dateTime, "%l", " 3");           // The hour (12-hour clock) as a decimal number (range 1 to 12); single digits are preceded by a blank. (See also %I)
-        checkStrfField(dateTime, "%m", "01");           // The month as a decimal number (range 01 to 12).
-        checkStrfField(dateTime, "%M", "04");           // The minute as a decimal number (range 00 to 59).
-        checkStrfField(dateTime, "%p", "AM");           // Either "AM" or "PM" according to the given time value, or the corresponding strings for the current locale. Noon is treated as "PM" and midnight as "AM".
-        checkStrfField(dateTime, "%P", "am");           // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
-        checkStrfField(dateTime, "%r", "03:04:05 AM");  // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
-        checkStrfField(dateTime, "%R", "03:04");        // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
-        checkStrfField(dateTime, "%S", "05");           // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
-        checkStrfField(dateTime, "%T", "03:04:05");     // The time in 24-hour notation (%H:%M:%S).
-        checkStrfField(dateTime, "%u", "2");            // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
-        checkStrfField(dateTime, "%V", "1");            // The ISO 8601 week number (see NOTES) of the current year as a decimal number, range 01 to 53, where week 1 is the first week that has at least 4 days in the new year. See also %U and %W.
-        checkStrfField(dateTime, "%W", "01");           // The week number of the current year as a decimal number, range 00 to 53, starting with the first Monday as the first day of week 01.
-        checkStrfField(dateTime, "%y", "01");           // The year as a decimal number without a century (range 00 to 99).
-        checkStrfField(dateTime, "%Y", "2001");         // The year as a decimal number including the century.
-        checkStrfField(dateTime, "%z", "+0100");        // The +hhmm or -hhmm numeric timezone.
-        checkStrfField(dateTime, "%Z", "CET");          // The timezone name or abbreviation.
-        checkStrfField(dateTime, "msec_frac", "678");   // Apache HTTPD specific: milliseconds fraction
-        checkStrfField(dateTime, "usec_frac", "678901");// Apache HTTPD specific: microseconds fraction
+        checkStrfField(dateTime, "%a", "Tue");           // The abbreviated name of the day of the week according to the current locale.
+        checkStrfField(dateTime, "%A", "Tuesday");       // The full name of the day of the week according to the current locale.
+        checkStrfField(dateTime, "%b", "Jan");           // The abbreviated month name according to the current locale.
+        checkStrfField(dateTime, "%h", "Jan");           // Equivalent to %b.
+        checkStrfField(dateTime, "%B", "January");       // The full month name according to the current locale.;
+        checkStrfField(dateTime, "%d", "02");            // The day of the month as a decimal number (range 01 to 31).
+        checkStrfField(dateTime, "%D", "01/02/01");      // Equivalent to %m/%d/%y. (Yecch—for Americans only)
+        checkStrfField(dateTime, "%e", " 2");            // Like %d, the day of the month as a decimal number, but a leading zero is replaced by a space.
+        checkStrfField(dateTime, "%F", "2001-01-02");    // Equivalent to %Y-%m-%d (the ISO 8601 date format).
+        checkStrfField(dateTime, "%G", "2001");          // The ISO 8601 week-based year (see NOTES) with century as a decimal number.
+        checkStrfField(dateTime, "%g", "01");            // Like %G, but without century, that is, with a 2-digit year (00–99).
+        checkStrfField(dateTime, "%H", "03");            // The hour as a decimal number using a 24-hour clock (range 00 to 23).
+        checkStrfField(dateTime, "%I", "03");            // The hour as a decimal number using a 12-hour clock (range 01 to 12).
+        checkStrfField(dateTime, "%j", "002");           // The day of the year as a decimal number (range 001 to 366).
+        checkStrfField(dateTime, "%k", " 3");            // The hour (24-hour clock) as a decimal number (range 0 to 23); single digits are preceded by a blank. (See also %H)
+        checkStrfField(dateTime, "%l", " 3");            // The hour (12-hour clock) as a decimal number (range 1 to 12); single digits are preceded by a blank. (See also %I)
+        checkStrfField(dateTime, "%m", "01");            // The month as a decimal number (range 01 to 12).
+        checkStrfField(dateTime, "%M", "04");            // The minute as a decimal number (range 00 to 59).
+        checkStrfField(dateTime, "%p", "AM");            // Either "AM" or "PM" according to the given time value, or the corresponding strings for the current locale. Noon is treated as "PM" and midnight as "AM".
+        checkStrfField(dateTime, "%P", "am");            // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
+        checkStrfField(dateTime, "%r", "03:04:05 AM");   // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
+        checkStrfField(dateTime, "%R", "03:04");         // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
+        checkStrfField(dateTime, "%S", "05");            // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
+        checkStrfField(dateTime, "%T", "03:04:05");      // The time in 24-hour notation (%H:%M:%S).
+        checkStrfField(dateTime, "%u", "2");             // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
+        checkStrfField(dateTime, "%V", "1");             // The ISO 8601 week number (see NOTES) of the current year as a decimal number, range 01 to 53, where week 1 is the first week that has at least 4 days in the new year. See also %U and %W.
+        checkStrfField(dateTime, "%W", "01");            // The week number of the current year as a decimal number, range 00 to 53, starting with the first Monday as the first day of week 01.
+        checkStrfField(dateTime, "%y", "01");            // The year as a decimal number without a century (range 00 to 99).
+        checkStrfField(dateTime, "%Y", "2001");          // The year as a decimal number including the century.
+        checkStrfField(dateTime, "%z", "+0100");         // The +hhmm or -hhmm numeric timezone.
+        checkStrfField(dateTime, "%Z", "CET");           // The timezone name or abbreviation.
+        checkStrfField(dateTime, "msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
 
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2001-01-02 03:04:05.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2001-01-02 03:04:05.678901 +0100");
@@ -434,39 +434,39 @@ public class TestTimeStampDissector {
     public void testAllStrfFieldsHighValues() {
         ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2017, 11, 12, 23, 14, 15, 678901234), ZoneId.of("CET"));
 
-        checkStrfField(dateTime, "%a", "Sun");          // The abbreviated name of the day of the week according to the current locale.
-        checkStrfField(dateTime, "%A", "Sunday");       // The full name of the day of the week according to the current locale.
-        checkStrfField(dateTime, "%b", "Nov");          // The abbreviated month name according to the current locale.
-        checkStrfField(dateTime, "%h", "Nov");          // Equivalent to %b.
-        checkStrfField(dateTime, "%B", "November");     // The full month name according to the current locale.;
-        checkStrfField(dateTime, "%d", "12");           // The day of the month as a decimal number (range 01 to 31).
-        checkStrfField(dateTime, "%D", "11/12/17");     // Equivalent to %m/%d/%y. (Yecch—for Americans only)
-        checkStrfField(dateTime, "%e", "12");           // Like %d, the day of the month as a decimal number, but a leading zero is replaced by a space.
-        checkStrfField(dateTime, "%F", "2017-11-12");   // Equivalent to %Y-%m-%d (the ISO 8601 date format).
-        checkStrfField(dateTime, "%G", "2017");         // The ISO 8601 week-based year (see NOTES) with century as a decimal number. The 4-digit year corresponding to the ISO week number (see %V). This has the same format and value as %Y, except that if the ISO week number belongs to the previous or next year, that year is used instead.
-        checkStrfField(dateTime, "%g", "17");           // Like %G, but without century, that is, with a 2-digit year (00–99).
-        checkStrfField(dateTime, "%H", "23");           // The hour as a decimal number using a 24-hour clock (range 00 to 23).
-        checkStrfField(dateTime, "%I", "11");           // The hour as a decimal number using a 12-hour clock (range 01 to 12).
-        checkStrfField(dateTime, "%j", "316");          // The day of the year as a decimal number (range 001 to 366).
-        checkStrfField(dateTime, "%k", "23");           // The hour (24-hour clock) as a decimal number (range 0 to 23); single digits are preceded by a blank. (See also %H)
-        checkStrfField(dateTime, "%l", "11");           // The hour (12-hour clock) as a decimal number (range 1 to 12); single digits are preceded by a blank. (See also %I)
-        checkStrfField(dateTime, "%m", "11");           // The month as a decimal number (range 01 to 12).
-        checkStrfField(dateTime, "%M", "14");           // The minute as a decimal number (range 00 to 59).
-        checkStrfField(dateTime, "%p", "PM");           // Either "AM" or "PM" according to the given time value, or the corresponding strings for the current locale. Noon is treated as "PM" and midnight as "AM".
-        checkStrfField(dateTime, "%P", "pm");           // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
-        checkStrfField(dateTime, "%r", "11:14:15 PM");  // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
-        checkStrfField(dateTime, "%R", "23:14");        // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
-        checkStrfField(dateTime, "%S", "15");           // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
-        checkStrfField(dateTime, "%T", "23:14:15");     // The time in 24-hour notation (%H:%M:%S).
-        checkStrfField(dateTime, "%u", "7");            // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
-        checkStrfField(dateTime, "%V", "45");           // The ISO 8601 week number (see NOTES) of the current year as a decimal number, range 01 to 53, where week 1 is the first week that has at least 4 days in the new year. See also %U and %W.
-        checkStrfField(dateTime, "%W", "45");           // The week number of the current year as a decimal number, range 00 to 53, starting with the first Monday as the first day of week 01.
-        checkStrfField(dateTime, "%y", "17");           // The year as a decimal number without a century (range 00 to 99).
-        checkStrfField(dateTime, "%Y", "2017");         // The year as a decimal number including the century.
-        checkStrfField(dateTime, "%z", "+0100");        // The +hhmm or -hhmm numeric timezone.
-        checkStrfField(dateTime, "%Z", "CET");          // The timezone name or abbreviation.
-        checkStrfField(dateTime, "msec_frac", "678");   // Apache HTTPD specific: milliseconds fraction
-        checkStrfField(dateTime, "usec_frac", "678901");// Apache HTTPD specific: microseconds fraction
+        checkStrfField(dateTime, "%a", "Sun");           // The abbreviated name of the day of the week according to the current locale.
+        checkStrfField(dateTime, "%A", "Sunday");        // The full name of the day of the week according to the current locale.
+        checkStrfField(dateTime, "%b", "Nov");           // The abbreviated month name according to the current locale.
+        checkStrfField(dateTime, "%h", "Nov");           // Equivalent to %b.
+        checkStrfField(dateTime, "%B", "November");      // The full month name according to the current locale.;
+        checkStrfField(dateTime, "%d", "12");            // The day of the month as a decimal number (range 01 to 31).
+        checkStrfField(dateTime, "%D", "11/12/17");      // Equivalent to %m/%d/%y. (Yecch—for Americans only)
+        checkStrfField(dateTime, "%e", "12");            // Like %d, the day of the month as a decimal number, but a leading zero is replaced by a space.
+        checkStrfField(dateTime, "%F", "2017-11-12");    // Equivalent to %Y-%m-%d (the ISO 8601 date format).
+        checkStrfField(dateTime, "%G", "2017");          // The ISO 8601 week-based year (see NOTES) with century as a decimal number. The 4-digit year corresponding to the ISO week number (see %V). This has the same format and value as %Y, except that if the ISO week number belongs to the previous or next year, that year is used instead.
+        checkStrfField(dateTime, "%g", "17");            // Like %G, but without century, that is, with a 2-digit year (00–99).
+        checkStrfField(dateTime, "%H", "23");            // The hour as a decimal number using a 24-hour clock (range 00 to 23).
+        checkStrfField(dateTime, "%I", "11");            // The hour as a decimal number using a 12-hour clock (range 01 to 12).
+        checkStrfField(dateTime, "%j", "316");           // The day of the year as a decimal number (range 001 to 366).
+        checkStrfField(dateTime, "%k", "23");            // The hour (24-hour clock) as a decimal number (range 0 to 23); single digits are preceded by a blank. (See also %H)
+        checkStrfField(dateTime, "%l", "11");            // The hour (12-hour clock) as a decimal number (range 1 to 12); single digits are preceded by a blank. (See also %I)
+        checkStrfField(dateTime, "%m", "11");            // The month as a decimal number (range 01 to 12).
+        checkStrfField(dateTime, "%M", "14");            // The minute as a decimal number (range 00 to 59).
+        checkStrfField(dateTime, "%p", "PM");            // Either "AM" or "PM" according to the given time value, or the corresponding strings for the current locale. Noon is treated as "PM" and midnight as "AM".
+        checkStrfField(dateTime, "%P", "pm");            // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
+        checkStrfField(dateTime, "%r", "11:14:15 PM");   // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
+        checkStrfField(dateTime, "%R", "23:14");         // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
+        checkStrfField(dateTime, "%S", "15");            // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
+        checkStrfField(dateTime, "%T", "23:14:15");      // The time in 24-hour notation (%H:%M:%S).
+        checkStrfField(dateTime, "%u", "7");             // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
+        checkStrfField(dateTime, "%V", "45");            // The ISO 8601 week number (see NOTES) of the current year as a decimal number, range 01 to 53, where week 1 is the first week that has at least 4 days in the new year. See also %U and %W.
+        checkStrfField(dateTime, "%W", "45");            // The week number of the current year as a decimal number, range 00 to 53, starting with the first Monday as the first day of week 01.
+        checkStrfField(dateTime, "%y", "17");            // The year as a decimal number without a century (range 00 to 99).
+        checkStrfField(dateTime, "%Y", "2017");          // The year as a decimal number including the century.
+        checkStrfField(dateTime, "%z", "+0100");         // The +hhmm or -hhmm numeric timezone.
+        checkStrfField(dateTime, "%Z", "CET");           // The timezone name or abbreviation.
+        checkStrfField(dateTime, "msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
 
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2017-11-12 23:14:15.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2017-11-12 23:14:15.678901 +0100");

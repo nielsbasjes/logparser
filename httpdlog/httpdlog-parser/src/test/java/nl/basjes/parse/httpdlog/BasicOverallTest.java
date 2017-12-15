@@ -49,7 +49,7 @@ public class BasicOverallTest {
         }
     }
 
-    private static final String logformat =
+    private static final String LOG_FORMAT =
             "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" " +
             "\"%l\" \"%L\" \"%m\" \"%p\" \"%{canonical}p\" \"%{local}p\" \"%{remote}p\" \"%P\" \"%{pid}P\" \"%{tid}P\"" +
             " \"%{hextid}P\" \"%q\" \"%r\" \"%R\" \"%s\" \"%>s\" \"%t\" \"%{msec}t\" \"%{begin:msec}t\" \"%{end:msec}t" +
@@ -57,7 +57,7 @@ public class BasicOverallTest {
             "c_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"" +
             "%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
 
-    private static final String[] loglines = {
+    private static final String[] LOG_LINES = {
         "\"%\" \"172.17.42.1\" \"172.17.42.1\" \"172.17.0.2\" \"4880\" \"4880\" \"652\" \"/usr/share/httpd/noindex/ind" +
                 "ex.html\" \"172.17.42.1\" \"HTTP/1.1\" \"0\" \"-\" \"VG9exZ0MX@uqta4OldejvQAAAAA\" \"GET\" \"80\" \"8" +
                 "0\" \"80\" \"43417\" \"126\" \"126\" \"140597540726848\" \"140597540726848\" \"\" \"GET / HTTP/1.1\" " +
@@ -111,14 +111,14 @@ public class BasicOverallTest {
 
     @Test
     public void testBasicParsing() throws Exception {
-        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
+        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, LOG_FORMAT);
         MyRecord         record = new MyRecord();
 
         List<String> paths = parser.getPossiblePaths();
 
         parser.addParseTarget(record.getClass().getMethod("setValue", String.class, String.class), paths);
 
-        for (String logline : loglines) {
+        for (String logline : LOG_LINES) {
             record.clear();
             parser.parse(record, logline);
             System.out.println(record.toString());

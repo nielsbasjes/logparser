@@ -116,10 +116,10 @@ public class TestParsedRecord {
         assertEquals("String B", "42",          record.getString("String B"));
         assertEquals("String C", "42",          record.getString("String C"));
         assertEquals("String D", "42",          record.getString("String D"));
-        assertEquals("Long A"  , (Long)42L,     record.getLong("Long A"));
-        assertEquals("Long B"  , (Long)42L,     record.getLong("Long B"));
-        assertEquals("Long C"  , (Long)42L,     record.getLong("Long C"));
-        assertEquals("Long D"  , (Long)42L,     record.getLong("Long D"));
+        assertEquals("Long A",   (Long)42L,     record.getLong("Long A"));
+        assertEquals("Long B",   (Long)42L,     record.getLong("Long B"));
+        assertEquals("Long C",   (Long)42L,     record.getLong("Long C"));
+        assertEquals("Long D",   (Long)42L,     record.getLong("Long D"));
         assertEquals("Double A", (Double)42D,   record.getDouble("Double A"));
         assertEquals("Double B", (Double)42D,   record.getDouble("Double B"));
         assertEquals("Double C", (Double)42D,   record.getDouble("Double C"));

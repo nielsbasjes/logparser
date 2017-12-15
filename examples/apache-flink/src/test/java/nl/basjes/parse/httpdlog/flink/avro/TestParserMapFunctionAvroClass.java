@@ -38,6 +38,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+// CHECKSTYLE.OFF: LineLength
+// CHECKSTYLE.OFF: LeftCurly
 @RunWith(JUnit4.class)
 public class TestParserMapFunctionAvroClass implements Serializable {
 
@@ -49,12 +51,12 @@ public class TestParserMapFunctionAvroClass implements Serializable {
 
         @Field("SCREENWIDTH:request.firstline.uri.query.s.width")   public void setScreenWidth(Long value)              { builder.getDeviceBuilder().setScreenWidth(value);     }
         @Field("SCREENHEIGHT:request.firstline.uri.query.s.height") public void setScreenHeight(Long value)             { builder.getDeviceBuilder().setScreenHeight(value);    }
-        @Field("STRING:request.user-agent.device_class")            public void setDevice_class(String value)           { builder.getDeviceBuilder().setDeviceClass(value);     }
-        @Field("STRING:request.user-agent.device_brand")            public void setDevice_brand(String value)           { builder.getDeviceBuilder().setDeviceBrand(value);     }
+        @Field("STRING:request.user-agent.device_class")            public void setDeviceClass(String value)            { builder.getDeviceBuilder().setDeviceClass(value);     }
+        @Field("STRING:request.user-agent.device_brand")            public void setDeviceBrand(String value)            { builder.getDeviceBuilder().setDeviceBrand(value);     }
 
-        @Field("STRING:request.user-agent.agent_class")             public void setAgent_class(String value)            { builder.getBrowserBuilder().setAgentClass(value);     }
-        @Field("STRING:request.user-agent.agent_name")              public void setAgent_name(String value)             { builder.getBrowserBuilder().setAgentName(value);      }
-        @Field("STRING:request.user-agent.agent_version")           public void setAgent_version(String value)          { builder.getBrowserBuilder().setAgentVersion(value);   }
+        @Field("STRING:request.user-agent.agent_class")             public void setAgentClass(String value)             { builder.getBrowserBuilder().setAgentClass(value);     }
+        @Field("STRING:request.user-agent.agent_name")              public void setAgentName(String value)              { builder.getBrowserBuilder().setAgentName(value);      }
+        @Field("STRING:request.user-agent.agent_version")           public void setAgentVersion(String value)           { builder.getBrowserBuilder().setAgentVersion(value);   }
 
         @Field("IP:connection.client.host")                         public void setConnectionClientHost(String value)   { builder.getVisitorBuilder().setIp(value);             }
 
@@ -68,7 +70,7 @@ public class TestParserMapFunctionAvroClass implements Serializable {
         private Parser<ClickSetter> parser;
 
         @Override
-        public void open(Configuration parameters) throws NoSuchMethodException {
+        public void open(Configuration parameters) {
             parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat());
 
             parser.addDissector(new ScreenResolutionDissector());

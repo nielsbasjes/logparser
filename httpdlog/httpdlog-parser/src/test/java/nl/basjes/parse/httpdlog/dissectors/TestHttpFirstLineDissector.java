@@ -22,7 +22,7 @@ import org.junit.Test;
 
 public class TestHttpFirstLineDissector {
     @Test
-    public void testNormal() throws Exception {
+    public void testNormal() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -35,7 +35,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testChoppedFirstLine() throws Exception {
+    public void testChoppedFirstLine() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -48,7 +48,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testInvalidFirstLine() throws Exception {
+    public void testInvalidFirstLine() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withInput("\\x16\\x03\\x01")
@@ -58,7 +58,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testStrangeCommandVersionControl() throws Exception {
+    public void testStrangeCommandVersionControl() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -71,7 +71,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testProtocol() throws Exception {
+    public void testProtocol() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("FOO/1.2")
@@ -81,7 +81,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testChoppedProtocol() throws Exception {
+    public void testChoppedProtocol() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("FOO")
@@ -91,7 +91,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testEmptyProtocol1() throws Exception {
+    public void testEmptyProtocol1() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("")
@@ -101,7 +101,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testEmptyProtocol2() throws Exception {
+    public void testEmptyProtocol2() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("-")

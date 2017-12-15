@@ -282,8 +282,7 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     @Override
-    public LongWritable getCurrentKey() throws IOException,
-            InterruptedException {
+    public LongWritable getCurrentKey() {
         // The key we return is the same byte offset as the TextInputFormat
         // would give.
         return lineReader.getCurrentKey();

@@ -43,7 +43,7 @@ public class TestParserDoFnInline implements Serializable {
     public final transient TestPipeline pipeline = TestPipeline.create();
 
     @Test
-    public void testInlineDefinition() throws Exception {
+    public void testInlineDefinition() {
         List<String> logLines = Collections.singletonList(TestCase.getInputLine());
 
         // Apply Create, passing the list and the coder, to create the PCollection.

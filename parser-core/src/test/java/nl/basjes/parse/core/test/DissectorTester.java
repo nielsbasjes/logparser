@@ -44,7 +44,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class DissectorTester implements Serializable {
+public final class DissectorTester implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DissectorTester.class);
 
@@ -67,8 +67,8 @@ public class DissectorTester implements Serializable {
         return new DissectorTester();
     }
 
-    public DissectorTester withParser(Parser<TestRecord> parser) {
-        this.parser = parser;
+    public DissectorTester withParser(Parser<TestRecord> newParser) {
+        this.parser = newParser;
         return this;
     }
 
@@ -249,27 +249,33 @@ public class DissectorTester implements Serializable {
             for (Map.Entry<String, String> expectation : expectedStrings.entrySet()) {
                 String fieldName = expectation.getKey();
                 assertTrue("The expected String value for '" + fieldName + "' was missing.", result.hasStringValue(fieldName));
-                assertEquals("The expected String value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getStringValue(fieldName));
+                assertEquals("The expected String value for '" + fieldName + "' was wrong.",
+                    expectation.getValue(), result.getStringValue(fieldName));
                 if (verbose) {
-                    LOG.info("Passed: String value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getStringValue(fieldName));
+                    LOG.info("Passed: String value for '{}'{} was correctly : {}",
+                        fieldName, padding(fieldName, longestFieldName), result.getStringValue(fieldName));
                 }
             }
 
             for (Map.Entry<String, Long> expectation : expectedLongs.entrySet()) {
                 String fieldName = expectation.getKey();
                 assertTrue("The expected Long value for '" + fieldName + "' was missing.", result.hasLongValue(fieldName));
-                assertEquals("The expected Long value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getLongValue(fieldName));
+                assertEquals("The expected Long value for '" + fieldName + "' was wrong.",
+                    expectation.getValue(), result.getLongValue(fieldName));
                 if (verbose) {
-                    LOG.info("Passed: Long   value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getLongValue(fieldName));
+                    LOG.info("Passed: Long   value for '{}'{} was correctly : {}",
+                        fieldName, padding(fieldName, longestFieldName), result.getLongValue(fieldName));
                 }
             }
 
             for (Map.Entry<String, Double> expectation : expectedDoubles.entrySet()) {
                 String fieldName = expectation.getKey();
                 assertTrue("The expected Double value for '" + fieldName + "' was missing.", result.hasDoubleValue(fieldName));
-                assertEquals("The expected Double value for '" + fieldName + "' was wrong.", expectation.getValue(), result.getDoubleValue(fieldName));
+                assertEquals("The expected Double value for '" + fieldName + "' was wrong.",
+                    expectation.getValue(), result.getDoubleValue(fieldName));
                 if (verbose) {
-                    LOG.info("Passed: Double value for '{}'{} was correctly : {}", fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
+                    LOG.info("Passed: Double value for '{}'{} was correctly : {}",
+                        fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
                 }
             }
 
@@ -316,21 +322,24 @@ public class DissectorTester implements Serializable {
             }
 
             for (String fieldName: expectedAbsentStrings) {
-                assertFalse("The String value for '" + fieldName + "' should have been absent. It was :." + result.getStringValue(fieldName), result.hasStringValue(fieldName));
+                assertFalse("The String value for '" + fieldName + "' should have been absent. " +
+                    "It was :." + result.getStringValue(fieldName), result.hasStringValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: String value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
             }
 
             for (String fieldName: expectedAbsentLongs) {
-                assertFalse("The Long value for '" + fieldName + "' should have been absent. It was :." + result.getLongValue(fieldName), result.hasLongValue(fieldName));
+                assertFalse("The Long value for '" + fieldName + "' should have been absent. " +
+                    "It was :." + result.getLongValue(fieldName), result.hasLongValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: Long value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
             }
 
             for (String fieldName: expectedAbsentDoubles) {
-                assertFalse("The Double value for '" + fieldName + "' should have been absent. It was :." + result.getDoubleValue(fieldName), result.hasDoubleValue(fieldName));
+                assertFalse("The Double value for '" + fieldName + "' should have been absent. " +
+                    "It was :." + result.getDoubleValue(fieldName), result.hasDoubleValue(fieldName));
                 if (verbose) {
                     LOG.info("Passed: Double value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
@@ -371,7 +380,7 @@ public class DissectorTester implements Serializable {
         for (Dissector dissector: dissectors) {
             for (String output: dissector.getPossibleOutput()) {
                 String baseMsg = "Dissector " + dissector.getClass().getSimpleName() + " outputs " + output;
-                String[] splitOutput = output.split(":",2);
+                String[] splitOutput = output.split(":", 2);
                 assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
                 assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
@@ -506,12 +515,12 @@ public class DissectorTester implements Serializable {
         }
 
         @Override
-        public void prepareForRun() throws InvalidDissectorException {
+        public void prepareForRun() {
 
         }
 
         @Override
-        protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+        protected void initializeNewInstance(Dissector newInstance) {
             DummyDissector dummyDissector = (DummyDissector)newInstance;
             dummyDissector.fieldName = fieldName;
             dummyDissector.outputType = outputType;

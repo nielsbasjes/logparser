@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TestModUniqueIdDissector {
 
     @Test
-    public void testUniqueId1() throws Exception {
+    public void testUniqueId1() {
         // This test case was verified using https://github.com/web-online/mod-unique-id-decode
         //$ ./mod_unique_id_uudecoder -i VaGTKApid0AAALpaNo0AAAAC
         //unique_id.stamp = Sun Jul 12 00:05:28 2015
@@ -35,16 +35,16 @@ public class TestModUniqueIdDissector {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("VaGTKApid0AAALpaNo0AAAAC")
-            .expect("TIME.EPOCH:epoch",           "1436652328000" )
-            .expect("IP:ip",                      "10.98.119.64"  )
-            .expect("PROCESSID:processid",        "47706"         )
-            .expect("COUNTER:counter",            "13965"         )
-            .expect("THREAD_INDEX:threadindex",   "2"             )
+            .expect("TIME.EPOCH:epoch",           "1436652328000")
+            .expect("IP:ip",                      "10.98.119.64")
+            .expect("PROCESSID:processid",        "47706")
+            .expect("COUNTER:counter",            "13965")
+            .expect("THREAD_INDEX:threadindex",   "2")
             .checkExpectations();
     }
 
     @Test
-    public void testUniqueId2() throws Exception {
+    public void testUniqueId2() {
         // This test case was verified using https://github.com/web-online/mod-unique-id-decode
         //$ ./mod_unique_id_uudecoder -i Ucdv38CoEJwAAEusp6EAAADz
         //unique_id.stamp = Sun Jun 23 23:59:59 2013
@@ -56,16 +56,16 @@ public class TestModUniqueIdDissector {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAADz")
-            .expect("TIME.EPOCH:epoch",           "1372024799000"  )
-            .expect("IP:ip",                      "192.168.16.156" )
-            .expect("PROCESSID:processid",        "19372"          )
-            .expect("COUNTER:counter",            "42913"          )
-            .expect("THREAD_INDEX:threadindex",   "243"            )
+            .expect("TIME.EPOCH:epoch",           "1372024799000")
+            .expect("IP:ip",                      "192.168.16.156")
+            .expect("PROCESSID:processid",        "19372")
+            .expect("COUNTER:counter",            "42913")
+            .expect("THREAD_INDEX:threadindex",   "243")
             .checkExpectations();
     }
 
     @Test
-    public void testBadUniqueId_tooShort() throws Exception {
+    public void testBadUniqueIdTooShort() {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD") // BAD: 1 letter too short
@@ -78,7 +78,7 @@ public class TestModUniqueIdDissector {
     }
 
     @Test
-    public void testBadUniqueId_notBase64() throws Exception {
+    public void testBadUniqueIdNotBase64() {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD!") // BAD: 1 letter wrong

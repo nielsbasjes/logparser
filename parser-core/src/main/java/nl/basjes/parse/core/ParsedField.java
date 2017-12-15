@@ -18,9 +18,9 @@ package nl.basjes.parse.core;
 
 public class ParsedField {
 
-    private String  type   = null;
-    private String  name   = null;
-    private Value   value  = null;
+    private String  type;
+    private String  name;
+    private Value   value;
 
     public ParsedField(String type, String name, Value value) {
         this.type = type;

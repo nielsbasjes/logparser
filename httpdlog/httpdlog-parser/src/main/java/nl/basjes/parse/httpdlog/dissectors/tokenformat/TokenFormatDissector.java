@@ -22,7 +22,6 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -175,7 +174,7 @@ public abstract class TokenFormatDissector extends Dissector {
     // --------------------------------------------
 
     @Override
-    public void prepareForRun() throws InvalidDissectorException {
+    public void prepareForRun() {
         // At this point we have all the tokens and now we construct the
         // complete regex and the list to use when extracting
         // We build the regexp so that it only extracts the needed parts.

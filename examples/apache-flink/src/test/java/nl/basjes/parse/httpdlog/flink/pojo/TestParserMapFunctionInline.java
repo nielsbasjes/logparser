@@ -41,18 +41,18 @@ public class TestParserMapFunctionInline implements Serializable {
 
         DataSet<TestRecord> filledTestRecords = input
             .map(new RichMapFunction<String, TestRecord>() {
-            private Parser<TestRecord> parser;
+                private Parser<TestRecord> parser;
 
-            @Override
-            public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
-                parser = TestCase.createTestParser();
-            }
+                @Override
+                public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
+                    parser = TestCase.createTestParser();
+                }
 
-            @Override
-            public TestRecord map(String line) throws Exception {
-                return parser.parse(line);
-            }
-        }).name("Extract Elements from logline");
+                @Override
+                public TestRecord map(String line) throws Exception {
+                    return parser.parse(line);
+                }
+            }).name("Extract Elements from logline");
 
         filledTestRecords.print();
 

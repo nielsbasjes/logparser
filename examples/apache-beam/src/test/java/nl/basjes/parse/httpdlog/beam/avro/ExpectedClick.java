@@ -16,23 +16,41 @@
  */
 package nl.basjes.parse.httpdlog.beam.avro;
 
-import nl.basjes.parse.httpdlog.beam.TestCase;
 import nl.basjes.parse.record.Click;
 
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentClass;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentName;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentVersion;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceBrand;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceClass;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTimeEpoch;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
+
+// CHECKSTYLE.OFF: HideUtilityClassConstructor
 public class ExpectedClick {
 
     public static Click create(){
         Click.Builder builder = Click.newBuilder();
 
-        builder.setTimestamp(                        TestCase.getExpectedRequestReceiveTimeEpoch());
-        builder.getDeviceBuilder().setScreenWidth(   TestCase.getExpectedScreenWidth());
-        builder.getDeviceBuilder().setScreenHeight(  TestCase.getExpectedScreenHeight());
-        builder.getDeviceBuilder().setDeviceClass(   TestCase.getExpectedDevice_class());
-        builder.getDeviceBuilder().setDeviceBrand(   TestCase.getExpectedDevice_brand());
-        builder.getBrowserBuilder().setAgentClass(   TestCase.getExpectedAgent_class());
-        builder.getBrowserBuilder().setAgentName(    TestCase.getExpectedAgent_name());
-        builder.getBrowserBuilder().setAgentVersion( TestCase.getExpectedAgent_version());
-        builder.getVisitorBuilder().setIp(           TestCase.getExpectedConnectionClientHost());
+        builder
+            .setTimestamp(getExpectedRequestReceiveTimeEpoch())
+            .getDeviceBuilder()
+                .setScreenWidth(getExpectedScreenWidth())
+                .setScreenHeight(getExpectedScreenHeight())
+                .setDeviceClass(getExpectedDeviceClass())
+                .setDeviceBrand(getExpectedDeviceBrand());
+
+        builder
+            .getBrowserBuilder()
+                .setAgentClass(getExpectedAgentClass())
+                .setAgentName(getExpectedAgentName())
+                .setAgentVersion(getExpectedAgentVersion());
+
+        builder
+            .getVisitorBuilder()
+                .setIp(getExpectedConnectionClientHost());
         return builder.build();
     }
 

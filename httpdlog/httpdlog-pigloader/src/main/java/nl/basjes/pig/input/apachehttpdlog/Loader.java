@@ -40,7 +40,6 @@ import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.util.UDFContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,8 +185,7 @@ public class Loader
     // ------------------------------------------
 
     @Override
-    public InputFormat<?, ?> getInputFormat()
-            throws IOException {
+    public InputFormat<?, ?> getInputFormat() {
         return theInputFormat;
     }
 
@@ -259,7 +257,7 @@ public class Loader
 
     private static final String MULTI_COMMENT = "  -- If you only want a single field replace * with name and change type to chararray";
 
-    private String createPigExample() throws IOException, MissingDissectorsException, InvalidDissectorException {
+    private String createPigExample() throws IOException {
         StringBuilder sb = new StringBuilder(1024);
         String fieldName = requestedFields.get(0);
 
@@ -336,8 +334,7 @@ public class Loader
     // ------------------------------------------
 
     @Override
-    public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit)
-            throws IOException {
+    public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit) {
         // Note that for this Loader, we don't care about the PigSplit.
         if (newReader instanceof ApacheHttpdLogfileRecordReader) {
             this.reader = (ApacheHttpdLogfileRecordReader) newReader;
@@ -417,21 +414,21 @@ public class Loader
     // ------------------------------------------
 
     @Override
-    public ResourceStatistics getStatistics(String location, Job job) throws IOException {
+    public ResourceStatistics getStatistics(String location, Job job) {
         return null;
     }
 
     // ------------------------------------------
 
     @Override
-    public String[] getPartitionKeys(String location, Job job) throws IOException {
+    public String[] getPartitionKeys(String location, Job job) {
         return null;
     }
 
     // ------------------------------------------
 
     @Override
-    public void setPartitionFilter(Expression partitionFilter) throws IOException {
+    public void setPartitionFilter(Expression partitionFilter) {
     }
 
     public final Map<String, Set<String>> getTypeRemappings() {
@@ -447,7 +444,7 @@ public class Loader
     }
 
     @Override
-    public RequiredFieldResponse pushProjection(RequiredFieldList pRequiredFieldList) throws FrontendException {
+    public RequiredFieldResponse pushProjection(RequiredFieldList pRequiredFieldList) {
         this.requiredFieldList = pRequiredFieldList;
         // Store the required fields information in the UDFContext.
         storeInUDFContext(PRUNE_PROJECTION_INFO, this.requiredFieldList);

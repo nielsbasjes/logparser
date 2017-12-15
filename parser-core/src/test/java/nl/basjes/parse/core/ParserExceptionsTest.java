@@ -270,7 +270,7 @@ public class ParserExceptionsTest {
         }
 
         @Override
-        public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
+        public void dissect(Parsable<?> parsable, String inputname) {
         }
 
         @Override
@@ -327,7 +327,7 @@ public class ParserExceptionsTest {
     }
 
     @Test
-    public void testDropDissector2() throws Exception {
+    public void testDropDissector2() {
         // setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 

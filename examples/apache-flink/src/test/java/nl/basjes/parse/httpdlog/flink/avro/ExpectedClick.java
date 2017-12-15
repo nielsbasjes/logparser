@@ -19,6 +19,9 @@ package nl.basjes.parse.httpdlog.flink.avro;
 import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.record.Click;
 
+
+// CHECKSTYLE.OFF: HideUtilityClassConstructor
+// CHECKSTYLE.OFF: ParenPad
 public class ExpectedClick {
 
     public static Click create(){
@@ -27,11 +30,11 @@ public class ExpectedClick {
         builder.setTimestamp(                        TestCase.getExpectedRequestReceiveTimeEpoch());
         builder.getDeviceBuilder().setScreenWidth(   TestCase.getExpectedScreenWidth());
         builder.getDeviceBuilder().setScreenHeight(  TestCase.getExpectedScreenHeight());
-        builder.getDeviceBuilder().setDeviceClass(   TestCase.getExpectedDevice_class());
-        builder.getDeviceBuilder().setDeviceBrand(   TestCase.getExpectedDevice_brand());
-        builder.getBrowserBuilder().setAgentClass(   TestCase.getExpectedAgent_class());
-        builder.getBrowserBuilder().setAgentName(    TestCase.getExpectedAgent_name());
-        builder.getBrowserBuilder().setAgentVersion( TestCase.getExpectedAgent_version());
+        builder.getDeviceBuilder().setDeviceClass(   TestCase.getExpectedDeviceClass());
+        builder.getDeviceBuilder().setDeviceBrand(   TestCase.getExpectedDeviceBrand());
+        builder.getBrowserBuilder().setAgentClass(   TestCase.getExpectedAgentClass());
+        builder.getBrowserBuilder().setAgentName(    TestCase.getExpectedAgentName());
+        builder.getBrowserBuilder().setAgentVersion( TestCase.getExpectedAgentVersion());
         builder.getVisitorBuilder().setIp(           TestCase.getExpectedConnectionClientHost());
         return builder.build();
     }

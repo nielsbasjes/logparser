@@ -20,7 +20,6 @@ import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.test.DissectorTester;
 import org.junit.Test;
 
@@ -179,11 +178,11 @@ public class ReferenceTestDouble {
         }
 
         @Override
-        public void prepareForRun() throws InvalidDissectorException {
+        public void prepareForRun() {
         }
 
         @Override
-        protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+        protected void initializeNewInstance(Dissector newInstance) {
         }
 
     }
@@ -216,11 +215,11 @@ public class ReferenceTestDouble {
         }
 
         @Override
-        public void prepareForRun() throws InvalidDissectorException {
+        public void prepareForRun() {
         }
 
         @Override
-        protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+        protected void initializeNewInstance(Dissector newInstance) {
         }
 
     }

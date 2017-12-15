@@ -31,8 +31,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TestLoadMultiFormat {
 
-    private static final String logformat_1 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
-    private static final String logformat_2 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+    private static final String LOGFORMAT_1 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
+    private static final String LOGFORMAT_2 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
     private final String logfile = getClass().getResource("/dual-format-access.log").toString();
 
     @Test
@@ -40,7 +40,7 @@ public class TestLoadMultiFormat {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 
-        String logformat = logformat_1 + '\n' + logformat_2;
+        String logformat = LOGFORMAT_1 + '\n' + LOGFORMAT_2;
 
         pigServer.registerQuery(
             "Clicks = " +
@@ -79,30 +79,30 @@ public class TestLoadMultiFormat {
 
         assertEquals(2, out.size());
         assertEquals(tuple(
-                        "2001:980:91c0:1:8d31:a232:25e5:85d",
-                        "05/Sep/2010:11:27:50 +0200",
-                        "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
-                        "1280x800",
-                        "1280",
-                        "800",
-                        "blablawashere",
-                        "SomeThing",
-                        "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
+                    "2001:980:91c0:1:8d31:a232:25e5:85d",
+                    "05/Sep/2010:11:27:50 +0200",
+                    "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
+                    "1280x800",
+                    "1280",
+                    "800",
+                    "blablawashere",
+                    "SomeThing",
+                    "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"
                 ).toDelimitedString("><#><"),
                 out.get(0).toDelimitedString("><#><"));
         assertEquals(tuple(
-                        "172.21.13.88",
-                        "07/Apr/2013:03:04:49 +0200",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "Mozilla/5.0 Dummy UserAgent"
+                    "172.21.13.88",
+                    "07/Apr/2013:03:04:49 +0200",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "Mozilla/5.0 Dummy UserAgent"
                 ).toDelimitedString("><#><"),
                 out.get(1).toDelimitedString("><#><"));
-  }
+    }
 
 
 }

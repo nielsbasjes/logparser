@@ -21,6 +21,11 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.flink.pojo.TestRecord;
 
+// CHECKSTYLE.OFF: LineLength
+// CHECKSTYLE.OFF: LeftCurly
+// CHECKSTYLE.OFF: ParamPad
+// CHECKSTYLE.OFF: HideUtilityClassConstructor
+
 public final class TestCase {
 
     public static String getLogFormat() {
@@ -68,10 +73,10 @@ public final class TestCase {
     public static String getExpectedGoogleQuery()               { return "blablawashere"; }
     public static String getExpectedBui()                       { return "SomeThing"; }
     public static String getExpectedRequestUseragent()          { return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"; }
-    public static String getExpectedDevice_class()              { return "Desktop"; }
-    public static String getExpectedDevice_brand()              { return "Apple"; }
-    public static String getExpectedAgent_class()               { return "Browser"; }
-    public static String getExpectedAgent_name()                { return "Safari"; }
-    public static String getExpectedAgent_version()             { return "5.0.1"; }
+    public static String getExpectedDeviceClass()               { return "Desktop"; }
+    public static String getExpectedDeviceBrand()               { return "Apple"; }
+    public static String getExpectedAgentClass()                { return "Browser"; }
+    public static String getExpectedAgentName()                 { return "Safari"; }
+    public static String getExpectedAgentVersion()              { return "5.0.1"; }
 
 }

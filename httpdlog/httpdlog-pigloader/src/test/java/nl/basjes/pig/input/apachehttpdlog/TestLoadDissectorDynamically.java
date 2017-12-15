@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestLoadDissectorDynamically {
 
-    private static final String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
+    private static final String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
     private final String logfile = getClass().getResource("/omniture-access.log").toString();
 
     @Test
@@ -43,7 +43,7 @@ public class TestLoadDissectorDynamically {
             "Clicks = " +
                     "    LOAD '" + logfile + "' " +
                     "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
-                    "            '" + logformat + "'," +
+                    "            '" + LOGFORMAT + "'," +
                     "            'IP:connection.client.host'," +
                     "            'TIME.STAMP:request.receive.time'," +
                     "    '-map:request.firstline.uri.query.g:HTTP.URI'," +
@@ -103,7 +103,7 @@ public class TestLoadDissectorDynamically {
                     "5.0.1"
             ).toDelimitedString("><#><"),
             out.get(0).toDelimitedString("><#><"));
-  }
+    }
 
 
 }

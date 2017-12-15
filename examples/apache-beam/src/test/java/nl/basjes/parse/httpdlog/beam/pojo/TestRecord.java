@@ -25,13 +25,13 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_class;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_name;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgent_version;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentClass;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentName;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentVersion;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedBui;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDevice_brand;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDevice_class;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceBrand;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceClass;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedGoogleQuery;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedReferrer;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTime;
@@ -41,6 +41,7 @@ import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenResolution
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
 import static org.junit.Assert.assertEquals;
 
+// CHECKSTYLE.OFF: ParamPad
 @ToString
 @EqualsAndHashCode
 public class TestRecord implements Serializable {
@@ -54,45 +55,45 @@ public class TestRecord implements Serializable {
     @Getter @Setter private String googleQuery          = null;
     @Getter @Setter private String bui                  = null;
     @Getter @Setter private String requestUseragent     = null;
-    @Getter @Setter private String device_class         = null;
-    @Getter @Setter private String device_brand         = null;
-    @Getter @Setter private String agent_class          = null;
-    @Getter @Setter private String agent_name           = null;
-    @Getter @Setter private String agent_version        = null;
+    @Getter @Setter private String deviceClass         = null;
+    @Getter @Setter private String deviceBrand         = null;
+    @Getter @Setter private String agentClass          = null;
+    @Getter @Setter private String agentName           = null;
+    @Getter @Setter private String agentVersion        = null;
 
 
     public void assertIsValid() {
-        assertEquals(getExpectedConnectionClientHost() ,getConnectionClientHost());
-        assertEquals(getExpectedRequestReceiveTime()   ,getRequestReceiveTime());
-        assertEquals(getExpectedReferrer()             ,getReferrer());
-        assertEquals(getExpectedScreenResolution()     ,getScreenResolution());
-        assertEquals(getExpectedScreenWidth()          ,getScreenWidth());
-        assertEquals(getExpectedScreenHeight()         ,getScreenHeight());
-        assertEquals(getExpectedGoogleQuery()          ,getGoogleQuery());
-        assertEquals(getExpectedBui()                  ,getBui());
-        assertEquals(getExpectedRequestUseragent()     ,getRequestUseragent());
-        assertEquals(getExpectedDevice_class()         ,getDevice_class());
-        assertEquals(getExpectedDevice_brand()         ,getDevice_brand());
-        assertEquals(getExpectedAgent_class()          ,getAgent_class());
-        assertEquals(getExpectedAgent_name()           ,getAgent_name());
-        assertEquals(getExpectedAgent_version()        ,getAgent_version());
+        assertEquals(getExpectedConnectionClientHost(), getConnectionClientHost());
+        assertEquals(getExpectedRequestReceiveTime(),   getRequestReceiveTime());
+        assertEquals(getExpectedReferrer(),             getReferrer());
+        assertEquals(getExpectedScreenResolution(),     getScreenResolution());
+        assertEquals(getExpectedScreenWidth(),          getScreenWidth());
+        assertEquals(getExpectedScreenHeight(),         getScreenHeight());
+        assertEquals(getExpectedGoogleQuery(),          getGoogleQuery());
+        assertEquals(getExpectedBui(),                  getBui());
+        assertEquals(getExpectedRequestUseragent(),     getRequestUseragent());
+        assertEquals(getExpectedDeviceClass(),          getDeviceClass());
+        assertEquals(getExpectedDeviceBrand(),          getDeviceBrand());
+        assertEquals(getExpectedAgentClass(),           getAgentClass());
+        assertEquals(getExpectedAgentName(),            getAgentName());
+        assertEquals(getExpectedAgentVersion(),         getAgentVersion());
     }
 
     public TestRecord setFullValid() {
-        setConnectionClientHost (getExpectedConnectionClientHost() );
-        setRequestReceiveTime   (getExpectedRequestReceiveTime()   );
-        setReferrer             (getExpectedReferrer()             );
-        setScreenResolution     (getExpectedScreenResolution()     );
-        setScreenWidth          (getExpectedScreenWidth()          );
-        setScreenHeight         (getExpectedScreenHeight()         );
-        setGoogleQuery          (getExpectedGoogleQuery()          );
-        setBui                  (getExpectedBui()                  );
-        setRequestUseragent     (getExpectedRequestUseragent()     );
-        setDevice_class         (getExpectedDevice_class()         );
-        setDevice_brand         (getExpectedDevice_brand()         );
-        setAgent_class          (getExpectedAgent_class()          );
-        setAgent_name           (getExpectedAgent_name()           );
-        setAgent_version        (getExpectedAgent_version()        );
+        setConnectionClientHost (getExpectedConnectionClientHost());
+        setRequestReceiveTime   (getExpectedRequestReceiveTime());
+        setReferrer             (getExpectedReferrer());
+        setScreenResolution     (getExpectedScreenResolution());
+        setScreenWidth          (getExpectedScreenWidth());
+        setScreenHeight         (getExpectedScreenHeight());
+        setGoogleQuery          (getExpectedGoogleQuery());
+        setBui                  (getExpectedBui());
+        setRequestUseragent     (getExpectedRequestUseragent());
+        setDeviceClass          (getExpectedDeviceClass());
+        setDeviceBrand          (getExpectedDeviceBrand());
+        setAgentClass           (getExpectedAgentClass());
+        setAgentName            (getExpectedAgentName());
+        setAgentVersion         (getExpectedAgentVersion());
         return this;
     }
 

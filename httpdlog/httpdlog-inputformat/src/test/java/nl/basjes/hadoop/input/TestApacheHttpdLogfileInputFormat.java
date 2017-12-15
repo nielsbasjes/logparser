@@ -75,7 +75,8 @@ public class TestApacheHttpdLogfileInputFormat {
         Object value = reader.getCurrentValue();
         if (value instanceof ParsedRecord) {
             assertEquals("1483272081000", ((ParsedRecord) value).getString("TIME.EPOCH:request.receive.time.epoch"));
-            assertEquals("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36", ((ParsedRecord) value).getString("HTTP.USERAGENT:request.user-agent"));
+            assertEquals("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36",
+                ((ParsedRecord) value).getString("HTTP.USERAGENT:request.user-agent"));
         } else {
             fail("Wrong return class type");
         }
@@ -88,23 +89,23 @@ public class TestApacheHttpdLogfileInputFormat {
 
         // A ',' separated list of fields
         List<String> fields = Arrays.asList(
-                "ANY:any" ,
-                "ANY:any" ,
-                "ANY:any" ,
-                "STRING:string" ,
-                "STRING:string" ,
-                "STRING:string" ,
-                "INT:int" ,
-                "INT:int" ,
-                "INT:int" ,
-                "LONG:long" ,
-                "LONG:long" ,
-                "LONG:long" ,
-                "FLOAT:float" ,
-                "FLOAT:float" ,
-                "FLOAT:float" ,
-                "DOUBLE:double" ,
-                "DOUBLE:double" ,
+                "ANY:any",
+                "ANY:any",
+                "ANY:any",
+                "STRING:string",
+                "STRING:string",
+                "STRING:string",
+                "INT:int",
+                "INT:int",
+                "INT:int",
+                "LONG:long",
+                "LONG:long",
+                "LONG:long",
+                "FLOAT:float",
+                "FLOAT:float",
+                "FLOAT:float",
+                "DOUBLE:double",
+                "DOUBLE:double",
                 "DOUBLE:double");
 
         File testFile = new File("src/test/resources/access.log");
@@ -132,9 +133,9 @@ public class TestApacheHttpdLogfileInputFormat {
             ParsedRecord record = (ParsedRecord)value;
             assertEquals("42",          record.getString("ANY:any"));             // any_string
             assertEquals(42L,           record.getLong("ANY:any").longValue());   // any_long
-            assertEquals(42D,           record.getDouble("ANY:any") ,0.1D);       // any_double
+            assertEquals(42D,           record.getDouble("ANY:any"), 0.1D);       // any_double
             assertEquals("FortyTwo",    record.getString("STRING:string"));       // string_string
-            assertEquals(null,          record.getLong("STRING:string")  );       // string_long
+            assertEquals(null,          record.getLong("STRING:string"));         // string_long
             assertEquals(null,          record.getDouble("STRING:string"));       // string_double
             assertEquals("42",          record.getString("INT:int"));             // int_string
             assertEquals(42L,           record.getLong("INT:int").longValue());   // int_long
@@ -143,11 +144,11 @@ public class TestApacheHttpdLogfileInputFormat {
             assertEquals(42L,           record.getLong("LONG:long").longValue()); // long_long
             assertEquals(null,          record.getDouble("LONG:long"));           // long_double
             assertEquals("42.0",        record.getString("FLOAT:float"));         // float_string
-            assertEquals(null,          record.getLong("FLOAT:float")  );         // float_long
-            assertEquals(42D,           record.getDouble("FLOAT:float") ,0.1D);   // float_double
+            assertEquals(null,          record.getLong("FLOAT:float"));           // float_long
+            assertEquals(42D,           record.getDouble("FLOAT:float"), 0.1D);   // float_double
             assertEquals("42.0",        record.getString("DOUBLE:double"));       // double_string
-            assertEquals(null,          record.getLong("DOUBLE:double")  );       // double_long
-            assertEquals(42D,           record.getDouble("DOUBLE:double") ,0.1D);  // double_double
+            assertEquals(null,          record.getLong("DOUBLE:double"));         // double_long
+            assertEquals(42D,           record.getDouble("DOUBLE:double"), 0.1D);  // double_double
         } else {
             fail("Wrong return class type");
         }

@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestRemappedLoader {
 
-    private static final String logformat = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
+    private static final String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
     private final String logfile = getClass().getResource("/omniture-access.log").toString();
 
     @Test
@@ -44,7 +44,7 @@ public class TestRemappedLoader {
             "Clicks = " +
             "    LOAD '" + logfile + "' " +
             "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
-            "            '" + logformat + "'," +
+            "            '" + LOGFORMAT + "'," +
             "            'IP:connection.client.host'," +
             "            'TIME.STAMP:request.receive.time'," +
             "    '-map:request.firstline.uri.query.g:HTTP.URI'," +
@@ -78,11 +78,11 @@ public class TestRemappedLoader {
                 "05/Sep/2010:11:27:50 +0200",
                 "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
                 map(
-                    "promo"       , "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
-                    "bltg.pg_nm"  , "koken-pannen",
-                    "bltg.slt_nm" , "hs-koken-pannen-afj-120601",
-                    "bltg.slt_id" , "303",
-                    "bltg.slt_p"  , ""
+                    "promo",        "koken-pannen_303_hs-koken-pannen-afj-120601_B3_product_1_9200000002876066",
+                    "bltg.pg_nm",   "koken-pannen",
+                    "bltg.slt_nm",  "hs-koken-pannen-afj-120601",
+                    "bltg.slt_id",  "303",
+                    "bltg.slt_p",   ""
                 ),
                 "1280x800",
                 "blablawashere",

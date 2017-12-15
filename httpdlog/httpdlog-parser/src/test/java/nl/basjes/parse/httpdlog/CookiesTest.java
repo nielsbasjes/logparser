@@ -68,11 +68,11 @@ public class CookiesTest {
             "HTTP.HEADER:response.header.etag",
 
             // Cookies
-            "HTTP.COOKIES:request.cookies" ,
+            "HTTP.COOKIES:request.cookies",
 //            "HTTP.COOKIE:request.cookies.apache" ,
 //            "HTTP.COOKIE:request.cookies.jquery-ui-theme",
             "HTTP.COOKIE:request.cookies.*",
-            "HTTP.SETCOOKIES:response.cookies" ,
+            "HTTP.SETCOOKIES:response.cookies",
             "HTTP.SETCOOKIE:response.cookies.nba-4",
             "STRING:response.cookies.nba-4.value",
             "STRING:response.cookies.nba-4.expires",
@@ -108,13 +108,13 @@ public class CookiesTest {
 
     }
 
-    private static final String logformat = "%h %a %A %l %u %t \"%r\" " +
+    private static final String LOG_FORMAT = "%h %a %A %l %u %t \"%r\" " +
             "%>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" " +
             "\"%{Cookie}i\" " +
             "\"%{Set-Cookie}o\" " +
             "\"%{If-None-Match}i\" \"%{Etag}o\"";
 
-    private static final String cookiesLine =
+    private static final String COOKIES_LINE =
             "127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:00:44 -0700] \"GET /index.php HTTP/1.1\" " +
             "200 - 80 \"\" \"-\" 80991 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\" " +
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
@@ -129,8 +129,8 @@ public class CookiesTest {
     // ----------------------------
 
     @Test
-    public void testEmptyRecordPossibles() throws Exception {
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);
+    public void testEmptyRecordPossibles() {
+        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -141,8 +141,8 @@ public class CookiesTest {
     // ---------------
 
     @Test
-    public void testRecordPossibles() throws Exception {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logformat);
+    public void testRecordPossibles() {
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -155,10 +155,10 @@ public class CookiesTest {
     @Test
     public void cookiesTest() throws Exception {
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logformat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         TestRecord record = new TestRecord();
-        parser.parse(record, cookiesLine);
+        parser.parse(record, COOKIES_LINE);
 
         // ---------------
 

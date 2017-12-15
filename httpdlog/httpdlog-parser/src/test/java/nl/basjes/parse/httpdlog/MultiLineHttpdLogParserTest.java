@@ -63,9 +63,9 @@ public class MultiLineHttpdLogParserTest {
     @Test
     public void fullTest1() throws Exception {
 
-        String logFormat = logFormat1 + '\n'
+        String logFormat = LOG_FORMAT_1 + '\n'
                          + '\n'
-                         + logFormat2 + '\n'
+                         + LOG_FORMAT_2 + '\n'
                          + '\n';
 
         Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
@@ -84,14 +84,14 @@ public class MultiLineHttpdLogParserTest {
         validateLine2(parser);
     }
 
-    private static final String logFormat1 = "%h %t \"%r\" %>s %b \"%{Referer}i\"";
-    private static final String line1 = "127.0.0.1 [31/Dec/2012:23:49:41 +0100] "
+    private static final String LOG_FORMAT_1 = "%h %t \"%r\" %>s %b \"%{Referer}i\"";
+    private static final String LINE_1 = "127.0.0.1 [31/Dec/2012:23:49:41 +0100] "
             + "\"GET /foo HTTP/1.1\" 200 "
             + "1213 \"http://localhost/index.php?mies=wim\"";
 
-    private void validateLine1 (Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    private void validateLine1(Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         TestRecord record = new TestRecord();
-        parser.parse(record, line1);
+        parser.parse(record, LINE_1);
         Map<String, String> results = record.getResults();
 
         assertEquals("127.0.0.1", results.get("IP:connection.client.host"));
@@ -103,14 +103,14 @@ public class MultiLineHttpdLogParserTest {
         assertEquals(null, results.get("HTTP.USERAGENT:request.user-agent"));
     }
 
-    private static final String logFormat2 = "%h %t \"%r\" %>s \"%{User-Agent}i\"";
-    private static final String line2 = "127.0.0.2 [31/Dec/2012:23:49:42 +0100] "
+    private static final String LOG_FORMAT_2 = "%h %t \"%r\" %>s \"%{User-Agent}i\"";
+    private static final String LINE_2 = "127.0.0.2 [31/Dec/2012:23:49:42 +0100] "
             + "\"GET /foo HTTP/1.1\" 404 "
             + "\"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\"";
 
-    private void validateLine2 (Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    private void validateLine2(Parser<TestRecord> parser) throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         TestRecord record = new TestRecord();
-        parser.parse(record, line2);
+        parser.parse(record, LINE_2);
         Map<String, String> results = record.getResults();
 
         assertEquals("127.0.0.2", results.get("IP:connection.client.host"));

@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TestQueryStringDissector {
 
     @Test
-    public void testQueryString() throws Exception {
+    public void testQueryString() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
             .withDissector(new QueryStringFieldDissector())

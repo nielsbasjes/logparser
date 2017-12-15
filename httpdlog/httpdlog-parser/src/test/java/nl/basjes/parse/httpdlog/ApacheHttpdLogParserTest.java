@@ -86,13 +86,13 @@ public class ApacheHttpdLogParserTest {
     // "%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" "
     // +"\"%{If-None-Match}i\" \"%{Etag}o\""
     // fullcombined
-    private static final String logFormat = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D " +
+    private static final String LOG_FORMAT = "%%%h %a %A %l %u %t \"%r\" %>s %b %p \"%q\" \"%!200,304,302{Referer}i\" %D " +
             "\"%200{User-agent}i\" \"%{Cookie}i\" \"%{Set-Cookie}o\" \"%{If-None-Match}i\" \"%{Etag}o\"";
 
     // Because header names are case insensitive we use the lowercase version internally
     // The modifiers ( like '!200,304,302') are to be removed.
     // This next value is what should be used internally
-    private static final String expectedLogFormat = "%%%h %a %A %l %u [%t] \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
+    private static final String EXPECTED_LOG_FORMAT = "%%%h %a %A %l %u [%t] \"%r\" %>s %b %p \"%q\" \"%{referer}i\" %D " +
             "\"%{user-agent}i\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{if-none-match}i\" \"%{etag}o\"";
 
     // ------------------------------------------
@@ -109,15 +109,15 @@ public class ApacheHttpdLogParserTest {
                 + "\"jquery-ui-theme=Eggplant\" \"Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl\" \"-\" "
                 + "\"\\\"3780ff-4bd-4c1ce3df91380\\\"\"";
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         // Manually add an extra dissector
         parser.addDissector(new ScreenResolutionDissector());
         parser.addTypeRemapping("request.firstline.uri.query.res", "SCREENRESOLUTION");
         List<String> extraFields = new ArrayList<>();
         extraFields.add("SCREENWIDTH:request.firstline.uri.query.res.width");
-        extraFields.add( "SCREENHEIGHT:request.firstline.uri.query.res.height");
-        parser.addParseTarget(TestRecord.class.getMethod("setValue",String.class, String.class), extraFields);
+        extraFields.add("SCREENHEIGHT:request.firstline.uri.query.res.height");
+        parser.addParseTarget(TestRecord.class.getMethod("setValue", String.class, String.class), extraFields);
 
         TestRecord record = new TestRecord();
         parser.parse(record, line);
@@ -166,7 +166,7 @@ public class ApacheHttpdLogParserTest {
 
     @Test
     public void fullTest2() throws Exception {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /icons/powered_by_rh.png HTTP/1.1\" 200 1213 80"
                 + " \"\" \"http://localhost/\" 1306 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\""
@@ -205,7 +205,7 @@ public class ApacheHttpdLogParserTest {
 
     @Test
     public void fullTestTooLongUri() throws Exception {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /ImagineAURLHereThatIsTooLong\" 414 1213 80"
                 + " \"\" \"http://localhost/\" 1306 \"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0\""
@@ -252,7 +252,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void testMissing() throws Exception {
         try {
-            Parser<TestRecordMissing> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing.class, logFormat);
+            Parser<TestRecordMissing> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing.class, LOG_FORMAT);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDissectorsException e) {
@@ -272,7 +272,7 @@ public class ApacheHttpdLogParserTest {
     @Test
     public void testMissing2() throws Exception {
         try {
-            Parser<TestRecordMissing2> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing2.class, logFormat);
+            Parser<TestRecordMissing2> parser = new ApacheHttpdLoglineParser<>(TestRecordMissing2.class, LOG_FORMAT);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
             fail("Missing exception.");
         } catch (MissingDissectorsException e) {
@@ -283,9 +283,9 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void testGetPossiblePaths() throws Exception {
+    public void testGetPossiblePaths() {
 //        setLoggingLevel(Level.ALL);
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> paths = parser.getPossiblePaths(5);
 //        for (String path:paths){
@@ -306,7 +306,7 @@ public class ApacheHttpdLogParserTest {
         ApacheHttpdLogFormatDissector d = new ApacheHttpdLogFormatDissector();
 
         assertEquals("foo", d.cleanupLogFormat("foo"));
-        assertEquals(expectedLogFormat, d.cleanupLogFormat(logFormat));
+        assertEquals(EXPECTED_LOG_FORMAT, d.cleanupLogFormat(LOG_FORMAT));
         assertEquals("%{user-agent}i %% %{referer}i %s %{user-agent}i %% %{referer}i",
                 d.cleanupLogFormat("%400,501{User-agent}i %% %!200,304,302{Referer}i %s %{User-agent}i %% %{Referer}i"));
     }
@@ -443,7 +443,7 @@ public class ApacheHttpdLogParserTest {
             "c_frac}t\" \"%{usec_frac}t\" \"%{begin:usec_frac}t\" \"%{end:usec_frac}t\" \"%T\" \"%u\" \"%U\" \"%v\" \"" +
             "%V\" \"%X\" \"%I\" \"%O\" \"%{cookie}i\" \"%{set-cookie}o\" \"%{user-agent}i\" \"%{referer}i\"";
 
-        String line_200 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"3186\" \"3186\" \"1302\" \"/var/www/html/index.html\" " +
+        String line200 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"3186\" \"3186\" \"1302\" \"/var/www/html/index.html\" " +
             "\"127.0.0.1\" \"HTTP/1.1\" \"0\" \"-\" \"-\" \"GET\" \"80\" \"80\" \"80\" \"50142\" \"10344\" \"10344\" " +
             "\"139854162249472\" \"139854162249472\" \"\" \"GET / HTTP/1.1\" \"-\" \"200\" \"200\" " +
             "\"[09/Aug/2016:22:57:59 +0200]\" \"1470776279833\" \"1470776279833\" \"1470776279835\" \"1470776279833934\" " +
@@ -451,7 +451,7 @@ public class ApacheHttpdLogParserTest {
             "\"-\" \"/index.html\" \"committer.lan.basjes.nl\" \"localhost\" \"+\" \"490\" \"3525\" \"-\" \"-\" " +
             "\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36\" \"-\"";
 
-        String line_408 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"0\" \"-\" \"34\" \"-\" " +
+        String line408 = "\"%\" \"127.0.0.1\" \"127.0.0.1\" \"127.0.0.1\" \"0\" \"-\" \"34\" \"-\" " +
             "\"127.0.0.1\" \"HTTP/1.0\" \"0\" \"-\" \"-\" \"-\" \"80\" \"80\" \"80\" \"50150\" \"10344\" \"10344\" " +
             "\"139854067267328\" \"139854067267328\" \"\" \"-\" \"-\" \"408\" \"408\" " +
             "\"[09/Aug/2016:22:59:14 +0200]\" \"1470776354625\" \"1470776354625\" \"1470776354625\" \"1470776354625377\" " +
@@ -464,8 +464,8 @@ public class ApacheHttpdLogParserTest {
         };
         parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
 
-        parser.parse(new EmptyTestRecord(), line_200);
-        parser.parse(new EmptyTestRecord(), line_408);
+        parser.parse(new EmptyTestRecord(), line200);
+        parser.parse(new EmptyTestRecord(), line408);
     }
 
     @Test(expected = MissingDissectorsException.class)

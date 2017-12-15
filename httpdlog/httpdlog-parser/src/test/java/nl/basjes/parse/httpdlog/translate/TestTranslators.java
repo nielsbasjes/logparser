@@ -25,45 +25,45 @@ import org.junit.Test;
 public class TestTranslators {
 
     @Test
-    public void testCLFToNumberMin() throws Exception {
+    public void testCLFToNumberMin() {
         DissectorTester.create()
-            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput(null) // A '-' in the input file goes into the dissector as a null value
             .expect("OUT:root", 0L)
             .checkExpectations();
     }
 
     @Test
-    public void testCLFToNumber0() throws Exception {
+    public void testCLFToNumber0() {
         DissectorTester.create()
-            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput("0")
             .expect("OUT:root", 0L)
             .checkExpectations();
     }
 
     @Test
-    public void testCLFToNumber1() throws Exception {
+    public void testCLFToNumber1() {
         DissectorTester.create()
-            .withDissector("root", new ConvertCLFIntoNumber("IN","OUT"))
+            .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput("1")
             .expect("OUT:root", 1L)
             .checkExpectations();
     }
 
     @Test
-    public void testNumberToCLF0() throws Exception {
+    public void testNumberToCLF0() {
         DissectorTester.create()
-            .withDissector("root", new ConvertNumberIntoCLF("IN","OUT"))
+            .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("0")
             .expect("OUT:root", (String)null)
             .checkExpectations();
     }
 
     @Test
-    public void testNumberToCLF1() throws Exception {
+    public void testNumberToCLF1() {
         DissectorTester.create()
-            .withDissector("root", new ConvertNumberIntoCLF("IN","OUT"))
+            .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("1")
             .expect("OUT:root", 1L)
             .checkExpectations();

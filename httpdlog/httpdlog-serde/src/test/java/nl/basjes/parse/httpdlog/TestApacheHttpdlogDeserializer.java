@@ -136,8 +136,10 @@ public class TestApacheHttpdlogDeserializer {
     private AbstractDeserializer getTestSerDe() throws SerDeException {
         // Create the SerDe
         Properties schema = new Properties();
-        schema.setProperty(serdeConstants.LIST_COLUMNS, "ip,timestamp,useragent,screenWidth,screenHeight,device_class,device_brand,agent_class,agent_name,agent_version");
-        schema.setProperty(serdeConstants.LIST_COLUMN_TYPES, "string,bigint,string,bigint,bigint,string,string,string,string,string");
+        schema.setProperty(serdeConstants.LIST_COLUMNS,
+            "ip,timestamp,useragent,screenWidth,screenHeight,device_class,device_brand,agent_class,agent_name,agent_version");
+        schema.setProperty(serdeConstants.LIST_COLUMN_TYPES,
+            "string,bigint,string,bigint,bigint,string,string,string,string,string");
 
         schema.setProperty("logformat",           logformat);
         schema.setProperty("field:timestamp",     "TIME.EPOCH:request.receive.time.epoch");

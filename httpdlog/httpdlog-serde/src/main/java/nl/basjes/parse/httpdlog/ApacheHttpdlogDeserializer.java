@@ -265,7 +265,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     }
 
     @Override
-    public ObjectInspector getObjectInspector() throws SerDeException {
+    public ObjectInspector getObjectInspector() {
         return rowOI;
     }
 

@@ -85,12 +85,12 @@ public class StrfTimeStampDissector extends Dissector {
     }
 
     @Override
-    public void prepareForRun() throws InvalidDissectorException {
+    public void prepareForRun() {
         timeStampDissector.prepareForRun();
     }
 
     @Override
-    protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+    protected void initializeNewInstance(Dissector newInstance) {
         StrfTimeStampDissector newStrfTimeStampDissector = (StrfTimeStampDissector) newInstance;
         newStrfTimeStampDissector.timeStampDissector.initializeNewInstance(newStrfTimeStampDissector.timeStampDissector);
         newStrfTimeStampDissector.setInputType(inputType);
@@ -153,7 +153,7 @@ public class StrfTimeStampDissector extends Dissector {
         }
 
         @Override
-        public void prepareForRun() throws InvalidDissectorException {
+        public void prepareForRun() {
         }
 
         @Override

@@ -214,19 +214,19 @@ public class ParserCastsTest {
         assertEquals(22, output.count);
 
         Map<String, EnumSet<Casts>> allCasts = parser.getAllCasts();
-        assertEquals(Casts.STRING_ONLY              , allCasts.get("OUTPUT_TYPE:string_good"           ));
-        assertEquals(Casts.LONG_ONLY                , allCasts.get("OUTPUT_TYPE:long_good"             ));
-        assertEquals(Casts.DOUBLE_ONLY              , allCasts.get("OUTPUT_TYPE:double_good"           ));
-        assertEquals(Casts.STRING_OR_LONG           , allCasts.get("OUTPUT_TYPE:string_long_good"      ));
-        assertEquals(Casts.STRING_OR_DOUBLE         , allCasts.get("OUTPUT_TYPE:string_double_good"    ));
-        assertEquals(Casts.STRING_OR_LONG_OR_DOUBLE , allCasts.get("OUTPUT_TYPE:multi_good"            ));
+        assertEquals(Casts.STRING_ONLY,               allCasts.get("OUTPUT_TYPE:string_good"));
+        assertEquals(Casts.LONG_ONLY,                 allCasts.get("OUTPUT_TYPE:long_good"));
+        assertEquals(Casts.DOUBLE_ONLY,               allCasts.get("OUTPUT_TYPE:double_good"));
+        assertEquals(Casts.STRING_OR_LONG,            allCasts.get("OUTPUT_TYPE:string_long_good"));
+        assertEquals(Casts.STRING_OR_DOUBLE,          allCasts.get("OUTPUT_TYPE:string_double_good"));
+        assertEquals(Casts.STRING_OR_LONG_OR_DOUBLE,  allCasts.get("OUTPUT_TYPE:multi_good"));
 
-        assertEquals(Casts.STRING_ONLY              , parser.getCasts("OUTPUT_TYPE:string_good"        ));
-        assertEquals(Casts.LONG_ONLY                , parser.getCasts("OUTPUT_TYPE:long_good"          ));
-        assertEquals(Casts.DOUBLE_ONLY              , parser.getCasts("OUTPUT_TYPE:double_good"        ));
-        assertEquals(Casts.STRING_OR_LONG           , parser.getCasts("OUTPUT_TYPE:string_long_good"   ));
-        assertEquals(Casts.STRING_OR_DOUBLE         , parser.getCasts("OUTPUT_TYPE:string_double_good" ));
-        assertEquals(Casts.STRING_OR_LONG_OR_DOUBLE , parser.getCasts("OUTPUT_TYPE:multi_good"         ));
+        assertEquals(Casts.STRING_ONLY,               parser.getCasts("OUTPUT_TYPE:string_good"));
+        assertEquals(Casts.LONG_ONLY,                 parser.getCasts("OUTPUT_TYPE:long_good"));
+        assertEquals(Casts.DOUBLE_ONLY,               parser.getCasts("OUTPUT_TYPE:double_good"));
+        assertEquals(Casts.STRING_OR_LONG,            parser.getCasts("OUTPUT_TYPE:string_long_good"));
+        assertEquals(Casts.STRING_OR_DOUBLE,          parser.getCasts("OUTPUT_TYPE:string_double_good"));
+        assertEquals(Casts.STRING_OR_LONG_OR_DOUBLE,  parser.getCasts("OUTPUT_TYPE:multi_good"));
     }
 
 }

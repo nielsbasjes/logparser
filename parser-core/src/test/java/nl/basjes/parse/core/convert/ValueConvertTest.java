@@ -70,7 +70,7 @@ public class ValueConvertTest {
         assertTrue(possible.contains("SECONDS:something"));
     }
 
-    public static abstract class TypeConvertBaseDissector extends SimpleDissector {
+    public abstract static class TypeConvertBaseDissector extends SimpleDissector {
         protected String inputType;
         protected String outputType;
 
