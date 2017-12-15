@@ -58,11 +58,11 @@ public final class TestCase {
         parser.addParseTarget("setGoogleQuery",          "STRING:request.firstline.uri.query.r.query.blabla");
         parser.addParseTarget("setBui",                  "HTTP.COOKIE:request.cookies.bui");
         parser.addParseTarget("setRequestUseragent",     "HTTP.USERAGENT:request.user-agent");
-        parser.addParseTarget("setDevice_class",         "STRING:request.user-agent.device_class");
-        parser.addParseTarget("setDevice_brand",         "STRING:request.user-agent.device_brand");
-        parser.addParseTarget("setAgent_class",          "STRING:request.user-agent.agent_class");
-        parser.addParseTarget("setAgent_name",           "STRING:request.user-agent.agent_name");
-        parser.addParseTarget("setAgent_version",        "STRING:request.user-agent.agent_version");
+        parser.addParseTarget("setDeviceClass",          "STRING:request.user-agent.device_class");
+        parser.addParseTarget("setDeviceBrand",          "STRING:request.user-agent.device_brand");
+        parser.addParseTarget("setAgentClass",           "STRING:request.user-agent.agent_class");
+        parser.addParseTarget("setAgentName",            "STRING:request.user-agent.agent_name");
+        parser.addParseTarget("setAgentVersion",         "STRING:request.user-agent.agent_version");
         return parser;
     }
 
