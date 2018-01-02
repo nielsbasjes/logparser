@@ -13,7 +13,7 @@ No normal visitor knows this. Not even google knows this.
 So the only people who 'know' this are hackers trying to break in (and fail in this case).
 
     Apache HTTPD & NGINX Access log parsing made easy
-    Copyright (C) 2011-2017 Niels Basjes
+    Copyright (C) 2011-2018 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

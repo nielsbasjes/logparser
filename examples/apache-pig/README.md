@@ -10,7 +10,7 @@ The result of 'mvn package' is a tar.gz file that contains the entire project wi
 dependencies in a lib directory.
 
     Apache HTTPD & NGINX Access log parsing made easy
-    Copyright (C) 2011-2017 Niels Basjes
+    Copyright (C) 2011-2018 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
