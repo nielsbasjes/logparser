@@ -16,6 +16,8 @@
  */
 package nl.basjes.parse.httpdlog.dissectors;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import nl.basjes.parse.strftime.StrfTimeBaseListener;
 import nl.basjes.parse.strftime.StrfTimeLexer;
 import nl.basjes.parse.strftime.StrfTimeParser;
@@ -38,12 +40,20 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener implements ANTLRErrorListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StrfTimeToDateTimeFormatter.class);
 
     private static final WeekFields LOCAL_WEEK_FIELDS = WeekFields.of(Locale.getDefault());
 
     public static DateTimeFormatter convert(String strfformat) {
+        return convert(strfformat, ZoneOffset.UTC);
+    }
+
+    public static DateTimeFormatter convert(String strfformat, ZoneId defaultZone) {
         CodePointCharStream input = CharStreams.fromString(strfformat);
         StrfTimeLexer lexer = new StrfTimeLexer(input);
 
@@ -55,7 +65,7 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
         parser.removeErrorListeners();
 
         ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
-        StrfTimeToDateTimeFormatter converter = new StrfTimeToDateTimeFormatter();
+        StrfTimeToDateTimeFormatter converter = new StrfTimeToDateTimeFormatter(strfformat, defaultZone);
 
         lexer.addErrorListener(converter);
         parser.addErrorListener(converter);
@@ -71,14 +81,26 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
         return converter.build();
     }
 
-    DateTimeFormatterBuilder builder;
-    private StrfTimeToDateTimeFormatter() {
+    private String strfformat;
+    private DateTimeFormatterBuilder builder;
+    private ZoneId defaultZone;
+    private boolean zoneWasSpecified = false;
+
+    private StrfTimeToDateTimeFormatter(String inputStrfformat, ZoneId newDefaultZone) {
+        strfformat = inputStrfformat;
+        defaultZone = newDefaultZone;
         builder = new DateTimeFormatterBuilder()
             .parseCaseInsensitive();
     }
 
     public DateTimeFormatter build() {
-        return builder.toFormatter();
+        DateTimeFormatter dateTimeFormatter = builder.toFormatter();
+        if (!zoneWasSpecified) {
+            dateTimeFormatter = dateTimeFormatter.withZone(defaultZone);
+            LOG.error("The timestamp format \"{}\" does NOT contain a timezone so we assume \"{}\".",
+                strfformat, defaultZone.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        return dateTimeFormatter;
     }
 
     // ------------- Error handling --------------
@@ -403,12 +425,14 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
     public void enterPz(StrfTimeParser.PzContext ctx) {
         // %z   The +hhmm or -hhmm numeric timezone.
         builder.appendOffset("+HHMM", "+0000");
+        zoneWasSpecified = true;
     }
 
     @Override
     public void enterPZ(StrfTimeParser.PZContext ctx) {
         // %Z   The timezone name or abbreviation.
         builder.appendZoneText(TextStyle.SHORT);
+        zoneWasSpecified = true;
     }
 
     @Override

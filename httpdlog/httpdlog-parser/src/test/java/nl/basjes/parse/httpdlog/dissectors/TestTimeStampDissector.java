@@ -475,7 +475,7 @@ public class TestTimeStampDissector {
 
     private void checkStrfField(ZonedDateTime dateTime, String strffield, String expected) {
         try {
-            DateTimeFormatter dateTimeFormatter = StrfTimeToDateTimeFormatter.convert(strffield);
+            DateTimeFormatter dateTimeFormatter = StrfTimeToDateTimeFormatter.convert(strffield, ZoneId.of("CET"));
             assertNotNull(dateTimeFormatter);
             String result = dateTime.format(dateTimeFormatter);
             assertEquals("Incorrect field " + strffield, expected, result);
@@ -506,5 +506,27 @@ public class TestTimeStampDissector {
         }
         fail("DateTimeException for field " + strffield + " should be unsupported");
     }
+
+    @Test
+    public void missingTimeZone(){
+
+        DissectorTester.create()
+            .verbose()
+            .withDissector(new HttpdLogFormatDissector("%{%F %H:%M:%S}t"))
+            .withInput("2017-12-25 00:00:00")
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1514160000000")
+            .checkExpectations();
+
+        String logformat = "%a %l %u %{%F %H:%M:%S}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
+        String logline = "192.168.85.3 - - 2017-12-25 00:00:00 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
+        DissectorTester.create()
+            .verbose()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1514160000000")
+            .checkExpectations();
+
+    }
+
 
 }
