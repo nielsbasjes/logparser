@@ -140,12 +140,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         return result;
     }
 
-    private boolean enableJettyFix = false;
-
-    public void enableJettyFix() {
-        this.enableJettyFix = true;
-    }
-
     @Override
     public String decodeExtractedValue(String tokenName, String value) {
         if (value == null || value.equals("")) {
@@ -155,15 +149,6 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // In Apache logfiles a '-' means a 'not specified' / 'empty' value.
         if (value.equals("-")){
             return null;
-        }
-
-        // Jetty has suffered from this historical problem:
-        // An empty user field was logged in the past as " - " instead of "-"
-        // See: https://github.com/eclipse/jetty.project/commit/2332b4f
-        if (this.enableJettyFix && "connection.client.user".equals(tokenName)) {
-            if (value.equals(" - ")){
-                return null;
-            }
         }
 
         // http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats
@@ -554,7 +539,7 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // %u Remote user (from auth; may be bogus if return status (%s) is 401)
         parsers.addAll(createFirstAndLastTokenParsers("%u",
                 "connection.client.user", "STRING",
-                Casts.STRING_ONLY, TokenParser.FORMAT_STRING));
+                Casts.STRING_ONLY, TokenParser.FORMAT_NO_SPACE_STRING));
 
         // -------
         // %U The URL path requested, not including any query string.

@@ -75,15 +75,21 @@ public class HttpdLogFormatDissector extends Dissector {
                 addLogFormat(patchedLogFormat);
             }
         }
+
+        // Jetty has suffered from this historical problem:
+        // An empty user field was logged in the past as " - " instead of "-"
+        // See: https://github.com/eclipse/jetty.project/commit/2332b4f
+        for (String logFormat : getAllLogFormats()) {
+            if (logFormat.contains("%u")) {
+                LOG.info("Creating extra logformat to handle Jetty userfield problem.");
+                String patchedLogFormat = logFormat.replace("%u", " %u ");
+                addLogFormat(patchedLogFormat);
+            }
+        }
     }
 
     public void enableJettyFix() {
         enableJettyFix = true;
-        for (TokenFormatDissector dissector : dissectors) {
-            if (dissector instanceof ApacheHttpdLogFormatDissector) {
-                ((ApacheHttpdLogFormatDissector) dissector).enableJettyFix();
-            }
-        }
     }
 
     public void addMultipleLogFormats(final String multiLineLogFormat) {
