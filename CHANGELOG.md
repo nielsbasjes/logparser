@@ -4,6 +4,8 @@ v4.1
 ===
 - The %u specifier allowed a space which broke parsing if the field after it also allowed space.
 - If a custom time format does not contain a timezone we assume a default timezone (UTC). 
+- Fix extracting milliseconds, added extracting microseconds and nanoseconds.
+- Allow %{%usec_frac}t in addition to %{usec_frac}t (same msec_frac) 
 
 v4.0
 ===

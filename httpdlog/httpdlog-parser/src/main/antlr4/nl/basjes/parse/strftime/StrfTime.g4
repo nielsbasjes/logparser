@@ -39,6 +39,9 @@ grammar StrfTime;
 
 fragment MOD: ( 'E' | 'O' )?;
 
+MsecFrac : '%'? 'msec_frac' ; // Apache HTTPD specific: milliseconds fraction
+UsecFrac : '%'? 'usec_frac' ; // Apache HTTPD specific: microseconds fraction
+
 Pa : '%' MOD 'a' ; // The abbreviated name of the day of the week according to the current locale.
 PA : '%' MOD 'A' ; // The full name of the day of the week according to the current locale.
 Pb : '%' MOD 'b' ; // The abbreviated month name according to the current locale.
@@ -117,8 +120,8 @@ token
     | pw | pW | px | pX | py | pY | pz | pZ | pplus
     | msecFrac | usecFrac ;
 
-msecFrac : 'msec_frac' ; // Apache HTTPD specific: milliseconds fraction
-usecFrac : 'usec_frac' ; // Apache HTTPD specific: microseconds fraction
+msecFrac : MsecFrac ; // Apache HTTPD specific: milliseconds fraction
+usecFrac : UsecFrac ; // Apache HTTPD specific: microseconds fraction
 
 pa    : Pa    ;
 pA    : PA    ;

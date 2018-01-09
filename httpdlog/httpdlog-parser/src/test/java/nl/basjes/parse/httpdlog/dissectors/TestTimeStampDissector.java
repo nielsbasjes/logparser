@@ -428,6 +428,12 @@ public class TestTimeStampDissector {
 
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2001-01-02 03:04:05.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2001-01-02 03:04:05.678901 +0100");
+
+        // With extra '%'
+        checkStrfField(dateTime, "%msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "%usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
+        checkStrfField(dateTime, "%F %T.msec_frac %z", "2001-01-02 03:04:05.678 +0100");
+        checkStrfField(dateTime, "%F %T.usec_frac %z", "2001-01-02 03:04:05.678901 +0100");
     }
 
     @Test
@@ -470,6 +476,12 @@ public class TestTimeStampDissector {
 
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2017-11-12 23:14:15.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2017-11-12 23:14:15.678901 +0100");
+
+        // With extra '%'
+        checkStrfField(dateTime, "%msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
+        checkStrfField(dateTime, "%usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
+        checkStrfField(dateTime, "%F %T.%msec_frac %z", "2017-11-12 23:14:15.678 +0100");
+        checkStrfField(dateTime, "%F %T.%usec_frac %z", "2017-11-12 23:14:15.678901 +0100");
     }
 
 
@@ -512,7 +524,7 @@ public class TestTimeStampDissector {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%F %H:%M:%S}t"))
             .withInput("2017-12-25 00:00:00")
-            .expect("TIME.EPOCH:request.receive.time.epoch", "1514160000000")
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160000000L)
             .checkExpectations();
 
         String logformat = "%a %l %u %{%F %H:%M:%S}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
@@ -520,9 +532,80 @@ public class TestTimeStampDissector {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
             .withInput(logline)
-            .expect("TIME.EPOCH:request.receive.time.epoch", "1514160000000")
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160000000L)
             .checkExpectations();
     }
 
+    @Test
+    public void testStrfTimeMsecfrac() {
+        String logformat = "%a %l %u %{%F %H:%M:%S.msec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
+        String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160042123L)
+            .expect("TIME.SECOND:request.receive.time.second", 42L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond", 123000L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond", 123000000L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond_utc", 123000L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond_utc", 123000000L)
+            .checkExpectations();
+    }
+
+    @Test
+    public void testStrfTimeMsecfracP() {
+        String logformat = "%a %l %u %{%F %H:%M:%S.%msec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
+        String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160042123L)
+            .expect("TIME.SECOND:request.receive.time.second", 42L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond", 123000L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond", 123000000L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond_utc", 123000L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond_utc", 123000000L)
+            .checkExpectations();
+    }
+
+    @Test
+    public void testStrfTimeUsecfrac() {
+        String logformat = "%a %l %u %{%F %H:%M:%S.usec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
+        String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123456 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160042123L)
+            .expect("TIME.SECOND:request.receive.time.second", 42L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond", 123456L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond", 123456000L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond_utc", 123456L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond_utc", 123456000L)
+            .checkExpectations();
+    }
+
+    @Test
+    public void testStrfTimeUsecfracP() {
+        String logformat = "%a %l %u %{%F %H:%M:%S.%usec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
+        String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123456 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
+        DissectorTester.create()
+            .withDissector(new HttpdLogFormatDissector(logformat))
+            .withInput(logline)
+            .expect("TIME.EPOCH:request.receive.time.epoch", 1514160042123L)
+            .expect("TIME.SECOND:request.receive.time.second", 42L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond", 123456L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond", 123456000L)
+            .expect("TIME.MILLISECOND:request.receive.time.millisecond_utc", 123L)
+            .expect("TIME.MICROSECOND:request.receive.time.microsecond_utc", 123456L)
+            .expect("TIME.NANOSECOND:request.receive.time.nanosecond_utc", 123456000L)
+            .checkExpectations();
+    }
 
 }

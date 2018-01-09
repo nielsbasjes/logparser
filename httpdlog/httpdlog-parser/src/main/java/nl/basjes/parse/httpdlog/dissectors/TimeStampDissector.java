@@ -142,6 +142,8 @@ public class TimeStampDissector extends Dissector {
         result.add("TIME.MINUTE:minute");
         result.add("TIME.SECOND:second");
         result.add("TIME.MILLISECOND:millisecond");
+        result.add("TIME.MICROSECOND:microsecond");
+        result.add("TIME.NANOSECOND:nanosecond");
 
         result.add("TIME.DATE:date"); // yyyy-MM-dd
         result.add("TIME.TIME:time"); // HH:mm:ss
@@ -161,6 +163,8 @@ public class TimeStampDissector extends Dissector {
         result.add("TIME.MINUTE:minute_utc");
         result.add("TIME.SECOND:second_utc");
         result.add("TIME.MILLISECOND:millisecond_utc");
+        result.add("TIME.MICROSECOND:microsecond_utc");
+        result.add("TIME.NANOSECOND:nanosecond_utc");
 
         result.add("TIME.DATE:date_utc"); // yyyy-MM-dd
         result.add("TIME.TIME:time_utc"); // HH:mm:ss
@@ -185,6 +189,8 @@ public class TimeStampDissector extends Dissector {
     private boolean wantMinute            = false;
     private boolean wantSecond            = false;
     private boolean wantMillisecond       = false;
+    private boolean wantMicrosecond       = false;
+    private boolean wantNanosecond        = false;
     private boolean wantDate              = false;
     private boolean wantTime              = false;
 
@@ -204,6 +210,8 @@ public class TimeStampDissector extends Dissector {
     private boolean wantMinuteUTC         = false;
     private boolean wantSecondUTC         = false;
     private boolean wantMillisecondUTC    = false;
+    private boolean wantMicrosecondUTC    = false;
+    private boolean wantNanosecondUTC     = false;
     private boolean wantDateUTC           = false;
     private boolean wantTimeUTC           = false;
 
@@ -250,6 +258,14 @@ public class TimeStampDissector extends Dissector {
 
             case "millisecond":
                 wantMillisecond = true;
+                return Casts.STRING_OR_LONG;
+
+            case "microsecond":
+                wantMicrosecond = true;
+                return Casts.STRING_OR_LONG;
+
+            case "nanosecond":
+                wantNanosecond = true;
                 return Casts.STRING_OR_LONG;
 
             case "date":
@@ -310,6 +326,14 @@ public class TimeStampDissector extends Dissector {
                 wantMillisecondUTC = true;
                 return Casts.STRING_OR_LONG;
 
+            case "microsecond_utc":
+                wantMicrosecondUTC = true;
+                return Casts.STRING_OR_LONG;
+
+            case "nanosecond_utc":
+                wantNanosecondUTC = true;
+                return Casts.STRING_OR_LONG;
+
             case "date_utc":
                 wantDateUTC = true;
                 return Casts.STRING_ONLY;
@@ -340,6 +364,8 @@ public class TimeStampDissector extends Dissector {
             || wantMinute
             || wantSecond
             || wantMillisecond
+            || wantMicrosecond
+            || wantNanosecond
             || wantDate
             || wantTime;
 
@@ -360,6 +386,8 @@ public class TimeStampDissector extends Dissector {
             || wantMinuteUTC
             || wantSecondUTC
             || wantMillisecondUTC
+            || wantMicrosecondUTC
+            || wantNanosecondUTC
             || wantDateUTC
             || wantTimeUTC;
     }
@@ -408,43 +436,51 @@ public class TimeStampDissector extends Dissector {
             // As parsed
             if (wantDay) {
                 parsable.addDissection(inputname, "TIME.DAY", "day",
-                        localDateTime.getDayOfMonth());
+                    localDateTime.getDayOfMonth());
             }
             if (wantMonthname) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname",
-                        localDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
+                    localDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantMonth) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month",
-                        localDateTime.getMonth().getValue());
+                    localDateTime.getMonth().getValue());
             }
             if (wantWeekOfWeekYear) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear",
-                        localDateTime.get(WeekFields.of(locale).weekOfWeekBasedYear()));
+                    localDateTime.get(WeekFields.of(locale).weekOfWeekBasedYear()));
             }
             if (wantWeekYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear",
-                        localDateTime.get(WeekFields.of(locale).weekBasedYear()));
+                    localDateTime.get(WeekFields.of(locale).weekBasedYear()));
             }
             if (wantYear) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year",
-                        localDateTime.getYear());
+                    localDateTime.getYear());
             }
             if (wantHour) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour",
-                        localDateTime.getHour());
+                    localDateTime.getHour());
             }
             if (wantMinute) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute",
-                        localDateTime.getMinute());
+                    localDateTime.getMinute());
             }
             if (wantSecond) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second",
-                        localDateTime.getSecond());
+                    localDateTime.getSecond());
             }
             if (wantMillisecond) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond",
-                        localDateTime.getNano() * 1000000);
+                    localDateTime.getNano() / 1000000L);
+            }
+            if (wantMicrosecond) {
+                parsable.addDissection(inputname, "TIME.MICROSECOND", "microsecond",
+                    localDateTime.getNano() / 1000L);
+            }
+            if (wantNanosecond) {
+                parsable.addDissection(inputname, "TIME.NANOSECOND", "nanosecond",
+                    localDateTime.getNano());
             }
             if (wantDate) {
                 parsable.addDissection(inputname, "TIME.DATE", "date",
@@ -464,43 +500,51 @@ public class TimeStampDissector extends Dissector {
 
             if (wantDayUTC) {
                 parsable.addDissection(inputname, "TIME.DAY", "day_utc",
-                        zonedDateTime.getDayOfMonth());
+                    zonedDateTime.getDayOfMonth());
             }
             if (wantMonthnameUTC) {
                 parsable.addDissection(inputname, "TIME.MONTHNAME", "monthname_utc",
-                        zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
+                    zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantMonthUTC) {
                 parsable.addDissection(inputname, "TIME.MONTH", "month_utc",
-                        zonedDateTime.getMonthValue());
+                    zonedDateTime.getMonthValue());
             }
             if (wantWeekOfWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.WEEK", "weekofweekyear_utc",
-                        zonedDateTime.get(WeekFields.ISO.weekOfWeekBasedYear()));
+                    zonedDateTime.get(WeekFields.ISO.weekOfWeekBasedYear()));
             }
             if (wantWeekYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "weekyear_utc",
-                        zonedDateTime.get(WeekFields.ISO.weekBasedYear()));
+                    zonedDateTime.get(WeekFields.ISO.weekBasedYear()));
             }
             if (wantYearUTC) {
                 parsable.addDissection(inputname, "TIME.YEAR", "year_utc",
-                        zonedDateTime.getYear());
+                    zonedDateTime.getYear());
             }
             if (wantHourUTC) {
                 parsable.addDissection(inputname, "TIME.HOUR", "hour_utc",
-                        zonedDateTime.getHour());
+                    zonedDateTime.getHour());
             }
             if (wantMinuteUTC) {
                 parsable.addDissection(inputname, "TIME.MINUTE", "minute_utc",
-                        zonedDateTime.getMinute());
+                    zonedDateTime.getMinute());
             }
             if (wantSecondUTC) {
                 parsable.addDissection(inputname, "TIME.SECOND", "second_utc",
-                        zonedDateTime.getSecond());
+                    zonedDateTime.getSecond());
             }
             if (wantMillisecondUTC) {
                 parsable.addDissection(inputname, "TIME.MILLISECOND", "millisecond_utc",
-                        zonedDateTime.getNano() * 1000000);
+                    zonedDateTime.getNano() / 1000000L);
+            }
+            if (wantMicrosecondUTC) {
+                parsable.addDissection(inputname, "TIME.MICROSECOND", "microsecond_utc",
+                    zonedDateTime.getNano() / 1000L);
+            }
+            if (wantNanosecondUTC) {
+                parsable.addDissection(inputname, "TIME.NANOSECOND", "nanosecond_utc",
+                    zonedDateTime.getNano());
             }
             if (wantDateUTC) {
                 parsable.addDissection(inputname, "TIME.DATE", "date_utc",
