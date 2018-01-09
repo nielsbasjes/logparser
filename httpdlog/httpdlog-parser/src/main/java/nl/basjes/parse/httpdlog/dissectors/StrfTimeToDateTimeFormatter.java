@@ -16,8 +16,6 @@
  */
 package nl.basjes.parse.httpdlog.dissectors;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import nl.basjes.parse.strftime.StrfTimeBaseListener;
 import nl.basjes.parse.strftime.StrfTimeLexer;
 import nl.basjes.parse.strftime.StrfTimeParser;
@@ -30,7 +28,11 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
@@ -40,8 +42,6 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener implements ANTLRErrorListener {
 
