@@ -99,6 +99,16 @@ Or a combination of the above examples where you specify multiple field patterns
         results.put(name, value);
     }
 
+In some cases you may not want to have empty/null values so starting with version 4.1 you can specify a setterPolicy:
+
+    @Field(value = "STRING:request.firstline.uri.query.*", setterPolicy = NOT_NULL)
+
+The 3 possible values for the setterPolicy flag are:
+
+    ALWAYS    : Call the setter for all values: Normal, Empty and NULL.
+    NOT_NULL  : Call the setter for values: Normal and Empty, but not for NULL values.
+    NOT_EMPTY : Call the setter for values: Normal, but not for Empty and NULL values.
+
 *Notes about the setters*
 
 - Only if a value exists in the actual logline the setter will be called (mainly relevant if you want to get a specific query param or cookie).

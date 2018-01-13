@@ -21,6 +21,7 @@ import nl.basjes.parse.core.exceptions.FatalErrorDuringCallOfSetterMethod;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
+import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
+import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_NULL;
+
 public class Parser<RECORD> implements Serializable {
+
+    public enum SetterPolicy {
+        /** Call the setter for all values: Normal, Empty and NULL */
+        ALWAYS,
+
+        /** Call the setter for values: Normal and Empty, but not for NULL values */
+        NOT_NULL,
+
+        /** Call the setter for values: Normal, but not for Empty and NULL values */
+        NOT_EMPTY
+    }
 
     private static class DissectorPhase implements Serializable {
         DissectorPhase(final String inputType, final String outputType, final String name, final Dissector instance) {
@@ -75,9 +91,9 @@ public class Parser<RECORD> implements Serializable {
     //       and we 're-find' all methods using their names and parameter lists.
 
     // The target methods in the record class that will want to receive the values
-    private transient Map<String, Set<Method>> targets = new TreeMap<>();
+    private transient Map<String, Set<Pair<Method, SetterPolicy>>> targets = new TreeMap<>();
     // Each method is a list of String: method name followed by the class names of each parameter.
-    private final Map<String, Set<List<String>>> targetsMethodNames = new TreeMap<>();
+    private final Map<String, Set<Pair<List<String>, SetterPolicy>>> targetsMethodNames = new TreeMap<>();
     private transient boolean assembled = false;
 
     private final Map<String, EnumSet<Casts>> castsOfTargets = new TreeMap<>();
@@ -220,14 +236,16 @@ public class Parser<RECORD> implements Serializable {
             // This happens only AFTER deserialization.
             targets = new HashMap<>(targetsMethodNames.size());
 
-            for (Entry<String, Set<List<String>>> entry:targetsMethodNames.entrySet()) {
+            for (Entry<String, Set<Pair<List<String>, SetterPolicy>>> entry:targetsMethodNames.entrySet()) {
 
                 String fieldName = entry.getKey();
-                Set<List<String>> methodSet = entry.getValue();
+                Set<Pair<List<String>, SetterPolicy>> methodSet = entry.getValue();
 
-                Set<Method> fieldTargets = targets.computeIfAbsent(fieldName, k -> new HashSet<>());
+                Set<Pair<Method, SetterPolicy>> fieldTargets = targets.computeIfAbsent(fieldName, k -> new HashSet<>());
 
-                for(List<String> methodString: methodSet) {
+                for(Pair<List<String>, SetterPolicy> methodStringPair: methodSet) {
+                    List<String> methodString = methodStringPair.getLeft();
+                    SetterPolicy setterPolicy = methodStringPair.getRight();
                     Method method;
                     String methodName = methodString.get(0);
                     int numberOfParameters = methodString.size()-1;
@@ -242,7 +260,7 @@ public class Parser<RECORD> implements Serializable {
                     }
                     try {
                         method = recordClass.getMethod(methodName, parameters);
-                        fieldTargets.add(method);
+                        fieldTargets.add(Pair.of(method, setterPolicy));
                     } catch (NoSuchMethodException e) {
                         throw new InvalidDissectorException("Unable to locate method " + methodName, e);
                     }
@@ -476,7 +494,7 @@ public class Parser<RECORD> implements Serializable {
         for (final Method method : recordClass.getMethods()) {
             final Field field = method.getAnnotation(Field.class);
             if (field != null) {
-                addParseTarget(method, Arrays.asList(field.value()));
+                addParseTarget(method, field.setterPolicy(), Arrays.asList(field.value()));
             }
         }
     }
@@ -485,7 +503,16 @@ public class Parser<RECORD> implements Serializable {
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final String setterMethodName, final String fieldValue) throws NoSuchMethodException {
+    public void addParseTarget(final String setterMethodName,
+                               final String fieldValue) throws NoSuchMethodException {
+        addParseTarget(setterMethodName, ALWAYS, fieldValue);
+    }
+
+    /*
+     * When there is a need to add a target callback manually use this method. */
+    public void addParseTarget(final String setterMethodName,
+                               final SetterPolicy setterPolicy,
+                               final String fieldValue) throws NoSuchMethodException {
         Method method;
 
         try {
@@ -516,19 +543,35 @@ public class Parser<RECORD> implements Serializable {
             }
         }
 
-        addParseTarget(method, Collections.singletonList(fieldValue));
+        addParseTarget(method, setterPolicy, Collections.singletonList(fieldValue));
     }
 
 
     /*
      * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final String fieldValue) {
-        addParseTarget(method, Collections.singletonList(fieldValue));
+        addParseTarget(method, SetterPolicy.ALWAYS, Collections.singletonList(fieldValue));
+    }
+
+    /*
+     * When there is a need to add a target callback manually use this method. */
+    public void addParseTarget(final Method method,
+                               final SetterPolicy setterPolicy,
+                               final String fieldValue) {
+        addParseTarget(method, setterPolicy, Collections.singletonList(fieldValue));
     }
 
     /*
      * When there is a need to add a target callback manually use this method. */
     public void addParseTarget(final Method method, final List<String> fieldValues) {
+        addParseTarget(method, SetterPolicy.ALWAYS, fieldValues);
+    }
+
+    /*
+     * When there is a need to add a target callback manually use this method. */
+    public void addParseTarget(final Method method,
+                               final SetterPolicy setterPolicy,
+                               final List<String> fieldValues) {
         assembled = false;
 
         if (method == null || fieldValues == null) {
@@ -556,12 +599,12 @@ public class Parser<RECORD> implements Serializable {
                 }
 
                 // We have 1 real target
-                Set<Method> fieldTargets = targets.computeIfAbsent(cleanedFieldValue, k -> new HashSet<>());
-                fieldTargets.add(method);
+                Set<Pair<Method, SetterPolicy>> fieldTargets = targets.computeIfAbsent(cleanedFieldValue, k -> new HashSet<>());
+                fieldTargets.add(Pair.of(method, setterPolicy));
                 targets.put(cleanedFieldValue, fieldTargets);
 
                 // We have 1 real target
-                Set<List<String>> fieldTargetNames = targetsMethodNames.get(cleanedFieldValue);
+                Set<Pair<List<String>, SetterPolicy>> fieldTargetNames = targetsMethodNames.get(cleanedFieldValue);
                 if (fieldTargetNames == null) {
                     fieldTargetNames = new HashSet<>();
                 }
@@ -570,7 +613,7 @@ public class Parser<RECORD> implements Serializable {
                 for (Class<?> clazz: method.getParameterTypes()) {
                     methodList.add(clazz.getCanonicalName());
                 }
-                fieldTargetNames.add(methodList);
+                fieldTargetNames.add(Pair.of(methodList, setterPolicy));
                 targetsMethodNames.put(cleanedFieldValue, fieldTargetNames);
             }
         } else {
@@ -706,8 +749,8 @@ public class Parser<RECORD> implements Serializable {
             return; // Nothing to do
         }
 
-        final Set<Method> methods = targets.get(key);
-        if (methods == null) {
+        final Set<Pair<Method, SetterPolicy>> methodPairs = targets.get(key);
+        if (methodPairs == null) {
             LOG.error("NO methods for key={}  name={}.", key, name);
             return;
         }
@@ -721,8 +764,10 @@ public class Parser<RECORD> implements Serializable {
             }
         }
 
-        for (Method method : methods) {
+        for (Pair<Method, SetterPolicy> methodPair : methodPairs) {
+            Method method = methodPair.getLeft();
             if (method != null) {
+                SetterPolicy setterPolicy = methodPair.getRight();
                 try {
                     Class<?>[] parameters = method.getParameterTypes();
                     Class<?> valueClass = parameters[parameters.length - 1]; // Always the last one
@@ -730,6 +775,15 @@ public class Parser<RECORD> implements Serializable {
                     if (valueClass == String.class) {
                         if (castsTo.contains(Casts.STRING)) {
                             String stringValue = value.getString();
+                            if (stringValue == null) {
+                                if (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY) {
+                                    continue;
+                                }
+                            } else {
+                                if (stringValue.isEmpty() && setterPolicy == NOT_EMPTY) {
+                                    continue;
+                                }
+                            }
                             if (parameters.length == 2) {
                                 method.invoke(record, name, stringValue);
                             } else {
@@ -743,6 +797,10 @@ public class Parser<RECORD> implements Serializable {
                     if (valueClass == Long.class) {
                         if (castsTo.contains(Casts.LONG)) {
                             Long longValue = value.getLong();
+                            if (longValue == null &&
+                                (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY)) {
+                                continue;
+                            }
                             if (parameters.length == 2) {
                                 method.invoke(record, name, longValue);
                             } else {
@@ -756,6 +814,10 @@ public class Parser<RECORD> implements Serializable {
                     if (valueClass == Double.class) {
                         if (castsTo.contains(Casts.DOUBLE)) {
                             Double doubleValue = value.getDouble();
+                            if (doubleValue == null &&
+                                (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY)) {
+                                continue;
+                            }
                             if (parameters.length == 2) {
                                 method.invoke(record, name, doubleValue);
                             } else {

@@ -16,6 +16,8 @@
  */
 package nl.basjes.parse.core;
 
+import nl.basjes.parse.core.Parser.SetterPolicy;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,4 +30,6 @@ import java.lang.annotation.Target;
  */
 public @interface Field {
     String[] value();
+
+    SetterPolicy setterPolicy() default SetterPolicy.ALWAYS;
 }
