@@ -7,6 +7,7 @@ v4.1
 - Fix extracting milliseconds, added extracting microseconds and nanoseconds.
 - Allow %{%usec_frac}t in addition to %{usec_frac}t (same msec_frac).
 - Introduce a setterPolicy to determine if the setter is called in case of a NULL or EMPTY value.
+- Replace Cobertura with Jacoco because of Java 8
 
 v4.0
 ===

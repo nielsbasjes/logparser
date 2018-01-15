@@ -20,7 +20,7 @@ jdk:
   - oraclejdk8
 
 after_success:
-  - mvn clean -PEnableReportPlugins cobertura:cobertura coveralls:report
+  - mvn -PEnableReportPlugins coveralls:report
 
 cache:
   directories:
