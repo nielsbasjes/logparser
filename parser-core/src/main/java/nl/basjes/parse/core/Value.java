@@ -88,11 +88,18 @@ public class Value {
 
     @Override
     public String toString() {
-        return "Value{" +
-                "filled=" + filled +
-                ", s='" + s + '\'' +
-                ", l=" + l +
-                ", d=" + d +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb  .append("Value{")
+            .append("filled=").append(filled);
+        if (s == null) {
+            sb.append(", s=null");
+        } else {
+            sb.append(", s='").append(s).append('\'');
+        }
+        sb
+            .append(", l=").append(l)
+            .append(", d=").append(d)
+            .append('}');
+        return sb.toString();
     }
 }
