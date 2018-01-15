@@ -16,35 +16,23 @@
  */
 package nl.basjes.parse.core.annotation;
 
-import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Field;
-import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.Parser;
-import nl.basjes.parse.core.SimpleDissector;
-import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_NULL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static nl.basjes.parse.core.annotation.Utils.isAbsent;
+import static nl.basjes.parse.core.annotation.Utils.isPresent;
 
 public class TestFieldSetters {
-    private static final Logger LOG = LoggerFactory.getLogger(TestFieldSetters.class);
 
     public static class TestRecord {
         private Map<String, String> strings = new TreeMap<>();
@@ -144,200 +132,100 @@ public class TestFieldSetters {
         // CHECKSTYLE.ON: LeftCurly
     }
 
-    public static class SetAllTypesDissector extends SimpleDissector {
-        enum ValueClass {
-            NORMAL,
-            EMPTY,
-            NULL
-        }
-        private ValueClass valueClass = null;
-
-        private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
-        static {
-            dissectorConfig.put("ANY:any",         Casts.STRING_OR_LONG_OR_DOUBLE);
-            dissectorConfig.put("STRING:string",   Casts.STRING_ONLY);
-            dissectorConfig.put("INT:int",         Casts.STRING_OR_LONG);
-            dissectorConfig.put("LONG:long",       Casts.STRING_OR_LONG);
-            dissectorConfig.put("FLOAT:float",     Casts.STRING_OR_DOUBLE);
-            dissectorConfig.put("DOUBLE:double",   Casts.STRING_OR_DOUBLE);
-        }
-
-        public SetAllTypesDissector() {
-            super("INPUT", dissectorConfig);
-        }
-
-        public SetAllTypesDissector(ValueClass valueClass) {
-            super("INPUT", dissectorConfig);
-            this.valueClass = valueClass;
-        }
-
-        protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
-            super.initializeNewInstance(newInstance);
-            if (newInstance instanceof SetAllTypesDissector) {
-                SetAllTypesDissector dissector = (SetAllTypesDissector) newInstance;
-                dissector.valueClass = valueClass;
-            }
-        }
-
-        @Override
-        public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
-            switch (valueClass){
-                case NORMAL:
-                    LOG.info("Outputting \"NORMAL\" values");
-                    parsable.addDissection(inputname, "ANY",    "any",    "42");
-                    parsable.addDissection(inputname, "STRING", "string", "42");
-                    parsable.addDissection(inputname, "INT",    "int",    42);
-                    parsable.addDissection(inputname, "LONG",   "long",   42L);
-                    parsable.addDissection(inputname, "FLOAT",  "float",  42F);
-                    parsable.addDissection(inputname, "DOUBLE", "double", 42D);
-                    break;
-                case NULL:
-                    LOG.info("Outputting \"NULL\" values");
-                    parsable.addDissection(inputname, "ANY",    "any",    (String) null);
-                    parsable.addDissection(inputname, "STRING", "string", (String) null);
-                    parsable.addDissection(inputname, "INT",    "int",    (Long)   null);
-                    parsable.addDissection(inputname, "LONG",   "long",   (Long)   null);
-                    parsable.addDissection(inputname, "FLOAT",  "float",  (Double) null);
-                    parsable.addDissection(inputname, "DOUBLE", "double", (Double) null);
-                    break;
-                case EMPTY:
-                    LOG.info("Outputting \"EMPTY\" values");
-                    parsable.addDissection(inputname, "ANY",    "any",    "");
-                    parsable.addDissection(inputname, "STRING", "string", "");
-                    parsable.addDissection(inputname, "INT",    "int",    "");
-                    parsable.addDissection(inputname, "LONG",   "long",   "");
-                    parsable.addDissection(inputname, "FLOAT",  "float",  "");
-                    parsable.addDissection(inputname, "DOUBLE", "double", "");
-                    break;
-                default:
-                    fail("We did not specify a valueClass");
-            }
-        }
-    }
-
-    private Double eDouble = (double) 42F;
-    private Long eLong = 42L;
-
-    private void isPresent(Map<String, ?> results, String field, Object value) {
-        if (value == null) {
-            assertTrue("The field \""+field+"\" is missing (a null value was expected).", results.containsKey(field));
-            Object actualValue = results.get(field);
-            if (actualValue != null) {
-                assertEquals("The field \"" + field + "\" should be null but it was: " +
-                    "(" + actualValue.getClass().getSimpleName() + ")\"" + actualValue + "\" ", value, actualValue);
-            }
-        } else {
-            assertTrue("The field \""+field+"\" is missing (an entry of type "+value.getClass().getSimpleName()+" was expected).",
-                results.containsKey(field));
-            assertEquals("The field \"" + field + "\" should have the value (" +
-                value
-                + ")\"" + value.toString() + "\"is missing", value, results.get(field));
-        }
-    }
-
-    private void isAbsent(Map<String, ?> results, String field) {
-        Object value = results.get(field);
-        if (value != null) {
-            fail("The value \""+value+"\" was found for field \""+field+"\"");
-        } else {
-            assertFalse("A null value was found for field \"" + field + "\"", results.containsKey(field));
-        }
-    }
-
     @Test
     public void testNormal() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<TestRecord> parser = new Parser<>(TestRecord.class);
         parser.setRootType("INPUT");
-        parser.addDissector(new SetAllTypesDissector(SetAllTypesDissector.ValueClass.NORMAL));
+        parser.addDissector(new Utils.SetAllTypesNormalDissector());
         TestRecord testRecord = parser.parse("Doesn't matter");
 
         // Default (== Always)
         isPresent(testRecord.strings, "ANY:any",        "42");
-        isPresent(testRecord.strings, "STRING:string",  "42");
+        isPresent(testRecord.strings, "STRING:string",  "FortyTwo");
         isPresent(testRecord.strings, "INT:int",        "42");
         isPresent(testRecord.strings, "LONG:long",      "42");
         isPresent(testRecord.strings, "FLOAT:float",    "42.0");
         isPresent(testRecord.strings, "DOUBLE:double",  "42.0");
-        isPresent(testRecord.longs,   "ANY:any",        eLong);
+        isPresent(testRecord.longs,   "ANY:any",        42L);
         isAbsent(testRecord.longs,    "STRING:string");
-        isPresent(testRecord.longs,   "INT:int",        eLong);
-        isPresent(testRecord.longs,   "LONG:long",      eLong);
+        isPresent(testRecord.longs,   "INT:int",        42L);
+        isPresent(testRecord.longs,   "LONG:long",      42L);
         isAbsent(testRecord.longs,    "FLOAT:float");
         isAbsent(testRecord.longs,    "DOUBLE:double");
-        isPresent(testRecord.doubles, "ANY:any",        eDouble);
+        isPresent(testRecord.doubles, "ANY:any",        42D);
         isAbsent(testRecord.doubles,  "STRING:string");
         isAbsent(testRecord.doubles,  "INT:int");
         isAbsent(testRecord.doubles,  "LONG:long");
-        isPresent(testRecord.doubles, "FLOAT:float",    eDouble);
-        isPresent(testRecord.doubles, "DOUBLE:double",  eDouble);
+        isPresent(testRecord.doubles, "FLOAT:float",    42D);
+        isPresent(testRecord.doubles, "DOUBLE:double",  42D);
 
 
         // Always
         isPresent(testRecord.strings, "A-ANY:any",        "42");
-        isPresent(testRecord.strings, "A-STRING:string",  "42");
+        isPresent(testRecord.strings, "A-STRING:string",  "FortyTwo");
         isPresent(testRecord.strings, "A-INT:int",        "42");
         isPresent(testRecord.strings, "A-LONG:long",      "42");
         isPresent(testRecord.strings, "A-FLOAT:float",    "42.0");
         isPresent(testRecord.strings, "A-DOUBLE:double",  "42.0");
-        isPresent(testRecord.longs,   "A-ANY:any",        eLong);
+        isPresent(testRecord.longs,   "A-ANY:any",        42L);
         isAbsent(testRecord.longs,    "A-STRING:string");
-        isPresent(testRecord.longs,   "A-INT:int",        eLong);
-        isPresent(testRecord.longs,   "A-LONG:long",      eLong);
+        isPresent(testRecord.longs,   "A-INT:int",        42L);
+        isPresent(testRecord.longs,   "A-LONG:long",      42L);
         isAbsent(testRecord.longs,    "A-FLOAT:float");
         isAbsent(testRecord.longs,    "A-DOUBLE:double");
-        isPresent(testRecord.doubles, "A-ANY:any",        eDouble);
+        isPresent(testRecord.doubles, "A-ANY:any",        42D);
         isAbsent(testRecord.doubles,  "A-STRING:string");
         isAbsent(testRecord.doubles,  "A-INT:int");
         isAbsent(testRecord.doubles,  "A-LONG:long");
-        isPresent(testRecord.doubles, "A-FLOAT:float",    eDouble);
-        isPresent(testRecord.doubles, "A-DOUBLE:double",  eDouble);
+        isPresent(testRecord.doubles, "A-FLOAT:float",    42D);
+        isPresent(testRecord.doubles, "A-DOUBLE:double",  42D);
 
         // Not Null
         isPresent(testRecord.strings, "NN-ANY:any",        "42");
-        isPresent(testRecord.strings, "NN-STRING:string",  "42");
+        isPresent(testRecord.strings, "NN-STRING:string",  "FortyTwo");
         isPresent(testRecord.strings, "NN-INT:int",        "42");
         isPresent(testRecord.strings, "NN-LONG:long",      "42");
         isPresent(testRecord.strings, "NN-FLOAT:float",    "42.0");
         isPresent(testRecord.strings, "NN-DOUBLE:double",  "42.0");
-        isPresent(testRecord.longs,   "NN-ANY:any",        eLong);
+        isPresent(testRecord.longs,   "NN-ANY:any",        42L);
         isAbsent(testRecord.longs,    "NN-STRING:string");
-        isPresent(testRecord.longs,   "NN-INT:int",        eLong);
-        isPresent(testRecord.longs,   "NN-LONG:long",      eLong);
+        isPresent(testRecord.longs,   "NN-INT:int",        42L);
+        isPresent(testRecord.longs,   "NN-LONG:long",      42L);
         isAbsent(testRecord.longs,    "NN-FLOAT:float");
         isAbsent(testRecord.longs,    "NN-DOUBLE:double");
-        isPresent(testRecord.doubles, "NN-ANY:any",        eDouble);
+        isPresent(testRecord.doubles, "NN-ANY:any",        42D);
         isAbsent(testRecord.doubles,  "NN-STRING:string");
         isAbsent(testRecord.doubles,  "NN-INT:int");
         isAbsent(testRecord.doubles,  "NN-LONG:long");
-        isPresent(testRecord.doubles, "NN-FLOAT:float",    eDouble);
-        isPresent(testRecord.doubles, "NN-DOUBLE:double",  eDouble);
+        isPresent(testRecord.doubles, "NN-FLOAT:float",    42D);
+        isPresent(testRecord.doubles, "NN-DOUBLE:double",  42D);
 
         // Not Empty
         isPresent(testRecord.strings, "NE-ANY:any",        "42");
-        isPresent(testRecord.strings, "NE-STRING:string",  "42");
+        isPresent(testRecord.strings, "NE-STRING:string",  "FortyTwo");
         isPresent(testRecord.strings, "NE-INT:int",        "42");
         isPresent(testRecord.strings, "NE-LONG:long",      "42");
         isPresent(testRecord.strings, "NE-FLOAT:float",    "42.0");
         isPresent(testRecord.strings, "NE-DOUBLE:double",  "42.0");
-        isPresent(testRecord.longs,   "NE-ANY:any",        eLong);
+        isPresent(testRecord.longs,   "NE-ANY:any",        42L);
         isAbsent(testRecord.longs,    "NE-STRING:string");
-        isPresent(testRecord.longs,   "NE-INT:int",        eLong);
-        isPresent(testRecord.longs,   "NE-LONG:long",      eLong);
+        isPresent(testRecord.longs,   "NE-INT:int",        42L);
+        isPresent(testRecord.longs,   "NE-LONG:long",      42L);
         isAbsent(testRecord.longs,    "NE-FLOAT:float");
         isAbsent(testRecord.longs,    "NE-DOUBLE:double");
-        isPresent(testRecord.doubles, "NE-ANY:any",        eDouble);
+        isPresent(testRecord.doubles, "NE-ANY:any",        42D);
         isAbsent(testRecord.doubles,  "NE-STRING:string");
         isAbsent(testRecord.doubles,  "NE-INT:int");
         isAbsent(testRecord.doubles,  "NE-LONG:long");
-        isPresent(testRecord.doubles, "NE-FLOAT:float",    eDouble);
-        isPresent(testRecord.doubles, "NE-DOUBLE:double",  eDouble);
+        isPresent(testRecord.doubles, "NE-FLOAT:float",    42D);
+        isPresent(testRecord.doubles, "NE-DOUBLE:double",  42D);
     }
 
     @Test
     public void testEmpty() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<TestRecord> parser = new Parser<>(TestRecord.class);
         parser.setRootType("INPUT");
-        parser.addDissector(new SetAllTypesDissector(SetAllTypesDissector.ValueClass.EMPTY));
+        parser.addDissector(new Utils.SetAllTypesEmptyDissector());
         TestRecord testRecord = parser.parse("Doesn't matter");
 
         // Default (== Always)
@@ -426,7 +314,7 @@ public class TestFieldSetters {
     public void testNull() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<TestRecord> parser = new Parser<>(TestRecord.class);
         parser.setRootType("INPUT");
-        parser.addDissector(new SetAllTypesDissector(SetAllTypesDissector.ValueClass.NULL));
+        parser.addDissector(new Utils.SetAllTypesNullDissector());
         TestRecord testRecord = parser.parse("Doesn't matter");
 
         // Default (== Always)

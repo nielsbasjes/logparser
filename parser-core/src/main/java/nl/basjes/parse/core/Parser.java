@@ -777,10 +777,12 @@ public class Parser<RECORD> implements Serializable {
                             String stringValue = value.getString();
                             if (stringValue == null) {
                                 if (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY) {
+                                    calledASetter = true;
                                     continue;
                                 }
                             } else {
                                 if (stringValue.isEmpty() && setterPolicy == NOT_EMPTY) {
+                                    calledASetter = true;
                                     continue;
                                 }
                             }
@@ -799,6 +801,7 @@ public class Parser<RECORD> implements Serializable {
                             Long longValue = value.getLong();
                             if (longValue == null &&
                                 (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY)) {
+                                calledASetter = true;
                                 continue;
                             }
                             if (parameters.length == 2) {
@@ -816,6 +819,7 @@ public class Parser<RECORD> implements Serializable {
                             Double doubleValue = value.getDouble();
                             if (doubleValue == null &&
                                 (setterPolicy == NOT_NULL || setterPolicy == NOT_EMPTY)) {
+                                calledASetter = true;
                                 continue;
                             }
                             if (parameters.length == 2) {
