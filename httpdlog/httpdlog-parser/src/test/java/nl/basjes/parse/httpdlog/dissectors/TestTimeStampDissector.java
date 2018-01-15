@@ -423,9 +423,9 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%Y", "2001");          // The year as a decimal number including the century.
         checkStrfField(dateTime, "%z", "+0100");         // The +hhmm or -hhmm numeric timezone.
         checkStrfField(dateTime, "%Z", "CET");           // The timezone name or abbreviation.
+
         checkStrfField(dateTime, "msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
         checkStrfField(dateTime, "usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
-
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2001-01-02 03:04:05.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2001-01-02 03:04:05.678901 +0100");
 
@@ -471,9 +471,9 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%Y", "2017");          // The year as a decimal number including the century.
         checkStrfField(dateTime, "%z", "+0100");         // The +hhmm or -hhmm numeric timezone.
         checkStrfField(dateTime, "%Z", "CET");           // The timezone name or abbreviation.
+
         checkStrfField(dateTime, "msec_frac", "678");    // Apache HTTPD specific: milliseconds fraction
         checkStrfField(dateTime, "usec_frac", "678901"); // Apache HTTPD specific: microseconds fraction
-
         checkStrfField(dateTime, "%F %T.msec_frac %z", "2017-11-12 23:14:15.678 +0100");
         checkStrfField(dateTime, "%F %T.usec_frac %z", "2017-11-12 23:14:15.678901 +0100");
 
