@@ -29,51 +29,48 @@ import java.util.TreeMap;
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
 import static nl.basjes.parse.core.annotation.Utils.isPresent;
 
-public class TestFieldSettersAlways {
+public class TestFieldSettersAlwaysCombined {
 
     public static class TestRecordString {
         private Map<String, String> strings = new TreeMap<>();
 
-        private void set(String name, String value) {
+        @Field(value = {
+            "ANY:any",
+            "STRING:string",
+            "INT:int",
+            "LONG:long",
+            "FLOAT:float",
+            "DOUBLE:double" },
+            setterPolicy = ALWAYS)
+        public void set(String name, String value) {
             strings.put(name, value);
         }
-
-        // CHECKSTYLE.OFF: LeftCurly
-        @Field(value = "ANY:any",       setterPolicy = ALWAYS) public void setA(String n, String v) { set(n, v); }
-        @Field(value = "STRING:string", setterPolicy = ALWAYS) public void setS(String n, String v) { set(n, v); }
-        @Field(value = "INT:int",       setterPolicy = ALWAYS) public void setI(String n, String v) { set(n, v); }
-        @Field(value = "LONG:long",     setterPolicy = ALWAYS) public void setL(String n, String v) { set(n, v); }
-        @Field(value = "FLOAT:float",   setterPolicy = ALWAYS) public void setF(String n, String v) { set(n, v); }
-        @Field(value = "DOUBLE:double", setterPolicy = ALWAYS) public void setD(String n, String v) { set(n, v); }
-        // CHECKSTYLE.ON: LeftCurly
     }
 
     public static class TestRecordLong {
         private Map<String, Long> longs = new TreeMap<>();
 
-        private void set(String name, Long value) {
+        @Field(value = {
+            "ANY:any",
+            "INT:int",
+            "LONG:long" },
+            setterPolicy = ALWAYS)
+        public void set(String name, Long value) {
             longs.put(name, value);
         }
-
-        // CHECKSTYLE.OFF: LeftCurly
-        @Field(value = "ANY:any",       setterPolicy = ALWAYS) public void setA(String n, Long v) { set(n, v); }
-        @Field(value = "INT:int",       setterPolicy = ALWAYS) public void setI(String n, Long v) { set(n, v); }
-        @Field(value = "LONG:long",     setterPolicy = ALWAYS) public void setL(String n, Long v) { set(n, v); }
-        // CHECKSTYLE.ON: LeftCurly
     }
 
     public static class TestRecordDouble {
         private Map<String, Double> doubles = new TreeMap<>();
 
-        private void set(String name, Double value) {
+        @Field(value = {
+            "ANY:any",
+            "FLOAT:float",
+            "DOUBLE:double" },
+            setterPolicy = ALWAYS)
+        public void set(String name, Double value) {
             doubles.put(name, value);
         }
-
-        // CHECKSTYLE.OFF: LeftCurly
-        @Field(value = "ANY:any",       setterPolicy = ALWAYS) public void setA(String n, Double v) { set(n, v); }
-        @Field(value = "FLOAT:float",   setterPolicy = ALWAYS) public void setF(String n, Double v) { set(n, v); }
-        @Field(value = "DOUBLE:double", setterPolicy = ALWAYS) public void setD(String n, Double v) { set(n, v); }
-        // CHECKSTYLE.ON: LeftCurly
     }
 
 

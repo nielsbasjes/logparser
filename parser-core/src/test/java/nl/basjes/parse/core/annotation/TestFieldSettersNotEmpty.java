@@ -34,7 +34,15 @@ public class TestFieldSettersNotEmpty {
     public static class TestRecordString {
         private Map<String, String> strings = new TreeMap<>();
 
-        private void set(String name, String value) {
+        @Field(value = {
+            "ANY:any",
+            "STRING:string",
+            "INT:int",
+            "LONG:long",
+            "FLOAT:float",
+            "DOUBLE:double" },
+            setterPolicy = NOT_EMPTY)
+        public void set(String name, String value) {
             strings.put(name, value);
         }
 
@@ -51,7 +59,12 @@ public class TestFieldSettersNotEmpty {
     public static class TestRecordLong {
         private Map<String, Long> longs = new TreeMap<>();
 
-        private void set(String name, Long value) {
+        @Field(value = {
+            "ANY:any",
+            "INT:int",
+            "LONG:long" },
+            setterPolicy = NOT_EMPTY)
+        public void set(String name, Long value) {
             longs.put(name, value);
         }
 
@@ -65,7 +78,12 @@ public class TestFieldSettersNotEmpty {
     public static class TestRecordDouble {
         private Map<String, Double> doubles = new TreeMap<>();
 
-        private void set(String name, Double value) {
+        @Field(value = {
+            "ANY:any",
+            "FLOAT:float",
+            "DOUBLE:double" },
+            setterPolicy = NOT_EMPTY)
+        public void set(String name, Double value) {
             doubles.put(name, value);
         }
 
