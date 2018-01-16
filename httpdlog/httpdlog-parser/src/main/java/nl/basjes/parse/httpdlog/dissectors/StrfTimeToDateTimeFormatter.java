@@ -97,7 +97,7 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
         DateTimeFormatter dateTimeFormatter = builder.toFormatter();
         if (!zoneWasSpecified) {
             dateTimeFormatter = dateTimeFormatter.withZone(defaultZone);
-            LOG.error("The timestamp format \"{}\" does NOT contain a timezone so we assume \"{}\".",
+            LOG.warn("The timestamp format \"{}\" does NOT contain a timezone so we assume \"{}\".",
                 strfformat, defaultZone.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
         }
         return dateTimeFormatter;
