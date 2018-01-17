@@ -111,7 +111,7 @@ public class BasicOverallTest {
 
     @Test
     public void testBasicParsing() throws Exception {
-        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, LOG_FORMAT);
+        Parser<MyRecord> parser = new HttpdLoglineParser<>(MyRecord.class, LOG_FORMAT);
         MyRecord         record = new MyRecord();
 
         List<String> paths = parser.getPossiblePaths();

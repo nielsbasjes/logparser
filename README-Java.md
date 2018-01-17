@@ -26,7 +26,7 @@ I assume we have a logformat variable that looks something like this:
 To figure out what values we CAN get from this line we instantiate the parser with a dummy class
 that does not have ANY @Field annotations. The "Object" class will do just fine for this purpose.
 
-    Parser<Object> dummyParser = new ApacheHttpdLoglineParser<Object>(Object.class, logformat);
+    Parser<Object> dummyParser = new HttpdLoglineParser<Object>(Object.class, logformat);
     List<String> possiblePaths = dummyParser.getPossiblePaths();
     for (String path: possiblePaths) {
         System.out.println(path);
@@ -121,7 +121,7 @@ Have a look at the 'examples/pojo' directory for a working example.
 
 You create an instance of the parser
 
-    Parser<MyRecord> parser = new ApacheHttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
+    Parser<MyRecord> parser = new HttpdLoglineParser<MyRecord>(MyRecord.class, logformat);
 
 And then call the parse method repeatedly for each line.
 There are two ways to do this:

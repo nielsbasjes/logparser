@@ -199,7 +199,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
         assert columnNames.size() == columnTypes.size();
         numColumns = columnNames.size();
 
-        parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
+        parser = new HttpdLoglineParser<>(ParsedRecord.class, logformat);
         parser.setTypeRemappings(typeRemappings)
               .addDissectors(additionalDissectors);
 

@@ -130,7 +130,7 @@ public class CookiesTest {
 
     @Test
     public void testEmptyRecordPossibles() {
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, LOG_FORMAT);
+        Parser<EmptyTestRecord> parser = new HttpdLoglineParser<>(EmptyTestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -142,7 +142,7 @@ public class CookiesTest {
 
     @Test
     public void testRecordPossibles() {
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
+        Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
         for (String possible : possibles) {
@@ -155,7 +155,7 @@ public class CookiesTest {
     @Test
     public void cookiesTest() throws Exception {
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
+        Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         TestRecord record = new TestRecord();
         parser.parse(record, COOKIES_LINE);

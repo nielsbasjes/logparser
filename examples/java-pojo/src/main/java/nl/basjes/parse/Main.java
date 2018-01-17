@@ -20,7 +20,6 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-import nl.basjes.parse.httpdlog.ApacheHttpdLoglineParser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +80,7 @@ public final class Main {
 
         printAllPossibles(logformat);
 
-        Parser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logformat);
+        Parser<MyRecord> parser = new HttpdLoglineParser<>(MyRecord.class, logformat);
         MyRecord record = new MyRecord();
 
         LOG.info("==================================================================================");

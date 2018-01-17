@@ -68,7 +68,7 @@ public class MultiLineHttpdLogParserTest {
                          + LOG_FORMAT_2 + '\n'
                          + '\n';
 
-        Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, logFormat);
+        Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, logFormat);
 
         validateLine1(parser);
         validateLine1(parser);

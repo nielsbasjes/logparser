@@ -49,7 +49,7 @@ public class PojoGenerator {
     }
 
     public void run() throws NoSuchMethodException, MissingDissectorsException, InvalidDissectorException {
-        ApacheHttpdLoglineParser<MyRecord> parser = new ApacheHttpdLoglineParser<>(MyRecord.class, logFormat);
+        HttpdLoglineParser<MyRecord> parser = new HttpdLoglineParser<>(MyRecord.class, logFormat);
 
         List<String> allPossiblePaths = parser.getPossiblePaths();
         parser.addParseTarget(MyRecord.class.getMethod("setter", String.class, String.class), allPossiblePaths);
