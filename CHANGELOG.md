@@ -1,6 +1,6 @@
 This is intended as an overview of the major changes
 
-v4.1
+v5.0
 ===
 - The %u specifier allowed a space which broke parsing if the field after it also allowed space.
 - If a custom time format does not contain a timezone we assume a default timezone (UTC). 
