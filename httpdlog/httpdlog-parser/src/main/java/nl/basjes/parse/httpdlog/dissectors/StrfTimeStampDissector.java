@@ -23,16 +23,12 @@ import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 public class StrfTimeStampDissector extends Dissector {
-
-    private static final Logger LOG = LoggerFactory.getLogger(StrfTimeStampDissector.class);
 
     private TimeStampDissector timeStampDissector;
 
