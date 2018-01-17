@@ -45,7 +45,7 @@ public class TestOutputTypes {
                 "    LOAD '" + logfile + "' " +
                 "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
                 "            '" + LOGFORMAT + "'," +
-                "    '-load:nl.basjes.parse.core.test.UltimateDummyDissector:"+ HttpdLogFormatDissector.INPUT_TYPE + "'," +
+                "    '-load:nl.basjes.parse.core.test.NormalValuesDissector:"+ HttpdLogFormatDissector.INPUT_TYPE + "'," +
                 "            'ANY:any'," +
                 "            'ANY:any'," +
                 "            'ANY:any'," +

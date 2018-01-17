@@ -152,10 +152,9 @@ public class ApacheHttpdLogfileRecordReader extends
     }
 
     protected Parser<ParsedRecord> instantiateParser(String logFormat)  {
-        HttpdLoglineParser<ParsedRecord> newParser = new HttpdLoglineParser<>(ParsedRecord.class, logFormat);
-        newParser.setTypeRemappings(typeRemappings);
-        newParser.addDissectors(additionalDissectors);
-        return newParser;
+        return new HttpdLoglineParser<>(ParsedRecord.class, logFormat)
+            .setTypeRemappings(typeRemappings)
+            .addDissectors(additionalDissectors);
     }
 
     private Map<String, EnumSet<Casts>> allCasts;
@@ -169,10 +168,9 @@ public class ApacheHttpdLogfileRecordReader extends
             outputAllPossibleFields = true;
             allPossiblePaths = getParser().getPossiblePaths();
             allPossiblePathsFieldName = firstField;
-            Parser<ParsedRecord> newParser = instantiateParser(logformat);
-            newParser.addParseTarget(ParsedRecord.class.getMethod("set",
-                    String.class, String.class), allPossiblePaths);
-            newParser.addTypeRemappings(typeRemappings);
+            Parser<ParsedRecord> newParser = instantiateParser(logformat)
+                .addParseTarget(ParsedRecord.class.getMethod("set", String.class, String.class), allPossiblePaths)
+                .addTypeRemappings(typeRemappings);
             allCasts = newParser.getAllCasts();
         }
     }

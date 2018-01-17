@@ -17,10 +17,7 @@
 package nl.basjes.parse.core.test;
 
 import nl.basjes.parse.core.Casts;
-import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.SimpleDissector;
-import nl.basjes.parse.core.Value;
-import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -28,7 +25,7 @@ import java.util.HashMap;
 /**
  * A dummy dissector to ensure retrieving all types works in the various wrappers
  */
-public class UltimateDummyDissector extends SimpleDissector {
+public abstract class UltimateDummyDissector extends SimpleDissector {
 
     private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
     static {
@@ -54,14 +51,5 @@ public class UltimateDummyDissector extends SimpleDissector {
         return true;
     }
 
-    @Override
-    public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
-        parsable.addDissection(inputname, "ANY",    "any",    "42");
-        parsable.addDissection(inputname, "STRING", "string", "FortyTwo");
-        parsable.addDissection(inputname, "INT",    "int",    42);
-        parsable.addDissection(inputname, "LONG",   "long",   42L);
-        parsable.addDissection(inputname, "FLOAT",  "float",  42F);
-        parsable.addDissection(inputname, "DOUBLE", "double", 42D);
-    }
 
 }

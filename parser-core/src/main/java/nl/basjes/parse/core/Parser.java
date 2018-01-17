@@ -140,25 +140,27 @@ public class Parser<RECORD> implements Serializable {
 
     // --------------------------------------------
 
-    public final void addDissectors(final List<Dissector> dissectors) {
+    public final Parser<RECORD> addDissectors(final List<Dissector> dissectors) {
         assembled = false;
         if (dissectors != null) {
             allDissectors.addAll(dissectors);
         }
+        return this;
     }
 
     // --------------------------------------------
 
-    public final void addDissector(final Dissector dissector) {
+    public final Parser<RECORD> addDissector(final Dissector dissector) {
         assembled = false;
         if (dissector != null) {
             allDissectors.add(dissector);
         }
+        return this;
     }
 
     // --------------------------------------------
 
-    public final void dropDissector(Class<? extends Dissector> dissectorClassToDrop) {
+    public final Parser<RECORD> dropDissector(Class<? extends Dissector> dissectorClassToDrop) {
         assembled = false;
         Set<Dissector> removeDissector = new HashSet<>();
         for (final Dissector dissector : allDissectors) {
@@ -167,6 +169,7 @@ public class Parser<RECORD> implements Serializable {
             }
         }
         allDissectors.removeAll(removeDissector);
+        return this;
     }
 
     // --------------------------------------------
@@ -177,9 +180,10 @@ public class Parser<RECORD> implements Serializable {
 
     // --------------------------------------------
 
-    public void setRootType(final String newRootType) {
+    public Parser<RECORD> setRootType(final String newRootType) {
         assembled = false;
         rootType = newRootType;
+        return this;
     }
 
     // --------------------------------------------
@@ -215,15 +219,17 @@ public class Parser<RECORD> implements Serializable {
      * The effect is that those fields that would have been classified as 'missing'
      * will result in a null value (or better: the setter is never called) for all records.
      */
-    public void ignoreMissingDissectors() {
+    public Parser<RECORD> ignoreMissingDissectors() {
         failOnMissingDissectors = false;
+        return this;
     }
 
     /**
      * Reset back to the default of failing on missing dissectors.
      */
-    public void failOnMissingDissectors() {
+    public Parser<RECORD> failOnMissingDissectors() {
         failOnMissingDissectors = true;
+        return this;
     }
 
 
@@ -503,14 +509,15 @@ public class Parser<RECORD> implements Serializable {
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final String setterMethodName,
+    public Parser<RECORD> addParseTarget(final String setterMethodName,
                                final String fieldValue) throws NoSuchMethodException {
         addParseTarget(setterMethodName, ALWAYS, fieldValue);
+        return this;
     }
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final String setterMethodName,
+    public Parser<RECORD> addParseTarget(final String setterMethodName,
                                final SetterPolicy setterPolicy,
                                final String fieldValue) throws NoSuchMethodException {
         Method method;
@@ -544,38 +551,39 @@ public class Parser<RECORD> implements Serializable {
         }
 
         addParseTarget(method, setterPolicy, Collections.singletonList(fieldValue));
+        return this;
     }
 
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final Method method, final String fieldValue) {
-        addParseTarget(method, SetterPolicy.ALWAYS, Collections.singletonList(fieldValue));
+    public Parser<RECORD> addParseTarget(final Method method, final String fieldValue) {
+        return addParseTarget(method, SetterPolicy.ALWAYS, Collections.singletonList(fieldValue));
     }
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final Method method,
+    public Parser<RECORD> addParseTarget(final Method method,
                                final SetterPolicy setterPolicy,
                                final String fieldValue) {
-        addParseTarget(method, setterPolicy, Collections.singletonList(fieldValue));
+        return addParseTarget(method, setterPolicy, Collections.singletonList(fieldValue));
     }
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final Method method, final List<String> fieldValues) {
-        addParseTarget(method, SetterPolicy.ALWAYS, fieldValues);
+    public Parser<RECORD> addParseTarget(final Method method, final List<String> fieldValues) {
+        return addParseTarget(method, SetterPolicy.ALWAYS, fieldValues);
     }
 
     /*
      * When there is a need to add a target callback manually use this method. */
-    public void addParseTarget(final Method method,
+    public Parser<RECORD> addParseTarget(final Method method,
                                final SetterPolicy setterPolicy,
                                final List<String> fieldValues) {
         assembled = false;
 
         if (method == null || fieldValues == null) {
-            return; // Nothing to do here
+            return this; // Nothing to do here
         }
 
         final Class<?>[] parameters = method.getParameterTypes();
@@ -619,34 +627,37 @@ public class Parser<RECORD> implements Serializable {
         } else {
             throw new InvalidFieldMethodSignature(method);
         }
+        return this;
     }
 
     // --------------------------------------------
 
     private Map<String, Set<String>> typeRemappings = new HashMap<>(16);
 
-    public void setTypeRemappings(Map<String, Set<String>> pTypeRemappings) {
+    public Parser<RECORD> setTypeRemappings(Map<String, Set<String>> pTypeRemappings) {
         if (pTypeRemappings == null) {
             this.typeRemappings.clear();
         } else {
             this.typeRemappings = pTypeRemappings;
         }
+        return this;
     }
 
-    public void addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
+    public Parser<RECORD> addTypeRemappings(Map<String, Set<String>> additionalTypeRemappings) {
         for (Entry<String, Set<String>> entry: additionalTypeRemappings.entrySet()){
             String input = entry.getKey();
             for (String newType: entry.getValue()) {
                 addTypeRemapping(input, newType, Casts.STRING_ONLY);
             }
         }
+        return this;
     }
 
-    public void addTypeRemapping(String input, String newType) {
-        addTypeRemapping(input, newType, Casts.STRING_ONLY);
+    public Parser<RECORD> addTypeRemapping(String input, String newType) {
+        return addTypeRemapping(input, newType, Casts.STRING_ONLY);
     }
 
-    public void addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
+    public Parser<RECORD> addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
         assembled = false;
 
         String theInput = input.trim().toLowerCase(Locale.ENGLISH);
@@ -658,6 +669,7 @@ public class Parser<RECORD> implements Serializable {
             mappingsForInput.add(theType);
             castsOfTargets.put(theType+':'+theInput, newCasts);
         }
+        return this;
     }
 
     // --------------------------------------------

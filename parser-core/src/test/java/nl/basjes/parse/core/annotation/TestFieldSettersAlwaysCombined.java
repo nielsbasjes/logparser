@@ -21,19 +21,15 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.core.test.NormalValuesDissector;
+import nl.basjes.parse.core.test.TestRecord;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
-import static nl.basjes.parse.core.annotation.Utils.isPresent;
 
 public class TestFieldSettersAlwaysCombined {
 
-    public static class TestRecordString {
-        private Map<String, String> strings = new TreeMap<>();
-
+    public static class TestRecordString extends TestRecord {
         @Field(value = {
             "ANY:any",
             "STRING:string",
@@ -43,74 +39,70 @@ public class TestFieldSettersAlwaysCombined {
             "DOUBLE:double" },
             setterPolicy = ALWAYS)
         public void set(String name, String value) {
-            strings.put(name, value);
+            setStringValue(name, value);
         }
     }
 
-    public static class TestRecordLong {
-        private Map<String, Long> longs = new TreeMap<>();
-
+    public static class TestRecordLong  extends TestRecord {
         @Field(value = {
             "ANY:any",
             "INT:int",
             "LONG:long" },
             setterPolicy = ALWAYS)
         public void set(String name, Long value) {
-            longs.put(name, value);
+            setLongValue(name, value);
         }
     }
 
-    public static class TestRecordDouble {
-        private Map<String, Double> doubles = new TreeMap<>();
-
+    public static class TestRecordDouble  extends TestRecord {
         @Field(value = {
             "ANY:any",
             "FLOAT:float",
             "DOUBLE:double" },
             setterPolicy = ALWAYS)
         public void set(String name, Double value) {
-            doubles.put(name, value);
+            setDoubleValue(name, value);
         }
     }
 
 
     @Test
     public void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordString> parser = new Parser<>(TestRecordString.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesNormalDissector());
-        TestRecordString testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordString.class)
+            .setRootType("INPUT")
+            .addDissector(new NormalValuesDissector())
+            .parse("Doesn't matter")
 
-        isPresent(testRecord.strings,  "ANY:any",       "42");
-        isPresent(testRecord.strings,  "STRING:string", "FortyTwo");
-        isPresent(testRecord.strings,  "INT:int",       "42");
-        isPresent(testRecord.strings,  "LONG:long",     "42");
-        isPresent(testRecord.strings,  "FLOAT:float",   "42.0");
-        isPresent(testRecord.strings,  "DOUBLE:double", "42.0");
+            .expectString("ANY:any",       "42")
+            .expectString("STRING:string", "FortyTwo")
+            .expectString("INT:int",       "42")
+            .expectString("LONG:long",     "42")
+            .expectString("FLOAT:float",   "42.0")
+            .expectString("DOUBLE:double", "42.0");
     }
 
     @Test
     public void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordLong> parser = new Parser<>(TestRecordLong.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesNormalDissector());
-        TestRecordLong testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordLong.class)
+            .setRootType("INPUT")
+            .addDissector(new NormalValuesDissector())
+            .parse("Doesn't matter")
 
-        isPresent(testRecord.longs, "ANY:any",    42L);
-        isPresent(testRecord.longs, "INT:int",    42L);
-        isPresent(testRecord.longs, "LONG:long",  42L);
+            .expectLong("ANY:any",    42L)
+            .expectLong("INT:int",    42L)
+            .expectLong("LONG:long",  42L);
     }
 
     @Test
     public void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordDouble> parser = new Parser<>(TestRecordDouble.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesNormalDissector());
-        TestRecordDouble testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordDouble.class)
+            .setRootType("INPUT")
+            .addDissector(new NormalValuesDissector())
+            .parse("Doesn't matter")
 
-        isPresent(testRecord.doubles, "ANY:any",       42D);
-        isPresent(testRecord.doubles, "FLOAT:float",   42D);
-        isPresent(testRecord.doubles, "DOUBLE:double", 42D);
+            .expectDouble("ANY:any",       42D)
+            .expectDouble("FLOAT:float",   42D)
+            .expectDouble("DOUBLE:double", 42D);
     }
 
 }

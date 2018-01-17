@@ -23,7 +23,7 @@ public class TestUltimateDummyDissector {
     @Test
     public void verifyUltimateDummyDissector() {
         DissectorTester.create()
-            .withDissector(new UltimateDummyDissector())
+            .withDissector(new NormalValuesDissector())
             .withInput("Doesn't matter")
             .expect("ANY:any",        "42")
             .expect("ANY:any",        42L)

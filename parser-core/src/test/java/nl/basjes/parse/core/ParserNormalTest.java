@@ -146,10 +146,10 @@ public class ParserNormalTest {
         Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
-
-        parser.dropDissector(TestDissectorWildCard.class);
-        parser.addDissector(new TestDissectorWildCard());
+        parser
+            .addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params))
+            .dropDissector(TestDissectorWildCard.class)
+            .addDissector(new TestDissectorWildCard());
 
         ParserNormalRecordTest output = new ParserNormalRecordTest();
         parser.parse(output, "Something");

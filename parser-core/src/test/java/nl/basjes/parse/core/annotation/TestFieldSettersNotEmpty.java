@@ -21,19 +21,15 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.core.test.EmptyValuesDissector;
+import nl.basjes.parse.core.test.TestRecord;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
-import static nl.basjes.parse.core.annotation.Utils.isAbsent;
 
 public class TestFieldSettersNotEmpty {
 
-    public static class TestRecordString {
-        private Map<String, String> strings = new TreeMap<>();
-
+    public static class TestRecordString extends TestRecord {
         @Field(value = {
             "ANY:any",
             "STRING:string",
@@ -43,7 +39,7 @@ public class TestFieldSettersNotEmpty {
             "DOUBLE:double" },
             setterPolicy = NOT_EMPTY)
         public void set(String name, String value) {
-            strings.put(name, value);
+            setStringValue(name, value);
         }
 
         // CHECKSTYLE.OFF: LeftCurly
@@ -56,16 +52,14 @@ public class TestFieldSettersNotEmpty {
         // CHECKSTYLE.ON: LeftCurly
     }
 
-    public static class TestRecordLong {
-        private Map<String, Long> longs = new TreeMap<>();
-
+    public static class TestRecordLong extends TestRecord {
         @Field(value = {
             "ANY:any",
             "INT:int",
             "LONG:long" },
             setterPolicy = NOT_EMPTY)
         public void set(String name, Long value) {
-            longs.put(name, value);
+            setLongValue(name, value);
         }
 
         // CHECKSTYLE.OFF: LeftCurly
@@ -75,16 +69,14 @@ public class TestFieldSettersNotEmpty {
         // CHECKSTYLE.ON: LeftCurly
     }
 
-    public static class TestRecordDouble {
-        private Map<String, Double> doubles = new TreeMap<>();
-
+    public static class TestRecordDouble extends TestRecord {
         @Field(value = {
             "ANY:any",
             "FLOAT:float",
             "DOUBLE:double" },
             setterPolicy = NOT_EMPTY)
         public void set(String name, Double value) {
-            doubles.put(name, value);
+            setDoubleValue(name, value);
         }
 
         // CHECKSTYLE.OFF: LeftCurly
@@ -96,41 +88,41 @@ public class TestFieldSettersNotEmpty {
 
     @Test
     public void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordString> parser = new Parser<>(TestRecordString.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesEmptyDissector());
-        TestRecordString testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordString.class)
+            .setRootType("INPUT")
+            .addDissector(new EmptyValuesDissector())
+            .parse("Doesn't matter")
 
-        isAbsent(testRecord.strings,  "ANY:any");
-        isAbsent(testRecord.strings,  "STRING:string");
-        isAbsent(testRecord.strings,  "INT:int");
-        isAbsent(testRecord.strings,  "LONG:long");
-        isAbsent(testRecord.strings,  "FLOAT:float");
-        isAbsent(testRecord.strings,  "DOUBLE:double");
+            .noString("ANY:any")
+            .noString("STRING:string")
+            .noString("INT:int")
+            .noString("LONG:long")
+            .noString("FLOAT:float")
+            .noString("DOUBLE:double");
     }
 
     @Test
     public void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordLong> parser = new Parser<>(TestRecordLong.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesEmptyDissector());
-        TestRecordLong testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordLong.class)
+            .setRootType("INPUT")
+            .addDissector(new EmptyValuesDissector())
+            .parse("Doesn't matter")
 
-        isAbsent(testRecord.longs, "ANY:any");
-        isAbsent(testRecord.longs, "INT:int");
-        isAbsent(testRecord.longs, "LONG:long");
+            .noLong("ANY:any")
+            .noLong("INT:int")
+            .noLong("LONG:long");
     }
 
     @Test
     public void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        Parser<TestRecordDouble> parser = new Parser<>(TestRecordDouble.class);
-        parser.setRootType("INPUT");
-        parser.addDissector(new Utils.SetAllTypesEmptyDissector());
-        TestRecordDouble testRecord = parser.parse("Doesn't matter");
+        new Parser<>(TestRecordDouble.class)
+            .setRootType("INPUT")
+            .addDissector(new EmptyValuesDissector())
+            .parse("Doesn't matter")
 
-        isAbsent(testRecord.doubles, "ANY:any");
-        isAbsent(testRecord.doubles, "FLOAT:float");
-        isAbsent(testRecord.doubles, "DOUBLE:double");
+            .noDouble("ANY:any")
+            .noDouble("FLOAT:float")
+            .noDouble("DOUBLE:double");
     }
 
 }

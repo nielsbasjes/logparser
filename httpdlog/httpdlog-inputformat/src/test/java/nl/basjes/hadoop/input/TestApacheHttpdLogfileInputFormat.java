@@ -17,7 +17,7 @@ package nl.basjes.hadoop.input;
  */
 
 import nl.basjes.parse.core.Dissector;
-import nl.basjes.parse.core.test.UltimateDummyDissector;
+import nl.basjes.parse.core.test.NormalValuesDissector;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -114,7 +114,7 @@ public class TestApacheHttpdLogfileInputFormat {
 
         Map<String, Set<String>> typeRemappings = new HashMap<>();
         List<Dissector> dissectors = new ArrayList<>();
-        dissectors.add(new UltimateDummyDissector(HttpdLogFormatDissector.INPUT_TYPE));
+        dissectors.add(new NormalValuesDissector(HttpdLogFormatDissector.INPUT_TYPE));
 
         InputFormat inputFormat = new ApacheHttpdLogfileInputFormat(
             logformat,

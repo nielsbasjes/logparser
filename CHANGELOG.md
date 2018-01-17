@@ -9,6 +9,7 @@ v5.0
 - Introduce a setterPolicy to determine if the setter is called in case of a NULL or EMPTY value.
 - Replace Cobertura with Jacoco because of Java 8
 - Remove Yauaa from tests and examples because of circulair dependency between the projects.
+- Make Java API more fluent (breaks backwards compatibility with external dissectors).
 
 v4.0
 ===

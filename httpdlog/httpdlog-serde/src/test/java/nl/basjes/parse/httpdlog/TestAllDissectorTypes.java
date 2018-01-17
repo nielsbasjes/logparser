@@ -142,7 +142,7 @@ public class TestAllDissectorTypes {
         );
 
         schema.setProperty("logformat",           "%t");
-        schema.setProperty("load:nl.basjes.parse.core.test.UltimateDummyDissector", HttpdLogFormatDissector.INPUT_TYPE);
+        schema.setProperty("load:nl.basjes.parse.core.test.NormalValuesDissector", HttpdLogFormatDissector.INPUT_TYPE);
 
         schema.setProperty("field:any_string",     "ANY:any");
         schema.setProperty("field:any_long",       "ANY:any");

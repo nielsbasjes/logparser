@@ -20,6 +20,7 @@ package nl.basjes.parse.httpdlog;
 import nl.basjes.hadoop.input.ParsedRecord;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Dissector;
+import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
@@ -109,11 +110,11 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     private static final String      LOAD_DISSECTOR = "load:";
     private static final int         LOAD_DISSECTOR_LENGTH = LOAD_DISSECTOR.length();
 
-    private StructObjectInspector   rowOI;
-    private ArrayList<Object>       row;
+    private StructObjectInspector    rowOI;
+    private ArrayList<Object>        row;
 
-    private ApacheHttpdLoglineParser<ParsedRecord> parser;
-    private ParsedRecord            currentValue;
+    private Parser<ParsedRecord>     parser;
+    private ParsedRecord             currentValue;
 
 
     // We do not want the parsing to fail immediately when we hit a single 'bad' line.
@@ -199,8 +200,8 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
         numColumns = columnNames.size();
 
         parser = new ApacheHttpdLoglineParser<>(ParsedRecord.class, logformat);
-        parser.setTypeRemappings(typeRemappings);
-        parser.addDissectors(additionalDissectors);
+        parser.setTypeRemappings(typeRemappings)
+              .addDissectors(additionalDissectors);
 
         List<ObjectInspector> columnOIs = new ArrayList<>(columnNames.size());
 

@@ -176,8 +176,6 @@ public class ApacheHttpdLogParserTest {
         parser.parse(record, line);
         Map<String, String> results = record.getResults();
 
-        // System.out.println(results.toString());
-
         assertEquals(null, results.get("HTTP.QUERYSTRING:request.firstline.uri.query.foo"));
         assertEquals("127.0.0.1", results.get("IP:connection.client.ip"));
         assertEquals(null, results.get("NUMBER:connection.client.logname"));
@@ -284,13 +282,9 @@ public class ApacheHttpdLogParserTest {
 
     @Test
     public void testGetPossiblePaths() {
-//        setLoggingLevel(Level.ALL);
         Parser<TestRecord> parser = new ApacheHttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> paths = parser.getPossiblePaths(5);
-//        for (String path:paths){
-//            System.out.println("--->"+path+"<---");
-//        }
         assertEquals(true, paths.contains("TIME.SECOND:request.receive.time.second"));
         assertEquals(true, paths.contains("STRING:request.firstline.uri.query.*"));
         assertEquals(true, paths.contains("STRING:response.cookies.*.expires"));
@@ -430,7 +424,7 @@ public class ApacheHttpdLogParserTest {
      * Test of mod_reqtimeout 408 status code
      * Assume  mod_reqtimeout is enabled and absolutely no data is entered by a client
      * after making the connection. The result is a http 408 status code and a logline that has proven to
-     * result in several field failing to be parsed because they are different than the specifications.
+     * result in several fields failing to be parsed because they are different than the specifications.
      */
     @Test
     public void test408ModReqTimeout() throws Exception {
@@ -458,12 +452,10 @@ public class ApacheHttpdLogParserTest {
             "\"1470776354625377\" \"1470776354625411\" \"625\" \"625\" \"625\" \"625377\" \"625377\" \"625411\" \"0\" " +
             "\"-\" \"-\" \"committer.lan.basjes.nl\" \"committer.lan.basjes.nl\" \"-\" \"0\" \"0\" \"-\" \"-\" \"-\" \"-\"";
 
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat);
-        String[] params = {
-            "STRING:request.firstline.uri.query.foo",
-        };
-        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
-
+        Parser<EmptyTestRecord> parser =
+            new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, logformat)
+            .addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class),
+                            "STRING:request.firstline.uri.query.foo");
         parser.parse(new EmptyTestRecord(), line200);
         parser.parse(new EmptyTestRecord(), line408);
     }
@@ -477,30 +469,22 @@ public class ApacheHttpdLogParserTest {
             "TIME.EPOCH:request.receive.time.epoch",
         };
 
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t");
-        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
-
-        parser.failOnMissingDissectors();
-
-        parser.parse(new EmptyTestRecord(), line);
+        new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t")
+            .addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params))
+            .failOnMissingDissectors()
+            .parse(new EmptyTestRecord(), line);
     }
 
     @Test
     public void testIgnoreMissingDissectors() throws Exception {
         String line = "[09/Aug/2016:22:57:59 +0200]";
 
-        String[] params = {
-            "STRING:request.firstline.uri.query.foo",
-            "TIME.EPOCH:request.receive.time.epoch",
-        };
-
-        Parser<EmptyTestRecord> parser = new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t");
-        parser.addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params));
-
-        parser.ignoreMissingDissectors();
-
-        parser.parse(new EmptyTestRecord(), line);
+        new ApacheHttpdLoglineParser<>(EmptyTestRecord.class, "%t")
+            .addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class),
+                            Arrays.asList("STRING:request.firstline.uri.query.foo",
+                                          "TIME.EPOCH:request.receive.time.epoch"))
+            .ignoreMissingDissectors()
+            .parse(new EmptyTestRecord(), line);
     }
-
 
 }
