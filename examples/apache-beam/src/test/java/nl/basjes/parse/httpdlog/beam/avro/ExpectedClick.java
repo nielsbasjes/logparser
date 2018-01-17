@@ -18,15 +18,11 @@ package nl.basjes.parse.httpdlog.beam.avro;
 
 import nl.basjes.parse.record.Click;
 
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentClass;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentVersion;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceBrand;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceClass;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTimeEpoch;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedUseragent;
 
 // CHECKSTYLE.OFF: HideUtilityClassConstructor
 public class ExpectedClick {
@@ -38,15 +34,11 @@ public class ExpectedClick {
             .setTimestamp(getExpectedRequestReceiveTimeEpoch())
             .getDeviceBuilder()
                 .setScreenWidth(getExpectedScreenWidth())
-                .setScreenHeight(getExpectedScreenHeight())
-                .setDeviceClass(getExpectedDeviceClass())
-                .setDeviceBrand(getExpectedDeviceBrand());
+                .setScreenHeight(getExpectedScreenHeight());
 
         builder
             .getBrowserBuilder()
-                .setAgentClass(getExpectedAgentClass())
-                .setAgentName(getExpectedAgentName())
-                .setAgentVersion(getExpectedAgentVersion());
+                .setUseragent(getExpectedUseragent());
 
         builder
             .getVisitorBuilder()

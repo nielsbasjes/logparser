@@ -16,8 +16,13 @@
  */
 package nl.basjes.parse.httpdlog.flink.avro;
 
-import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.record.Click;
+
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestReceiveTimeEpoch;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenHeight;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedUseragent;
 
 
 // CHECKSTYLE.OFF: HideUtilityClassConstructor
@@ -27,15 +32,19 @@ public class ExpectedClick {
     public static Click create(){
         Click.Builder builder = Click.newBuilder();
 
-        builder.setTimestamp(                        TestCase.getExpectedRequestReceiveTimeEpoch());
-        builder.getDeviceBuilder().setScreenWidth(   TestCase.getExpectedScreenWidth());
-        builder.getDeviceBuilder().setScreenHeight(  TestCase.getExpectedScreenHeight());
-        builder.getDeviceBuilder().setDeviceClass(   TestCase.getExpectedDeviceClass());
-        builder.getDeviceBuilder().setDeviceBrand(   TestCase.getExpectedDeviceBrand());
-        builder.getBrowserBuilder().setAgentClass(   TestCase.getExpectedAgentClass());
-        builder.getBrowserBuilder().setAgentName(    TestCase.getExpectedAgentName());
-        builder.getBrowserBuilder().setAgentVersion( TestCase.getExpectedAgentVersion());
-        builder.getVisitorBuilder().setIp(           TestCase.getExpectedConnectionClientHost());
+        builder
+            .setTimestamp(getExpectedRequestReceiveTimeEpoch())
+            .getDeviceBuilder()
+            .setScreenWidth(getExpectedScreenWidth())
+            .setScreenHeight(getExpectedScreenHeight());
+
+        builder
+            .getBrowserBuilder()
+            .setUseragent(getExpectedUseragent());
+
+        builder
+            .getVisitorBuilder()
+            .setIp(getExpectedConnectionClientHost());
         return builder.build();
     }
 

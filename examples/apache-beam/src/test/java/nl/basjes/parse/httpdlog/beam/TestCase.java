@@ -38,7 +38,6 @@ public final class TestCase {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, getLogFormat());
 
         parser.addDissector(new nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector());
-        parser.addDissector(new nl.basjes.parse.useragent.dissector.UserAgentDissector());
 
         parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI");
         parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI");
@@ -52,12 +51,7 @@ public final class TestCase {
         parser.addParseTarget("setScreenHeight",         "SCREENHEIGHT:request.firstline.uri.query.s.height");
         parser.addParseTarget("setGoogleQuery",          "STRING:request.firstline.uri.query.r.query.blabla");
         parser.addParseTarget("setBui",                  "HTTP.COOKIE:request.cookies.bui");
-        parser.addParseTarget("setRequestUseragent",     "HTTP.USERAGENT:request.user-agent");
-        parser.addParseTarget("setDeviceClass",          "STRING:request.user-agent.device_class");
-        parser.addParseTarget("setDeviceBrand",          "STRING:request.user-agent.device_brand");
-        parser.addParseTarget("setAgentClass",           "STRING:request.user-agent.agent_class");
-        parser.addParseTarget("setAgentName",            "STRING:request.user-agent.agent_name");
-        parser.addParseTarget("setAgentVersion",         "STRING:request.user-agent.agent_version");
+        parser.addParseTarget("setUseragent",            "HTTP.USERAGENT:request.user-agent");
         return parser;
     }
 
@@ -70,11 +64,6 @@ public final class TestCase {
     public static Long   getExpectedScreenHeight()              { return 800L; }
     public static String getExpectedGoogleQuery()               { return "blablawashere"; }
     public static String getExpectedBui()                       { return "SomeThing"; }
-    public static String getExpectedRequestUseragent()          { return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"; }
-    public static String getExpectedDeviceClass()               { return "Desktop"; }
-    public static String getExpectedDeviceBrand()               { return "Apple"; }
-    public static String getExpectedAgentClass()                { return "Browser"; }
-    public static String getExpectedAgentName()                 { return "Safari"; }
-    public static String getExpectedAgentVersion()              { return "5.0.1"; }
+    public static String getExpectedUseragent()                 { return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"; }
 
 }

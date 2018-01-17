@@ -8,6 +8,7 @@ v4.1
 - Allow %{%usec_frac}t in addition to %{usec_frac}t (same msec_frac).
 - Introduce a setterPolicy to determine if the setter is called in case of a NULL or EMPTY value.
 - Replace Cobertura with Jacoco because of Java 8
+- Remove Yauaa from tests and examples because of circulair dependency between the projects.
 
 v4.0
 ===

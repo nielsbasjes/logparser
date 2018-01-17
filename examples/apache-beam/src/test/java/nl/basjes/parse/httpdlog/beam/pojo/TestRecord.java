@@ -25,20 +25,15 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentClass;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAgentVersion;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedBui;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceBrand;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedDeviceClass;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedGoogleQuery;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedReferrer;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTime;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestUseragent;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenResolution;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedUseragent;
 import static org.junit.Assert.assertEquals;
 
 // CHECKSTYLE.OFF: ParamPad
@@ -54,13 +49,7 @@ public class TestRecord implements Serializable {
     @Getter @Setter private Long   screenHeight         = null;
     @Getter @Setter private String googleQuery          = null;
     @Getter @Setter private String bui                  = null;
-    @Getter @Setter private String requestUseragent     = null;
-    @Getter @Setter private String deviceClass         = null;
-    @Getter @Setter private String deviceBrand         = null;
-    @Getter @Setter private String agentClass          = null;
-    @Getter @Setter private String agentName           = null;
-    @Getter @Setter private String agentVersion        = null;
-
+    @Getter @Setter private String useragent            = null;
 
     public void assertIsValid() {
         assertEquals(getExpectedConnectionClientHost(), getConnectionClientHost());
@@ -71,12 +60,7 @@ public class TestRecord implements Serializable {
         assertEquals(getExpectedScreenHeight(),         getScreenHeight());
         assertEquals(getExpectedGoogleQuery(),          getGoogleQuery());
         assertEquals(getExpectedBui(),                  getBui());
-        assertEquals(getExpectedRequestUseragent(),     getRequestUseragent());
-        assertEquals(getExpectedDeviceClass(),          getDeviceClass());
-        assertEquals(getExpectedDeviceBrand(),          getDeviceBrand());
-        assertEquals(getExpectedAgentClass(),           getAgentClass());
-        assertEquals(getExpectedAgentName(),            getAgentName());
-        assertEquals(getExpectedAgentVersion(),         getAgentVersion());
+        assertEquals(getExpectedUseragent(),            getUseragent());
     }
 
     public TestRecord setFullValid() {
@@ -88,12 +72,7 @@ public class TestRecord implements Serializable {
         setScreenHeight         (getExpectedScreenHeight());
         setGoogleQuery          (getExpectedGoogleQuery());
         setBui                  (getExpectedBui());
-        setRequestUseragent     (getExpectedRequestUseragent());
-        setDeviceClass          (getExpectedDeviceClass());
-        setDeviceBrand          (getExpectedDeviceBrand());
-        setAgentClass           (getExpectedAgentClass());
-        setAgentName            (getExpectedAgentName());
-        setAgentVersion         (getExpectedAgentVersion());
+        setUseragent            (getExpectedUseragent());
         return this;
     }
 

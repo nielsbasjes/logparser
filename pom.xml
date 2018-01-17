@@ -38,9 +38,6 @@
     <hive.version>2.1.1</hive.version>
     <pig.version>0.17.0</pig.version>
 
-    <!-- Used for testing the plugin loading -->
-    <yauaa.version>3.3</yauaa.version>
-
     <rat.version>0.9</rat.version>
     <jacoco.version>0.7.9</jacoco.version>
 

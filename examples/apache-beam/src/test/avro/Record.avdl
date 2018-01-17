@@ -22,14 +22,10 @@ protocol BeamTestRecord {
   record Device {
     long   screenWidth    ; // "SCREENWIDTH:request.firstline.uri.query.s.width"
     long   screenHeight   ; // "SCREENHEIGHT:request.firstline.uri.query.s.height"
-    string device_class   ; // "STRING:request.user-agent.device_class"
-    string device_brand   ; // "STRING:request.user-agent.device_brand"
   }
 
   record Browser {
-    string agent_class    ; // "STRING:request.user-agent.agent_class"
-    string agent_name     ; // "STRING:request.user-agent.agent_name"
-    string agent_version  ; // "STRING:request.user-agent.agent_version"
+    string useragent ; // "STRING:request.user-agent"
   }
 
   record Visitor {

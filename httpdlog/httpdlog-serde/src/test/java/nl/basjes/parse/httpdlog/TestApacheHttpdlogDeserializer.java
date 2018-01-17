@@ -32,7 +32,7 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestApacheHttpdlogDeserializer {
 
@@ -81,23 +81,17 @@ public class TestApacheHttpdlogDeserializer {
 
         // Deserialize
         Object row = serDe.deserialize(t);
-//        ObjectInspector rowOI = serDe.getObjectInspector();
 
-        assertTrue(row instanceof List);
-
-        @SuppressWarnings("unchecked")
-        List<Object> rowArray = (List<Object>)row;
+        if (!(row instanceof List)) {
+            fail("row must be instanceof List<>");
+        }
+        List<?> rowArray = (List<?>)row;
         LOG.debug("Deserialized row: {}", row);
         assertEquals("127.0.0.1",     rowArray.get(0));
         assertEquals(1351112444000L,  rowArray.get(1));
         assertEquals("Mozilla/5.0 (X11; Linux i686 on x86_64; rv:11.0) Gecko/20100101 Firefox/11.0", rowArray.get(2));
         assertEquals(800L,            rowArray.get(3));
         assertEquals(600L,            rowArray.get(4));
-        assertEquals("Desktop",       rowArray.get(5));
-        assertEquals("Unknown",       rowArray.get(6));
-        assertEquals("Browser",       rowArray.get(7));
-        assertEquals("Firefox",       rowArray.get(8));
-        assertEquals("11.0",          rowArray.get(9));
     }
 
     @Test (expected = SerDeException.class)
@@ -137,9 +131,9 @@ public class TestApacheHttpdlogDeserializer {
         // Create the SerDe
         Properties schema = new Properties();
         schema.setProperty(serdeConstants.LIST_COLUMNS,
-            "ip,timestamp,useragent,screenWidth,screenHeight,device_class,device_brand,agent_class,agent_name,agent_version");
+            "ip,timestamp,useragent,screenWidth,screenHeight");
         schema.setProperty(serdeConstants.LIST_COLUMN_TYPES,
-            "string,bigint,string,bigint,bigint,string,string,string,string,string");
+            "string,bigint,string,bigint,bigint");
 
         schema.setProperty("logformat",           logformat);
         schema.setProperty("field:timestamp",     "TIME.EPOCH:request.receive.time.epoch");
@@ -150,12 +144,6 @@ public class TestApacheHttpdlogDeserializer {
         schema.setProperty("field:screenWidth",   "SCREENWIDTH:request.firstline.uri.query.s.width");
         schema.setProperty("field:screenHeight",  "SCREENHEIGHT:request.firstline.uri.query.s.height");
 
-        schema.setProperty("load:nl.basjes.parse.useragent.dissector.UserAgentDissector", "");
-        schema.setProperty("field:device_class",   "STRING:request.user-agent.device_class");
-        schema.setProperty("field:device_brand",   "STRING:request.user-agent.device_brand");
-        schema.setProperty("field:agent_class",    "STRING:request.user-agent.agent_class");
-        schema.setProperty("field:agent_name",     "STRING:request.user-agent.agent_name");
-        schema.setProperty("field:agent_version",  "STRING:request.user-agent.agent_version");
         AbstractDeserializer serDe = new ApacheHttpdlogDeserializer();
         serDe.initialize(new Configuration(), createOverlayedProperties(schema, null));
         return serDe;

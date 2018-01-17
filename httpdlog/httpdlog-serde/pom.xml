@@ -105,13 +105,6 @@
     </dependency>
 
     <dependency>
-      <groupId>nl.basjes.parse.useragent</groupId>
-      <artifactId>yauaa-logparser</artifactId>
-      <version>${yauaa.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>nl.basjes.parse</groupId>
       <artifactId>parser-core</artifactId>
       <version>${project.version}</version>

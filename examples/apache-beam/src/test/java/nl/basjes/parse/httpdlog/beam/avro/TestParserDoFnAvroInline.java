@@ -26,7 +26,6 @@ import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.beam.TestCase;
 import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
 import nl.basjes.parse.record.Click;
-import nl.basjes.parse.useragent.dissector.UserAgentDissector;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
@@ -57,12 +56,8 @@ public class TestParserDoFnAvroInline implements Serializable {
 
         @Field("SCREENWIDTH:request.firstline.uri.query.s.width")   public void setScreenWidth(Long value)              { builder.getDeviceBuilder().setScreenWidth(value);     }
         @Field("SCREENHEIGHT:request.firstline.uri.query.s.height") public void setScreenHeight(Long value)             { builder.getDeviceBuilder().setScreenHeight(value);    }
-        @Field("STRING:request.user-agent.device_class")            public void setDeviceClass(String value)            { builder.getDeviceBuilder().setDeviceClass(value);     }
-        @Field("STRING:request.user-agent.device_brand")            public void setDeviceBrand(String value)            { builder.getDeviceBuilder().setDeviceBrand(value);     }
 
-        @Field("STRING:request.user-agent.agent_class")             public void setAgentClass(String value)             { builder.getBrowserBuilder().setAgentClass(value);     }
-        @Field("STRING:request.user-agent.agent_name")              public void setAgentName(String value)              { builder.getBrowserBuilder().setAgentName(value);      }
-        @Field("STRING:request.user-agent.agent_version")           public void setAgentVersion(String value)           { builder.getBrowserBuilder().setAgentVersion(value);   }
+        @Field("HTTP.USERAGENT:request.user-agent")                 public void setUseragent(String value)              { builder.getBrowserBuilder().setUseragent(value);      }
 
         @Field("IP:connection.client.host")                         public void setConnectionClientHost(String value)   { builder.getVisitorBuilder().setIp(value);             }
 
@@ -93,8 +88,6 @@ public class TestParserDoFnAvroInline implements Serializable {
 
                         parser.addDissector(new ScreenResolutionDissector());
                         parser.addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION");
-
-                        parser.addDissector(new UserAgentDissector());
                     }
 
                     @ProcessElement
