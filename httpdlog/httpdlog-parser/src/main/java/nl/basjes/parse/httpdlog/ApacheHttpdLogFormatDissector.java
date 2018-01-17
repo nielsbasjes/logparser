@@ -90,6 +90,22 @@ public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         }
     }
 
+    public static boolean looksLikeApacheFormat(String logFormat) {
+        if (logFormat.indexOf('%') != -1) {
+            return true;
+        }
+        switch (logFormat.toLowerCase(Locale.getDefault())) {
+            case "common":
+            case "combined":
+            case "combinedio":
+            case "referer":
+            case "agent":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // --------------------------------------------
 
     protected String makeHeaderNamesLowercaseInLogFormat(String logformat) {

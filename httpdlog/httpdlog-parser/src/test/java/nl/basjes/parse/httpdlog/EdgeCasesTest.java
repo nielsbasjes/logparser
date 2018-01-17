@@ -55,4 +55,22 @@ public class EdgeCasesTest {
 
             .checkExpectations();
     }
+
+
+    @Test
+    public void checkErrorLogging(){
+        HttpdLogFormatDissector dissector = new HttpdLogFormatDissector();
+        dissector
+            // Apache format
+            .addLogFormat("%t")
+            .addMultipleLogFormats("%a\n%b\n%c")
+            .addLogFormat("%b") // Already have this one
+            // Nginx format
+            .addLogFormat("$remote_addr")
+            .addMultipleLogFormats("$time_local\n$body_bytes_sent\n$status")
+            .addLogFormat("$body_bytes_sent") // Already have this one
+            // Unable to determine
+            .addLogFormat("blup");
+    }
+
 }

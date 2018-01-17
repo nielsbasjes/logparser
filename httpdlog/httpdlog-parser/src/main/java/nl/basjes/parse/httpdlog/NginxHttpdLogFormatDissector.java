@@ -93,6 +93,18 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         }
     }
 
+    public static boolean looksLikeNginxFormat(String logFormat) {
+        if (logFormat.indexOf('$') != -1) {
+            return true;
+        }
+        switch (logFormat.toLowerCase(Locale.getDefault())) {
+            case "combined":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // --------------------------------------------
 
     @Override

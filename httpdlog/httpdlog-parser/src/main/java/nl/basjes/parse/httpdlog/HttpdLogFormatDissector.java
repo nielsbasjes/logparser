@@ -88,33 +88,34 @@ public class HttpdLogFormatDissector extends Dissector {
         }
     }
 
-    public void enableJettyFix() {
+    public HttpdLogFormatDissector enableJettyFix() {
         enableJettyFix = true;
+        return this;
     }
 
-    public void addMultipleLogFormats(final String multiLineLogFormat) {
-        addLogFormat(Arrays.asList(multiLineLogFormat.split("\\r?\\n")));
+    public HttpdLogFormatDissector addMultipleLogFormats(final String multiLineLogFormat) {
+        return addLogFormat(Arrays.asList(multiLineLogFormat.split("\\r?\\n")));
     }
 
-    public void addLogFormat(final List<String> logFormats) {
+    public HttpdLogFormatDissector addLogFormat(final List<String> logFormats) {
         for (String logFormat : logFormats) {
             addLogFormat(logFormat);
         }
+        return this;
     }
 
-    public void addLogFormat(final String logFormat) {
+    public HttpdLogFormatDissector addLogFormat(final String logFormat) {
         if (logFormat == null || logFormat.trim().isEmpty()) {
-            return; // Skip this one
+            return this; // Skip this one
         }
 
         if (logFormat.toUpperCase().trim().equals("ENABLE JETTY FIX")) {
-            enableJettyFix();
-            return;
+            return enableJettyFix();
         }
 
         if (registeredLogFormats.contains(logFormat)) {
             LOG.info("Skipping duplicate LogFormat: >>{}<<", logFormat);
-            return; // We already have this one
+            return this; // We already have this one
         }
 
         registeredLogFormats.add(logFormat);
@@ -132,22 +133,24 @@ public class HttpdLogFormatDissector extends Dissector {
                 LOG.error("Unable to determine if this is an APACHE or a NGINX LogFormat= >>{}<<", logFormat);
                 break;
         }
+        return this;
     }
 
     private enum LogFormatType {
         APACHE,
-        NGINX
+        NGINX,
+        UNKNOWN
     }
 
     private LogFormatType determineMostLikelyLogFormat(final String logFormat) {
-        if (logFormat.indexOf('%') != -1) {
+        if (ApacheHttpdLogFormatDissector.looksLikeApacheFormat(logFormat)) {
             return LogFormatType.APACHE;
         }
-        if (logFormat.indexOf('$') != -1) {
+        if (NginxHttpdLogFormatDissector.looksLikeNginxFormat(logFormat)) {
             return LogFormatType.NGINX;
         }
-        // We do not know (so this may be "combinedio" or similar)
-        return LogFormatType.APACHE;
+        // We do not know
+        return LogFormatType.UNKNOWN;
     }
 
 
