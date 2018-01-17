@@ -66,9 +66,9 @@ public class TokenOutputField implements Serializable {
 
     public void wasUsed() {
         if (deprecated != null) {
-            LOG.error("------------------------------------------------------------------------");
-            LOG.error("The field \"{}:{}\" is deprecated. Use \"{}\" instead.", type, name, deprecated);
-            LOG.error("------------------------------------------------------------------------");
+            LOG.warn("------------------------------------------------------------------------");
+            LOG.warn("The field \"{}:{}\" is deprecated. Use \"{}\" instead.", type, name, deprecated);
+            LOG.warn("------------------------------------------------------------------------");
         }
     }
 
