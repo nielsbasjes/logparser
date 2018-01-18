@@ -48,11 +48,6 @@ public class ParserTypeColissionTest {
         }
 
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true; // Everything went right
-        }
-
-        @Override
         protected void initializeNewInstance(Dissector newInstance) {
             ((TestDissector)newInstance).init(inputType, outputType, outputName, salt);
         }
@@ -79,10 +74,6 @@ public class ParserTypeColissionTest {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
         }
     }
 

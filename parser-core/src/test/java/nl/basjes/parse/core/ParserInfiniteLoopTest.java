@@ -32,15 +32,6 @@ public class ParserInfiniteLoopTest {
         }
 
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true; // Everything went right
-        }
-
-        protected void initializeNewInstance(Dissector newInstance) {
-            // Empty
-        }
-
-        @Override
         public void dissect(Parsable<?> parsable, final String inputname) throws DissectionFailure {
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string", "123");
         }
@@ -60,10 +51,6 @@ public class ParserInfiniteLoopTest {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
         }
     }
 

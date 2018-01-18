@@ -72,7 +72,10 @@ public abstract class Dissector implements Serializable {
      * Dissector implementation to parse and handle this input.
      * @return true if everything went right. false otherwise.
      */
-    public abstract boolean initializeFromSettingsParameter(String settings);
+    public boolean initializeFromSettingsParameter(String settings) {
+        // Default behaviour is do nothing.
+        return true;
+    }
 
     // --------------------------------------------
 
@@ -116,7 +119,9 @@ public abstract class Dissector implements Serializable {
      * The framework will tell the dissector that it should get ready to run.
      * I.e. finalize the bootstrapping.
      */
-    public abstract void prepareForRun() throws InvalidDissectorException;
+    public void prepareForRun() throws InvalidDissectorException {
+        // Default behaviour is do nothing.
+    }
 
     // --------------------------------------------
 
@@ -154,7 +159,9 @@ public abstract class Dissector implements Serializable {
      * This is called after instantiating the class that is actually in the parsetree.
      * @param newInstance The new instances of this class that must be initialized
      */
-    protected abstract void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException;
+    protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
+        // Default behaviour is do nothing.
+    }
 
     /**
      * If a dissector really needs to add an additional dissector to the set this method is the

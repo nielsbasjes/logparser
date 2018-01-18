@@ -176,24 +176,10 @@ public class ReferenceTestDouble {
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
         }
-
-        @Override
-        public void prepareForRun() {
-        }
-
-        @Override
-        protected void initializeNewInstance(Dissector newInstance) {
-        }
-
     }
 
 
     public static class RemapInputDissector extends Dissector {
-        @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true;
-        }
-
         @Override
         public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
             parsable.addDissection(inputname, "INPUT", "", "42");
@@ -212,10 +198,6 @@ public class ReferenceTestDouble {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
         }
 
         @Override

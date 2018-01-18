@@ -64,17 +64,6 @@ public abstract class SimpleDissector extends Dissector {
     }
 
     @Override
-    public void prepareForRun() {
-        // Do nothing
-    }
-
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        // Do nothing
-        return true;
-    }
-
-    @Override
     protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
         if (newInstance instanceof SimpleDissector) {
             SimpleDissector dissector = (SimpleDissector) newInstance;

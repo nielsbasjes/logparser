@@ -87,14 +87,4 @@ public class ScreenResolutionDissector extends Dissector {
         }
         return null;
     }
-
-    @Override
-    public void prepareForRun() {
-        // Nothing to do
-    }
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
 }

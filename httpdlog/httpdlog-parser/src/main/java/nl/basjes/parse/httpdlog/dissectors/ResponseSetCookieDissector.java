@@ -57,19 +57,6 @@ public class ResponseSetCookieDissector extends Dissector {
     // --------------------------------------------
 
     @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true; // Everything went right.
-    }
-
-    // --------------------------------------------
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
-
-
-    @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = extractFieldName(inputname, outputname);
         switch (name) {
@@ -80,13 +67,6 @@ public class ResponseSetCookieDissector extends Dissector {
             case "comment": return Casts.STRING_ONLY;
             default:        return Casts.STRING_ONLY;
         }
-    }
-
-    // --------------------------------------------
-
-    @Override
-    public void prepareForRun() {
-        // We do not do anything extra here
     }
 
     // --------------------------------------------

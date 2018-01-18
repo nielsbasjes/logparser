@@ -60,18 +60,6 @@ public class HttpUriDissector extends Dissector {
 
     // --------------------------------------------
 
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true; // Everything went right.
-    }
-
-    // --------------------------------------------
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
-
     private boolean wantProtocol = false;
     private boolean wantUserinfo = false;
     private boolean wantHost = false;
@@ -112,11 +100,6 @@ public class HttpUriDissector extends Dissector {
             return Casts.STRING_ONLY;
         }
         return null;
-    }
-
-    @Override
-    public void prepareForRun() {
-        // We do not do anything extra here
     }
 
     // --------------------------------------------

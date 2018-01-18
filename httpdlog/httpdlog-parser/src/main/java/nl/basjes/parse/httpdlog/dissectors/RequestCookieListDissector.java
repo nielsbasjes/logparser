@@ -52,20 +52,6 @@ public class RequestCookieListDissector extends Dissector {
 
     // --------------------------------------------
 
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true; // Everything went right.
-    }
-
-    // --------------------------------------------
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
-
-    // --------------------------------------------
-
     private final Set<String> requestedCookies = new HashSet<>(16);
 
     @Override

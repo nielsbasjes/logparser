@@ -47,10 +47,6 @@ public class ParserExceptionsTest {
             this.outputName = outputname;
         }
 
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true; // Everything went right
-        }
-
         protected void initializeNewInstance(Dissector newInstance) {
             ((TestDissector)newInstance).init(inputType, outputType, outputName);
         }
@@ -76,10 +72,6 @@ public class ParserExceptionsTest {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
         }
     }
 
@@ -293,10 +285,6 @@ public class ParserExceptionsTest {
         @Override
         public void prepareForRun() throws InvalidDissectorException {
             throw new InvalidDissectorException();
-        }
-
-        @Override
-        protected void initializeNewInstance(Dissector newInstance) {
         }
     }
 

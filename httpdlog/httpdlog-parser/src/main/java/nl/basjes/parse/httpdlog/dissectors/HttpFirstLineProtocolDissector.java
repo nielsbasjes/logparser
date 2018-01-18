@@ -87,31 +87,12 @@ public class HttpFirstLineProtocolDissector extends Dissector {
 
     // --------------------------------------------
 
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true; // Everything went right.
-    }
-
-    // --------------------------------------------
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
-
-    // --------------------------------------------
-
     private final Set<String> requestedParameters = new HashSet<>(16);
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedParameters.add(extractFieldName(inputname, outputname));
         return Casts.STRING_ONLY;
-    }
-
-    @Override
-    public void prepareForRun() {
-        // We do not do anything extra here
     }
 
     // --------------------------------------------

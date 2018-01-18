@@ -149,10 +149,6 @@ public class StrfTimeStampDissector extends Dissector {
         }
 
         @Override
-        public void prepareForRun() {
-        }
-
-        @Override
         protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
             newInstance.setInputType(inputType);
         }

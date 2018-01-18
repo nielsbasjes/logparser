@@ -52,11 +52,6 @@ public class ParserNormalTest {
         }
 
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true; // Everything went right
-        }
-
-        @Override
         protected void initializeNewInstance(Dissector newInstance) {
             ((TestDissector)newInstance).init(inputType, outputType, outputName);
         }
@@ -90,10 +85,6 @@ public class ParserNormalTest {
             }
             outputNames.add(name);
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
         }
     }
 

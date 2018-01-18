@@ -37,15 +37,6 @@ public class ParserCastsTest {
         }
 
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true; // Everything went right
-        }
-
-        protected void initializeNewInstance(Dissector newInstance) {
-            // Empty
-        }
-
-        @Override
         public void dissect(Parsable<?> parsable, final String inputname) throws DissectionFailure {
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string_null", (String)null);
             parsable.addDissection(inputname, "OUTPUT_TYPE", "string_good", "123");
@@ -116,10 +107,6 @@ public class ParserCastsTest {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return PREPARE_FOR_DISSECT_MAP.get(outputname);
-        }
-
-        @Override
-        public void prepareForRun() {
         }
     }
 

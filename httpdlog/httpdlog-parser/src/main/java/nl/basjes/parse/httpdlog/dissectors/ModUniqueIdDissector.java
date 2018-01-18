@@ -63,18 +63,6 @@ public class ModUniqueIdDissector extends Dissector {
 
     // --------------------------------------------
 
-    @Override
-    public boolean initializeFromSettingsParameter(String settings) {
-        return true; // Everything went right.
-    }
-
-    // --------------------------------------------
-
-    @Override
-    protected void initializeNewInstance(Dissector newInstance) {
-        // Nothing to do
-    }
-
     private boolean wantTime = false;
     private boolean wantIp = false;
     private boolean wantProcessId = false;
@@ -105,11 +93,6 @@ public class ModUniqueIdDissector extends Dissector {
             return Casts.STRING_OR_LONG;
         }
         return null;
-    }
-
-    @Override
-    public void prepareForRun() {
-        // We do not do anything extra here
     }
 
     // --------------------------------------------

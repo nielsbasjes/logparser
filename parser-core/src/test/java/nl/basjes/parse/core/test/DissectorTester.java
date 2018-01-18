@@ -489,11 +489,6 @@ public final class DissectorTester implements Serializable {
         }
 
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true;
-        }
-
-        @Override
         public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
             final ParsedField field = parsable.getParsableField("DUMMYROOT", inputname);
             parsable.addDissection(inputname, outputType, fieldName, field.getValue());
@@ -512,11 +507,6 @@ public final class DissectorTester implements Serializable {
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return Casts.STRING_ONLY;
-        }
-
-        @Override
-        public void prepareForRun() {
-
         }
 
         @Override
