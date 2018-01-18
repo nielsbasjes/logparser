@@ -99,7 +99,7 @@ Or a combination of the above examples where you specify multiple field patterns
         results.put(name, value);
     }
 
-In some cases you may not want to have empty/null values so starting with version 4.1 you can specify a setterPolicy:
+In some cases you may not want to have empty/null values so starting with version 5.0 you can specify a setterPolicy:
 
     @Field(value = "STRING:request.firstline.uri.query.*", setterPolicy = NOT_NULL)
 
