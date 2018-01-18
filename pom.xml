@@ -39,7 +39,7 @@
     <pig.version>0.17.0</pig.version>
 
     <rat.version>0.9</rat.version>
-    <jacoco.version>0.7.9</jacoco.version>
+    <jacoco.version>0.8.0</jacoco.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine/>
