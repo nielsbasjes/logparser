@@ -84,7 +84,7 @@ Building
 Simply type : mvn package
 and the whole thing should build.
 
-Java, Apache {Hadoop, PIG, Hive, Flink, Beam}
+Java, Apache {Hadoop, PIG, Hive, Drill, Flink, Beam}
 ===
 I'm a big user of bigdata tools like Apache Pig, Hadoop, Hive, etc. .
 So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
@@ -99,11 +99,13 @@ The framework needs two things:
 To obtain all the identifiers the system CAN extract from the specified logformat a separate
 developer call exists in various languages that allows you to get the list of all possible values.
 
-Languages
+Languages and Tools
 ===
 The languages that are supported in this version:
 
 * [Java](README-Java.md)
+
+Prebuilt plugins for these are provided in the distribution:
 * [Apache Pig](README-Pig.md)
 * [Apache Hive](README-Hive.md)
 
@@ -112,6 +114,10 @@ still works on those systems.
 * [Apache Flink](examples/apache-flink/src/test/java/nl/basjes/parse/httpdlog/flink)
 * [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
 * [Apache Storm](examples/apache-storm/src/test/java/nl/basjes/parse/httpdlog/storm)
+
+Tools that ship a version of this parser in their distribution
+* [Apache Pig](https://github.com/apache/pig/blob/trunk/contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/apachelog/LogFormatLoader.java)
+* [Apache Drill](https://drill.apache.org/docs/httpd-storage-plugin/)
 
 Internal structure and type remapping
 ===
