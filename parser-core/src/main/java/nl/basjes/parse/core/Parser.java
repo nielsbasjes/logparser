@@ -601,6 +601,9 @@ public class Parser<RECORD> implements Serializable {
                 ((parameters.length == 2) && (parameters[0] == String.class) && (parameters[1] == Double.class))
         ) {
             for (final String fieldValue : fieldValues) {
+                if (fieldValue == null) {
+                    continue;
+                }
                 String cleanedFieldValue = cleanupFieldValue(fieldValue);
                 if (!fieldValue.equals(cleanedFieldValue)) {
                     LOG.warn("The requested \"{}\" was converted into \"{}\"", fieldValue, cleanedFieldValue);

@@ -17,17 +17,23 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
+import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
+import nl.basjes.parse.core.test.NormalValuesDissector;
+import nl.basjes.parse.core.test.TestRecord;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ParserNormalTest {
 
@@ -208,6 +214,53 @@ public class ParserNormalTest {
             System.out.println("XXX " + path);
         }
 
+    }
+
+    @Test
+    public void testAddTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+        new Parser<>(TestRecord.class)
+            .setRootType("INPUT")
+            .addDissector(new NormalValuesDissector())
+            .addTypeRemapping("string", "STRINGXX")
+            .addParseTarget("setStringValue", "STRINGXX:string")
+            .addTypeRemapping("string", "STRINGYY")
+            .addParseTarget("setStringValue", "STRINGYY:string")
+            .parse("Doesn't matter")
+            .expectString("STRINGXX:string", "FortyTwo")
+            .expectString("STRINGYY:string", "FortyTwo");
+    }
+
+    @Test
+    public void testAddTypeRemappings() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+        new Parser<>(TestRecord.class)
+            .setRootType("INPUT")
+            .addDissector(new NormalValuesDissector())
+            .addTypeRemapping("string", "STRINGXX")
+            .addParseTarget("setStringValue", "STRINGXX:string")
+            .addTypeRemappings(Collections.singletonMap("string", Collections.singleton("STRINGYY")))
+            .addParseTarget("setStringValue", "STRINGYY:string")
+            .parse("Doesn't matter")
+            .expectString("STRINGXX:string", "FortyTwo")
+            .expectString("STRINGYY:string", "FortyTwo");
+    }
+
+    @Test
+    public void testSetTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+        try{
+            new Parser<>(TestRecord.class)
+                .setRootType("INPUT")
+                .addDissector(new NormalValuesDissector())
+                .addTypeRemapping("string", "STRINGXX")
+                .addParseTarget("setStringValue", "STRINGXX:string")
+                // Should wipe previous
+                .setTypeRemappings(Collections.singletonMap("string", Collections.singleton("STRINGYY")))
+                .addParseTarget("setStringValue", "STRINGYY:string")
+                .parse("Doesn't matter");
+
+            fail("We should get an exception because the mapping to STRINGXX:string wass removed.");
+        } catch (MissingDissectorsException mde) {
+            assertTrue(mde.getMessage().contains("STRINGXX:string"));
+        }
     }
 
 }
