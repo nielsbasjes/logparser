@@ -22,7 +22,7 @@
   <parent>
     <artifactId>httpdlog</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>5.0</version>
+    <version>5.1-SNAPSHOT</version>
   </parent>
   <artifactId>httpdlog-inputformat</artifactId>
   <name>Parser - Apache HTTPD - Hadoop InputFormat</name>
