@@ -247,8 +247,8 @@ public class TestTimeStampDissector {
 
     @Test
     public void testSpecialTimeFormatMultiFields1() {
-        String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 25 3 2016 +0100";
-        String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t";
+        String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 1482349825 25 3 2016 +0100";
+        String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
@@ -288,8 +288,8 @@ public class TestTimeStampDissector {
 
     @Test
     public void testSpecialTimeFormatMultiFields2() {
-        String logline = "127.0.0.1 - - [22/Dec/2016:00:09:54 +0100] \"GET / HTTP/1.1\" 200 3525 \"12/22/16 2016-12-22 00:09 00:09:54 12:09:54 AM Thu Thursday Dec December 22 2016 Dec 00 12 357  0 12 12 09 AM 54 4 2016 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
-        String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
+        String logline = "127.0.0.1 - - [22/Dec/2016:00:09:54 +0100] \"GET / HTTP/1.1\" 200 3525 \"12/22/16 2016-12-22 00:09 00:09:54 12:09:54 AM Thu Thursday Dec December 22 2016 Dec 00 12 357  0 12 12 09 AM 1482361794 54 4 2016 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
+        String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
@@ -329,8 +329,8 @@ public class TestTimeStampDissector {
 
     @Test
     public void testSpecialTimeLeadingSpaces1() {
-        String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 25 3 2016 +0100";
-        String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t";
+        String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 1482349825 25 3 2016 +0100";
+        String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t";
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector(logformat))
@@ -414,6 +414,7 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%P", "am");            // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
         checkStrfField(dateTime, "%r", "03:04:05 AM");   // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
         checkStrfField(dateTime, "%R", "03:04");         // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
+        checkStrfField(dateTime, "%s", "978401045");     // The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
         checkStrfField(dateTime, "%S", "05");            // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
         checkStrfField(dateTime, "%T", "03:04:05");      // The time in 24-hour notation (%H:%M:%S).
         checkStrfField(dateTime, "%u", "2");             // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
@@ -462,6 +463,7 @@ public class TestTimeStampDissector {
         checkStrfField(dateTime, "%P", "pm");            // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
         checkStrfField(dateTime, "%r", "11:14:15 PM");   // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
         checkStrfField(dateTime, "%R", "23:14");         // The time in 24-hour notation (%H:%M). For a version including the seconds, see %T below.
+        checkStrfField(dateTime, "%s", "1510524855");    // The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
         checkStrfField(dateTime, "%S", "15");            // The second as a decimal number (range 00 to 60). (The range is up to 60 to allow for occasional leap seconds)
         checkStrfField(dateTime, "%T", "23:14:15");      // The time in 24-hour notation (%H:%M:%S).
         checkStrfField(dateTime, "%u", "7");             // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
@@ -500,7 +502,6 @@ public class TestTimeStampDissector {
     public void ensureUnsupportedFields() {
         checkUnsupported("%c"); // The preferred date and time representation for the current locale.
         checkUnsupported("%C"); // The century number (year/100) as a 2-digit integer.
-        checkUnsupported("%s"); // The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
         checkUnsupported("%U"); // The week number of the current year as a decimal number, range 00 to 53, starting with the first Sunday as the first day of week 01. See also %V and %W.
         checkUnsupported("%w"); // The day of the week as a decimal, range 0 to 6, Sunday being 0. See also %u.
         checkUnsupported("%x"); // The preferred date representation for the current locale without the time.

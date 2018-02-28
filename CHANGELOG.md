@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v5.1
+===
+- Parse epoch seconds %{%s}t
+
 v5.0
 ===
 - The %u specifier allowed a space which broke parsing if the field after it also allowed space.

@@ -35,6 +35,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
@@ -343,7 +344,9 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
     @Override
     public void enterPs(StrfTimeParser.PsContext ctx) {
         // %s   The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
-        throw new UnsupportedStrfField("%s   The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).");
+        // Based upon https://stackoverflow.com/questions/36066155/datetimeformatter-for-epoch-milliseconds#answer-36069732
+        builder
+            .appendValue(ChronoField.INSTANT_SECONDS, 1, 19, SignStyle.NEVER);
     }
 
     @Override
