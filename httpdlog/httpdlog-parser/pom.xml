@@ -68,6 +68,12 @@
       <version>${antlr.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.maxmind.geoip2</groupId>
+      <artifactId>geoip2</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>

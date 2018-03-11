@@ -167,6 +167,9 @@ the values that were used to construct this.
 When you choose to ignore the clear 'should not' statement then simply add
 a type remapping to map the field to the type *MOD_UNIQUE_ID*
 
+**GeoIP parsing**
+Head for the separate [README](README-geoip.md) file for information about this dissector.
+
 Parsing problems with Jetty generated logfiles
 ==============================================
 In Jetty there is the option to create a logfile in what they call the NCSARequestLog format.

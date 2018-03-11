@@ -1,0 +1,77 @@
+[
+   {
+      "::80.100.47.45/118" : {
+         "city" : {
+            "confidence" : 42,
+            "geoname_id" : "1234",
+            "names" : {
+               "en" : "Amstelveen"
+            }
+         },
+         "postal" : {
+            "code" : "1187",
+            "confidence" : 42
+         },
+         "subdivisions" : [
+            {
+               "confidence" : 42,
+               "geoname_id" : 2345,
+               "iso_code" : "NH",
+               "names" : {
+                  "en" : "Noord Holland"
+               }
+            }
+         ],
+         "continent" : {
+            "code" : "EU",
+            "geoname_id" : 6255148,
+            "names" : {
+               "de" : "Europa",
+               "en" : "Europe",
+               "es" : "Europa",
+               "fr" : "Europe",
+               "ja" : "ヨーロッパ",
+               "pt-BR" : "Europa",
+               "ru" : "Европа",
+               "zh-CN" : "欧洲"
+            }
+         },
+         "country" : {
+            "geoname_id" : 2750405,
+            "is_in_european_union" : true,
+            "iso_code" : "NL",
+            "names" : {
+               "de" : "Niederlande",
+               "en" : "Netherlands",
+               "es" : "Holanda",
+               "fr" : "Pays-Bas",
+               "ja" : "オランダ王国",
+               "pt-BR" : "Países Baixos",
+               "ru" : "Нидерланды",
+               "zh-CN" : "荷兰"
+            }
+         },
+         "location" : {
+            "accuracy_radius" : 100,
+            "latitude" : "52.5",
+            "longitude" : "5.75",
+            "time_zone" : "Europe/Amsterdam"
+         },
+         "registered_country" : {
+            "geoname_id" : 2750405,
+            "is_in_european_union" : true,
+            "iso_code" : "NL",
+            "names" : {
+               "de" : "Niederlande",
+               "en" : "Netherlands",
+               "es" : "Holanda",
+               "fr" : "Pays-Bas",
+               "ja" : "オランダ王国",
+               "pt-BR" : "Países Baixos",
+               "ru" : "Нидерланды",
+               "zh-CN" : "荷兰"
+            }
+         }
+      }
+   }
+]

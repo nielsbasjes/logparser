@@ -38,7 +38,7 @@
     <hive.version>2.1.1</hive.version>
     <pig.version>0.17.0</pig.version>
 
-    <rat.version>0.9</rat.version>
+    <rat.version>0.12</rat.version>
     <jacoco.version>0.8.0</jacoco.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
@@ -333,6 +333,7 @@
           </execution>
         </executions>
         <configuration>
+          <consoleOutput>true</consoleOutput>
           <excludeSubProjects>false</excludeSubProjects>
           <excludes>
             <!-- Version control files -->
@@ -347,6 +348,7 @@
             <!-- Test and demo input files -->
             <exclude>**/src/test/resources/*.log</exclude>
             <exclude>**/demolog/*.log</exclude>
+            <exclude>GeoIP2-TestData/**</exclude>
             <!-- File generated during build -->
             <exclude>**/target/**</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>

@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.1
 ===
 - Parse epoch seconds %{%s}t
+- Added GeoIP2 dissectors for City, Country and ASN data.
 
 v5.0
 ===

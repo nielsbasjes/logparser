@@ -1,0 +1,8 @@
+[
+   {
+      "::80.100.47.45/118" : {
+         "autonomous_system_number" : 8472,
+         "autonomous_system_organization" : "Basjes Global Network"
+      }
+   }
+]
