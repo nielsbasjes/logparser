@@ -18,10 +18,24 @@ package nl.basjes.parse.httpdlog.beam.avro;
 
 import nl.basjes.parse.record.Click;
 
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnNumber;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnOrganization;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCityName;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedContinentCode;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedContinentName;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCountryIso;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCountryName;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedIspName;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedIspOrganization;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedLocationLatitude;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedLocationLongitude;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedPostalCode;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTimeEpoch;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedSubdivisionIso;
+import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedSubdivisionName;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedUseragent;
 
 // CHECKSTYLE.OFF: HideUtilityClassConstructor
@@ -43,6 +57,29 @@ public class ExpectedClick {
         builder
             .getVisitorBuilder()
                 .setIp(getExpectedConnectionClientHost());
+
+        builder
+            .getVisitorBuilder()
+                .getIspBuilder()
+                    .setAsnNumber(getExpectedAsnNumber())
+                    .setAsnOrganization(getExpectedAsnOrganization())
+                    .setIspName(getExpectedIspName())
+                    .setIspOrganization(getExpectedIspOrganization());
+
+        builder
+            .getVisitorBuilder()
+                .getGeoLocationBuilder()
+                    .setContinentName(getExpectedContinentName())
+                    .setContinentCode(getExpectedContinentCode())
+                    .setCountryName(getExpectedCountryName())
+                    .setCountryIso(getExpectedCountryIso())
+                    .setSubdivisionName(getExpectedSubdivisionName())
+                    .setSubdivisionIso(getExpectedSubdivisionIso())
+                    .setCityName(getExpectedCityName())
+                    .setPostalCode(getExpectedPostalCode())
+                    .setLocationLatitude(getExpectedLocationLatitude())
+                    .setLocationLongitude(getExpectedLocationLongitude());
+
         return builder.build();
     }
 

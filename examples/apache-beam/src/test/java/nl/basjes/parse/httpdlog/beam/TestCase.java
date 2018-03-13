@@ -20,11 +20,19 @@ package nl.basjes.parse.httpdlog.beam;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.beam.pojo.TestRecord;
+import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
+import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 
 // CHECKSTYLE.OFF: LineLength
 // CHECKSTYLE.OFF: LeftCurly
 // CHECKSTYLE.OFF: HideUtilityClassConstructor
 public final class TestCase {
+
+    private static final String TEST_MMDB_BASE_DIR = "../../GeoIP2-TestData/test-data/";
+    public static final String ASN_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoLite2-ASN-Test.mmdb";
+    public static final String ISP_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
+    public static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
+    public static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
 
     public static String getLogFormat() {
         return "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
@@ -52,6 +60,25 @@ public final class TestCase {
         parser.addParseTarget("setGoogleQuery",          "STRING:request.firstline.uri.query.r.query.blabla");
         parser.addParseTarget("setBui",                  "HTTP.COOKIE:request.cookies.bui");
         parser.addParseTarget("setUseragent",            "HTTP.USERAGENT:request.user-agent");
+
+        parser.addDissector(new GeoIPISPDissector(ISP_TEST_MMDB));
+        parser.addParseTarget("setAsnNumber",            "ASN:connection.client.host.asn.number");
+        parser.addParseTarget("setAsnOrganization",      "STRING:connection.client.host.asn.organization");
+        parser.addParseTarget("setIspName",              "STRING:connection.client.host.isp.name");
+        parser.addParseTarget("setIspOrganization",      "STRING:connection.client.host.isp.organization");
+
+        parser.addDissector(new GeoIPCityDissector(CITY_TEST_MMDB));
+        parser.addParseTarget("setContinentName",        "STRING:connection.client.host.continent.name");
+        parser.addParseTarget("setContinentCode",        "STRING:connection.client.host.continent.code");
+        parser.addParseTarget("setCountryName",          "STRING:connection.client.host.country.name");
+        parser.addParseTarget("setCountryIso",           "STRING:connection.client.host.country.iso");
+        parser.addParseTarget("setSubdivisionName",      "STRING:connection.client.host.subdivision.name");
+        parser.addParseTarget("setSubdivisionIso",       "STRING:connection.client.host.subdivision.iso");
+        parser.addParseTarget("setCityName",             "STRING:connection.client.host.city.name");
+        parser.addParseTarget("setPostalCode",           "STRING:connection.client.host.postal.code");
+        parser.addParseTarget("setLocationLatitude",     "STRING:connection.client.host.location.latitude");
+        parser.addParseTarget("setLocationLongitude",    "STRING:connection.client.host.location.longitude");
+
         return parser;
     }
 
@@ -65,5 +92,21 @@ public final class TestCase {
     public static String getExpectedGoogleQuery()               { return "blablawashere"; }
     public static String getExpectedBui()                       { return "SomeThing"; }
     public static String getExpectedUseragent()                 { return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; nl-nl) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8"; }
+
+    public static String getExpectedAsnNumber()                 { return "6666"; }
+    public static String getExpectedAsnOrganization()           { return "Basjes Global Network IPv6"; }
+    public static String getExpectedIspName()                   { return "Basjes ISP IPv6"; }
+    public static String getExpectedIspOrganization()           { return "Niels Basjes IPv6"; }
+
+    public static String getExpectedContinentName()             { return "Europe"; }
+    public static String getExpectedContinentCode()             { return "EU"; }
+    public static String getExpectedCountryName()               { return "Netherlands"; }
+    public static String getExpectedCountryIso()                { return "NL"; }
+    public static String getExpectedSubdivisionName()           { return "Noord Holland"; }
+    public static String getExpectedSubdivisionIso()            { return "NH"; }
+    public static String getExpectedCityName()                  { return "Amstelveen"; }
+    public static String getExpectedPostalCode()                { return "1187"; }
+    public static Double getExpectedLocationLatitude()          { return 52.5; }
+    public static Double getExpectedLocationLongitude()         { return 5.75; }
 
 }
