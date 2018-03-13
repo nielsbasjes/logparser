@@ -25,21 +25,32 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnNumber;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnOrganization;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedBui;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCityName;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentCode;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryName;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedGoogleQuery;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspOrganization;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLatitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLongitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedPostalCode;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedReferrer;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestReceiveTime;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenHeight;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenResolution;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionName;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedUseragent;
 import static org.junit.Assert.assertEquals;
 
-// CHECKSTYLE.OFF: LineLength
-// CHECKSTYLE.OFF: LeftCurly
 // CHECKSTYLE.OFF: ParamPad
-// CHECKSTYLE.OFF: MethodParamPad
 @ToString
 @EqualsAndHashCode
 public class TestRecord implements Serializable {
@@ -54,6 +65,21 @@ public class TestRecord implements Serializable {
     @Getter @Setter private String bui                  = null;
     @Getter @Setter private String useragent            = null;
 
+    @Getter @Setter private String asnNumber            = null;
+    @Getter @Setter private String asnOrganization      = null;
+    @Getter @Setter private String ispName              = null;
+    @Getter @Setter private String ispOrganization      = null;
+
+    @Getter @Setter private String continentName        = null;
+    @Getter @Setter private String continentCode        = null;
+    @Getter @Setter private String countryName          = null;
+    @Getter @Setter private String countryIso           = null;
+    @Getter @Setter private String subdivisionName      = null;
+    @Getter @Setter private String subdivisionIso       = null;
+    @Getter @Setter private String cityName             = null;
+    @Getter @Setter private String postalCode           = null;
+    @Getter @Setter private Double locationLatitude     = null;
+    @Getter @Setter private Double locationLongitude    = null;
 
     public void assertIsValid() {
         assertEquals(getExpectedConnectionClientHost(), getConnectionClientHost());
@@ -65,6 +91,22 @@ public class TestRecord implements Serializable {
         assertEquals(getExpectedGoogleQuery(),          getGoogleQuery());
         assertEquals(getExpectedBui(),                  getBui());
         assertEquals(getExpectedUseragent(),            getUseragent());
+
+        assertEquals(getExpectedAsnNumber(),            getAsnNumber());
+        assertEquals(getExpectedAsnOrganization(),      getAsnOrganization());
+        assertEquals(getExpectedIspName(),              getIspName());
+        assertEquals(getExpectedIspOrganization(),      getIspOrganization());
+
+        assertEquals(getExpectedContinentName(),        getContinentName());
+        assertEquals(getExpectedContinentCode(),        getContinentCode());
+        assertEquals(getExpectedSubdivisionName(),      getSubdivisionName());
+        assertEquals(getExpectedSubdivisionIso(),       getSubdivisionIso());
+        assertEquals(getExpectedCountryName(),          getCountryName());
+        assertEquals(getExpectedCountryIso(),           getCountryIso());
+        assertEquals(getExpectedCityName(),             getCityName());
+        assertEquals(getExpectedPostalCode(),           getPostalCode());
+        assertEquals(getExpectedLocationLatitude(),     getLocationLatitude());
+        assertEquals(getExpectedLocationLongitude(),    getLocationLongitude());
     }
 
     public TestRecord setFullValid() {
@@ -77,6 +119,23 @@ public class TestRecord implements Serializable {
         setGoogleQuery          (getExpectedGoogleQuery());
         setBui                  (getExpectedBui());
         setUseragent            (getExpectedUseragent());
+
+        setAsnNumber            (getExpectedAsnNumber());
+        setAsnOrganization      (getExpectedAsnOrganization());
+        setIspName              (getExpectedIspName());
+        setIspOrganization      (getExpectedIspOrganization());
+
+        setContinentName        (getExpectedContinentName());
+        setContinentCode        (getExpectedContinentCode());
+        setCountryName          (getExpectedCountryName());
+        setCountryIso           (getExpectedCountryIso());
+        setSubdivisionName      (getExpectedSubdivisionName());
+        setSubdivisionIso       (getExpectedSubdivisionIso());
+        setCityName             (getExpectedCityName());
+        setPostalCode           (getExpectedPostalCode());
+        setLocationLatitude     (getExpectedLocationLatitude());
+        setLocationLongitude    (getExpectedLocationLongitude());
+
         return this;
     }
 

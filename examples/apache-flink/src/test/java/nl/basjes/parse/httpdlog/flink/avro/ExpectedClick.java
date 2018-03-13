@@ -18,15 +18,27 @@ package nl.basjes.parse.httpdlog.flink.avro;
 
 import nl.basjes.parse.record.Click;
 
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnNumber;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnOrganization;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCityName;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentCode;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspOrganization;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLatitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLongitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedPostalCode;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestReceiveTimeEpoch;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenHeight;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionName;
 import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedUseragent;
 
-
 // CHECKSTYLE.OFF: HideUtilityClassConstructor
-// CHECKSTYLE.OFF: ParenPad
 public class ExpectedClick {
 
     public static Click create(){
@@ -35,16 +47,39 @@ public class ExpectedClick {
         builder
             .setTimestamp(getExpectedRequestReceiveTimeEpoch())
             .getDeviceBuilder()
-            .setScreenWidth(getExpectedScreenWidth())
-            .setScreenHeight(getExpectedScreenHeight());
+                .setScreenWidth(getExpectedScreenWidth())
+                .setScreenHeight(getExpectedScreenHeight());
 
         builder
             .getBrowserBuilder()
-            .setUseragent(getExpectedUseragent());
+                .setUseragent(getExpectedUseragent());
 
         builder
             .getVisitorBuilder()
-            .setIp(getExpectedConnectionClientHost());
+                .setIp(getExpectedConnectionClientHost());
+
+        builder
+            .getVisitorBuilder()
+                .getIspBuilder()
+                    .setAsnNumber(getExpectedAsnNumber())
+                    .setAsnOrganization(getExpectedAsnOrganization())
+                    .setIspName(getExpectedIspName())
+                    .setIspOrganization(getExpectedIspOrganization());
+
+        builder
+            .getVisitorBuilder()
+                .getGeoLocationBuilder()
+                    .setContinentName(getExpectedContinentName())
+                    .setContinentCode(getExpectedContinentCode())
+                    .setCountryName(getExpectedCountryName())
+                    .setCountryIso(getExpectedCountryIso())
+                    .setSubdivisionName(getExpectedSubdivisionName())
+                    .setSubdivisionIso(getExpectedSubdivisionIso())
+                    .setCityName(getExpectedCityName())
+                    .setPostalCode(getExpectedPostalCode())
+                    .setLocationLatitude(getExpectedLocationLatitude())
+                    .setLocationLongitude(getExpectedLocationLongitude());
+
         return builder.build();
     }
 

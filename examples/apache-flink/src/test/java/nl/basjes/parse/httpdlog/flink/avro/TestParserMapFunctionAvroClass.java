@@ -21,6 +21,8 @@ import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
+import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
+import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.record.Click;
 import org.apache.commons.lang3.builder.Builder;
@@ -35,6 +37,8 @@ import org.junit.runners.JUnit4;
 import java.io.Serializable;
 import java.util.List;
 
+import static nl.basjes.parse.httpdlog.flink.TestCase.CITY_TEST_MMDB;
+import static nl.basjes.parse.httpdlog.flink.TestCase.ISP_TEST_MMDB;
 import static org.junit.Assert.assertEquals;
 
 // CHECKSTYLE.OFF: LineLength
@@ -55,6 +59,22 @@ public class TestParserMapFunctionAvroClass implements Serializable {
 
         @Field("IP:connection.client.host")                         public void setConnectionClientHost(String value)   { builder.getVisitorBuilder().setIp(value);             }
 
+        @Field("ASN:connection.client.host.asn.number")             public void setAsnNumber(String value)              { builder.getVisitorBuilder().getIspBuilder().setAsnNumber(value);  }
+        @Field("STRING:connection.client.host.asn.organization")    public void setAsnOrganization(String value)        { builder.getVisitorBuilder().getIspBuilder().setAsnOrganization(value);  }
+        @Field("STRING:connection.client.host.isp.name")            public void setIspName(String value)                { builder.getVisitorBuilder().getIspBuilder().setIspName(value);  }
+        @Field("STRING:connection.client.host.isp.organization")    public void setIspOrganization(String value)        { builder.getVisitorBuilder().getIspBuilder().setIspOrganization(value);  }
+
+        @Field("STRING:connection.client.host.continent.name")      public void setContinentName(String value)          { builder.getVisitorBuilder().getGeoLocationBuilder().setContinentName(value);  }
+        @Field("STRING:connection.client.host.continent.code")      public void setContinentCode(String value)          { builder.getVisitorBuilder().getGeoLocationBuilder().setContinentCode(value);  }
+        @Field("STRING:connection.client.host.country.name")        public void setCountryName(String value)            { builder.getVisitorBuilder().getGeoLocationBuilder().setCountryName(value);  }
+        @Field("STRING:connection.client.host.country.iso")         public void setCountryIso(String value)             { builder.getVisitorBuilder().getGeoLocationBuilder().setCountryIso(value);  }
+        @Field("STRING:connection.client.host.subdivision.name")    public void setSubdivisionName(String value)        { builder.getVisitorBuilder().getGeoLocationBuilder().setSubdivisionName(value);  }
+        @Field("STRING:connection.client.host.subdivision.iso")     public void setSubdivisionIso(String value)         { builder.getVisitorBuilder().getGeoLocationBuilder().setSubdivisionIso(value);  }
+        @Field("STRING:connection.client.host.city.name")           public void setCityName(String value)               { builder.getVisitorBuilder().getGeoLocationBuilder().setCityName(value);  }
+        @Field("STRING:connection.client.host.postal.code")         public void setPostalCode(String value)             { builder.getVisitorBuilder().getGeoLocationBuilder().setPostalCode(value);  }
+        @Field("STRING:connection.client.host.location.latitude")   public void setLocationLatitude(Double value)       { builder.getVisitorBuilder().getGeoLocationBuilder().setLocationLatitude(value);  }
+        @Field("STRING:connection.client.host.location.longitude")  public void setLocationLongitude(Double value)      { builder.getVisitorBuilder().getGeoLocationBuilder().setLocationLongitude(value);  }
+
         @Override
         public Click build() {
             return builder.build();
@@ -66,10 +86,13 @@ public class TestParserMapFunctionAvroClass implements Serializable {
 
         @Override
         public void open(Configuration parameters) {
-            parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat());
-
-            parser.addDissector(new ScreenResolutionDissector());
-            parser.addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION");
+            parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat())
+                .addDissector(new ScreenResolutionDissector())
+                .addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI")
+                .addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI")
+                .addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION")
+                .addDissector(new GeoIPISPDissector(ISP_TEST_MMDB))
+                .addDissector(new GeoIPCityDissector(CITY_TEST_MMDB));
         }
 
         @Override

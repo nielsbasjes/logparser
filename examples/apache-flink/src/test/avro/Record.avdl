@@ -28,8 +28,30 @@ protocol BeamTestRecord {
     string useragent ; // "STRING:request.user-agent"
   }
 
+  record ISP {
+    string asnNumber ;          // ASN:connection.client.host.asn.number
+    string asnOrganization ;    // STRING:connection.client.host.asn.organization
+    string ispName ;            // STRING:connection.client.host.isp.name
+    string ispOrganization ;    // STRING:connection.client.host.isp.organization
+  }
+
+  record GeoLocation {
+    string continentName;       // STRING:connection.client.host.continent.name
+    string continentCode;       // STRING:connection.client.host.continent.code
+    string countryName;         // STRING:connection.client.host.country.name
+    string countryIso;          // STRING:connection.client.host.country.iso
+    string subdivisionName;     // STRING:connection.client.host.subdivision.name
+    string subdivisionIso;      // STRING:connection.client.host.subdivision.iso
+    string cityName;            // STRING:connection.client.host.city.name
+    string postalCode;          // STRING:connection.client.host.postal.code
+    double locationLatitude;    // STRING:connection.client.host.location.latitude
+    double locationLongitude;   // STRING:connection.client.host.location.longitude
+  }
+
   record Visitor {
     string ip; // "IP:connection.client.host"
+    ISP isp;
+    GeoLocation geoLocation;
   }
 
   record Click {
