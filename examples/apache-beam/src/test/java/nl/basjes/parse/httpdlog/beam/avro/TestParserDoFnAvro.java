@@ -24,6 +24,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.beam.TestCase;
+import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.record.Click;
@@ -93,7 +94,7 @@ public class TestParserDoFnAvro implements Serializable {
         @Setup
         public void setup() {
             parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat())
-                .addDissector(new nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector())
+                .addDissector(new ScreenResolutionDissector())
                 .addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI")
                 .addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI")
                 .addTypeRemapping("request.firstline.uri.query.s", "SCREENRESOLUTION")

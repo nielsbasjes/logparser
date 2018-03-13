@@ -29,10 +29,8 @@ import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 public final class TestCase {
 
     private static final String TEST_MMDB_BASE_DIR = "../../GeoIP2-TestData/test-data/";
-    public static final String ASN_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoLite2-ASN-Test.mmdb";
     public static final String ISP_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
     public static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
-    public static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
 
     public static String getLogFormat() {
         return "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
