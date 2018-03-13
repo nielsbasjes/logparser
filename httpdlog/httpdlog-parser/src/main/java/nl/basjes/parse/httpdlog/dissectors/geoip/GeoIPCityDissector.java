@@ -142,6 +142,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             if (city != null) {
                 parsable.addDissection(inputname, "STRING", "city.name", city.getName());
             }
+            // TODO: city.getConfidence()
         }
 
         if (wantPostalCode) {
@@ -149,6 +150,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             if (postal != null) {
                 parsable.addDissection(inputname, "STRING", "postal.code", postal.getCode());
             }
+            // TODO: postal.getConfidence()
         }
 
         Location location = response.getLocation();
@@ -162,6 +164,10 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             if (wantLocationTimezone) {
                 parsable.addDissection(inputname, "STRING", "location.timezone", location.getTimeZone());
             }
+            // TODO: location.getAccuracyRadius()
+            // TODO: location.getAverageIncome();
+            // TODO: location.getMetroCode();
+            // TODO: location.getPopulationDensity();
         }
     }
 

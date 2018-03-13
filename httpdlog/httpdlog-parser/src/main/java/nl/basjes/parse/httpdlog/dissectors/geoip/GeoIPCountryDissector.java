@@ -120,6 +120,8 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
             if (wantCountryIso) {
                 parsable.addDissection(inputname, "STRING", "country.iso", country.getIsoCode());
             }
+            // TODO: country.getConfidence();
+            // TODO: country.isInEuropeanUnion();
         }
     }
     // --------------------------------------------
