@@ -1,8 +1,14 @@
 [
-   {
-      "::80.100.47.45/118" : {
-         "autonomous_system_number" : 8472,
-         "autonomous_system_organization" : "Basjes Global Network"
-      }
-   }
+  {
+    "::80.100.47.45/118": {
+      "autonomous_system_number": 4444,
+      "autonomous_system_organization": "Basjes Global Network"
+    }
+  },
+  {
+    "2001:980:91c0::/56": {
+      "autonomous_system_number": 6666,
+      "autonomous_system_organization": "Basjes Global Network IPv6"
+    }
+  }
 ]

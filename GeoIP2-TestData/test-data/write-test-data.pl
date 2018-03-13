@@ -28,6 +28,7 @@ sub write_geoip2_dbs {
         for (
         ['GeoIP2-City'],
         ['GeoIP2-Country'],
+        ['GeoIP2-ISP'],
         ['GeoLite2-ASN'],
         );
 }
