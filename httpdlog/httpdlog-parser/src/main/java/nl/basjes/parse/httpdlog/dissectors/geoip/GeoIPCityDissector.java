@@ -34,6 +34,14 @@ import java.util.List;
 
 public class GeoIPCityDissector extends GeoIPCountryDissector {
 
+    public GeoIPCityDissector() {
+        super();
+    }
+
+    public GeoIPCityDissector(String databaseFileName) {
+        super(databaseFileName);
+    }
+
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = super.getPossibleOutput();

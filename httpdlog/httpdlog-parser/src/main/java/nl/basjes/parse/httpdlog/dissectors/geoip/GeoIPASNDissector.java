@@ -30,6 +30,14 @@ import java.util.List;
 
 public class GeoIPASNDissector extends AbstractGeoIPDissector {
 
+    public GeoIPASNDissector() {
+        super();
+    }
+
+    public GeoIPASNDissector(String databaseFileName) {
+        super(databaseFileName);
+    }
+
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = new ArrayList<>();

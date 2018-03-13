@@ -29,6 +29,14 @@ import java.util.List;
 
 public class GeoIPISPDissector extends GeoIPASNDissector {
 
+    public GeoIPISPDissector() {
+        super();
+    }
+
+    public GeoIPISPDissector(String databaseFileName) {
+        super(databaseFileName);
+    }
+
     @Override
     public List<String> getPossibleOutput() {
         List<String> result = super.getPossibleOutput();

@@ -38,6 +38,13 @@ public abstract class AbstractGeoIPDissector extends Dissector {
 
     String databaseFileName;
 
+    public AbstractGeoIPDissector() {
+    }
+
+    public AbstractGeoIPDissector(String databaseFileName) {
+        this.databaseFileName = databaseFileName;
+    }
+
     @Override
     public String getInputType() {
         return INPUT_TYPE;
