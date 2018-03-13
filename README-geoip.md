@@ -21,9 +21,10 @@ The datafiles I usually work with:
 
     /var/lib/GeoIP/GeoLite2-City.mmdb
     /var/lib/GeoIP/GeoLite2-Country.mmdb
+    /var/lib/GeoIP/GeoIP2-ISP.mmdb
     /var/lib/GeoIP/GeoLite2-ASN.mmdb
 
-You can achieve this by installing geoipupdate tool with the config file /etc/GeoIP.conf
+You can get some of those by installing geoipupdate tool with the config file /etc/GeoIP.conf
 
     # The following UserId and LicenseKey are required placeholders:
     UserId 999999
@@ -31,7 +32,34 @@ You can achieve this by installing geoipupdate tool with the config file /etc/Ge
     ProductIds GeoLite2-City GeoLite2-Country GeoLite2-ASN
 
 How do I use it?
+===
+
+Currently there are 4 dissectors available
+
+ASN
 ---
+* Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector
+* Input: Needs the path to the GeoLite2-ASN.mmdb to function.
+* Output: ASN number and organization. 
+
+ISP
+---
+* Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector
+* Input: Needs the path to the GeoIP2-ISP.mmdb or GeoLite2-ISP.mmdb to function.
+* Output: ASN number and organization, ISP name and organization. 
+
+Country
+---
+* Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCountryDissector
+* Input: Needs the path to the GeoIP2-Country.mmdb or GeoLite2-Country.mmdb to function.
+* Output: Information about continent and country.
+
+City
+---
+* Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector
+* Input: Needs the path to the GeoIP2-City.mmdb or GeoLite2-City.mmdb to function.
+* Output: Information about continent, country, subdivision, city, postalcode and latitude/longitude.
+
 
 In Apache Pig you can do something like this now:
 
@@ -41,7 +69,7 @@ In Apache Pig you can do something like this now:
             '"%h"',
             'IP:connection.client.host',
 
-            '-load:nl.basjes.parse.httpdlog.dissectors.GeoIPCityDissector:/var/lib/GeoIP/GeoLite2-City.mmdb',
+            '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector:/var/lib/GeoIP/GeoLite2-City.mmdb',
             'STRING:connection.client.host.continent.name',
             'STRING:connection.client.host.continent.code',
             'STRING:connection.client.host.country.name',
@@ -53,7 +81,7 @@ In Apache Pig you can do something like this now:
             'STRING:connection.client.host.location.latitude',
             'STRING:connection.client.host.location.longitude',
 
-            '-load:nl.basjes.parse.httpdlog.dissectors.GeoIPASNDissector:/var/lib/GeoIP/GeoLite2-ASN.mmdb',
+            '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector:/var/lib/GeoIP/GeoLite2-ASN.mmdb',
             'ASN:connection.client.host.asn.number',
             'STRING:connection.client.host.asn.organization'
         ) AS (
