@@ -17,45 +17,48 @@
 package nl.basjes.parse.httpdlog.dissectors.geoip;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
-import com.maxmind.geoip2.model.AsnResponse;
+import com.maxmind.geoip2.model.IspResponse;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class GeoIPASNDissector extends AbstractGeoIPDissector {
+public class GeoIPISPDissector extends GeoIPASNDissector {
 
     @Override
     public List<String> getPossibleOutput() {
-        List<String> result = new ArrayList<>();
+        List<String> result = super.getPossibleOutput();
 
-        result.add("ASN:asn.number");
-        result.add("STRING:asn.organization");
+        result.add("STRING:isp.name");
+        result.add("STRING:isp.organization");
 
         return result;
     }
 
-    private boolean wantAsnNumber = false;
-    private boolean wantAsnOrganization = false;
+    private boolean wantIspName = false;
+    private boolean wantIspOrganization = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
+        EnumSet<Casts> result = super.prepareForDissect(inputname, outputname);
+        if (result != null) {
+            return result;
+        }
         String name = outputname;
         if (!inputname.isEmpty()) {
             name = outputname.substring(inputname.length() + 1);
         }
 
-        if ("asn.number".equals(name)) {
-            wantAsnNumber = true;
-            return Casts.STRING_OR_LONG;
+        if ("isp.name".equals(name)) {
+            wantIspName = true;
+            return Casts.STRING_ONLY;
         }
-        if ("asn.organization".equals(name)) {
-            wantAsnOrganization = true;
+        if ("isp.organization".equals(name)) {
+            wantIspOrganization = true;
             return Casts.STRING_ONLY;
         }
         return null;
@@ -64,9 +67,9 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
     // --------------------------------------------
 
     public void dissect(final Parsable<?> parsable, final String inputname, final InetAddress ipAddress) throws DissectionFailure {
-        AsnResponse response;
+        IspResponse response;
         try {
-            response = reader.asn(ipAddress);
+            response = reader.isp(ipAddress);
         } catch (IOException | GeoIp2Exception e) {
             return;
         }
@@ -74,17 +77,21 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
         if (response == null) {
             return;
         }
+
         extractAsnFields(parsable, inputname, response);
+        extractIspFields(parsable, inputname, response);
     }
 
-    protected void extractAsnFields(final Parsable<?> parsable, final String inputname, AsnResponse response) throws DissectionFailure {
-        if (wantAsnNumber) {
-            parsable.addDissection(inputname, "ASN", "asn.number", response.getAutonomousSystemNumber());
+    protected void extractIspFields(final Parsable<?> parsable, final String inputname, IspResponse response) throws DissectionFailure {
+        if (wantIspName) {
+            parsable.addDissection(inputname, "STRING", "isp.name", response.getIsp());
         }
-        if (wantAsnOrganization) {
-            parsable.addDissection(inputname, "STRING", "asn.organization", response.getAutonomousSystemOrganization());
+        if (wantIspOrganization) {
+            parsable.addDissection(inputname, "STRING", "isp.organization", response.getOrganization());
         }
     }
+
+
     // --------------------------------------------
 
 }

@@ -48,13 +48,13 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
         return result;
     }
 
-    boolean wantSubdivisionName = false;
-    boolean wantSubdivisionIso = false;
-    boolean wantCityName = false;
-    boolean wantPostalCode = false;
-    boolean wantLocationLatitude = false;
-    boolean wantLocationLongitude = false;
-    boolean wantLocationTimezone = false;
+    private boolean wantSubdivisionName     = false;
+    private boolean wantSubdivisionIso      = false;
+    private boolean wantCityName            = false;
+    private boolean wantPostalCode          = false;
+    private boolean wantLocationLatitude    = false;
+    private boolean wantLocationLongitude   = false;
+    private boolean wantLocationTimezone    = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {

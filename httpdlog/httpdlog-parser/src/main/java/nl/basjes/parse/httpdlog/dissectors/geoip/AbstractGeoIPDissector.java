@@ -16,6 +16,7 @@
  */
 package nl.basjes.parse.httpdlog.dissectors.geoip;
 
+import com.maxmind.db.CHMCache;
 import com.maxmind.db.Reader;
 import com.maxmind.geoip2.DatabaseReader;
 import nl.basjes.parse.core.Dissector;
@@ -65,7 +66,11 @@ public abstract class AbstractGeoIPDissector extends Dissector {
     public void prepareForRun() throws InvalidDissectorException {
         // This creates the DatabaseReader object, which should be reused across lookups.
         try {
-            reader = new DatabaseReader.Builder(openDatabaseFile(databaseFileName)).fileMode(Reader.FileMode.MEMORY).build();
+            reader = new DatabaseReader
+                .Builder(openDatabaseFile(databaseFileName))
+                .fileMode(Reader.FileMode.MEMORY)
+                .withCache(new CHMCache())
+                .build();
         } catch (IOException e) {
             throw new InvalidDissectorException(this.getClass().getCanonicalName() + ":" + e.getMessage());
         }

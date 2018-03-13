@@ -45,10 +45,10 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
         return result;
     }
 
-    boolean wantContinentName = false;
-    boolean wantContinentCode = false;
-    boolean wantCountryName = false;
-    boolean wantCountryIso = false;
+    private boolean wantContinentName   = false;
+    private boolean wantContinentCode   = false;
+    private boolean wantCountryName     = false;
+    private boolean wantCountryIso      = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {

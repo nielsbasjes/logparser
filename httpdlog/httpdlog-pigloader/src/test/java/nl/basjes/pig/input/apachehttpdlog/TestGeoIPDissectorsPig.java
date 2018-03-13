@@ -33,12 +33,13 @@ public class TestGeoIPDissectorsPig {
     private static final String LOGFORMAT = "%h";
     private final String logfile = getClass().getResource("/geoip.log").toString();
     private static final String TEST_MMDB_BASE_DIR = "../../GeoIP2-TestData/test-data/";
+    private static final String ISP_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
     private static final String ASN_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoLite2-ASN-Test.mmdb";
     private static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
     private static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
 
     @Test
-    public void testGeoIPCountryDissectorPig() throws Exception {
+    public void testGeoIPCountryASNDissectorPig() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 
@@ -48,18 +49,27 @@ public class TestGeoIPDissectorsPig {
             "       USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
             "               '" + LOGFORMAT + "'," +
             "               'IP:connection.client.host'," +
+
             "       '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCountryDissector:" + COUNTRY_TEST_MMDB + "'," +
             "               'STRING:connection.client.host.continent.name'," +
             "               'STRING:connection.client.host.continent.code'," +
             "               'STRING:connection.client.host.country.name'," +
-            "               'STRING:connection.client.host.country.iso'" +
+            "               'STRING:connection.client.host.country.iso'," +
+
+            "       '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector:"+ASN_TEST_MMDB+"'," +
+            "               'ASN:connection.client.host.asn.number'," +
+            "               'STRING:connection.client.host.asn.organization'" +
+
             "          )" +
             "       AS (" +
             "               connection_client_host:chararray," +
             "               connection_client_host_continent_name:chararray," +
             "               connection_client_host_continent_code:chararray," +
             "               connection_client_host_country_name:chararray," +
-            "               connection_client_host_country_iso:chararray" +
+            "               connection_client_host_country_iso:chararray," +
+
+            "               connection_client_host_asn_number:long," +
+            "               connection_client_host_asn_organization:chararray" +
             "          );"
         );
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
@@ -76,10 +86,12 @@ public class TestGeoIPDissectorsPig {
         assertEquals("EU",                      result.get(2));
         assertEquals("Netherlands",             result.get(3));
         assertEquals("NL",                      result.get(4));
+        assertEquals("4444",                    result.get(5).toString());
+        assertEquals("Basjes Global Network",   result.get(6));
     }
 
     @Test
-    public void testGeoIPCityASNDissectorPig() throws Exception {
+    public void testGeoIPCityISPDissectorPig() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 
@@ -101,9 +113,11 @@ public class TestGeoIPDissectorsPig {
                 "               'STRING:connection.client.host.location.latitude'," +
                 "               'STRING:connection.client.host.location.longitude'," +
 
-                "       '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector:"+ASN_TEST_MMDB+"'," +
+                "       '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector:"+ISP_TEST_MMDB+"'," +
                 "               'ASN:connection.client.host.asn.number'," +
-                "               'STRING:connection.client.host.asn.organization'" +
+                "               'STRING:connection.client.host.asn.organization'," +
+                "               'STRING:connection.client.host.isp.name'," +
+                "               'STRING:connection.client.host.isp.organization'" +
                 "          )" +
                 "       AS (" +
                 "               connection_client_host:chararray," +
@@ -120,7 +134,9 @@ public class TestGeoIPDissectorsPig {
                 "               connection_client_host_location_longitude:double," +
 
                 "               connection_client_host_asn_number:long," +
-                "               connection_client_host_asn_organization:chararray" +
+                "               connection_client_host_asn_organization:chararray," +
+                "               connection_client_host_isp_name:chararray," +
+                "               connection_client_host_isp_organization:chararray" +
                 "          );"
         );
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
@@ -143,9 +159,10 @@ public class TestGeoIPDissectorsPig {
         assertEquals("1187",                    result.get(8));
         assertEquals("52.5",                    result.get(9).toString());
         assertEquals("5.75",                    result.get(10).toString());
-        assertEquals("8472",                    result.get(11).toString());
+        assertEquals("4444",                    result.get(11).toString());
         assertEquals("Basjes Global Network",   result.get(12));
-
+        assertEquals("Basjes ISP",              result.get(13));
+        assertEquals("Niels Basjes",            result.get(14));
     }
 
 }
