@@ -48,21 +48,45 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
 
         result.add("STRING:subdivision.name");
         result.add("STRING:subdivision.iso");
+
         result.add("STRING:city.name");
+        result.add("NUMBER:city.confidence");
+
         result.add("STRING:postal.code");
+        result.add("NUMBER:postal.confidence");
+
         result.add("STRING:location.latitude");
         result.add("STRING:location.longitude");
+        result.add("STRING:location.timezone");
+        result.add("NUMBER:location.accuracyradius");
+        result.add("NUMBER:location.averageincome");
+        result.add("NUMBER:location.metrocode");
+        result.add("NUMBER:location.populationdensity");
 
         return result;
     }
 
-    private boolean wantSubdivisionName     = false;
-    private boolean wantSubdivisionIso      = false;
-    private boolean wantCityName            = false;
-    private boolean wantPostalCode          = false;
-    private boolean wantLocationLatitude    = false;
-    private boolean wantLocationLongitude   = false;
-    private boolean wantLocationTimezone    = false;
+    private boolean wantSubdivisionName            = false;
+    private boolean wantSubdivisionIso             = false;
+    private boolean wantAnySubdivision             = false;
+
+    private boolean wantCityName                   = false;
+    private boolean wantCityConfidence             = false;
+    private boolean wantAnyCity                    = false;
+
+    private boolean wantPostalCode                 = false;
+    private boolean wantPostalConfidence           = false;
+    private boolean wantAnyPostal                  = false;
+
+    private boolean wantLocationLatitude           = false;
+    private boolean wantLocationLongitude          = false;
+    private boolean wantLocationTimezone           = false;
+    private boolean wantLocationAccuracyradius     = false;
+    private boolean wantLocationAverageincome      = false;
+    private boolean wantLocationMetrocode          = false;
+    private boolean wantLocationPopulationdensity  = false;
+    private boolean wantAnyLocation                = false;
+
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
@@ -78,32 +102,73 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
 
         if ("subdivision.name".equals(name)) {
             wantSubdivisionName = true;
+            wantAnySubdivision = true;
             return Casts.STRING_ONLY;
         }
         if ("subdivision.iso".equals(name)) {
             wantSubdivisionIso = true;
+            wantAnySubdivision = true;
             return Casts.STRING_ONLY;
         }
+
         if ("city.name".equals(name)) {
             wantCityName = true;
+            wantAnyCity = true;
             return Casts.STRING_ONLY;
         }
+        if ("city.confidence".equals(name)) {
+            wantCityConfidence = true;
+            wantAnyCity = true;
+            return Casts.STRING_OR_LONG;
+        }
+
         if ("postal.code".equals(name)) {
             wantPostalCode = true;
+            wantAnyPostal = true;
             return Casts.STRING_ONLY;
         }
+        if ("postal.confidence".equals(name)) {
+            wantPostalConfidence = true;
+            wantAnyPostal = true;
+            return Casts.STRING_OR_LONG;
+        }
+
         if ("location.latitude".equals(name)) {
             wantLocationLatitude = true;
+            wantAnyLocation = true;
             return Casts.STRING_OR_DOUBLE;
         }
         if ("location.longitude".equals(name)) {
             wantLocationLongitude = true;
+            wantAnyLocation = true;
             return Casts.STRING_OR_DOUBLE;
+        }
+        if ("location.accuracyradius".equals(name)) {
+            wantLocationAccuracyradius = true;
+            wantAnyLocation = true;
+            return Casts.STRING_OR_LONG;
         }
         if ("location.timezone".equals(name)) {
             wantLocationTimezone = true;
+            wantAnyLocation = true;
             return Casts.STRING_ONLY;
         }
+        if ("location.averageincome".equals(name)) {
+            wantLocationAverageincome = true;
+            wantAnyLocation = true;
+            return Casts.STRING_OR_LONG;
+        }
+        if ("location.metrocode".equals(name)) {
+            wantLocationMetrocode = true;
+            wantAnyLocation = true;
+            return Casts.STRING_OR_LONG;
+        }
+        if ("location.populationdensity".equals(name)) {
+            wantLocationPopulationdensity = true;
+            wantAnyLocation = true;
+            return Casts.STRING_OR_LONG;
+        }
+
         return null;
     }
 
@@ -127,47 +192,76 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
     }
 
     protected void extractCityFields(final Parsable<?> parsable, final String inputname, AbstractCityResponse response) throws DissectionFailure {
-        Subdivision subdivision = response.getMostSpecificSubdivision();
-        if (subdivision != null) {
-            if (wantSubdivisionName) {
-                parsable.addDissection(inputname, "STRING", "subdivision.name", subdivision.getName());
-            }
-            if (wantSubdivisionIso) {
-                parsable.addDissection(inputname, "STRING", "subdivision.iso", subdivision.getIsoCode());
+        if (wantAnySubdivision) {
+            Subdivision subdivision = response.getMostSpecificSubdivision();
+            if (subdivision != null) {
+                if (wantSubdivisionName) {
+                    parsable.addDissection(inputname, "STRING", "subdivision.name", subdivision.getName());
+                }
+                if (wantSubdivisionIso) {
+                    parsable.addDissection(inputname, "STRING", "subdivision.iso", subdivision.getIsoCode());
+                }
             }
         }
 
-        if (wantCityName) {
+        if (wantAnyCity) {
             City city = response.getCity();
             if (city != null) {
-                parsable.addDissection(inputname, "STRING", "city.name", city.getName());
+                if (wantCityName) {
+                    parsable.addDissection(inputname, "STRING", "city.name", city.getName());
+                }
+                if (wantCityConfidence) {
+                    parsable.addDissection(inputname, "NUMBER", "city.confidence", city.getConfidence());
+                }
             }
-            // TODO: city.getConfidence()
         }
 
-        if (wantPostalCode) {
+        if (wantAnyPostal) {
             Postal postal = response.getPostal();
             if (postal != null) {
-                parsable.addDissection(inputname, "STRING", "postal.code", postal.getCode());
+                if (wantPostalCode) {
+                    parsable.addDissection(inputname, "STRING", "postal.code", postal.getCode());
+                }
+                if (wantPostalConfidence) {
+                    parsable.addDissection(inputname, "NUMBER", "postal.confidence", postal.getConfidence());
+                }
             }
-            // TODO: postal.getConfidence()
         }
 
-        Location location = response.getLocation();
-        if (location != null) {
-            if (wantLocationLatitude) {
-                parsable.addDissection(inputname, "STRING", "location.latitude", location.getLatitude());
+        if (wantAnyLocation) {
+            Location location = response.getLocation();
+            if (location != null) {
+                if (wantLocationLatitude) {
+                    parsable.addDissection(inputname, "STRING", "location.latitude", location.getLatitude());
+                }
+                if (wantLocationLongitude) {
+                    parsable.addDissection(inputname, "STRING", "location.longitude", location.getLongitude());
+                }
+                if (wantLocationTimezone) {
+                    parsable.addDissection(inputname, "STRING", "location.timezone", location.getTimeZone());
+                }
+                if (wantLocationAccuracyradius) {
+                    parsable.addDissection(inputname, "NUMBER", "location.accuracyradius", location.getAccuracyRadius());
+                }
+                if (wantLocationAverageincome) {
+                    Integer value = location.getAverageIncome();
+                    if (value != null) {
+                        parsable.addDissection(inputname, "NUMBER", "location.averageincome", value);
+                    }
+                }
+                if (wantLocationMetrocode) {
+                    Integer value = location.getMetroCode();
+                    if (value != null) {
+                        parsable.addDissection(inputname, "NUMBER", "location.metrocode", value);
+                    }
+                }
+                if (wantLocationPopulationdensity) {
+                    Integer value = location.getPopulationDensity();
+                    if (value != null) {
+                        parsable.addDissection(inputname, "NUMBER", "location.populationdensity", value);
+                    }
+                }
             }
-            if (wantLocationLongitude) {
-                parsable.addDissection(inputname, "STRING", "location.longitude", location.getLongitude());
-            }
-            if (wantLocationTimezone) {
-                parsable.addDissection(inputname, "STRING", "location.timezone", location.getTimeZone());
-            }
-            // TODO: location.getAccuracyRadius()
-            // TODO: location.getAverageIncome();
-            // TODO: location.getMetroCode();
-            // TODO: location.getPopulationDensity();
         }
     }
 

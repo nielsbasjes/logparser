@@ -86,18 +86,30 @@ public class TestGeoIPDissectors {
         DissectorTester.create()
             .withInput("80.100.47.45")
             .withDissector(dissector)
-            .expect("STRING:continent.name",        "Europe")
-            .expect("STRING:continent.code",        "EU")
-            .expect("STRING:country.name",          "Netherlands")
-            .expect("STRING:country.iso",           "NL")
-            .expect("STRING:subdivision.name",      "Noord Holland")
-            .expect("STRING:subdivision.iso",       "NH")
-            .expect("STRING:city.name",             "Amstelveen")
-            .expect("STRING:postal.code",           "1187")
-            .expect("STRING:location.latitude",     "52.5")
-            .expect("STRING:location.latitude",     52.5)
-            .expect("STRING:location.longitude",    "5.75")
-            .expect("STRING:location.longitude",    5.75)
+            .expect("STRING:continent.name",                "Europe")
+            .expect("STRING:continent.code",                "EU")
+
+            .expect("STRING:country.name",                  "Netherlands")
+            .expect("STRING:country.iso",                   "NL")
+
+            .expect("STRING:subdivision.name",              "Noord Holland")
+            .expect("STRING:subdivision.iso",               "NH")
+
+            .expect("STRING:city.name",                     "Amstelveen")
+            .expect("NUMBER:city.confidence",               1L)
+
+            .expect("STRING:postal.code",                   "1187")
+            .expect("NUMBER:postal.confidence",             2L)
+
+            .expect("STRING:location.latitude",             "52.5")
+            .expect("STRING:location.latitude",             52.5)
+            .expect("STRING:location.longitude",            "5.75")
+            .expect("STRING:location.longitude",            5.75)
+            .expect("NUMBER:location.accuracyradius",       4L)
+            .expect("NUMBER:location.metrocode",            5L)
+            .expect("NUMBER:location.averageincome",        6L)
+            .expect("NUMBER:location.populationdensity",    7L)
+
             .checkExpectations();
     }
 
@@ -157,18 +169,30 @@ public class TestGeoIPDissectors {
         DissectorTester.create()
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .withDissector(dissector)
-            .expect("STRING:continent.name",        "Europe")
-            .expect("STRING:continent.code",        "EU")
-            .expect("STRING:country.name",          "Netherlands")
-            .expect("STRING:country.iso",           "NL")
-            .expect("STRING:subdivision.name",      "Noord Holland")
-            .expect("STRING:subdivision.iso",       "NH")
-            .expect("STRING:city.name",             "Amstelveen")
-            .expect("STRING:postal.code",           "1187")
-            .expect("STRING:location.latitude",     "52.5")
-            .expect("STRING:location.latitude",     52.5)
-            .expect("STRING:location.longitude",    "5.75")
-            .expect("STRING:location.longitude",    5.75)
+            .expect("STRING:continent.name",                    "Europe")
+            .expect("STRING:continent.code",                    "EU")
+
+            .expect("STRING:country.name",                      "Netherlands")
+            .expect("STRING:country.iso",                       "NL")
+
+            .expect("STRING:subdivision.name",                  "Noord Holland")
+            .expect("STRING:subdivision.iso",                   "NH")
+
+            .expect("STRING:city.name",                         "Amstelveen")
+            .expect("NUMBER:city.confidence",                   11L)
+
+            .expect("STRING:postal.code",                       "1187")
+            .expect("NUMBER:postal.confidence",                 12L)
+
+            .expect("STRING:location.latitude",                 "52.5")
+            .expect("STRING:location.latitude",                 52.5)
+            .expect("STRING:location.longitude",                "5.75")
+            .expect("STRING:location.longitude",                5.75)
+            .expect("STRING:location.timezone",                 "Europe/Amsterdam")
+            .expect("NUMBER:location.accuracyradius",           14L)
+            .expect("NUMBER:location.metrocode",                15L)
+            .expect("NUMBER:location.averageincome",            16L)
+            .expect("NUMBER:location.populationdensity",        17L)
             .checkExpectations();
     }
 
