@@ -80,6 +80,15 @@ public final class Parsable<RECORD> {
     }
 
     /** Store a newly parsed value in the result set */
+    public Parsable<RECORD> addDissection(final String base, final String type, final String name, final Integer value) throws DissectionFailure {
+        LOG.debug("Got new (Integer) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        if (value == null) {
+            return addDissection(base, type, name, new Value((Long)null), false);
+        }
+        return addDissection(base, type, name, new Value((long)value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
     public Parsable<RECORD> addDissection(final String base, final String type, final String name, final long value) throws DissectionFailure {
         LOG.debug("Got new (long) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         return addDissection(base, type, name, new Value(value), false);
@@ -95,6 +104,21 @@ public final class Parsable<RECORD> {
     public Parsable<RECORD> addDissection(final String base, final String type, final String name, final float value) throws DissectionFailure {
         LOG.debug("Got new (float) dissection: base={}; type={}; name=\"{}\"", base, type, name);
         return addDissection(base, type, name, new Value((double)value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
+    public Parsable<RECORD> addDissection(final String base, final String type, final String name, final Float value) throws DissectionFailure {
+        LOG.debug("Got new (Float) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        if (value == null) {
+            return addDissection(base, type, name, new Value((Double)null), false);
+        }
+        return addDissection(base, type, name, new Value((double)value), false);
+    }
+
+    /** Store a newly parsed value in the result set */
+    public Parsable<RECORD> addDissection(final String base, final String type, final String name, final double value) throws DissectionFailure {
+        LOG.debug("Got new (double) dissection: base={}; type={}; name=\"{}\"", base, type, name);
+        return addDissection(base, type, name, new Value(value), false);
     }
 
     /** Store a newly parsed value in the result set */

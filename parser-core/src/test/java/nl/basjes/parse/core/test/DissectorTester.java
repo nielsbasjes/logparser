@@ -39,9 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public final class DissectorTester implements Serializable {
@@ -186,6 +183,46 @@ public final class DissectorTester implements Serializable {
         return this;
     }
 
+    private static class ExpectationResult {
+        String expectation;
+        String field;
+        String value;
+        String failReason;
+
+        ExpectationResult(String expectation, String field, Object value, String failReason) {
+            this.expectation = expectation;
+            this.field = field;
+            if (value == null) {
+                this.value = null;
+            } else {
+                this.value = value.toString();
+            }
+            this.failReason = failReason;
+        }
+    }
+
+    private void expectEquals(List<ExpectationResult> expectationResults, String fieldName, String msg, Object left, Object right) {
+        boolean expression = false;
+        String expected = "<<<null>>>";
+        if (left == null) {
+            if (right == null) {
+                expression = true;
+            }
+        } else {
+            expected = left.toString();
+            expression = left.equals(right);
+        }
+        if (expression) {
+            expectationResults.add(new ExpectationResult(msg, fieldName, expected, null));
+        } else {
+            if (right == null) {
+                expectationResults.add(new ExpectationResult(msg, fieldName, expected, "Wrong value: <<<null>>>"));
+            } else {
+                expectationResults.add(new ExpectationResult(msg, fieldName, expected, "Wrong value: "+right));
+            }
+        }
+    }
+
     public DissectorTester checkExpectations() {
         DissectorTester tester = SerializationUtils.clone(this);
         return tester.checkExpectationsDirect();
@@ -205,25 +242,107 @@ public final class DissectorTester implements Serializable {
             expectedPossible.isEmpty()) {
             fail("No expected values were specified");
         }
+        List<ExpectationResult> results = new ArrayList<>(32);
 
-        checkDissectors();
-        checkExpectedValues();
-        checkExpectedAbsent();
-        checkExpectedPossible();
+        results.addAll(checkDissectors());
+        results.addAll(checkExpectedValues());
+        results.addAll(checkExpectedAbsent());
+        results.addAll(checkExpectedPossible());
+
+        summarizeResults(results);
         return this;
     }
 
-    private void checkExpectedValues() {
+    private void summarizeResults(List<ExpectationResult> results) {
+        boolean success = true;
+        final String headerField            = "Field";
+        final String headerCheck            = "Check";
+        final String headerExpectedValue    = "Expected Value";
+        final String headerFailReason       = "Fail reason";
+        int maxExpectation                  = headerField        .length();
+        int maxFieldName                    = headerCheck        .length();
+        int maxExpectedValue                = headerExpectedValue.length();
+        int maxFailReason                   = headerFailReason   .length();
+
+        String nullString = " ";
+        for (ExpectationResult expectationResult: results) {
+            maxExpectation = Math.max(maxExpectation, expectationResult.expectation.length());
+            maxFieldName = Math.max(maxFieldName, expectationResult.field.length());
+            if (expectationResult.value == null) {
+                maxExpectedValue = Math.max(maxExpectedValue, nullString.length());
+            } else {
+                maxExpectedValue = Math.max(maxExpectedValue, expectationResult.value.length());
+            }
+            if (expectationResult.failReason == null) {
+                maxFailReason = Math.max(maxFailReason, nullString.length());
+            } else {
+                success = false;
+                maxFailReason = Math.max(maxFailReason, expectationResult.failReason.length());
+            }
+        }
+        if (!success) {
+            StringBuilder sb = new StringBuilder(1024);
+            sb.append("\n[     ] /").append(padding("", maxExpectation+maxFieldName+maxExpectedValue+maxFailReason+11, '=')).append("\\\n");
+            sb
+                .append("[     ] | ")
+                .append(headerField).append(padding(headerField, maxFieldName))
+                .append(" | ")
+                .append(headerCheck).append(padding(headerCheck, maxExpectation))
+                .append(" | ")
+                .append(headerExpectedValue).append(padding(headerExpectedValue, maxExpectedValue))
+                .append(" | ")
+                .append(headerFailReason).append(padding(headerFailReason, maxFailReason))
+                .append(" |")
+                .append("\n[     ] +")
+                    .append(padding("", maxFieldName+2, '-')).append('+')
+                    .append(padding("", maxExpectation+2, '-')).append('+')
+                    .append(padding("", maxExpectedValue+2, '-')).append('+')
+                    .append(padding("", maxFailReason+2, '-')).append('+')
+                .append("\n");
+
+            for (ExpectationResult expectationResult: results) {
+                if (expectationResult.failReason == null) {
+                    sb.append("[     ] ");
+                } else {
+                    sb.append("[ERROR] ");
+                }
+                sb
+                    .append("| ")
+                    .append(expectationResult.field).append(padding(expectationResult.field, maxFieldName))
+                    .append(" | ")
+                    .append(expectationResult.expectation).append(padding(expectationResult.expectation, maxExpectation))
+                    .append(" | ");
+                String value = expectationResult.value;
+                if (expectationResult.value == null) {
+                    value = nullString;
+                }
+                sb
+                    .append(padding(value, maxExpectedValue)).append(value).append(" | ");
+                if (expectationResult.failReason == null) {
+                    sb.append(padding("", maxFailReason));
+                } else {
+                    sb.append(expectationResult.failReason).append(padding(expectationResult.failReason, maxFailReason));
+                }
+                sb.append(" |\n");
+            }
+            sb.append("[     ] \\").append(padding("", maxExpectation+maxFieldName+maxExpectedValue+maxFailReason+11, '=')).append("/\n");
+            fail(sb.toString());
+        }
+    }
+
+    private List<ExpectationResult> checkExpectedValues() {
         if (expectedStrings.size() +
             expectedLongs.size() +
             expectedDoubles.size() +
             expectedValuePresent.size() == 0) {
-            return; // Nothing to do here
+            return Collections.emptyList(); // Nothing to do here
         }
 
         if (inputValues.isEmpty()) {
             fail("No inputvalues were specified");
         }
+
+        List<ExpectationResult> expectationResults = new ArrayList<>(32);
 
         for (String inputValue : inputValues) {
             if (verbose) {
@@ -248,9 +367,12 @@ public final class DissectorTester implements Serializable {
 
             for (Map.Entry<String, String> expectation : expectedStrings.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertTrue("The expected String value for '" + fieldName + "' was missing.", result.hasStringValue(fieldName));
-                assertEquals("The expected String value for '" + fieldName + "' was wrong.",
-                    expectation.getValue(), result.getStringValue(fieldName));
+                if (!result.hasStringValue(fieldName)) {
+                    expectationResults.add(new ExpectationResult("String value", fieldName, expectation.getValue(), "Missing"));
+                } else {
+                    expectEquals(expectationResults, fieldName, "String value",
+                        expectation.getValue(), result.getStringValue(fieldName));
+                }
                 if (verbose) {
                     LOG.info("Passed: String value for '{}'{} was correctly : {}",
                         fieldName, padding(fieldName, longestFieldName), result.getStringValue(fieldName));
@@ -259,9 +381,12 @@ public final class DissectorTester implements Serializable {
 
             for (Map.Entry<String, Long> expectation : expectedLongs.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertTrue("The expected Long value for '" + fieldName + "' was missing.", result.hasLongValue(fieldName));
-                assertEquals("The expected Long value for '" + fieldName + "' was wrong.",
-                    expectation.getValue(), result.getLongValue(fieldName));
+                if (!result.hasLongValue(fieldName)) {
+                    expectationResults.add(new ExpectationResult("Long value", fieldName, expectation.getValue(), "Missing"));
+                } else {
+                    expectEquals(expectationResults, fieldName, "Long value",
+                        expectation.getValue(), result.getLongValue(fieldName));
+                }
                 if (verbose) {
                     LOG.info("Passed: Long   value for '{}'{} was correctly : {}",
                         fieldName, padding(fieldName, longestFieldName), result.getLongValue(fieldName));
@@ -270,9 +395,12 @@ public final class DissectorTester implements Serializable {
 
             for (Map.Entry<String, Double> expectation : expectedDoubles.entrySet()) {
                 String fieldName = expectation.getKey();
-                assertTrue("The expected Double value for '" + fieldName + "' was missing.", result.hasDoubleValue(fieldName));
-                assertEquals("The expected Double value for '" + fieldName + "' was wrong.",
-                    expectation.getValue(), result.getDoubleValue(fieldName));
+                if (!result.hasDoubleValue(fieldName)) {
+                    expectationResults.add(new ExpectationResult("Double value", fieldName, expectation.getValue(), "Missing"));
+                } else {
+                    expectEquals(expectationResults, fieldName, "Double value",
+                        expectation.getValue(), result.getDoubleValue(fieldName));
+                }
                 if (verbose) {
                     LOG.info("Passed: Double value for '{}'{} was correctly : {}",
                         fieldName, padding(fieldName, longestFieldName), result.getDoubleValue(fieldName));
@@ -280,25 +408,29 @@ public final class DissectorTester implements Serializable {
             }
 
             for (String fieldName: expectedValuePresent) {
-                assertTrue("The string value for '" + fieldName + "' was missing.", result.hasStringValue(fieldName));
+                expectationResults.add(new ExpectationResult("String present", fieldName, null, result.hasStringValue(fieldName) ? null : "Missing"));
+
                 if (verbose) {
                     LOG.info("Passed: A value for '{}'{} was present.", fieldName, padding(fieldName, longestFieldName));
                 }
             }
 
         }
+        return expectationResults;
     }
 
-    private void checkExpectedAbsent() {
+    private List<ExpectationResult> checkExpectedAbsent() {
         if (expectedAbsentStrings.size() +
             expectedAbsentLongs.size() +
             expectedAbsentDoubles.size() == 0) {
-            return; // Nothing to do here
+            return Collections.emptyList(); // Nothing to do here
         }
 
         if (inputValues.isEmpty()) {
             fail("No inputvalues were specified");
         }
+
+        List<ExpectationResult> expectationResults = new ArrayList<>(32);
 
         for (String inputValue : inputValues) {
             if (verbose) {
@@ -322,29 +454,30 @@ public final class DissectorTester implements Serializable {
             }
 
             for (String fieldName: expectedAbsentStrings) {
-                assertFalse("The String value for '" + fieldName + "' should have been absent. " +
-                    "It was :." + result.getStringValue(fieldName), result.hasStringValue(fieldName));
+                expectationResults.add(new ExpectationResult("String absent", fieldName,
+                    result.getStringValue(fieldName), result.hasStringValue(fieldName) ? "Present" : null));
                 if (verbose) {
                     LOG.info("Passed: String value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
             }
 
             for (String fieldName: expectedAbsentLongs) {
-                assertFalse("The Long value for '" + fieldName + "' should have been absent. " +
-                    "It was :." + result.getLongValue(fieldName), result.hasLongValue(fieldName));
+                expectationResults.add(new ExpectationResult("Long absent", fieldName,
+                    result.getLongValue(fieldName), result.hasLongValue(fieldName) ? "Present" : null));
                 if (verbose) {
                     LOG.info("Passed: Long value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
             }
 
             for (String fieldName: expectedAbsentDoubles) {
-                assertFalse("The Double value for '" + fieldName + "' should have been absent. " +
-                    "It was :." + result.getDoubleValue(fieldName), result.hasDoubleValue(fieldName));
+                expectationResults.add(new ExpectationResult("Double absent", fieldName,
+                    result.getDoubleValue(fieldName), result.hasDoubleValue(fieldName) ? "Present" : null));
                 if (verbose) {
                     LOG.info("Passed: Double value for '{}'{} was correctly absent", fieldName, padding(fieldName, longestFieldName));
                 }
             }
         }
+        return expectationResults;
     }
 
     private TestRecord parse(String inputValue) {
@@ -360,40 +493,68 @@ public final class DissectorTester implements Serializable {
         return testRecord; // This will never happen
     }
 
-    private void checkExpectedPossible() {
+    private List<ExpectationResult> checkExpectedPossible() {
+        List<ExpectationResult> expectationResults = new ArrayList<>(32);
+
         int longestFieldName = 0;
-        for (String fieldName : expectedValuePresent) {
+        for (String fieldName : expectedPossible) {
             longestFieldName = Math.max(longestFieldName, fieldName.length());
         }
 
         List<String> allpossible = parser.getPossiblePaths();
         for (String fieldName: expectedPossible) {
-            assertTrue("The fieldName '" + fieldName + "' is not possible.", allpossible.contains(fieldName));
+            expectationResults.add(new ExpectationResult("Fieldname possible", fieldName,
+                null, allpossible.contains(fieldName) ? null : "Not possible"));
             if (verbose) {
                 LOG.info("Passed: Fieldname '{}'{} is possible.", fieldName, padding(fieldName, longestFieldName));
             }
         }
+        return expectationResults;
     }
 
-    private void checkDissectors() {
+    private List<ExpectationResult> checkDissectors() {
+        List<ExpectationResult> results = new ArrayList<>();
         Set<Dissector> dissectors = parser.getAllDissectors();
         for (Dissector dissector: dissectors) {
             for (String output: dissector.getPossibleOutput()) {
-                String baseMsg = "Dissector " + dissector.getClass().getSimpleName() + " outputs " + output;
+//                String baseMsg = "Dissector " + dissector.getClass().getSimpleName() + " outputs " + output;
                 String[] splitOutput = output.split(":", 2);
-                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
-                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
+                if (!splitOutput[0].toUpperCase(Locale.ENGLISH).equals(splitOutput[0])) {
+                    results.add(new ExpectationResult("Dissector input type is UPPERcase",
+                        dissector.getClass().getSimpleName() + " --> " + output,
+                        splitOutput[0].toUpperCase(Locale.ENGLISH),
+                        "\"" + splitOutput[0] + "\" is not fully uppercase."));
+                }
+
+                if (!splitOutput[1].toLowerCase(Locale.ENGLISH).equals(splitOutput[1])) {
+                    results.add(new ExpectationResult("Dissector output name is lowercase",
+                        dissector.getClass().getSimpleName() + " --> " + output,
+                        splitOutput[1].toLowerCase(Locale.ENGLISH),
+                        "\"" + splitOutput[1] + "\" is not fully uppercase."));
+                }
+//                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
+//                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
         }
+        return results;
     }
 
     private String padding(String name, int longestFieldName) {
-        int i = longestFieldName - name.length();
-        if (i == 0) {
+        return padding(name, longestFieldName, ' ');
+    }
+
+    private String padding(String name, int longestFieldName, char pad) {
+        int length = longestFieldName - name.length();
+        if (length == 0) {
             return "";
         }
-        return String.format(Locale.ENGLISH, "%" + i + "s", "");
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(pad);
+        }
+        return sb.toString();
     }
+
 
     public DissectorTester printDissectors() {
         LOG.info("=====================================================");
