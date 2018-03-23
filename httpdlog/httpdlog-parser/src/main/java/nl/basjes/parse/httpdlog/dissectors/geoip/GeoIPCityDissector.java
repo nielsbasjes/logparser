@@ -95,10 +95,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             return result;
         }
 
-        String name = outputname;
-        if (!inputname.isEmpty()) {
-            name = outputname.substring(inputname.length() + 1);
-        }
+        String name = extractFieldName(inputname, outputname);
 
         if ("subdivision.name".equals(name)) {
             wantSubdivisionName = true;

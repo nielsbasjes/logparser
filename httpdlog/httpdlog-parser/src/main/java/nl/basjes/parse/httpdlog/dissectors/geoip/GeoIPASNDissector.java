@@ -53,10 +53,7 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        String name = outputname;
-        if (!inputname.isEmpty()) {
-            name = outputname.substring(inputname.length() + 1);
-        }
+        String name = extractFieldName(inputname, outputname);
 
         if ("asn.number".equals(name)) {
             wantAsnNumber = true;

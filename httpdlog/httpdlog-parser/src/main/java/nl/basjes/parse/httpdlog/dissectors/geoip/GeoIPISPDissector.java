@@ -56,10 +56,7 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
         if (result != null) {
             return result;
         }
-        String name = outputname;
-        if (!inputname.isEmpty()) {
-            name = outputname.substring(inputname.length() + 1);
-        }
+        String name = extractFieldName(inputname, outputname);
 
         if ("isp.name".equals(name)) {
             wantIspName = true;
