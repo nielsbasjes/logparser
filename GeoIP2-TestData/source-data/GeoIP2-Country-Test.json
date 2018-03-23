@@ -19,6 +19,7 @@
         "geoname_id": 2750405,
         "is_in_european_union": true,
         "iso_code": "NL",
+        "confidence": 42,
         "names": {
           "de": "Niederlande",
           "en": "Netherlands",
@@ -67,6 +68,7 @@
         "geoname_id": 2750405,
         "is_in_european_union": true,
         "iso_code": "NL",
+        "confidence": 42,
         "names": {
           "de": "Niederlande",
           "en": "Netherlands",

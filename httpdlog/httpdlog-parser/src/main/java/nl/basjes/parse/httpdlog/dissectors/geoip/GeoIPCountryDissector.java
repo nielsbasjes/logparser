@@ -49,14 +49,21 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
         result.add("STRING:continent.code");
         result.add("STRING:country.name");
         result.add("STRING:country.iso");
+        result.add("NUMBER:country.getconfidence");
+        result.add("BOOLEAN:country.isineuropeanunion");
 
         return result;
     }
 
-    private boolean wantContinentName   = false;
-    private boolean wantContinentCode   = false;
-    private boolean wantCountryName     = false;
-    private boolean wantCountryIso      = false;
+    private boolean wantContinentName               = false;
+    private boolean wantContinentCode               = false;
+    private boolean wantAnyContinent                = false;
+
+    private boolean wantCountryName                 = false;
+    private boolean wantCountryIso                  = false;
+    private boolean wantCountryGetConfidence        = false;
+    private boolean wantCountryIsInEuropeanUnion    = false;
+    private boolean wantAnyCountry                  = false;
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
@@ -67,20 +74,36 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
 
         if ("continent.name".equals(name)) {
             wantContinentName = true;
+            wantAnyContinent = true;
             return Casts.STRING_ONLY;
         }
         if ("continent.code".equals(name)) {
             wantContinentCode = true;
+            wantAnyContinent = true;
             return Casts.STRING_ONLY;
         }
         if ("country.name".equals(name)) {
             wantCountryName = true;
+            wantAnyCountry = true;
             return Casts.STRING_ONLY;
         }
         if ("country.iso".equals(name)) {
             wantCountryIso = true;
+            wantAnyCountry = true;
             return Casts.STRING_ONLY;
         }
+
+        if ("country.getconfidence".equals(name)) {
+            wantCountryGetConfidence = true;
+            wantAnyCountry = true;
+            return Casts.STRING_OR_LONG;
+        }
+        if ("country.isineuropeanunion".equals(name)) {
+            wantCountryIsInEuropeanUnion = true;
+            wantAnyCountry = true;
+            return Casts.STRING_OR_LONG;
+        }
+
         return null;
     }
 
@@ -103,25 +126,34 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
 
     protected void extractCountryFields(final Parsable<?> parsable, final String inputname, AbstractCountryResponse response)
         throws DissectionFailure {
-        Continent continent = response.getContinent();
-        if (continent != null) {
-            if (wantContinentName) {
-                parsable.addDissection(inputname, "STRING", "continent.name", continent.getName());
-            }
-            if (wantContinentCode) {
-                parsable.addDissection(inputname, "STRING", "continent.code", continent.getCode());
+        if (wantAnyContinent) {
+            Continent continent = response.getContinent();
+            if (continent != null) {
+                if (wantContinentName) {
+                    parsable.addDissection(inputname, "STRING", "continent.name", continent.getName());
+                }
+                if (wantContinentCode) {
+                    parsable.addDissection(inputname, "STRING", "continent.code", continent.getCode());
+                }
             }
         }
-        Country country = response.getCountry();
-        if (country != null) {
-            if (wantCountryName) {
-                parsable.addDissection(inputname, "STRING", "country.name", country.getName());
+        if (wantAnyCountry) {
+            Country country = response.getCountry();
+            if (country != null) {
+                if (wantCountryName) {
+                    parsable.addDissection(inputname, "STRING", "country.name", country.getName());
+                }
+                if (wantCountryIso) {
+                    parsable.addDissection(inputname, "STRING", "country.iso", country.getIsoCode());
+                }
+
+                if (wantCountryGetConfidence) {
+                    parsable.addDissection(inputname, "NUMBER", "country.getconfidence", country.getConfidence());
+                }
+                if (wantCountryIsInEuropeanUnion) {
+                    parsable.addDissection(inputname, "BOOLEAN", "country.isineuropeanunion", country.isInEuropeanUnion() ? 1L : 0L);
+                }
             }
-            if (wantCountryIso) {
-                parsable.addDissection(inputname, "STRING", "country.iso", country.getIsoCode());
-            }
-            // TODO: country.getConfidence();
-            // TODO: country.isInEuropeanUnion();
         }
     }
     // --------------------------------------------

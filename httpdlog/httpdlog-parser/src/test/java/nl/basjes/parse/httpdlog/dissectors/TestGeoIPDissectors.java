@@ -71,10 +71,14 @@ public class TestGeoIPDissectors {
         DissectorTester.create()
             .withInput("80.100.47.45")
             .withDissector(dissector)
-            .expect("STRING:continent.name",        "Europe")
-            .expect("STRING:continent.code",        "EU")
-            .expect("STRING:country.name",          "Netherlands")
-            .expect("STRING:country.iso",           "NL")
+            .expect("STRING:continent.name",                "Europe")
+            .expect("STRING:continent.code",                "EU")
+            .expect("STRING:country.name",                  "Netherlands")
+            .expect("STRING:country.iso",                   "NL")
+            .expect("NUMBER:country.getconfidence",         "42")
+            .expect("NUMBER:country.getconfidence",         42L)
+            .expect("BOOLEAN:country.isineuropeanunion",    "1")
+            .expect("BOOLEAN:country.isineuropeanunion",    1L)
             .checkExpectations();
     }
 
@@ -91,6 +95,10 @@ public class TestGeoIPDissectors {
 
             .expect("STRING:country.name",                  "Netherlands")
             .expect("STRING:country.iso",                   "NL")
+            .expect("NUMBER:country.getconfidence",         "42")
+            .expect("NUMBER:country.getconfidence",         42L)
+            .expect("BOOLEAN:country.isineuropeanunion",    "1")
+            .expect("BOOLEAN:country.isineuropeanunion",    1L)
 
             .expect("STRING:subdivision.name",              "Noord Holland")
             .expect("STRING:subdivision.iso",               "NH")
@@ -154,10 +162,14 @@ public class TestGeoIPDissectors {
         DissectorTester.create()
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .withDissector(dissector)
-            .expect("STRING:continent.name",        "Europe")
-            .expect("STRING:continent.code",        "EU")
-            .expect("STRING:country.name",          "Netherlands")
-            .expect("STRING:country.iso",           "NL")
+            .expect("STRING:continent.name",                    "Europe")
+            .expect("STRING:continent.code",                    "EU")
+            .expect("STRING:country.name",                      "Netherlands")
+            .expect("STRING:country.iso",                       "NL")
+            .expect("NUMBER:country.getconfidence",             "42")
+            .expect("NUMBER:country.getconfidence",             42L)
+            .expect("BOOLEAN:country.isineuropeanunion",        1L)
+            .expect("BOOLEAN:country.isineuropeanunion",        "1")
             .checkExpectations();
     }
 
@@ -174,6 +186,10 @@ public class TestGeoIPDissectors {
 
             .expect("STRING:country.name",                      "Netherlands")
             .expect("STRING:country.iso",                       "NL")
+            .expect("NUMBER:country.getconfidence",             "42")
+            .expect("NUMBER:country.getconfidence",             42L)
+            .expect("BOOLEAN:country.isineuropeanunion",        "1")
+            .expect("BOOLEAN:country.isineuropeanunion",        1L)
 
             .expect("STRING:subdivision.name",                  "Noord Holland")
             .expect("STRING:subdivision.iso",                   "NH")
@@ -241,6 +257,10 @@ public class TestGeoIPDissectors {
             .expectAbsentString("STRING:continent.code")
             .expectAbsentString("STRING:country.name")
             .expectAbsentString("STRING:country.iso")
+            .expectAbsentString("NUMBER:country.getconfidence")
+            .expectAbsentLong("NUMBER:country.getconfidence")
+            .expectAbsentString("BOOLEAN:country.isineuropeanunion")
+            .expectAbsentLong("BOOLEAN:country.isineuropeanunion")
             .checkExpectations();
     }
 
@@ -256,14 +276,17 @@ public class TestGeoIPDissectors {
             .expectAbsentString("STRING:continent.code")
             .expectAbsentString("STRING:country.name")
             .expectAbsentString("STRING:country.iso")
+            .expectAbsentString("NUMBER:country.getconfidence")
+            .expectAbsentLong("NUMBER:country.getconfidence")
+            .expectAbsentString("BOOLEAN:country.isineuropeanunion")
+            .expectAbsentLong("BOOLEAN:country.isineuropeanunion")
             .expectAbsentString("STRING:city.name")
             .expectAbsentString("STRING:postal.code")
             .expectAbsentString("STRING:location.latitude")
-            .expectAbsentString("STRING:location.latitude")
+            .expectAbsentDouble("STRING:location.latitude")
             .expectAbsentString("STRING:location.longitude")
-            .expectAbsentString("STRING:location.longitude")
+            .expectAbsentDouble("STRING:location.longitude")
             .checkExpectations();
     }
-
 
 }
