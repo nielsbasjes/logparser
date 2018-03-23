@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.fail;
 
@@ -56,6 +57,7 @@ public final class DissectorTester implements Serializable {
     private List<String> expectedAbsentDoubles = new ArrayList<>();
     private List<String> expectedPossible = new ArrayList<>();
     private Parser<TestRecord> parser = new Parser<>(TestRecord.class);
+    private String pathPrefix = "";
 
     private DissectorTester() {
     }
@@ -122,30 +124,35 @@ public final class DissectorTester implements Serializable {
     }
 
     public DissectorTester expect(String fieldname, String expected) {
+        fieldname = addPrefix(fieldname);
         expectedStrings.put(fieldname, expected);
         addStringSetter(fieldname);
         return this;
     }
 
     public DissectorTester expect(String fieldname, Long expected) {
+        fieldname = addPrefix(fieldname);
         expectedLongs.put(fieldname, expected);
         addLongSetter(fieldname);
         return this;
     }
 
     public DissectorTester expect(String fieldname, Double expected) {
+        fieldname = addPrefix(fieldname);
         expectedDoubles.put(fieldname, expected);
         addDoubleSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectNull(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedStrings.put(fieldname, null);
         addStringSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectValuePresent(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedValuePresent.add(fieldname);
         try {
             parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), fieldname);
@@ -156,24 +163,28 @@ public final class DissectorTester implements Serializable {
     }
 
     public DissectorTester expectAbsentString(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedAbsentStrings.add(fieldname);
         addStringSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectAbsentLong(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedAbsentLongs.add(fieldname);
         addLongSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectAbsentDouble(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedAbsentDoubles.add(fieldname);
         addDoubleSetter(fieldname);
         return this;
     }
 
     public DissectorTester expectPossible(String fieldname) {
+        fieldname = addPrefix(fieldname);
         expectedPossible.add(fieldname);
         return this;
     }
@@ -181,6 +192,24 @@ public final class DissectorTester implements Serializable {
     public DissectorTester verbose() {
         this.verbose = true;
         return this;
+    }
+
+    private Pattern prefixInserter = Pattern.compile("([^:]+:)([^:]+)");
+
+    public DissectorTester withPathPrefix(String prefix) {
+        if (prefix == null || prefix.isEmpty()) {
+            pathPrefix = "";
+        } else {
+            pathPrefix = "$1" + prefix + "$2";
+        }
+        return this;
+    }
+
+    String addPrefix(String field) {
+        if (pathPrefix.isEmpty()) {
+            return field;
+        }
+        return prefixInserter.matcher(field).replaceAll(pathPrefix);
     }
 
     private static class ExpectationResult {
