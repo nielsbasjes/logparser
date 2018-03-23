@@ -17,7 +17,10 @@
 
 package nl.basjes.parse.httpdlog.dissectors;
 
+import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.test.DissectorTester;
+import nl.basjes.parse.core.test.TestRecord;
+import nl.basjes.parse.httpdlog.HttpdLoglineParser;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCountryDissector;
@@ -32,15 +35,27 @@ public class TestGeoIPDissectors {
     private static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
     private static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
 
+    DissectorTester createTester(Dissector dissector) {
+        return DissectorTester.create()
+            .withDissector(dissector)
+            .withPathPrefix("");
+    }
+
+    public static class TestGeoIPDissectorsWithPrefix extends TestGeoIPDissectors {
+        // We run the SAME tests again but now wrapped in a parser that does things with a prefix.
+        DissectorTester createTester(Dissector dissector) {
+            return DissectorTester.create()
+                .withParser(new HttpdLoglineParser<>(TestRecord.class, "%h"))
+                .withDissector(dissector)
+                .withPathPrefix("connection.client.host.");
+        }
+    }
+
     // Tests with IPv4
     @Test
     public void testGeoIPASN() {
-        GeoIPASNDissector dissector = new GeoIPASNDissector();
-        dissector.initializeFromSettingsParameter(ASN_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("80.100.47.45")
-            .withDissector(dissector)
             .expect("ASN:asn.number",               "4444")
             .expect("ASN:asn.number",               4444L)
             .expect("STRING:asn.organization",      "Basjes Global Network")
@@ -49,12 +64,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPISP() {
-        GeoIPISPDissector dissector = new GeoIPISPDissector();
-        dissector.initializeFromSettingsParameter(ISP_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("80.100.47.45")
-            .withDissector(dissector)
             .expect("ASN:asn.number",               "4444")
             .expect("ASN:asn.number",               4444L)
             .expect("STRING:asn.organization",      "Basjes Global Network")
@@ -65,12 +76,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCountry() {
-        GeoIPCountryDissector dissector = new GeoIPCountryDissector();
-        dissector.initializeFromSettingsParameter(COUNTRY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("80.100.47.45")
-            .withDissector(dissector)
             .expect("STRING:continent.name",                "Europe")
             .expect("STRING:continent.code",                "EU")
             .expect("STRING:country.name",                  "Netherlands")
@@ -84,12 +91,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCity() {
-        GeoIPCityDissector dissector = new GeoIPCityDissector();
-        dissector.initializeFromSettingsParameter(CITY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("80.100.47.45")
-            .withDissector(dissector)
             .expect("STRING:continent.name",                "Europe")
             .expect("STRING:continent.code",                "EU")
 
@@ -126,12 +129,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPASNIpv6() {
-        GeoIPASNDissector dissector = new GeoIPASNDissector();
-        dissector.initializeFromSettingsParameter(ASN_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
-            .withDissector(dissector)
             .expect("ASN:asn.number",               "6666")
             .expect("ASN:asn.number",               6666L)
             .expect("STRING:asn.organization",      "Basjes Global Network IPv6")
@@ -140,12 +139,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPISPIpv6() {
-        GeoIPISPDissector dissector = new GeoIPISPDissector();
-        dissector.initializeFromSettingsParameter(ISP_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
-            .withDissector(dissector)
             .expect("ASN:asn.number",               "6666")
             .expect("ASN:asn.number",               6666L)
             .expect("STRING:asn.organization",      "Basjes Global Network IPv6")
@@ -156,12 +151,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCountryIpv6() {
-        GeoIPCountryDissector dissector = new GeoIPCountryDissector();
-        dissector.initializeFromSettingsParameter(COUNTRY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
-            .withDissector(dissector)
             .expect("STRING:continent.name",                    "Europe")
             .expect("STRING:continent.code",                    "EU")
             .expect("STRING:country.name",                      "Netherlands")
@@ -175,12 +166,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCityIpv6() {
-        GeoIPCityDissector dissector = new GeoIPCityDissector();
-        dissector.initializeFromSettingsParameter(CITY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
-            .withDissector(dissector)
             .expect("STRING:continent.name",                    "Europe")
             .expect("STRING:continent.code",                    "EU")
 
@@ -217,12 +204,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPISPLocalhost() {
-        GeoIPISPDissector dissector = new GeoIPISPDissector();
-        dissector.initializeFromSettingsParameter(ISP_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("127.0.0.1")
-            .withDissector(dissector)
             .expectAbsentString("ASN:asn.number")
             .expectAbsentLong("ASN:asn.number")
             .expectAbsentString("STRING:asn.organization")
@@ -233,12 +216,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPASNLocalhost() {
-        GeoIPASNDissector dissector = new GeoIPASNDissector();
-        dissector.initializeFromSettingsParameter(ASN_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("127.0.0.1")
-            .withDissector(dissector)
             .expectAbsentString("ASN:asn.number")
             .expectAbsentLong("ASN:asn.number")
             .expectAbsentString("STRING:asn.organization")
@@ -247,12 +226,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCountryLocalhost() {
-        GeoIPCountryDissector dissector = new GeoIPCountryDissector();
-        dissector.initializeFromSettingsParameter(COUNTRY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("127.0.0.1")
-            .withDissector(dissector)
             .expectAbsentString("STRING:continent.name")
             .expectAbsentString("STRING:continent.code")
             .expectAbsentString("STRING:country.name")
@@ -266,12 +241,8 @@ public class TestGeoIPDissectors {
 
     @Test
     public void testGeoIPCityLocalhost() {
-        GeoIPCityDissector dissector = new GeoIPCityDissector();
-        dissector.initializeFromSettingsParameter(CITY_TEST_MMDB);
-
-        DissectorTester.create()
+        createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("127.0.0.1")
-            .withDissector(dissector)
             .expectAbsentString("STRING:continent.name")
             .expectAbsentString("STRING:continent.code")
             .expectAbsentString("STRING:country.name")
