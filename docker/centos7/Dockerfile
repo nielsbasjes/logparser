@@ -31,5 +31,6 @@ ENV M2_HOME /usr/local/apache-maven
 ENV PATH ${M2_HOME}/bin:${PATH}
 
 # Install Pig
+RUN rpm --import http://www.apache.org/dist/bigtop/bigtop-1.2.1/repos/GPG-KEY-bigtop
 RUN yum-config-manager --add-repo http://www.apache.org/dist/bigtop/bigtop-1.2.1/repos/centos7/bigtop.repo
 RUN yum install -y pig
