@@ -30,6 +30,7 @@ import java.util.List;
 
 public class GeoIPASNDissector extends AbstractGeoIPDissector {
 
+    @SuppressWarnings("unused") // Used via reflection
     public GeoIPASNDissector() {
         super();
     }
@@ -55,15 +56,18 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = extractFieldName(inputname, outputname);
 
-        if ("asn.number".equals(name)) {
-            wantAsnNumber = true;
-            return Casts.STRING_OR_LONG;
+        switch (name) {
+            case "asn.number":
+                wantAsnNumber = true;
+                return Casts.STRING_OR_LONG;
+
+            case "asn.organization":
+                wantAsnOrganization = true;
+                return Casts.STRING_ONLY;
+
+            default:
+                return null;
         }
-        if ("asn.organization".equals(name)) {
-            wantAsnOrganization = true;
-            return Casts.STRING_ONLY;
-        }
-        return null;
     }
 
     // --------------------------------------------

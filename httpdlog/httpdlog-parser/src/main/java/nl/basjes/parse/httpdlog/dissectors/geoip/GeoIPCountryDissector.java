@@ -33,6 +33,7 @@ import java.util.List;
 
 public class GeoIPCountryDissector extends AbstractGeoIPDissector {
 
+    @SuppressWarnings("unused") // Used via reflection
     public GeoIPCountryDissector() {
         super();
     }
@@ -69,39 +70,40 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = extractFieldName(inputname, outputname);
 
-        if ("continent.name".equals(name)) {
-            wantContinentName = true;
-            wantAnyContinent = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("continent.code".equals(name)) {
-            wantContinentCode = true;
-            wantAnyContinent = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("country.name".equals(name)) {
-            wantCountryName = true;
-            wantAnyCountry = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("country.iso".equals(name)) {
-            wantCountryIso = true;
-            wantAnyCountry = true;
-            return Casts.STRING_ONLY;
-        }
+        switch (name) {
+            case "continent.name":
+                wantContinentName = true;
+                wantAnyContinent = true;
+                return Casts.STRING_ONLY;
 
-        if ("country.getconfidence".equals(name)) {
-            wantCountryGetConfidence = true;
-            wantAnyCountry = true;
-            return Casts.STRING_OR_LONG;
-        }
-        if ("country.isineuropeanunion".equals(name)) {
-            wantCountryIsInEuropeanUnion = true;
-            wantAnyCountry = true;
-            return Casts.STRING_OR_LONG;
-        }
+            case "continent.code":
+                wantContinentCode = true;
+                wantAnyContinent = true;
+                return Casts.STRING_ONLY;
 
-        return null;
+            case "country.name":
+                wantCountryName = true;
+                wantAnyCountry = true;
+                return Casts.STRING_ONLY;
+
+            case "country.iso":
+                wantCountryIso = true;
+                wantAnyCountry = true;
+                return Casts.STRING_ONLY;
+
+            case "country.getconfidence":
+                wantCountryGetConfidence = true;
+                wantAnyCountry = true;
+                return Casts.STRING_OR_LONG;
+
+            case "country.isineuropeanunion":
+                wantCountryIsInEuropeanUnion = true;
+                wantAnyCountry = true;
+                return Casts.STRING_OR_LONG;
+
+            default:
+                return null;
+        }
     }
 
     // --------------------------------------------

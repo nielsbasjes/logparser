@@ -108,6 +108,7 @@ public class TestGeoIPDissectors {
 
             .expect("STRING:city.name",                     "Amstelveen")
             .expect("NUMBER:city.confidence",               1L)
+            .expect("NUMBER:city.geonameid",                1234L)
 
             .expect("STRING:postal.code",                   "1187")
             .expect("NUMBER:postal.confidence",             2L)
@@ -183,6 +184,7 @@ public class TestGeoIPDissectors {
 
             .expect("STRING:city.name",                         "Amstelveen")
             .expect("NUMBER:city.confidence",                   11L)
+            .expect("NUMBER:city.geonameid",                    1234L)
 
             .expect("STRING:postal.code",                       "1187")
             .expect("NUMBER:postal.confidence",                 12L)

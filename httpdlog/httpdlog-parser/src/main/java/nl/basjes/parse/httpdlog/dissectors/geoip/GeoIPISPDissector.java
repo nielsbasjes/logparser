@@ -29,6 +29,7 @@ import java.util.List;
 
 public class GeoIPISPDissector extends GeoIPASNDissector {
 
+    @SuppressWarnings("unused") // Used via reflection
     public GeoIPISPDissector() {
         super();
     }
@@ -58,15 +59,18 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
         }
         String name = extractFieldName(inputname, outputname);
 
-        if ("isp.name".equals(name)) {
-            wantIspName = true;
-            return Casts.STRING_ONLY;
+        switch (name) {
+            case "isp.name":
+                wantIspName = true;
+                return Casts.STRING_ONLY;
+
+            case "isp.organization":
+                wantIspOrganization = true;
+                return Casts.STRING_ONLY;
+
+            default:
+                return null;
         }
-        if ("isp.organization".equals(name)) {
-            wantIspOrganization = true;
-            return Casts.STRING_ONLY;
-        }
-        return null;
     }
 
     // --------------------------------------------

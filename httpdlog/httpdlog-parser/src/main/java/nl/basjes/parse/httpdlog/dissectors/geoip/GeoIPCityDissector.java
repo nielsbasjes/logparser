@@ -34,6 +34,7 @@ import java.util.List;
 
 public class GeoIPCityDissector extends GeoIPCountryDissector {
 
+    @SuppressWarnings("unused") // Used via reflection
     public GeoIPCityDissector() {
         super();
     }
@@ -51,6 +52,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
 
         result.add("STRING:city.name");
         result.add("NUMBER:city.confidence");
+        result.add("NUMBER:city.geonameid");
 
         result.add("STRING:postal.code");
         result.add("NUMBER:postal.confidence");
@@ -72,6 +74,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
 
     private boolean wantCityName                   = false;
     private boolean wantCityConfidence             = false;
+    private boolean wantCityGeoNameId              = false;
     private boolean wantAnyCity                    = false;
 
     private boolean wantPostalCode                 = false;
@@ -97,76 +100,86 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
 
         String name = extractFieldName(inputname, outputname);
 
-        if ("subdivision.name".equals(name)) {
-            wantSubdivisionName = true;
-            wantAnySubdivision = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("subdivision.iso".equals(name)) {
-            wantSubdivisionIso = true;
-            wantAnySubdivision = true;
-            return Casts.STRING_ONLY;
-        }
+        switch (name) {
 
-        if ("city.name".equals(name)) {
-            wantCityName = true;
-            wantAnyCity = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("city.confidence".equals(name)) {
-            wantCityConfidence = true;
-            wantAnyCity = true;
-            return Casts.STRING_OR_LONG;
-        }
+            case "subdivision.name":
+                wantSubdivisionName = true;
+                wantAnySubdivision = true;
+                return Casts.STRING_ONLY;
 
-        if ("postal.code".equals(name)) {
-            wantPostalCode = true;
-            wantAnyPostal = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("postal.confidence".equals(name)) {
-            wantPostalConfidence = true;
-            wantAnyPostal = true;
-            return Casts.STRING_OR_LONG;
-        }
+            case "subdivision.iso":
+                wantSubdivisionIso = true;
+                wantAnySubdivision = true;
+                return Casts.STRING_ONLY;
 
-        if ("location.latitude".equals(name)) {
-            wantLocationLatitude = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_DOUBLE;
-        }
-        if ("location.longitude".equals(name)) {
-            wantLocationLongitude = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_DOUBLE;
-        }
-        if ("location.accuracyradius".equals(name)) {
-            wantLocationAccuracyradius = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_LONG;
-        }
-        if ("location.timezone".equals(name)) {
-            wantLocationTimezone = true;
-            wantAnyLocation = true;
-            return Casts.STRING_ONLY;
-        }
-        if ("location.averageincome".equals(name)) {
-            wantLocationAverageincome = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_LONG;
-        }
-        if ("location.metrocode".equals(name)) {
-            wantLocationMetrocode = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_LONG;
-        }
-        if ("location.populationdensity".equals(name)) {
-            wantLocationPopulationdensity = true;
-            wantAnyLocation = true;
-            return Casts.STRING_OR_LONG;
-        }
+            // ---------------------------------
 
-        return null;
+            case "city.name":
+                wantCityName = true;
+                wantAnyCity = true;
+                return Casts.STRING_ONLY;
+
+            case "city.confidence":
+                wantCityConfidence = true;
+                wantAnyCity = true;
+                return Casts.STRING_OR_LONG;
+
+            case "city.geonameid":
+                wantCityGeoNameId = true;
+                wantAnyCity = true;
+                return Casts.STRING_OR_LONG;
+
+            // ---------------------------------
+
+            case "postal.code":
+                wantPostalCode = true;
+                wantAnyPostal = true;
+                return Casts.STRING_ONLY;
+
+            case "postal.confidence":
+                wantPostalConfidence = true;
+                wantAnyPostal = true;
+                return Casts.STRING_OR_LONG;
+
+            // ---------------------------------
+
+            case "location.latitude":
+                wantLocationLatitude = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_DOUBLE;
+
+            case "location.longitude":
+                wantLocationLongitude = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_DOUBLE;
+
+            case "location.accuracyradius":
+                wantLocationAccuracyradius = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_LONG;
+
+            case "location.timezone":
+                wantLocationTimezone = true;
+                wantAnyLocation = true;
+                return Casts.STRING_ONLY;
+
+            case "location.averageincome":
+                wantLocationAverageincome = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_LONG;
+
+            case "location.metrocode":
+                wantLocationMetrocode = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_LONG;
+
+            case "location.populationdensity":
+                wantLocationPopulationdensity = true;
+                wantAnyLocation = true;
+                return Casts.STRING_OR_LONG;
+            default:
+                return null;
+        }
     }
 
     // --------------------------------------------
@@ -209,6 +222,9 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
                 }
                 if (wantCityConfidence) {
                     parsable.addDissection(inputname, "NUMBER", "city.confidence", city.getConfidence());
+                }
+                if (wantCityGeoNameId) {
+                    parsable.addDissection(inputname, "NUMBER", "city.geonameid", city.getGeoNameId());
                 }
             }
         }
