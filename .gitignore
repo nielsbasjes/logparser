@@ -41,4 +41,5 @@ hadoop*.log
 rm-appsummary.log
 
 # Docker
-docker/_m2/repository/
+docker/_m2/
+docker/_gnupg/
