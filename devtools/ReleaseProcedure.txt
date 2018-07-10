@@ -26,13 +26,16 @@ git status
 mvn clean package
 mvn clean
 
-RELEASEVERSION=5.0
-NEXTVERSION=5.1
+RELEASEVERSION=5.1
+NEXTVERSION=5.2
 
 # Creating and publishing the new Tagging
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
 
 # Update the version number in all of the examples in the README*md files
+sed -i "s@<version>[0-9\.]*</version>@<version>${RELEASEVERSION}</version>@g" *md
+git diff README*.md
+
 vim README*.md
 
 git status
