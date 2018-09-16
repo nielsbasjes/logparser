@@ -103,7 +103,7 @@
         <executions>
           <!--<execution>-->
             <!--<id>schemas</id>-->
-            <!--<phase>process-resources</phase>-->
+            <!--<phase>generate-sources</phase>-->
             <!--<goals>-->
               <!--<goal>schema</goal>-->
               <!--<goal>protocol</goal>-->
@@ -117,7 +117,7 @@
           <!--</execution>-->
           <execution>
             <id>test-schemas</id>
-            <phase>process-test-resources</phase>
+            <phase>generate-test-sources</phase>
             <goals>
               <goal>schema</goal>
               <goal>protocol</goal>
