@@ -523,6 +523,9 @@ public final class DissectorTester implements Serializable {
     }
 
     private List<ExpectationResult> checkExpectedPossible() {
+        if (expectedPossible.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<ExpectationResult> expectationResults = new ArrayList<>(32);
 
         int longestFieldName = 0;
