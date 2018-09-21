@@ -254,7 +254,11 @@ public final class DissectorTester implements Serializable {
 
     public DissectorTester checkExpectations() {
         DissectorTester tester = SerializationUtils.clone(this);
-        return tester.checkExpectationsDirect();
+        try {
+            return tester.checkExpectationsDirect();
+        } catch (AssertionError ae) {
+            throw new AssertionError(ae.getMessage());
+        }
     }
 
     private DissectorTester checkExpectationsDirect() {
