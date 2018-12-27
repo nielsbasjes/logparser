@@ -912,13 +912,13 @@ public class Parser<RECORD> implements Serializable {
      */
     public List<String> getPossiblePaths(int maxDepth) {
         if (allDissectors.isEmpty()) {
-            return null; // nothing to do.
+            return Collections.emptyList(); // nothing to do.
         }
 
         try {
             assembleDissectors();
         } catch (MissingDissectorsException | InvalidDissectorException e) {
-            // Should never occur
+            // Simply swallow this one
         }
         List<String> paths = new ArrayList<>();
 
@@ -928,7 +928,7 @@ public class Parser<RECORD> implements Serializable {
             final String inputType = dissector.getInputType();
             if (inputType == null) {
                 LOG.error("Dissector returns null on getInputType(): [{}]", dissector.getClass().getCanonicalName());
-                return null;
+                return Collections.emptyList();
             }
 
             final List<String> outputs = dissector.getPossibleOutput();
@@ -980,28 +980,30 @@ public class Parser<RECORD> implements Serializable {
 
         if (pathNodes.containsKey(baseType)) {
             List<String> childPaths = pathNodes.get(baseType);
-            for (String childPath : childPaths) {
-                final int colonPos = childPath.indexOf(':');
-                final String childType = childPath.substring(0, colonPos);
-                final String childName = childPath.substring(colonPos + 1);
+            if (childPaths != null) {
+                for (String childPath : childPaths) {
+                    final int colonPos = childPath.indexOf(':');
+                    final String childType = childPath.substring(0, colonPos);
+                    final String childName = childPath.substring(colonPos + 1);
 
-                String childBase;
-                if (base.isEmpty()) {
-                    childBase = childName;
-                } else {
-                    if (childName.isEmpty()) {
-                        childBase = base;
+                    String childBase;
+                    if (base.isEmpty()) {
+                        childBase = childName;
                     } else {
-                        childBase = base + '.' + childName;
+                        if (childName.isEmpty()) {
+                            childBase = base;
+                        } else {
+                            childBase = base + '.' + childName;
+                        }
                     }
-                }
 
-                String newPath = childType + ':' + childBase;
-                if (!paths.contains(newPath)) {
-                    LOG.debug("Possible:{} + {}", logPrefix, childType, childBase);
-                    paths.add(childType + ':' + childBase);
+                    String newPath = childType + ':' + childBase;
+                    if (!paths.contains(newPath)) {
+                        LOG.debug("Possible:{} + {}", logPrefix, childType, childBase);
+                        paths.add(childType + ':' + childBase);
 
-                    findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");
+                        findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");
+                    }
                 }
             }
         }

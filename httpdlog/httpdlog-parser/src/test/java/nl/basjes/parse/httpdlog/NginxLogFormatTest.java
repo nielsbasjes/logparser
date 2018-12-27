@@ -387,6 +387,7 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$nginx_version",            "1.10.0",                              "STRING:server.nginx.version",                                "1.10.0"));
         fieldsTests.add(new SingleFieldTestcase("$pid",                      "5137",                                "NUMBER:connection.server.child.processid",                   "5137"));
         fieldsTests.add(new SingleFieldTestcase("$pipe",                     ".",                                   "STRING:connection.nginx.pipe",                               "."));
+        fieldsTests.add(new SingleFieldTestcase("$pipe",                     "p",                                   "STRING:connection.nginx.pipe",                               "p"));
         fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr",      "",                                    "IP:connection.client.proxy.host",                            ""));
         fieldsTests.add(new SingleFieldTestcase("$request",                  "GET /?aap&noot=&mies=wim HTTP/1.1",   "HTTP.FIRSTLINE:request.firstline",                           "GET /?aap&noot=&mies=wim HTTP/1.1"));
         fieldsTests.add(new SingleFieldTestcase("$request_completion",       "OK",                                  "STRING:request.completion",                                  "OK"));

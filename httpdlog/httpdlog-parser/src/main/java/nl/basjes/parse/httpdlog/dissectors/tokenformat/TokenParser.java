@@ -33,12 +33,12 @@ public class TokenParser implements Serializable {
 
     // ---------------------------------------
     public static final String FORMAT_DIGIT = "[0-9]";
-    public static final String FORMAT_NUMBER = FORMAT_DIGIT + "*";
+    public static final String FORMAT_NUMBER = FORMAT_DIGIT + "+";
     public static final String FORMAT_CLF_NUMBER = FORMAT_NUMBER + "|-";
     public static final String FORMAT_HEXDIGIT = "[0-9a-fA-F]";
-    public static final String FORMAT_HEXNUMBER = FORMAT_HEXDIGIT + "*";
+    public static final String FORMAT_HEXNUMBER = FORMAT_HEXDIGIT + "+";
     public static final String FORMAT_CLF_HEXNUMBER = FORMAT_HEXNUMBER + "|-";
-    public static final String FORMAT_NON_ZERO_NUMBER = "[1-9]|[1-9][0-9]*";
+    public static final String FORMAT_NON_ZERO_NUMBER = "[1-9][0-9]*";
     public static final String FORMAT_CLF_NON_ZERO_NUMBER = FORMAT_NON_ZERO_NUMBER + "|-";
     public static final String FORMAT_EIGHT_BIT_DECIMAL = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 
@@ -50,7 +50,7 @@ public class TokenParser implements Serializable {
     public static final String FORMAT_IP = FORMAT_IPV4 + "|" + FORMAT_IPV6;
 
     public static final String FORMAT_CLF_IP = FORMAT_IP + "|-";
-    public static final String FORMAT_STRING = ".*";
+    public static final String FORMAT_STRING = ".*?";
     public static final String FORMAT_NO_SPACE_STRING = "[^\\s]*";
     public static final String FIXED_STRING = "FIXED_STRING";
 

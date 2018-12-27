@@ -14,25 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.basjes.parse.httpdlog.dissectors.tokenformat;
 
-import java.io.Serializable;
-import java.util.Comparator;
+package nl.basjes.parse.httpdlog.dissectors.nginxmodules;
 
-public class TokenSorterByStartPos implements Comparator<Token>, Serializable {
-    @Override
-    public int compare(final Token t1, final Token t2) {
+import nl.basjes.parse.core.Dissector;
+import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 
-        int startPosDiff = Integer.compare(t1.getStartPos(), t2.getStartPos());
-        if (startPosDiff != 0) {
-            return startPosDiff;
-        }
-        int lengthDiff = Integer.compare(t1.getLength(), t2.getLength());
-        if (lengthDiff != 0) {
-            return lengthDiff;
-        }
+import java.util.Collections;
+import java.util.List;
 
-        return -1 * Integer.compare(t1.getPrio(), t2.getPrio());
+public interface NginxModule {
+    List<TokenParser> getTokenParsers();
 
+    default List<Dissector> getDissectors() {
+        return Collections.emptyList(); // By default no extra dissectors
     }
 }

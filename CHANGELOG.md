@@ -1,5 +1,10 @@
 This is intended as an overview of the major changes
 
+v5.2-SNAPSHOT
+===
+- Improve regex performance
+- Add support for the NGinx Upstream module
+
 v5.1
 ===
 - Parse epoch seconds %{%s}t

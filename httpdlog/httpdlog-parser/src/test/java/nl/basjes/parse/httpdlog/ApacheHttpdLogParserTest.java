@@ -296,6 +296,15 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
+    public void testGetPossiblePathsWithUnusableLogFormat() {
+        Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, "Empty");
+
+        List<String> paths = parser.getPossiblePaths(5);
+        assertTrue("The output should be empty!", paths == null || paths.isEmpty());
+    }
+
+    // ------------------------------------------
+    @Test
     public void testLogFormatCleanup(){
         ApacheHttpdLogFormatDissector d = new ApacheHttpdLogFormatDissector();
 
