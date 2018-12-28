@@ -36,10 +36,10 @@ import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STANDARD_TIME_US;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
 
-// List of implemented tokens retrieved from here:
+// Implement the variables described here:
 // http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
 // http://nginx.org/en/docs/http/ngx_http_core_module.html#variables
-public class HttpCoreLogModule implements NginxModule {
+public class CoreLogModule implements NginxModule {
     @Override
     public List<TokenParser> getTokenParsers() {
         List<TokenParser> parsers = new ArrayList<>(60);
@@ -49,6 +49,13 @@ public class HttpCoreLogModule implements NginxModule {
         // number of bytes sent to a client (1.3.8, 1.2.5)
         parsers.add(new TokenParser("$bytes_sent",
             "response.bytes", "BYTES",
+            Casts.STRING_OR_LONG, FORMAT_NUMBER));
+
+        // -------
+        // $bytes_received
+        // number of bytes received from a client (1.11.4)
+        parsers.add(new TokenParser("$bytes_received",
+            "request.bytes", "BYTES",
             Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
@@ -93,12 +100,6 @@ public class HttpCoreLogModule implements NginxModule {
         parsers.add(new TokenParser("$time_local",
             "request.receive.time", "TIME.STAMP",
             Casts.STRING_ONLY, FORMAT_STANDARD_TIME_US));
-
-        // -------
-        // Header lines sent to a client have the prefix “sent_http_”, for example, $sent_http_content_range.
-        parsers.add(new NamedTokenParser("\\$sent_http_([a-z0-9\\-\\_]*)",
-            "response.header.", "HTTP.HEADER",
-            Casts.STRING_ONLY, FORMAT_STRING));
 
         // http://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
         // -------
@@ -231,6 +232,13 @@ public class HttpCoreLogModule implements NginxModule {
             Casts.STRING_OR_LONG, FORMAT_NUMBER));
 
         // -------
+        // $protocol
+        // protocol used to communicate with the client: TCP or UDP (1.11.4)
+        parsers.add(new TokenParser("$protocol",
+            "connection.protocol", "STRING",
+            Casts.STRING_ONLY, FORMAT_NO_SPACE_STRING));
+
+        // -------
         // $pipe
         // “p” if request was pipelined, “.” otherwise (1.3.12, 1.2.7)
         parsers.add(new TokenParser("$pipe",
@@ -246,6 +254,12 @@ public class HttpCoreLogModule implements NginxModule {
         parsers.add(new TokenParser("$proxy_protocol_addr",
             "connection.client.proxy.host", "IP",
             Casts.STRING_OR_LONG, FORMAT_CLF_IP));
+
+        // $proxy_protocol_port
+        // client port from the PROXY protocol header, or an empty string otherwise (1.11.4)
+        parsers.add(new TokenParser("$proxy_protocol_port",
+            "connection.client.proxy.port", "PORT",
+            Casts.STRING_OR_LONG, FORMAT_CLF_NUMBER));
 
         // -------
         // $remote_addr
@@ -386,6 +400,14 @@ public class HttpCoreLogModule implements NginxModule {
             Casts.STRING_ONLY, FORMAT_STRING));
 
         // -------
+        // $sent_trailer_name
+        // arbitrary field sent at the end of the response (1.13.2); the last part of a variable name is the field name
+        // converted to lower case with dashes replaced by underscores
+        parsers.add(new NamedTokenParser("\\$sent_trailer_([a-z0-9\\-_]*)",
+            "response.trailer.", "HTTP.TRAILER",
+            Casts.STRING_ONLY, FORMAT_STRING));
+
+        // -------
         // $server_addr
         // an address of the server which accepted a request
         // Computing a value of this variable usually requires one system call. To avoid a system call, the listen
@@ -414,6 +436,12 @@ public class HttpCoreLogModule implements NginxModule {
         parsers.add(new TokenParser("$server_protocol",
             "request.firstline.protocol", "HTTP.PROTOCOL_VERSION",
             Casts.STRING_OR_LONG, FORMAT_NO_SPACE_STRING));
+
+        // $session_time
+        // session duration in seconds with a milliseconds resolution (1.11.4);
+        parsers.add(new TokenParser("$session_time",
+            "connection.session.time", "SECOND_MILLIS",
+            Casts.STRING_ONLY, FORMAT_NUMBER_DOT_NUMBER));
 
         // -------
         // $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space

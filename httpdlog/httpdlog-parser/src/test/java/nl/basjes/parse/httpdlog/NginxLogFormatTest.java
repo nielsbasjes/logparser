@@ -370,6 +370,7 @@ public class NginxLogFormatTest {
         fieldsTests.add(new SingleFieldTestcase("$arg_name",                 "foo",                                 "STRING:request.firstline.uri.query.name",          "foo"));
 
         fieldsTests.add(new SingleFieldTestcase("$bytes_sent",               "694",                                 "BYTES:response.bytes",             "694"));
+        fieldsTests.add(new SingleFieldTestcase("$bytes_received",           "694",                                 "BYTES:request.bytes",             "694"));
         fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent",          "436",                                 "BYTES:response.body.bytes",        "436"));
         fieldsTests.add(new SingleFieldTestcase("$connection",               "5",                                   "NUMBER:connection.serial_number",  "5"));
         fieldsTests.add(new SingleFieldTestcase("$connection_requests",      "4",                                   "NUMBER:connection.requestnr",      "4"));
@@ -383,12 +384,16 @@ public class NginxLogFormatTest {
 
         fieldsTests.add(new SingleFieldTestcase("$host",                     "localhost",                           "STRING:connection.server.name",                                "localhost"));
         fieldsTests.add(new SingleFieldTestcase("$hostname",                 "hackbox",                             "STRING:connection.client.host",                                "hackbox"));
-        fieldsTests.add(new SingleFieldTestcase("$http_name",                "Something",                           "HTTP.HEADER:request.header.name",                              "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$http_foobar",              "Something",                           "HTTP.HEADER:request.header.foobar",                          "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_http_foobar",         "Something",                           "HTTP.HEADER:response.header.foobar",                         "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_trailer_foobar",      "Something",                           "HTTP.TRAILER:response.trailer.foobar",                        "Something"));
         fieldsTests.add(new SingleFieldTestcase("$nginx_version",            "1.10.0",                              "STRING:server.nginx.version",                                "1.10.0"));
         fieldsTests.add(new SingleFieldTestcase("$pid",                      "5137",                                "NUMBER:connection.server.child.processid",                   "5137"));
         fieldsTests.add(new SingleFieldTestcase("$pipe",                     ".",                                   "STRING:connection.nginx.pipe",                               "."));
         fieldsTests.add(new SingleFieldTestcase("$pipe",                     "p",                                   "STRING:connection.nginx.pipe",                               "p"));
-        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr",      "",                                    "IP:connection.client.proxy.host",                            ""));
+        fieldsTests.add(new SingleFieldTestcase("$protocol",                 "TCP",                                 "STRING:connection.protocol",                                 "TCP"));
+        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr",      "1.2.3.4",                             "IP:connection.client.proxy.host",                            "1.2.3.4"));
+        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_port",      "1234",                                "PORT:connection.client.proxy.port",                            "1234"));
         fieldsTests.add(new SingleFieldTestcase("$request",                  "GET /?aap&noot=&mies=wim HTTP/1.1",   "HTTP.FIRSTLINE:request.firstline",                           "GET /?aap&noot=&mies=wim HTTP/1.1"));
         fieldsTests.add(new SingleFieldTestcase("$request_completion",       "OK",                                  "STRING:request.completion",                                  "OK"));
         fieldsTests.add(new SingleFieldTestcase("$request_filename",         "/var/www/html/index.html",            "FILENAME:server.filename",                                   "/var/www/html/index.html"));

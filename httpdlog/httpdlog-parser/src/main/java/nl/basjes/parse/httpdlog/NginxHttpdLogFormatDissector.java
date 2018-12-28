@@ -22,9 +22,11 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.SimpleDissector;
 import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import nl.basjes.parse.httpdlog.dissectors.nginxmodules.HttpCoreLogModule;
-import nl.basjes.parse.httpdlog.dissectors.nginxmodules.HttpUpstreamModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.CoreLogModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.GeoIPModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.NginxModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.SslModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.UpstreamModule;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertMillisecondsIntoMicroseconds;
@@ -114,8 +116,10 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static List<NginxModule> modules = new ArrayList<>();
     static {
-        modules.add(new HttpCoreLogModule());
-        modules.add(new HttpUpstreamModule());
+        modules.add(new CoreLogModule());
+        modules.add(new UpstreamModule());
+        modules.add(new SslModule());
+        modules.add(new GeoIPModule());
     }
 
     // --------------------------------------------

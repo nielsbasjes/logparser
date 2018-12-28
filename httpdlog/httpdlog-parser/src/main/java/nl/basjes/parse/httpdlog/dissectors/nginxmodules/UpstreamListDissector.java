@@ -44,7 +44,7 @@ import java.util.List;
 
 // This dissector tries to pick apart this list format.
 
-public class HttpUpstreamListDissector extends Dissector {
+public class UpstreamListDissector extends Dissector {
 
     private static final String OUTPUT_ORIGINAL_NAME   = ".value";
     private static final String OUTPUT_REDIRECTED_NAME = ".redirected";
@@ -55,7 +55,7 @@ public class HttpUpstreamListDissector extends Dissector {
     private String          outputRedirectedType;
     private EnumSet<Casts>  outputRedirectedCasts;
 
-    public HttpUpstreamListDissector() {
+    public UpstreamListDissector() {
         inputType                   = null;
         outputOriginalType          = null;
         outputOriginalCasts         = null;
@@ -63,9 +63,9 @@ public class HttpUpstreamListDissector extends Dissector {
         outputRedirectedCasts       = null;
     }
 
-    public HttpUpstreamListDissector(String inputType,
-                                     String outputOriginalType, EnumSet<Casts> outputOriginalCasts,
-                                     String outputRedirectedType, EnumSet<Casts> outputRedirectedCasts) {
+    public UpstreamListDissector(String inputType,
+                                 String outputOriginalType, EnumSet<Casts> outputOriginalCasts,
+                                 String outputRedirectedType, EnumSet<Casts> outputRedirectedCasts) {
         this.inputType = inputType;
         this.outputOriginalType     = outputOriginalType;
         this.outputOriginalCasts    = outputOriginalCasts;
@@ -137,11 +137,11 @@ public class HttpUpstreamListDissector extends Dissector {
 
     @Override
     protected void initializeNewInstance(Dissector newInstance) throws InvalidDissectorException {
-        if (!(newInstance instanceof HttpUpstreamListDissector)) {
+        if (!(newInstance instanceof UpstreamListDissector)) {
             throw new InvalidDissectorException(
-                "Called HttpUpstreamListDissector::initializeNewInstance with a dissector of class " + newInstance.getClass().getCanonicalName());
+                "Called UpstreamListDissector::initializeNewInstance with a dissector of class " + newInstance.getClass().getCanonicalName());
         }
-        HttpUpstreamListDissector dissector = (HttpUpstreamListDissector)newInstance;
+        UpstreamListDissector dissector  = (UpstreamListDissector)newInstance;
         dissector.inputType              = inputType;
         dissector.outputOriginalType     = outputOriginalType;
         dissector.outputOriginalCasts    = outputOriginalCasts;

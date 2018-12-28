@@ -32,7 +32,8 @@ import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT
 
 // Implement the tokens described here:
 // http://nginx.org/en/docs/http/ngx_http_upstream_module.html#variables
-public class HttpUpstreamModule implements NginxModule {
+// http://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#variables
+public class UpstreamModule implements NginxModule {
 
     private static final String PREFIX = "nginxmodule.upstream";
 
@@ -151,6 +152,20 @@ public class HttpUpstreamModule implements NginxModule {
             PREFIX + ".trailer.", "HTTP.TRAILER",
             Casts.STRING_ONLY, FORMAT_STRING));
 
+        // $upstream_first_byte_time
+        // time to receive the first byte of data (1.11.4); the time is kept in seconds with millisecond resolution.
+        // Times of several connections are separated by commas like addresses in the $upstream_addr variable.
+        parsers.add(new TokenParser("$upstream_first_byte_time",
+            PREFIX + ".first_byte.time", "UPSTREAM_SECOND_MILLIS_LIST",
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+
+        // $upstream_session_time
+        // session duration in seconds with millisecond resolution (1.11.4).
+        // Times of several connections are separated by commas like addresses in the $upstream_addr variable.
+        parsers.add(new TokenParser("$upstream_session_time",
+            PREFIX + ".session.time", "UPSTREAM_SECOND_MILLIS_LIST",
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+
         return parsers;
     }
 
@@ -158,22 +173,22 @@ public class HttpUpstreamModule implements NginxModule {
     public List<Dissector> getDissectors() {
         List<Dissector> dissectors = new ArrayList<>();
 
-        dissectors.add(new HttpUpstreamListDissector(
+        dissectors.add(new UpstreamListDissector(
             "UPSTREAM_ADDR_LIST",
             "UPSTREAM_ADDR",            Casts.STRING_ONLY,
             "UPSTREAM_ADDR",            Casts.STRING_ONLY));
 
-        dissectors.add(new HttpUpstreamListDissector(
+        dissectors.add(new UpstreamListDissector(
             "UPSTREAM_BYTES_LIST",
             "BYTES",           Casts.STRING_OR_LONG,
             "BYTES",           Casts.STRING_OR_LONG));
 
-        dissectors.add(new HttpUpstreamListDissector(
+        dissectors.add(new UpstreamListDissector(
             "UPSTREAM_SECOND_MILLIS_LIST",
             "SECOND_MILLIS",   Casts.STRING_OR_LONG_OR_DOUBLE,
             "SECOND_MILLIS",   Casts.STRING_OR_LONG_OR_DOUBLE));
 
-        dissectors.add(new HttpUpstreamListDissector(
+        dissectors.add(new UpstreamListDissector(
             "UPSTREAM_STATUS_LIST",
             "UPSTREAM_STATUS",          Casts.STRING_ONLY,
             "UPSTREAM_STATUS",          Casts.STRING_ONLY));

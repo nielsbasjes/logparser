@@ -227,8 +227,29 @@ public class NginxUpstreamTest {
         fieldsTests.add(new SingleFieldTestcase("$upstream_status",             statusList,  "UPSTREAM_STATUS:nginxmodule.upstream.status.4.redirected", null));
 
 
-        fieldsTests.add(new SingleFieldTestcase("$upstream_trailer_mytrailer",      "MyValue", "HTTP.TRAILER:nginxmodule.upstream.trailer.mytrailer", "MyValue"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_trailer_mytrailer",  "MyValue", "HTTP.TRAILER:nginxmodule.upstream.trailer.mytrailer", "MyValue"));
 
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.0.value",      "1.001"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.0.redirected", "1.001"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.1.value",      "2.002"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.1.redirected", "2.002"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.2.value",      "3.003"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.2.redirected", "4.004"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.3.value",      "5.005"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.3.redirected", "5.005"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.4.value",      null));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_first_byte_time",    timeList,  "SECOND_MILLIS:nginxmodule.upstream.first_byte.time.4.redirected", null));
+
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.0.value",      "1.001"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.0.redirected", "1.001"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.1.value",      "2.002"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.1.redirected", "2.002"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.2.value",      "3.003"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.2.redirected", "4.004"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.3.value",      "5.005"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.3.redirected", "5.005"));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.4.value",      null));
+        fieldsTests.add(new SingleFieldTestcase("$upstream_session_time",       timeList,  "SECOND_MILLIS:nginxmodule.upstream.session.time.4.redirected", null));
 
         for (SingleFieldTestcase testCase: fieldsTests) {
             DissectorTester tester =

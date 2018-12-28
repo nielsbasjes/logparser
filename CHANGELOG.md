@@ -3,7 +3,7 @@ This is intended as an overview of the major changes
 v5.2-SNAPSHOT
 ===
 - Improve regex performance
-- Add support for the NGinx Upstream module
+- Add support for the NGinx Upstream, SSL and GeoIP modules
 
 v5.1
 ===
