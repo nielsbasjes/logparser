@@ -3,7 +3,8 @@ This is intended as an overview of the major changes
 v5.2-SNAPSHOT
 ===
 - Improve regex performance
-- Add support for the NGinx Upstream, SSL and GeoIP modules
+- Added basic support for the NGinx Upstream, SSL, GeoIP and all other documented modules
+- Added basic support for parsing the Kubernetes Ingress logformat variables
 
 v5.1
 ===

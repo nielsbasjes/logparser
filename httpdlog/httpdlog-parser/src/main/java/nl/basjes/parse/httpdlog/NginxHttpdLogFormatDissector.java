@@ -24,6 +24,7 @@ import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.CoreLogModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.GeoIPModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.KubernetesIngressModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.NginxModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.SslModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.UpstreamModule;
@@ -122,6 +123,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         modules.add(new SslModule());
         modules.add(new GeoIPModule());
         modules.add(new VariousModule());
+        modules.add(new KubernetesIngressModule());
     }
 
     // --------------------------------------------
