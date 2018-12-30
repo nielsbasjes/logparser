@@ -80,9 +80,6 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
             return;
         }
 
-        if (response == null) {
-            return;
-        }
         extractAsnFields(parsable, inputname, response);
     }
 

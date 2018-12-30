@@ -116,10 +116,6 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
         } catch (IOException | GeoIp2Exception e) {
             return;
         }
-
-        if (response == null) {
-            return;
-        }
         extractCountryFields(parsable, inputname, response);
     }
 

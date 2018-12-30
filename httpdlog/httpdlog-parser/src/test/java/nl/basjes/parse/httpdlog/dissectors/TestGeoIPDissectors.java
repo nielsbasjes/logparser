@@ -25,7 +25,11 @@ import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCountryDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.hamcrest.core.StringContains.containsString;
 
 public class TestGeoIPDissectors {
 
@@ -34,6 +38,10 @@ public class TestGeoIPDissectors {
     private static final String ISP_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
     private static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
     private static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
+
+    @Rule
+    public final transient ExpectedException expectedEx = ExpectedException.none();
+
 
     DissectorTester createTester(Dissector dissector) {
         return DissectorTester.create()
@@ -50,6 +58,84 @@ public class TestGeoIPDissectors {
                 .withPathPrefix("connection.client.host.");
         }
     }
+
+    // =================================================================================================================
+    // No such file
+    @Test
+    public void testBadFileASN() {
+        expectedEx.expect(AssertionError.class);
+        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
+        createTester(new GeoIPASNDissector("Does not exist"))
+            .withInput("80.100.47.45")
+            .expect("ASN:asn.number",         "4444")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testBadFileISP() {
+        expectedEx.expect(AssertionError.class);
+        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
+        createTester(new GeoIPISPDissector("Does not exist"))
+            .withInput("80.100.47.45")
+            .expect("ASN:asn.number",         "4444")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testBadFileCity() {
+        expectedEx.expect(AssertionError.class);
+        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
+        createTester(new GeoIPCityDissector("Does not exist"))
+            .withInput("80.100.47.45")
+            .expect("STRING:continent.name", "Europe")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testBadFileCountry() {
+        expectedEx.expect(AssertionError.class);
+        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
+        createTester(new GeoIPCountryDissector("Does not exist"))
+            .withInput("80.100.47.45")
+            .expect("STRING:continent.name", "Europe")
+            .checkExpectations();
+    }
+
+    // =================================================================================================================
+    // IP not in index
+    @Test
+    public void testUnknownFileASN() {
+        createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
+            .withInput("1.2.3.4")
+            .expectAbsentString("ASN:asn.number")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testUnknownFileISP() {
+        createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
+            .withInput("1.2.3.4")
+            .expectAbsentString("ASN:asn.number")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testUnknownFileCity() {
+        createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
+            .withInput("1.2.3.4")
+            .expectAbsentString("STRING:continent.name")
+            .checkExpectations();
+    }
+
+    @Test
+    public void testUnknownFileCountry() {
+        createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
+            .withInput("1.2.3.4")
+            .expectAbsentString("STRING:continent.name")
+            .checkExpectations();
+    }
+
+    // =================================================================================================================
 
     // Tests with IPv4
     @Test

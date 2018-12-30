@@ -193,10 +193,6 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             return;
         }
 
-        if (response == null) {
-            return;
-        }
-
         extractCountryFields(parsable, inputname, response);
         extractCityFields(parsable, inputname, response);
     }

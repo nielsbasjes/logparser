@@ -83,10 +83,6 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
             return;
         }
 
-        if (response == null) {
-            return;
-        }
-
         extractAsnFields(parsable, inputname, response);
         extractIspFields(parsable, inputname, response);
     }
