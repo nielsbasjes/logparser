@@ -118,17 +118,17 @@ public class NginxAllFieldsTest {
         ALL_NGINX_VARIABLES.add("$time_local");                  // ngx_http_log_module
         ALL_NGINX_VARIABLES.add("$time_local");                  // ngx_stream_core_module
 
-//        ALL_NGINX_VARIABLES.add("$secure_link");                 // ngx_http_secure_link_module
-//        ALL_NGINX_VARIABLES.add("$secure_link_expires");         // ngx_http_secure_link_module
+        ALL_NGINX_VARIABLES.add("$secure_link");                 // ngx_http_secure_link_module
+// NOT FOR LOGGING: ALL_NGINX_VARIABLES.add("$secure_link_expires");         // ngx_http_secure_link_module
 
-//        ALL_NGINX_VARIABLES.add("$session_log_binary_id");       // ngx_http_session_log_module
-//        ALL_NGINX_VARIABLES.add("$session_log_id");              // ngx_http_session_log_module
+// NOT FOR LOGGING: ALL_NGINX_VARIABLES.add("$session_log_binary_id");       // ngx_http_session_log_module
+        ALL_NGINX_VARIABLES.add("$session_log_id");              // ngx_http_session_log_module
 
-//        ALL_NGINX_VARIABLES.add("$slice_range");                 // ngx_http_slice_module
+        ALL_NGINX_VARIABLES.add("$slice_range");                 // ngx_http_slice_module
 
-//        ALL_NGINX_VARIABLES.add("$proxy_add_x_forwarded_for");   // ngx_http_proxy_module
-//        ALL_NGINX_VARIABLES.add("$proxy_host");                  // ngx_http_proxy_module
-//        ALL_NGINX_VARIABLES.add("$proxy_port");                  // ngx_http_proxy_module
+        ALL_NGINX_VARIABLES.add("$proxy_add_x_forwarded_for");   // ngx_http_proxy_module
+        ALL_NGINX_VARIABLES.add("$proxy_host");                  // ngx_http_proxy_module
+        ALL_NGINX_VARIABLES.add("$proxy_port");                  // ngx_http_proxy_module
 
         ALL_NGINX_VARIABLES.add("$ssl_cipher");                  // ngx_http_ssl_module
         ALL_NGINX_VARIABLES.add("$ssl_cipher");                  // ngx_stream_ssl_module
@@ -193,24 +193,24 @@ public class NginxAllFieldsTest {
         ALL_NGINX_VARIABLES.add("$upstream_trailer_");           // ngx_http_upstream_module
         ALL_NGINX_VARIABLES.add("$uri");                         // ngx_http_core_module
 
-//        ALL_NGINX_VARIABLES.add("$uid_got");                     // ngx_http_userid_module
-//        ALL_NGINX_VARIABLES.add("$uid_reset");                   // ngx_http_userid_module
-//        ALL_NGINX_VARIABLES.add("$uid_set");                     // ngx_http_userid_module
+        ALL_NGINX_VARIABLES.add("$uid_got");                     // ngx_http_userid_module
+        ALL_NGINX_VARIABLES.add("$uid_reset");                   // ngx_http_userid_module
+        ALL_NGINX_VARIABLES.add("$uid_set");                     // ngx_http_userid_module
 
-//        ALL_NGINX_VARIABLES.add("$ancient_browser");             // ngx_http_browser_module
-//        ALL_NGINX_VARIABLES.add("$modern_browser");              // ngx_http_browser_module
-//        ALL_NGINX_VARIABLES.add("$msie");                        // ngx_http_browser_module
+        ALL_NGINX_VARIABLES.add("$ancient_browser");             // ngx_http_browser_module
+        ALL_NGINX_VARIABLES.add("$modern_browser");              // ngx_http_browser_module
+        ALL_NGINX_VARIABLES.add("$msie");                        // ngx_http_browser_module
 
-//        ALL_NGINX_VARIABLES.add("$connections_active");          // ngx_http_stub_status_module
-//        ALL_NGINX_VARIABLES.add("$connections_reading");         // ngx_http_stub_status_module
-//        ALL_NGINX_VARIABLES.add("$connections_waiting");         // ngx_http_stub_status_module
-//        ALL_NGINX_VARIABLES.add("$connections_writing");         // ngx_http_stub_status_module
+        ALL_NGINX_VARIABLES.add("$connections_active");          // ngx_http_stub_status_module
+        ALL_NGINX_VARIABLES.add("$connections_reading");         // ngx_http_stub_status_module
+        ALL_NGINX_VARIABLES.add("$connections_waiting");         // ngx_http_stub_status_module
+        ALL_NGINX_VARIABLES.add("$connections_writing");         // ngx_http_stub_status_module
 
-//        ALL_NGINX_VARIABLES.add("$date_gmt");                    // ngx_http_ssi_module
-//        ALL_NGINX_VARIABLES.add("$date_local");                  // ngx_http_ssi_module
+        ALL_NGINX_VARIABLES.add("$date_gmt");                    // ngx_http_ssi_module
+        ALL_NGINX_VARIABLES.add("$date_local");                  // ngx_http_ssi_module
 
-//        ALL_NGINX_VARIABLES.add("$fastcgi_path_info");           // ngx_http_fastcgi_module
-//        ALL_NGINX_VARIABLES.add("$fastcgi_script_name");         // ngx_http_fastcgi_module
+        ALL_NGINX_VARIABLES.add("$fastcgi_path_info");           // ngx_http_fastcgi_module
+        ALL_NGINX_VARIABLES.add("$fastcgi_script_name");         // ngx_http_fastcgi_module
 
         ALL_NGINX_VARIABLES.add("$geoip_area_code");             // ngx_http_geoip_module
         ALL_NGINX_VARIABLES.add("$geoip_area_code");             // ngx_stream_geoip_module
@@ -245,23 +245,23 @@ public class NginxAllFieldsTest {
         ALL_NGINX_VARIABLES.add("$geoip_region_name");           // ngx_http_geoip_module
         ALL_NGINX_VARIABLES.add("$geoip_region_name");           // ngx_stream_geoip_module
 
-//        ALL_NGINX_VARIABLES.add("$gzip_ratio");                  // ngx_http_gzip_module
+        ALL_NGINX_VARIABLES.add("$gzip_ratio");                  // ngx_http_gzip_module
 
-//        ALL_NGINX_VARIABLES.add("$spdy");                        // ngx_http_spdy_module
-//        ALL_NGINX_VARIABLES.add("$spdy_request_priority");       // ngx_http_spdy_module
-//        ALL_NGINX_VARIABLES.add("$http2");                       // ngx_http_v2_module
+        ALL_NGINX_VARIABLES.add("$spdy");                        // ngx_http_spdy_module
+        ALL_NGINX_VARIABLES.add("$spdy_request_priority");       // ngx_http_spdy_module
+        ALL_NGINX_VARIABLES.add("$http2");                       // ngx_http_v2_module
 
-//        ALL_NGINX_VARIABLES.add("$invalid_referer");             // ngx_http_referer_module
+        ALL_NGINX_VARIABLES.add("$invalid_referer");             // ngx_http_referer_module
 
-//        ALL_NGINX_VARIABLES.add("$jwt_claim_");                  // ngx_http_auth_jwt_module
-//        ALL_NGINX_VARIABLES.add("$jwt_header_");                 // ngx_http_auth_jwt_module
+        ALL_NGINX_VARIABLES.add("$jwt_claim_foobar");            // ngx_http_auth_jwt_module
+        ALL_NGINX_VARIABLES.add("$jwt_header_foobar");           // ngx_http_auth_jwt_module
 
-//        ALL_NGINX_VARIABLES.add("$memcached_key");               // ngx_http_memcached_module
+        ALL_NGINX_VARIABLES.add("$memcached_key");               // ngx_http_memcached_module
 
-//        ALL_NGINX_VARIABLES.add("$realip_remote_addr");          // ngx_http_realip_module
-//        ALL_NGINX_VARIABLES.add("$realip_remote_addr");          // ngx_stream_realip_module
-//        ALL_NGINX_VARIABLES.add("$realip_remote_port");          // ngx_http_realip_module
-//        ALL_NGINX_VARIABLES.add("$realip_remote_port");          // ngx_stream_realip_module
+        ALL_NGINX_VARIABLES.add("$realip_remote_addr");          // ngx_http_realip_module
+        ALL_NGINX_VARIABLES.add("$realip_remote_addr");          // ngx_stream_realip_module
+        ALL_NGINX_VARIABLES.add("$realip_remote_port");          // ngx_http_realip_module
+        ALL_NGINX_VARIABLES.add("$realip_remote_port");          // ngx_stream_realip_module
 
     }
 

@@ -27,6 +27,7 @@ import nl.basjes.parse.httpdlog.dissectors.nginxmodules.GeoIPModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.NginxModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.SslModule;
 import nl.basjes.parse.httpdlog.dissectors.nginxmodules.UpstreamModule;
+import nl.basjes.parse.httpdlog.dissectors.nginxmodules.VariousModule;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenFormatDissector;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertMillisecondsIntoMicroseconds;
@@ -120,6 +121,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         modules.add(new UpstreamModule());
         modules.add(new SslModule());
         modules.add(new GeoIPModule());
+        modules.add(new VariousModule());
     }
 
     // --------------------------------------------

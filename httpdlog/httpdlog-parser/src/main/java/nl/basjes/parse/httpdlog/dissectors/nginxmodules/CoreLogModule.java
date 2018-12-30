@@ -31,7 +31,7 @@ import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_HEXNUMBER;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NO_SPACE_STRING;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER;
-import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER_DOT_NUMBER;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER_DECIMAL;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STANDARD_TIME_ISO8601;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STANDARD_TIME_US;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
@@ -354,7 +354,7 @@ public class CoreLogModule implements NginxModule {
         // time elapsed since the first bytes were read from the client
         parsers.add(new TokenParser("$request_time",
             "response.server.processing.time", "SECOND_MILLIS",
-            Casts.STRING_ONLY, FORMAT_NUMBER_DOT_NUMBER));
+            Casts.STRING_ONLY, FORMAT_NUMBER_DECIMAL));
 
         // -------
         // $request_uri
@@ -441,7 +441,7 @@ public class CoreLogModule implements NginxModule {
         // session duration in seconds with a milliseconds resolution (1.11.4);
         parsers.add(new TokenParser("$session_time",
             "connection.session.time", "SECOND_MILLIS",
-            Casts.STRING_ONLY, FORMAT_NUMBER_DOT_NUMBER));
+            Casts.STRING_ONLY, FORMAT_NUMBER_DECIMAL));
 
         // -------
         // $tcpinfo_rtt, $tcpinfo_rttvar, $tcpinfo_snd_cwnd, $tcpinfo_rcv_space

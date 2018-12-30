@@ -27,7 +27,7 @@ import java.util.List;
 
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NO_SPACE_STRING;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER;
-import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER_DOT_NUMBER;
+import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_NUMBER_DECIMAL;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
 
 // Implement the tokens described here:
@@ -88,7 +88,7 @@ public class UpstreamModule implements NginxModule {
         // Times of several connections are separated by commas and colons like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_connect_time",
             PREFIX + ".connect.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         // $upstream_cookie_name
         // cookie with the specified name sent by the upstream server in the “Set-Cookie” response header field (1.7.1).
@@ -103,7 +103,7 @@ public class UpstreamModule implements NginxModule {
         // Times of several responses are separated by commas and colons like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_header_time",
             PREFIX + ".header.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         // $upstream_http_name
         // keep server response header fields. For example, the “Server” response header field is available through
@@ -120,7 +120,7 @@ public class UpstreamModule implements NginxModule {
         // Times of several responses are separated by commas and colons like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_queue_time",
             PREFIX + ".queue.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         // $upstream_response_length
         // keeps the length of the response obtained from the upstream server (0.7.27);
@@ -136,7 +136,7 @@ public class UpstreamModule implements NginxModule {
         // Times of several responses are separated by commas and colons like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_response_time",
             PREFIX + ".response.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         // $upstream_status
         // keeps status code of the response obtained from the upstream server.
@@ -157,14 +157,14 @@ public class UpstreamModule implements NginxModule {
         // Times of several connections are separated by commas like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_first_byte_time",
             PREFIX + ".first_byte.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         // $upstream_session_time
         // session duration in seconds with millisecond resolution (1.11.4).
         // Times of several connections are separated by commas like addresses in the $upstream_addr variable.
         parsers.add(new TokenParser("$upstream_session_time",
             PREFIX + ".session.time", "UPSTREAM_SECOND_MILLIS_LIST",
-            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DOT_NUMBER)));
+            Casts.STRING_ONLY, upstreamListOf(FORMAT_NUMBER_DECIMAL)));
 
         return parsers;
     }
