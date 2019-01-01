@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class ResponseSetCookieListDissector extends Dissector {
     // --------------------------------------------
 
@@ -55,7 +57,7 @@ public class ResponseSetCookieListDissector extends Dissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedCookies.add(extractFieldName(inputname, outputname));
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     // --------------------------------------------

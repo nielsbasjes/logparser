@@ -5,6 +5,7 @@ v5.2-SNAPSHOT
 - Improve regex performance
 - Added basic support for the NGinx Upstream, SSL, GeoIP and all other documented modules
 - Added basic support for parsing the Kubernetes Ingress logformat variables
+- Disallow some Dissector methods to return a null.
 
 v5.1
 ===

@@ -40,6 +40,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public final class DissectorTester implements Serializable {
@@ -568,6 +570,8 @@ public final class DissectorTester implements Serializable {
                         splitOutput[1].toLowerCase(Locale.ENGLISH),
                         "\"" + splitOutput[1] + "\" is not fully uppercase."));
                 }
+
+                assertNotNull("Dissector::prepareForDissect may NEVER return null!!", dissector.prepareForDissect("This will", "never exist"));
 //                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
 //                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
@@ -703,7 +707,7 @@ public final class DissectorTester implements Serializable {
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
 
         @Override

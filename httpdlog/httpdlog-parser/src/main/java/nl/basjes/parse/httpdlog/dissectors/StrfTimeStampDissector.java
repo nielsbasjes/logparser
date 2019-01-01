@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class StrfTimeStampDissector extends Dissector {
 
     private TimeStampDissector timeStampDissector;
@@ -145,7 +147,7 @@ public class StrfTimeStampDissector extends Dissector {
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
 
         @Override

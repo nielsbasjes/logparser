@@ -118,17 +118,17 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
 
     @Override
     public void reportAmbiguity(org.antlr.v4.runtime.Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
-
+        // Ignoring this Antlr4 event
     }
 
     @Override
     public void reportAttemptingFullContext(org.antlr.v4.runtime.Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
-
+        // Ignoring this Antlr4 event
     }
 
     @Override
     public void reportContextSensitivity(org.antlr.v4.runtime.Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
-
+        // Ignoring this Antlr4 event
     }
 
     public static class UnsupportedStrfField extends RuntimeException {

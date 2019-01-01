@@ -21,6 +21,7 @@ import java.util.EnumSet;
 
 public enum Casts {
     STRING, LONG, DOUBLE;
+    public static final EnumSet<Casts> NO_CASTS         = EnumSet.noneOf(Casts.class);
     public static final EnumSet<Casts> STRING_ONLY      = EnumSet.of(STRING);
     public static final EnumSet<Casts> LONG_ONLY        = EnumSet.of(LONG);
     public static final EnumSet<Casts> DOUBLE_ONLY      = EnumSet.of(DOUBLE);

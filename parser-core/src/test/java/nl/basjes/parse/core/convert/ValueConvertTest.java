@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
 import static org.junit.Assert.assertTrue;
 
 public class ValueConvertTest {
@@ -81,7 +82,7 @@ public class ValueConvertTest {
         }
 
         public TypeConvertBaseDissector(String nInputType, String nOutputType) {
-            super(nInputType, fillOutputConfig(nOutputType, Casts.STRING_OR_LONG));
+            super(nInputType, fillOutputConfig(nOutputType, STRING_OR_LONG));
             inputType = nInputType;
             outputType = nOutputType;
         }

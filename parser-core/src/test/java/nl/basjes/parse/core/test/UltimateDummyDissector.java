@@ -22,6 +22,11 @@ import nl.basjes.parse.core.SimpleDissector;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_DOUBLE;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
+
 /**
  * A dummy dissector to ensure retrieving all types works in the various wrappers
  */
@@ -29,12 +34,12 @@ public abstract class UltimateDummyDissector extends SimpleDissector {
 
     private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:any",         Casts.STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:string",   Casts.STRING_ONLY);
-        dissectorConfig.put("INT:int",         Casts.STRING_OR_LONG);
-        dissectorConfig.put("LONG:long",       Casts.STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:float",     Casts.STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:double",   Casts.STRING_OR_DOUBLE);
+        dissectorConfig.put("ANY:any",         STRING_OR_LONG_OR_DOUBLE);
+        dissectorConfig.put("STRING:string",   STRING_ONLY);
+        dissectorConfig.put("INT:int",         STRING_OR_LONG);
+        dissectorConfig.put("LONG:long",       STRING_OR_LONG);
+        dissectorConfig.put("FLOAT:float",     STRING_OR_DOUBLE);
+        dissectorConfig.put("DOUBLE:double",   STRING_OR_DOUBLE);
     }
 
     public UltimateDummyDissector() {

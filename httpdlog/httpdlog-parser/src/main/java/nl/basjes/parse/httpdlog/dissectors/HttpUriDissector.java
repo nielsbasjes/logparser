@@ -33,6 +33,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class HttpUriDissector extends Dissector {
     // --------------------------------------------
 
@@ -73,33 +77,33 @@ public class HttpUriDissector extends Dissector {
         String name = extractFieldName(inputname, outputname);
         if ("protocol".equals(name)) {
             wantProtocol = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
         if ("userinfo".equals(name)) {
             wantUserinfo = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
         if ("host".equals(name)) {
             wantHost = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
         if ("port".equals(name)) {
             wantPort = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("path".equals(name)) {
             wantPath = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
         if ("query".equals(name)) {
             wantQuery = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
         if ("ref".equals(name)) {
             wantRef = true;
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
-        return null;
+        return NO_CASTS;
     }
 
     // --------------------------------------------

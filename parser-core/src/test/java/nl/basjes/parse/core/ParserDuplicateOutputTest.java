@@ -23,12 +23,14 @@ import org.junit.Test;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class ParserDuplicateOutputTest {
 
     public abstract static class TestDissector extends SimpleDissector {
         private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
         static {
-            dissectorConfig.put("STRING:output",   Casts.STRING_ONLY);
+            dissectorConfig.put("STRING:output",   STRING_ONLY);
         }
 
         public TestDissector() {

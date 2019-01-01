@@ -35,6 +35,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class TimeStampDissector extends Dissector {
 
     // The default parser to what we find in the Apache httpd Logfiles
@@ -222,128 +226,128 @@ public class TimeStampDissector extends Dissector {
             // As parsed
             case "day":
                 wantDay = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "monthname":
                 wantMonthname = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "month":
                 wantMonth = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "weekofweekyear":
                 wantWeekOfWeekYear = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "weekyear":
                 wantWeekYear = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "year":
                 wantYear = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "hour":
                 wantHour = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "minute":
                 wantMinute = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "second":
                 wantSecond = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "millisecond":
                 wantMillisecond = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "microsecond":
                 wantMicrosecond = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "nanosecond":
                 wantNanosecond = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "date":
                 wantDate = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "time":
                 wantTime = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             // Timezone independent
             case "timezone":
                 wantTimezone = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "epoch":
                 wantEpoch = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             // In UTC timezone
             case "day_utc":
                 wantDayUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "monthname_utc":
                 wantMonthnameUTC = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "month_utc":
                 wantMonthUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "weekofweekyear_utc":
                 wantWeekOfWeekYearUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "weekyear_utc":
                 wantWeekYearUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "year_utc":
                 wantYearUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "hour_utc":
                 wantHourUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "minute_utc":
                 wantMinuteUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "second_utc":
                 wantSecondUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "millisecond_utc":
                 wantMillisecondUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "microsecond_utc":
                 wantMicrosecondUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "nanosecond_utc":
                 wantNanosecondUTC = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "date_utc":
                 wantDateUTC = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "time_utc":
                 wantTimeUTC = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             default:
-                return null;
+                return NO_CASTS;
         }
     }
 

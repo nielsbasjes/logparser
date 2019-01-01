@@ -25,16 +25,21 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_DOUBLE;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
+
 public class BarDissector extends SimpleDissector {
 
     private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:barany",         Casts.STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:barstring",   Casts.STRING_ONLY);
-        dissectorConfig.put("INT:barint",         Casts.STRING_OR_LONG);
-        dissectorConfig.put("LONG:barlong",       Casts.STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:barfloat",     Casts.STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:bardouble",   Casts.STRING_OR_DOUBLE);
+        dissectorConfig.put("ANY:barany",         STRING_OR_LONG_OR_DOUBLE);
+        dissectorConfig.put("STRING:barstring",   STRING_ONLY);
+        dissectorConfig.put("INT:barint",         STRING_OR_LONG);
+        dissectorConfig.put("LONG:barlong",       STRING_OR_LONG);
+        dissectorConfig.put("FLOAT:barfloat",     STRING_OR_DOUBLE);
+        dissectorConfig.put("DOUBLE:bardouble",   STRING_OR_DOUBLE);
     }
 
     public BarDissector() {

@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class UrlClassDissector extends Dissector {
 
     // --------------------------------------------
@@ -46,7 +48,7 @@ public class UrlClassDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     @Override

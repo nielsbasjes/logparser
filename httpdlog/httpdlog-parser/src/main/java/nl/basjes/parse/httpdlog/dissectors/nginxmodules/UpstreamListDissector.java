@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+
 // Implement the tokens described here:
 // http://nginx.org/en/docs/http/ngx_http_upstream_module.html#variables
 
@@ -132,7 +134,7 @@ public class UpstreamListDissector extends Dissector {
         if (name.endsWith(OUTPUT_REDIRECTED_NAME)) {
             return outputRedirectedCasts;
         }
-        return null;
+        return NO_CASTS;
     }
 
     @Override

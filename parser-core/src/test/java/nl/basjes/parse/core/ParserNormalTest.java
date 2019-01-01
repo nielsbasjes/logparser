@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -90,7 +91,7 @@ public class ParserNormalTest {
                 name = outputname.substring(prefix.length());
             }
             outputNames.add(name);
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
     }
 

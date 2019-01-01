@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class RequestCookieListDissector extends Dissector {
     // --------------------------------------------
 
@@ -57,7 +59,7 @@ public class RequestCookieListDissector extends Dissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedCookies.add(extractFieldName(inputname, outputname));
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     // --------------------------------------------

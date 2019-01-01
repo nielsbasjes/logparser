@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class HttpFirstLineDissector extends Dissector {
     // --------------------------------------------
     // The "first line" of a request can be split up a bit further
@@ -138,7 +140,7 @@ public class HttpFirstLineDissector extends Dissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedParameters.add(extractFieldName(inputname, outputname));
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     // --------------------------------------------

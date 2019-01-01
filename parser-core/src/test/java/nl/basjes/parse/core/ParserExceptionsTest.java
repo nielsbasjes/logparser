@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -71,7 +72,7 @@ public class ParserExceptionsTest {
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
     }
 
@@ -279,7 +280,7 @@ public class ParserExceptionsTest {
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
 
         @Override

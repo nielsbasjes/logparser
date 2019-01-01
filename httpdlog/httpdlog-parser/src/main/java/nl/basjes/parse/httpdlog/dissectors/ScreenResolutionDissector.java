@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class ScreenResolutionDissector extends Dissector {
 
     public static final String SCREENRESOLUTION = "SCREENRESOLUTION";
@@ -79,12 +82,12 @@ public class ScreenResolutionDissector extends Dissector {
         String name = extractFieldName(inputname, outputname);
         if ("width".equals(name)) {
             wantWidth = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("height".equals(name)) {
             wantHeight = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
-        return null;
+        return NO_CASTS;
     }
 }

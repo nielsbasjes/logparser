@@ -24,6 +24,8 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public abstract class TypeConvertBaseDissector extends SimpleDissector {
     protected String inputType;
     protected String outputType;
@@ -38,7 +40,7 @@ public abstract class TypeConvertBaseDissector extends SimpleDissector {
     }
 
     public TypeConvertBaseDissector(String nInputType, String nOutputType) {
-        super(nInputType, fillOutputConfig(nOutputType, Casts.STRING_OR_LONG));
+        super(nInputType, fillOutputConfig(nOutputType, STRING_OR_LONG));
         inputType = nInputType;
         outputType = nOutputType;
     }

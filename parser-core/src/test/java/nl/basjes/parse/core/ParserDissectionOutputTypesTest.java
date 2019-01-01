@@ -25,6 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
 import static org.junit.Assert.assertEquals;
 
 public class ParserDissectionOutputTypesTest {
@@ -91,28 +95,28 @@ public class ParserDissectionOutputTypesTest {
         private static final Map<String, EnumSet<Casts>> PREPARE_FOR_DISSECT_MAP = new HashMap<>();
 
         static {
-            PREPARE_FOR_DISSECT_MAP.put("string_set_null",              Casts.STRING_ONLY);
-            PREPARE_FOR_DISSECT_MAP.put("string_set_string",            Casts.STRING_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("string_set_null",              STRING_ONLY);
+            PREPARE_FOR_DISSECT_MAP.put("string_set_string",            STRING_ONLY);
 
-            PREPARE_FOR_DISSECT_MAP.put("long_set_longclass_null",      Casts.STRING_OR_LONG);
-            PREPARE_FOR_DISSECT_MAP.put("long_set_longclass",           Casts.STRING_OR_LONG);
-            PREPARE_FOR_DISSECT_MAP.put("long_set_longprimitive",       Casts.STRING_OR_LONG);
-            PREPARE_FOR_DISSECT_MAP.put("long_set_string_null",         Casts.STRING_OR_LONG);
-            PREPARE_FOR_DISSECT_MAP.put("long_set_string",              Casts.STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("long_set_longclass_null",      STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("long_set_longclass",           STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("long_set_longprimitive",       STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("long_set_string_null",         STRING_OR_LONG);
+            PREPARE_FOR_DISSECT_MAP.put("long_set_string",              STRING_OR_LONG);
 
-            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleclass_null",  Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleclass",       Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleprimitive",   Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_longclass_null",    Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_longclass",         Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_longprimitive",     Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_string_null",       Casts.STRING_OR_LONG_OR_DOUBLE);
-            PREPARE_FOR_DISSECT_MAP.put("double_set_string",            Casts.STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleclass_null",  STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleclass",       STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_doubleprimitive",   STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_longclass_null",    STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_longclass",         STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_longprimitive",     STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_string_null",       STRING_OR_LONG_OR_DOUBLE);
+            PREPARE_FOR_DISSECT_MAP.put("double_set_string",            STRING_OR_LONG_OR_DOUBLE);
         }
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return PREPARE_FOR_DISSECT_MAP.get(outputname);
+            return PREPARE_FOR_DISSECT_MAP.getOrDefault(outputname, NO_CASTS);
         }
     }
 

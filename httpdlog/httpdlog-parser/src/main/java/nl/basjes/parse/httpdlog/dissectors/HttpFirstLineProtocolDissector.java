@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class HttpFirstLineProtocolDissector extends Dissector {
 
     // --------------------------------------------
@@ -92,7 +94,7 @@ public class HttpFirstLineProtocolDissector extends Dissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         requestedParameters.add(extractFieldName(inputname, outputname));
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     // --------------------------------------------

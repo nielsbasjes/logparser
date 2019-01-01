@@ -96,7 +96,7 @@ public abstract class Dissector implements Serializable {
 
     /**
      * What are all possible outputs that can be provided.
-     * @return array of "type:name" values that indicates all the possible outputs
+     * @return array of "type:name" values that indicates all the possible outputs. Never a null!
      */
     public abstract List<String> getPossibleOutput();
 
@@ -110,6 +110,7 @@ public abstract class Dissector implements Serializable {
      * This can be used by the dissector implementation to optimize the internal parsing
      * algorithms and lookup tables and such.
      * The dissector must return the types to which this value can be mapped later on during the run.
+     * @return The EnumSet of all allowed casts. Returns an empty EnumSet if nothing is allowed. Never a null !
      */
     public abstract EnumSet<Casts> prepareForDissect(String inputname, String outputname);
 
@@ -138,7 +139,7 @@ public abstract class Dissector implements Serializable {
             initializeNewInstance(newInstance);
             return newInstance;
         } catch (Exception e) {
-            LOG.error("Unable to create instance of {}: {}", this.getClass().getCanonicalName(), e.toString());
+            LOG.error("Unable to create instance of {}: {}", this.getClass().getCanonicalName(), e);
         }
         return null;
     }

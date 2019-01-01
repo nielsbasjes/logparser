@@ -28,6 +28,10 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class GeoIPASNDissector extends AbstractGeoIPDissector {
 
     @SuppressWarnings("unused") // Used via reflection
@@ -59,14 +63,14 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
         switch (name) {
             case "asn.number":
                 wantAsnNumber = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "asn.organization":
                 wantAsnOrganization = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             default:
-                return null;
+                return NO_CASTS;
         }
     }
 

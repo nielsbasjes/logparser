@@ -17,12 +17,12 @@
 
 package nl.basjes.parse.httpdlog.dissectors.nginxmodules;
 
-import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
 
 //
@@ -38,31 +38,31 @@ public class KubernetesIngressModule implements NginxModule {
 
         // $the_real_ip
         // the source IP address of the client
-        parsers.add(new TokenParser("$the_real_ip", PREFIX + ".the_real_ip", "IP", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$the_real_ip", PREFIX + ".the_real_ip", "IP", STRING_ONLY, FORMAT_STRING));
 
         // $proxy_upstream_name
         // name of the upstream. The format is upstream-<namespace>-<service name>-<service port>
-        parsers.add(new TokenParser("$proxy_upstream_name", PREFIX + ".proxy_upstream_name", "STRING", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$proxy_upstream_name", PREFIX + ".proxy_upstream_name", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // $req_id
         // the randomly generated ID of the request
-        parsers.add(new TokenParser("$req_id", PREFIX + ".req_id", "STRING", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$req_id", PREFIX + ".req_id", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // $namespace
         // namespace of the ingress
-        parsers.add(new TokenParser("$namespace", PREFIX + ".namespace", "STRING", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$namespace", PREFIX + ".namespace", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // $ingress_name
         // name of the ingress
-        parsers.add(new TokenParser("$ingress_name", PREFIX + ".ingress_name", "STRING", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$ingress_name", PREFIX + ".ingress_name", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // $service_name
         // name of the service
-        parsers.add(new TokenParser("$service_name", PREFIX + ".service.name", "STRING", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$service_name", PREFIX + ".service.name", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // $service_port
         // port of the service
-        parsers.add(new TokenParser("$service_port", PREFIX + ".service.port", "PORT", Casts.STRING_ONLY, FORMAT_STRING));
+        parsers.add(new TokenParser("$service_port", PREFIX + ".service.port", "PORT", STRING_ONLY, FORMAT_STRING));
 
 
         return parsers;

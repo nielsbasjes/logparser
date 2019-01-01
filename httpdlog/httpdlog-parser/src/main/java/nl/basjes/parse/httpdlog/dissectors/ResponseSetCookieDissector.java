@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class ResponseSetCookieDissector extends Dissector {
     // --------------------------------------------
 
@@ -60,12 +63,12 @@ public class ResponseSetCookieDissector extends Dissector {
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = extractFieldName(inputname, outputname);
         switch (name) {
-            case "value":   return Casts.STRING_ONLY;
-            case "expires": return Casts.STRING_OR_LONG;
-            case "path":    return Casts.STRING_ONLY;
-            case "domain":  return Casts.STRING_ONLY;
-            case "comment": return Casts.STRING_ONLY;
-            default:        return Casts.STRING_ONLY;
+            case "value":   return STRING_ONLY;
+            case "expires": return STRING_OR_LONG;
+            case "path":    return STRING_ONLY;
+            case "domain":  return STRING_ONLY;
+            case "comment": return STRING_ONLY;
+            default:        return STRING_ONLY;
         }
     }
 

@@ -25,16 +25,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+
 public abstract class SimpleDissector extends Dissector {
 
     String inputType;
-    Map<String, EnumSet<Casts>> outputTypes;
+    // Using HashMap instead of Map<> because a Map<> is not Serializable
+    private HashMap<String, EnumSet<Casts>> outputTypes;
 
-    Map<String, EnumSet<Casts>> outputCasts;
+    private HashMap<String, EnumSet<Casts>> outputCasts;
 
     public SimpleDissector(String inputType, Map<String, EnumSet<Casts>> outputTypes) {
         this.inputType = inputType;
-        this.outputTypes = outputTypes;
+        this.outputTypes = new HashMap<>(outputTypes);
 
         outputCasts = new HashMap<>(outputTypes.size());
         for (Map.Entry<String, EnumSet<Casts>> type: outputTypes.entrySet()) {
@@ -60,7 +63,7 @@ public abstract class SimpleDissector extends Dissector {
     @Override
     public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
         String name = extractFieldName(inputname, outputname);
-        return outputCasts.get(name);
+        return outputCasts.getOrDefault(name, NO_CASTS);
     }
 
     @Override

@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 @SuppressWarnings({
         "PMD.LongVariable", // I like my variable names this way
         "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
@@ -45,7 +47,7 @@ public abstract class TokenFormatDissector extends Dissector {
     private static final Logger LOG = LoggerFactory.getLogger(TokenFormatDissector.class);
 
     private String       logFormat           = null;
-    private List<Token>  logFormatUsedTokens = null;
+    private ArrayList<Token>  logFormatUsedTokens = null; // Using ArrayList because it is Serializable
     private String       logFormatRegEx      = null;
     private Pattern      logFormatPattern    = null;
     private boolean      isUsable            = false;
@@ -94,7 +96,7 @@ public abstract class TokenFormatDissector extends Dissector {
             super(nLogFormatToken,
                 fieldPrefix + "_" + nLogFormatToken.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "_"),
                 "NOT_IMPLEMENTED",
-                Casts.STRING_ONLY,
+                STRING_ONLY,
                 regEx,
                 nPrio);
         }
@@ -168,7 +170,7 @@ public abstract class TokenFormatDissector extends Dissector {
                 }
             }
         }
-        return Casts.STRING_ONLY;
+        return STRING_ONLY;
     }
 
     // --------------------------------------------
@@ -212,6 +214,7 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
 
+    @Override
     public void setInputType(String newInputType) {
         this.inputType = newInputType;
     }

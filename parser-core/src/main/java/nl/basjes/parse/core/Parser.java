@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_NULL;
@@ -195,7 +196,7 @@ public class Parser<RECORD> implements Serializable {
             }
 
             final List<String> outputs = dissector.getPossibleOutput();
-            if (outputs == null || outputs.size() == 0) {
+            if (outputs == null || outputs.isEmpty()) {
                 throw new InvalidDissectorException("Dissector cannot create any outputs: ["+ dissector.getClass().getCanonicalName()+"]");
             }
 
@@ -319,7 +320,7 @@ public class Parser<RECORD> implements Serializable {
                     sb.append('.').append(part);
                 }
                 allPossibleSubtargets.add(sb.toString());
-                LOG.debug("Possible: >>>{}<<<", sb.toString());
+                LOG.debug("Possible: >>>{}<<<", sb);
             }
         }
 
@@ -448,7 +449,7 @@ public class Parser<RECORD> implements Serializable {
             for (String mappedType : mappings) {
                 if (!compiledDissectors.containsKey(mappedType + ':' + subRootName)) {
                     // Retyped targets are ALWAYS String ONLY.
-                    castsOfTargets.put(mappedType + ':' + subRootName, Casts.STRING_ONLY);
+                    castsOfTargets.put(mappedType + ':' + subRootName, STRING_ONLY);
                     findUsefulDissectorsFromField(possibleTargets, locatedTargets, mappedType, subRootName, false);
                 }
             }
@@ -650,14 +651,14 @@ public class Parser<RECORD> implements Serializable {
         for (Entry<String, Set<String>> entry: additionalTypeRemappings.entrySet()){
             String input = entry.getKey();
             for (String newType: entry.getValue()) {
-                addTypeRemapping(input, newType, Casts.STRING_ONLY);
+                addTypeRemapping(input, newType, STRING_ONLY);
             }
         }
         return this;
     }
 
     public Parser<RECORD> addTypeRemapping(String input, String newType) {
-        return addTypeRemapping(input, newType, Casts.STRING_ONLY);
+        return addTypeRemapping(input, newType, STRING_ONLY);
     }
 
     public Parser<RECORD> addTypeRemapping(String input, String newType, EnumSet<Casts> newCasts) {
@@ -733,7 +734,7 @@ public class Parser<RECORD> implements Serializable {
         // Values look like "TYPE:foo.bar"
         Set<ParsedField> toBeParsed = new HashSet<>(parsable.getToBeParsed());
 
-        while (toBeParsed.size() > 0) {
+        while (!toBeParsed.isEmpty()) {
             for (ParsedField fieldThatNeedsToBeParsed : toBeParsed) {
                 parsable.setAsParsed(fieldThatNeedsToBeParsed);
                 Set<DissectorPhase> dissectorSet = compiledDissectors.get(fieldThatNeedsToBeParsed.getId());
@@ -887,7 +888,7 @@ public class Parser<RECORD> implements Serializable {
             Constructor<RECORD> co = recordClass.getConstructor();
             record = co.newInstance();
         } catch (Exception e) {
-            LOG.error("Unable to create instance: {}", e.toString());
+            LOG.error("Unable to create instance: {}", e);
             return null;
         }
         return createParsable(record);
@@ -999,7 +1000,7 @@ public class Parser<RECORD> implements Serializable {
 
                     String newPath = childType + ':' + childBase;
                     if (!paths.contains(newPath)) {
-                        LOG.debug("Possible:{} + {}", logPrefix, childType, childBase);
+                        LOG.debug("Possible:{} + {}:{}", logPrefix, childType, childBase);
                         paths.add(childType + ':' + childBase);
 
                         findAdditionalPossiblePaths(pathNodes, paths, childBase, childType, maxDepth - 1, logPrefix + "--");

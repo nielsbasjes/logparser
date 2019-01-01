@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 /**
  * The documentation of mod_unique_id clearly states:
  * http://httpd.apache.org/docs/current/mod/mod_unique_id.html
@@ -74,25 +77,25 @@ public class ModUniqueIdDissector extends Dissector {
         String name = extractFieldName(inputname, outputname);
         if ("epoch".equals(name)) {
             wantTime = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("ip".equals(name)) {
             wantIp = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("processid".equals(name)) {
             wantProcessId = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("counter".equals(name)) {
             wantCounter = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
         if ("threadindex".equals(name)) {
             wantThreadIndex = true;
-            return Casts.STRING_OR_LONG;
+            return STRING_OR_LONG;
         }
-        return null;
+        return NO_CASTS;
     }
 
     // --------------------------------------------

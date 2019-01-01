@@ -25,16 +25,21 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_DOUBLE;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
+
 public class FooDissector extends SimpleDissector {
 
     private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:fooany",         Casts.STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:foostring",   Casts.STRING_ONLY);
-        dissectorConfig.put("INT:fooint",         Casts.STRING_OR_LONG);
-        dissectorConfig.put("LONG:foolong",       Casts.STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:foofloat",     Casts.STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:foodouble",   Casts.STRING_OR_DOUBLE);
+        dissectorConfig.put("ANY:fooany",         STRING_OR_LONG_OR_DOUBLE);
+        dissectorConfig.put("STRING:foostring",   STRING_ONLY);
+        dissectorConfig.put("INT:fooint",         STRING_OR_LONG);
+        dissectorConfig.put("LONG:foolong",       STRING_OR_LONG);
+        dissectorConfig.put("FLOAT:foofloat",     STRING_OR_DOUBLE);
+        dissectorConfig.put("DOUBLE:foodouble",   STRING_OR_DOUBLE);
     }
 
     public FooDissector() {

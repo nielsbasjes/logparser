@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static org.junit.Assert.assertEquals;
 
 public class ParserTypeColissionTest {
@@ -73,7 +74,7 @@ public class ParserTypeColissionTest {
 
         @Override
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-            return Casts.STRING_ONLY;
+            return STRING_ONLY;
         }
     }
 

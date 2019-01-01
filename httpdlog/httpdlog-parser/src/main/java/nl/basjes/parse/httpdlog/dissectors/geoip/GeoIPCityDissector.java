@@ -32,6 +32,11 @@ import java.net.InetAddress;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_DOUBLE;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class GeoIPCityDissector extends GeoIPCountryDissector {
 
     @SuppressWarnings("unused") // Used via reflection
@@ -94,7 +99,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         EnumSet<Casts> result = super.prepareForDissect(inputname, outputname);
-        if (result != null) {
+        if (!result.isEmpty()) {
             return result;
         }
 
@@ -105,80 +110,80 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             case "subdivision.name":
                 wantSubdivisionName = true;
                 wantAnySubdivision = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "subdivision.iso":
                 wantSubdivisionIso = true;
                 wantAnySubdivision = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             // ---------------------------------
 
             case "city.name":
                 wantCityName = true;
                 wantAnyCity = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "city.confidence":
                 wantCityConfidence = true;
                 wantAnyCity = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "city.geonameid":
                 wantCityGeoNameId = true;
                 wantAnyCity = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             // ---------------------------------
 
             case "postal.code":
                 wantPostalCode = true;
                 wantAnyPostal = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "postal.confidence":
                 wantPostalConfidence = true;
                 wantAnyPostal = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             // ---------------------------------
 
             case "location.latitude":
                 wantLocationLatitude = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_DOUBLE;
+                return STRING_OR_DOUBLE;
 
             case "location.longitude":
                 wantLocationLongitude = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_DOUBLE;
+                return STRING_OR_DOUBLE;
 
             case "location.accuracyradius":
                 wantLocationAccuracyradius = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "location.timezone":
                 wantLocationTimezone = true;
                 wantAnyLocation = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "location.averageincome":
                 wantLocationAverageincome = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "location.metrocode":
                 wantLocationMetrocode = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "location.populationdensity":
                 wantLocationPopulationdensity = true;
                 wantAnyLocation = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
             default:
-                return null;
+                return NO_CASTS;
         }
     }
 

@@ -29,10 +29,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static nl.basjes.parse.core.Casts.NO_CASTS;
 
 public class HttpdLogFormatDissector extends Dissector {
 
@@ -207,8 +210,8 @@ public class HttpdLogFormatDissector extends Dissector {
 
     @Override
     public List<String> getPossibleOutput() {
-        if (dissectors.size() == 0) {
-            return null;
+        if (dissectors.isEmpty()) {
+            return Collections.emptyList();
         }
 
         Set<String> result = new HashSet<>(32); // Go via a Set to deduplicate the fields
@@ -221,8 +224,8 @@ public class HttpdLogFormatDissector extends Dissector {
 
     @Override
     public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
-        if (dissectors.size() == 0) {
-            return null;
+        if (dissectors.isEmpty()) {
+            return NO_CASTS;
         }
 
         EnumSet<Casts> result = EnumSet.noneOf(Casts.class); // Start empty
@@ -234,7 +237,7 @@ public class HttpdLogFormatDissector extends Dissector {
 
     @Override
     public void prepareForRun() throws InvalidDissectorException {
-        if (dissectors.size() == 0) {
+        if (dissectors.isEmpty()) {
             throw new InvalidDissectorException("Cannot run without logformats");
         }
 
@@ -260,7 +263,7 @@ public class HttpdLogFormatDissector extends Dissector {
 
     @Override
     protected void initializeNewInstance(Dissector newInstance) {
-        if (dissectors.size() == 0) {
+        if (dissectors.isEmpty()) {
             return;
         }
 

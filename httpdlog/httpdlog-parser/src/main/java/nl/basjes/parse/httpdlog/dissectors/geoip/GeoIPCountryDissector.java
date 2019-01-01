@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 public class GeoIPCountryDissector extends AbstractGeoIPDissector {
 
     @SuppressWarnings("unused") // Used via reflection
@@ -74,35 +78,35 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
             case "continent.name":
                 wantContinentName = true;
                 wantAnyContinent = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "continent.code":
                 wantContinentCode = true;
                 wantAnyContinent = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "country.name":
                 wantCountryName = true;
                 wantAnyCountry = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "country.iso":
                 wantCountryIso = true;
                 wantAnyCountry = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "country.getconfidence":
                 wantCountryGetConfidence = true;
                 wantAnyCountry = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             case "country.isineuropeanunion":
                 wantCountryIsInEuropeanUnion = true;
                 wantAnyCountry = true;
-                return Casts.STRING_OR_LONG;
+                return STRING_OR_LONG;
 
             default:
-                return null;
+                return NO_CASTS;
         }
     }
 

@@ -27,6 +27,9 @@ import java.net.InetAddress;
 import java.util.EnumSet;
 import java.util.List;
 
+import static nl.basjes.parse.core.Casts.NO_CASTS;
+import static nl.basjes.parse.core.Casts.STRING_ONLY;
+
 public class GeoIPISPDissector extends GeoIPASNDissector {
 
     @SuppressWarnings("unused") // Used via reflection
@@ -54,7 +57,7 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
     @Override
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         EnumSet<Casts> result = super.prepareForDissect(inputname, outputname);
-        if (result != null) {
+        if (!result.isEmpty()) {
             return result;
         }
         String name = extractFieldName(inputname, outputname);
@@ -62,14 +65,14 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
         switch (name) {
             case "isp.name":
                 wantIspName = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             case "isp.organization":
                 wantIspOrganization = true;
-                return Casts.STRING_ONLY;
+                return STRING_ONLY;
 
             default:
-                return null;
+                return NO_CASTS;
         }
     }
 

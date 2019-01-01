@@ -44,6 +44,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+
 @SuppressWarnings({
         "PMD.LongVariable", // I like my variable names this way
         "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
@@ -150,7 +152,7 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
         private static HashMap<String, EnumSet<Casts>> epochMillisConfig = new HashMap<>();
         static {
-            epochMillisConfig.put("IP:", Casts.STRING_OR_LONG);
+            epochMillisConfig.put("IP:", STRING_OR_LONG);
         }
         public BinaryIPDissector() {
             super("IP_BINARY", epochMillisConfig);
