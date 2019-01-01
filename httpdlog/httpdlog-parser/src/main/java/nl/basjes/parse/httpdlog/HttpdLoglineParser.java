@@ -1,6 +1,6 @@
 /*
  * Apache HTTPD & NGINX Access log parsing made easy
- * Copyright (C) 2011-2018 Niels Basjes
+ * Copyright (C) 2011-2019 Niels Basjes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
         String[] lines = {
             "Apache HTTPD & NGINX Access log parsing made easy",
             "For more information: https://github.com/nielsbasjes/logparser",
-            "Copyright (C) 2011-2018 Niels Basjes - License Apache 2.0"
+            "Copyright (C) 2011-2019 Niels Basjes - License Apache 2.0"
         };
         String version = getVersion();
         int width = version.length();
