@@ -102,9 +102,6 @@ public abstract class AbstractGeoIPDissector extends Dissector {
         InetAddress ipAddress;
         try {
             ipAddress = InetAddress.getByName(fieldValue);
-            if (ipAddress == null) {
-                return;
-            }
         } catch (UnknownHostException e) {
             return;
         }
