@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ public final class Utils {
             cookedInput = CHOPPED_STANDARD.matcher(cookedInput).replaceAll("");
 
             // Handle non standard (rejected by W3C) encoding that is used anyway by some
-            // See: http://stackoverflow.com/a/5408655/114196
+            // See: https://stackoverflow.com/a/5408655/114196
             if (cookedInput.contains("%u")) {
                 // Transform all existing non standard into UTF-16 standard.
                 cookedInput = VALID_NON_STANDARD.matcher(cookedInput).replaceAll("%$1%$2");
@@ -155,7 +155,7 @@ public final class Utils {
 
         StringBuilder sb = new StringBuilder(input.length());
 
-        // http://stackoverflow.com/q/8894258/114196 : Fastest way to iterate over all the chars in a String
+        // https://stackoverflow.com/q/8894258/114196 : Fastest way to iterate over all the chars in a String
         for (int i = 0; i < input.length(); i++) {
             char chr = input.charAt(i);
 

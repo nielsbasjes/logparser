@@ -1,6 +1,6 @@
 Dissect IP using GeoIP2 information
 ===
-This project also contains a dissector that uses the [MaxMind](http://www.maxmind.com) GeoIP2 data to 
+This project also contains a dissector that uses the [MaxMind](https://www.maxmind.com) GeoIP2 data to 
 dissect IP addresses into things like Country, City, ASN, etc.
 
 Where are the datafiles?
@@ -11,11 +11,11 @@ The data is owned by MaxMind and in order to use it you must either purchase a l
 data or download a 'slightly less accurate' free GeoLite2 version. 
 Also adding these files would make the repo very big.
 
-See http://dev.maxmind.com/ for the both the paid GeoIP2 and the free GeoLite2 downloadable databases.
+See https://dev.maxmind.com/ for the both the paid GeoIP2 and the free GeoLite2 downloadable databases.
 
 I personally install and run the geoipupdate tool.
 
-http://dev.maxmind.com/geoip/geoipupdate/
+https://dev.maxmind.com/geoip/geoipupdate/
 
 The datafiles I usually work with:
 
@@ -108,7 +108,7 @@ License
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://www.apache.org/licenses/LICENSE-2.0
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,

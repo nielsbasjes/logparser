@@ -2,7 +2,7 @@ Apache HTTPD & NGINX access log parser
 ======================================
 [![Travis Build status](https://api.travis-ci.org/nielsbasjes/logparser.png)](https://travis-ci.org/nielsbasjes/logparser)
 [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/logparser/badge.svg)](https://coveralls.io/github/nielsbasjes/logparser?branch=master)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Maven Central](https://img.shields.io/maven-central/v/nl.basjes.parse/parser-parent.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22nl.basjes.parse.httpdlog%22)
 [![If this project has business value for you then don't hesitate to support me with a small donation.](https://img.shields.io/badge/Donations-via%20Paypal-blue.svg)](https://www.paypal.me/nielsbasjes)
 
@@ -14,7 +14,7 @@ These configuration options are the schema of the access loglines.
 
 So we are using the LogFormat that wrote the file as the input parameter for the parser that reads the same file.
 In addition to the config options specified in the Apache HTTPD manual under
-[Custom Log Formats](http://httpd.apache.org/docs/current/mod/mod_log_config.html) the following are also recognized:
+[Custom Log Formats](https://httpd.apache.org/docs/current/mod/mod_log_config.html) the following are also recognized:
 
 * common
 * combined
@@ -22,12 +22,12 @@ In addition to the config options specified in the Apache HTTPD manual under
 * referer
 * agent
 
-For Nginx the log_format tokens are specified [here](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) and [here](http://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
+For Nginx the log_format tokens are specified [here](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) and [here](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
 
 **Special notes about the Apache HTTPD token %{format}t**
 ===
 
-Quote from [Apache HTTPD manual](http://httpd.apache.org/docs/current/mod/mod_log_config.html#formats)
+Quote from [Apache HTTPD manual](https://httpd.apache.org/docs/current/mod/mod_log_config.html#formats)
 
     %{format}t: The time, in the form given by format, which should be in strftime(3) format. (potentially localized)
 
@@ -40,7 +40,7 @@ This means that many fields are supported, but not all. Check the implementation
 * **Version 4.0 and newer**: Switched to parsing using native java 8 time library supports a few fields differently. See [StrfTimeToDateTimeFormatter](/httpdlog/httpdlog-parser/src/main/java/nl/basjes/parse/httpdlog/dissectors/StrfTimeToDateTimeFormatter.java#L119).
 
 **Limitation**: Only a single %{format}t entry is supported per line.
-Examples as described in the LogFormat [examples section](http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
+Examples as described in the LogFormat [examples section](https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples)
 of the Apache HTTPD manual cannot be parsed.
 
     You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
@@ -158,7 +158,7 @@ Special Dissectors
 If you have a log field / request header that gets filled using mod_unique_id you can now peek inside
 the values that were used to construct this.
 
-**NOTE: http://httpd.apache.org/docs/current/mod/mod_unique_id.html clearly states**
+**NOTE: https://httpd.apache.org/docs/current/mod/mod_unique_id.html clearly states**
 
      it should be emphasized that applications should not dissect the encoding.
      Applications should treat the entire encoded UNIQUE_ID as an opaque token,
@@ -201,7 +201,7 @@ License
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://www.apache.org/licenses/LICENSE-2.0
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,

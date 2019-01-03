@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,8 +38,8 @@ import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT
 import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT_STRING;
 
 // Implement the variables described here:
-// http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
-// http://nginx.org/en/docs/http/ngx_http_core_module.html#variables
+// https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+// https://nginx.org/en/docs/http/ngx_http_core_module.html#variables
 public class CoreLogModule implements NginxModule {
     @Override
     public List<TokenParser> getTokenParsers() {
@@ -102,7 +102,7 @@ public class CoreLogModule implements NginxModule {
             "request.receive.time", "TIME.STAMP",
             STRING_ONLY, FORMAT_STANDARD_TIME_US));
 
-        // http://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
+        // https://nginx.org/en/docs/http/ngx_http_core_module.html#var_bytes_sent
         // -------
         // $arg_name
         // argument name in the request line

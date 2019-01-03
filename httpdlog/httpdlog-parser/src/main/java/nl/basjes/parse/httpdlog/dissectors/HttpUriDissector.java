@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -136,7 +136,7 @@ public class HttpUriDissector extends Dissector {
         }
 
         // First we cleanup the URI so we fail less often over 'garbage' URIs.
-        // See: http://stackoverflow.com/questions/11038967/brackets-in-a-request-url-are-legal-but-not-in-a-uri-java
+        // See: https://stackoverflow.com/questions/11038967/brackets-in-a-request-url-are-legal-but-not-in-a-uri-java
         try {
             uriString = URIUtil.encode(uriString, badUriChars, "UTF-8");
         } catch (URIException e) {

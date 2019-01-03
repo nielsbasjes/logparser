@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,7 +39,7 @@ public class VariousModule implements NginxModule {
         List<TokenParser> parsers = new ArrayList<>(60);
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_secure_link_module.html#var_secure_link
+        // https://nginx.org/en/docs/http/ngx_http_secure_link_module.html#var_secure_link
 
         // $secure_link
         // The status of a link check. The specific value depends on the selected operation mode.
@@ -49,7 +49,7 @@ public class VariousModule implements NginxModule {
         // --- NOT FOR LOGGING ---
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_session_log_module.html#var_session_log_id
+        // https://nginx.org/en/docs/http/ngx_http_session_log_module.html#var_session_log_id
 
         // $session_log_id
         // current session ID;
@@ -57,13 +57,13 @@ public class VariousModule implements NginxModule {
         // NOT FOR LOGGING      $ session_log_binary_id         current session ID in binary form (16 bytes).
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_slice_module.html#var_slice_range
+        // https://nginx.org/en/docs/http/ngx_http_slice_module.html#var_slice_range
         // $slice_range
         // the current slice range in HTTP byte range format, for example, bytes=0-1048575.
         parsers.add(new TokenParser("$slice_range", PREFIX + ".slice_range", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_proxy_module.html#var_proxy_add_x_forwarded_for
+        // https://nginx.org/en/docs/http/ngx_http_proxy_module.html#var_proxy_add_x_forwarded_for
 
         // $proxy_host
         // name and port of a proxied server as specified in the proxy_pass directive;
@@ -79,7 +79,7 @@ public class VariousModule implements NginxModule {
             PREFIX + ".proxy.add_x_forwarded_for", "STRING", STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_userid_module.html#var_uid_got
+        // https://nginx.org/en/docs/http/ngx_http_userid_module.html#var_uid_got
 
         // $uid_got
         // The cookie name and received client identifier.
@@ -93,7 +93,7 @@ public class VariousModule implements NginxModule {
         parsers.add(new TokenParser("$uid_set", PREFIX + ".userid.uid_set", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_browser_module.html#var_msie
+        // https://nginx.org/en/docs/http/ngx_http_browser_module.html#var_msie
 
         // $modern_browser
         // equals the value set by the modern_browser_value directive, if a browser was identified as modern;
@@ -106,7 +106,7 @@ public class VariousModule implements NginxModule {
         parsers.add(new TokenParser("$msie", PREFIX + ".browser.msie", "STRING", STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_stub_status_module.html#var_connections_active
+        // https://nginx.org/en/docs/http/ngx_http_stub_status_module.html#var_connections_active
 
         // $connections_active
         // The current number of active client connections including Waiting connections.
@@ -122,7 +122,7 @@ public class VariousModule implements NginxModule {
         parsers.add(new TokenParser("$connections_waiting", PREFIX + ".stub_status.connections.waiting", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_ssi_module.html#var_date_gmt
+        // https://nginx.org/en/docs/http/ngx_http_ssi_module.html#var_date_gmt
         // NOTE: These two are STRING because the actual format is unknown (it is configurable)
 
         // $date_local
@@ -145,14 +145,14 @@ public class VariousModule implements NginxModule {
         parsers.add(new TokenParser("$fastcgi_path_info", PREFIX + ".fastcgi.path_info", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_gzip_module.html#var_gzip_ratio
+        // https://nginx.org/en/docs/http/ngx_http_gzip_module.html#var_gzip_ratio
 
         // $gzip_ratio
         // achieved compression ratio, computed as the ratio between the original and compressed response sizes.
         parsers.add(new TokenParser("$gzip_ratio", PREFIX + ".gzip.ratio", "STRING", STRING_ONLY, FORMAT_NUMBER_OPTIONAL_DECIMAL));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_spdy_module.html#var_spdy
+        // https://nginx.org/en/docs/http/ngx_http_spdy_module.html#var_spdy
 
         // $spdy
         // SPDY protocol version for SPDY connections, or an empty string otherwise;
@@ -162,20 +162,20 @@ public class VariousModule implements NginxModule {
         parsers.add(new TokenParser("$spdy_request_priority", PREFIX + ".spdy.request_priority", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_v2_module.html#var_http2
+        // https://nginx.org/en/docs/http/ngx_http_v2_module.html#var_http2
         // $http2
         // negotiated protocol identifier: “h2” for HTTP/2 over TLS, “h2c” for HTTP/2 over cleartext TCP, or an empty string otherwise.
         parsers.add(new TokenParser("$http2", PREFIX + ".http2.negotiated_protocol", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_referer_module.html#var_invalid_referer
+        // https://nginx.org/en/docs/http/ngx_http_referer_module.html#var_invalid_referer
         // $invalid_referer
         // Empty string, if the “Referer” request header field value is considered valid, otherwise “1”.
         parsers.add(new TokenParser("$invalid_referer", PREFIX + ".referer.invalid", "STRING", STRING_ONLY, "1?"));
 
         // -----------------------------------------------------------------------------------------------------
 
-        // http://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#var_jwt_claim_
+        // https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#var_jwt_claim_
         // $jwt_header_name
         // returns the value of a specified JOSE header
         parsers.add(new NamedTokenParser("\\$jwt_header_([a-z0-9\\-_]*)",
@@ -189,15 +189,15 @@ public class VariousModule implements NginxModule {
             STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_memcached_module.html#var_memcached_key
+        // https://nginx.org/en/docs/http/ngx_http_memcached_module.html#var_memcached_key
 
         // $memcached_key
         // Defines a key for obtaining response from a memcached server.
         parsers.add(new TokenParser("$memcached_key", PREFIX + ".memcached.key", "STRING", STRING_ONLY, FORMAT_STRING));
 
         // -----------------------------------------------------------------------------------------------------
-        // http://nginx.org/en/docs/http/ngx_http_realip_module.html#var_realip_remote_addr
-        // http://nginx.org/en/docs/stream/ngx_stream_realip_module.html#var_realip_remote_addr
+        // https://nginx.org/en/docs/http/ngx_http_realip_module.html#var_realip_remote_addr
+        // https://nginx.org/en/docs/stream/ngx_stream_realip_module.html#var_realip_remote_addr
 
         // $realip_remote_addr
         // keeps the original client address

@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -104,7 +104,7 @@ public class TestGeoIPDissectors {
     // =================================================================================================================
     // IP not in index
     @Test
-    public void testUnknownFileASN() {
+    public void testUnknownIPASN() {
         createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("ASN:asn.number")
@@ -112,7 +112,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownFileISP() {
+    public void testUnknownIPISP() {
         createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("ASN:asn.number")
@@ -120,7 +120,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownFileCity() {
+    public void testUnknownIPCity() {
         createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("STRING:continent.name")
@@ -128,7 +128,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownFileCountry() {
+    public void testUnknownIPCountry() {
         createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("STRING:continent.name")
