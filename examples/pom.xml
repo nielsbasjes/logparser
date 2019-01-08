@@ -63,7 +63,7 @@
     <module>apache-hadoop-mapreduce</module>
     <module>apache-flink</module>
     <module>apache-beam</module>
-    <module>apache-storm</module>
+    <!--<module>apache-storm</module>-->
   </modules>
 
 </project>
