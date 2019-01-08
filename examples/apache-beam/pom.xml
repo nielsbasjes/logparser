@@ -23,7 +23,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>5.2</version>
+    <version>5.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>apache-beam</artifactId>
