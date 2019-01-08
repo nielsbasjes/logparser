@@ -22,7 +22,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>5.2-SNAPSHOT</version>
+    <version>5.2</version>
   </parent>
   <artifactId>java-pojo</artifactId>
   <name>Parser - Examples - Java POJO</name>

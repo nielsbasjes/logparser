@@ -21,7 +21,7 @@
   <parent>
     <artifactId>parser-parent</artifactId>
     <groupId>nl.basjes.parse</groupId>
-    <version>5.2-SNAPSHOT</version>
+    <version>5.2</version>
   </parent>
   <artifactId>parser-core</artifactId>
   <name>Parser - Core</name>
