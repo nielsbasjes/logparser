@@ -29,12 +29,6 @@
   <artifactId>apache-flink</artifactId>
   <name>Parser - Examples - Apache Flink</name>
 
-  <properties>
-    <avro.version>1.8.2</avro.version>
-    <flink.version>1.3.2</flink.version>
-    <flink.scala.version>2.11</flink.scala.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
@@ -53,6 +47,13 @@
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
       <version>${avro.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-avro</artifactId>
+      <version>${flink.version}</version>
       <scope>provided</scope>
     </dependency>
 

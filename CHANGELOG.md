@@ -6,6 +6,7 @@ v5.2-SNAPSHOT
 - Added basic support for the NGinx Upstream, SSL, GeoIP and all other documented modules
 - Added basic support for parsing the Kubernetes Ingress logformat variables
 - Disallow some Dissector methods to return a null.
+- Updated many dependencies: Hadoop, Flink, Beam, etc.
 
 v5.1
 ===

@@ -29,11 +29,6 @@
   <artifactId>apache-beam</artifactId>
   <name>Parser - Examples - Apache Beam</name>
 
-  <properties>
-    <avro.version>1.8.2</avro.version>
-    <beam.version>2.4.0</beam.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>
