@@ -1,5 +1,9 @@
 This is intended as an overview of the major changes
 
+v5.3-SNAPSHOT
+===
+- Updated many dependencies
+
 v5.2
 ===
 - Improve regex performance
