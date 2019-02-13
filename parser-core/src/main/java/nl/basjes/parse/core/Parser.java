@@ -84,8 +84,8 @@ public class Parser<RECORD> implements Serializable {
 
     // Key = "request.time.hour"
     // Value = the set of dissectors that must all be started once we have this value
-    private Map<String, Set<DissectorPhase>> compiledDissectors = null;
-    private Set<String> usefulIntermediateFields = null;
+    private HashMap<String, Set<DissectorPhase>> compiledDissectors = null;
+    private HashSet<String> usefulIntermediateFields = null;
     private String rootType;
 
     // NOTE: The Method is NOT serializable. So after deserialization the 'assembled' is false
