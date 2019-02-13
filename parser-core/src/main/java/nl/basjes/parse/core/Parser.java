@@ -888,7 +888,7 @@ public class Parser<RECORD> implements Serializable {
             Constructor<RECORD> co = recordClass.getConstructor();
             record = co.newInstance();
         } catch (Exception e) {
-            LOG.error("Unable to create instance: {}", e);
+            LOG.error("Unable to create instance: {}", e.getMessage());
             return null;
         }
         return createParsable(record);
