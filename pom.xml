@@ -33,7 +33,7 @@
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
     <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
-    <checkstyle.version>8.16</checkstyle.version>
+    <checkstyle.version>8.20</checkstyle.version>
 
     <lombok.version>1.18.4</lombok.version>
     <slf4j.version>1.7.21</slf4j.version>
