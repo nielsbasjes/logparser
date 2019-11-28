@@ -363,6 +363,9 @@
             <exclude>**/target/**</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
             <exclude>docker/_m2/**</exclude>
+            <!-- Documentation and website config -->
+            <exclude>**/CNAME</exclude>
+            <exclude>**/_config.yml</exclude>
           </excludes>
         </configuration>
       </plugin>
