@@ -14,7 +14,7 @@ v5.2
 
 v5.1
 ===
-- Parse epoch seconds %{%s}t
+- Parse epoch seconds `%{%s}t`
 - Added GeoIP2 dissectors for City, Country and ASN data.
 - Improved output of dissector testing framework.
 
@@ -23,7 +23,7 @@ v5.0
 - The %u specifier allowed a space which broke parsing if the field after it also allowed space.
 - If a custom time format does not contain a timezone we assume a default timezone (UTC). 
 - Fix extracting milliseconds, added extracting microseconds and nanoseconds.
-- Allow %{%usec_frac}t in addition to %{usec_frac}t (same msec_frac).
+- Allow `%{%usec_frac}t` in addition to `%{usec_frac}t` (same msec_frac).
 - Introduce a setterPolicy to determine if the setter is called in case of a NULL or EMPTY value.
 - Replace Cobertura with Jacoco because of Java 8
 - Remove Yauaa from tests and examples because of circular dependency between the projects.
@@ -55,20 +55,20 @@ v3.0
 - Allow a dissector to return an empty 'extra part' to allow an alternate form of type remapping
 - Improved test coverage
 - Dissection the setcookies expire value was not deterministic and an absent 'expire' value is now returned as null instead of the 'now' timestamp.
-- Implemented %{UNIT}T
+- Implemented `%{UNIT}T`
 - Implemented converters between several closely related formats (BYTES/BYTESCLF, time related formats)
 - Token based parsers can output multiple values for the same parameter.
 - Implemented all < and > directives for Apache logformat
-- Implemented %{VARNAME}^ti and %{VARNAME}^to
+- Implemented `%{VARNAME}^ti` and `%{VARNAME}^to`
 
 **RELEVANT CHANGES COMPARED WITH THE 2.X VERSION**:
 These fields are now reported as deprecated.
-- %b changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
-- %D changed from "server.process.time" to "response.server.processing.time"
-- %{msec_frac}t" changed from "request.receive.time.begin.msec_frac" to "request.receive.time.msec_frac"
-- %{usec_frac}t" changed from "request.receive.time.begin.usec_frac" to "request.receive.time.usec_frac"
-- %{msec}t"      changed from "request.receive.time.begin.msec"      to "request.receive.time.msec"
-- %{usec}t"      changed from "request.receive.time.begin.usec"      to "request.receive.time.usec"
+- `%b` changed from "BYTES:response.body.bytesclf" to "BYTESCLF:response.body.bytes"
+- `%D` changed from "server.process.time" to "response.server.processing.time"
+- `%{msec_frac}t` changed from "request.receive.time.begin.msec_frac" to "request.receive.time.msec_frac"
+- `%{usec_frac}t` changed from "request.receive.time.begin.usec_frac" to "request.receive.time.usec_frac"
+- `%{msec}t`      changed from "request.receive.time.begin.msec"      to "request.receive.time.msec"
+- `%{usec}t`      changed from "request.receive.time.begin.usec"      to "request.receive.time.usec"
 
 v2.8
 ===
@@ -90,9 +90,9 @@ v2.6
 
 v2.5
 ===
-- Simply treat the %{...}t as a text field you can retrieve (instead of failing if it occurs).
+- Simply treat the `%{...}t` as a text field you can retrieve (instead of failing if it occurs).
 - Change URI dissector to allow URIs like android-app://...
-- Change URI dissector to allow % in the URI when it is not an escape sequence (like in ?promo=Give-5%-discount)
+- Change URI dissector to allow % in the URI when it is not an escape sequence (like in `?promo=Give-5%-discount`)
 
 v2.4
 ===
