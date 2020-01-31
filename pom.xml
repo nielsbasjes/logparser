@@ -32,6 +32,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
+    <!-- In order for everything to work correctly we need atleast this version of maven. -->
+    <maven.minimal.version>3.5.2</maven.minimal.version>
+
     <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
     <checkstyle.version>8.29</checkstyle.version>
 
@@ -288,8 +291,11 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>[3.6.2,)</version>
-                  <message>You must use a newer version of Maven (the Maven 3.0.5 built in into IntelliJ IDEA is too old!)</message>
+                  <version>[${maven.minimal.version},)</version>
+                  <message>You must use Maven version ${maven.minimal.version} or newer to build this project.</message>
+                  <!-- Reasons for this need:                            -->
+                  <!-- https://issues.apache.org/jira/browse/MDEPLOY-221 -->
+                  <!-- https://issues.apache.org/jira/browse/MNG-6581    -->
                 </requireMavenVersion>
               </rules>
             </configuration>
