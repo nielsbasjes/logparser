@@ -31,7 +31,7 @@
   <url>https://niels.basjes.nl</url>
 
   <properties>
-    <antlr.version>4.7.2</antlr.version>
+    <antlr.version>4.8-1</antlr.version>
   </properties>
 
   <dependencies>
@@ -53,13 +53,7 @@
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.11</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-      <version>3.1</version>
+      <version>1.14</version>
     </dependency>
 
     <dependency>
@@ -71,7 +65,13 @@
     <dependency>
       <groupId>com.maxmind.geoip2</groupId>
       <artifactId>geoip2</artifactId>
-      <version>2.12.0</version>
+      <version>2.13.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
@@ -103,8 +103,8 @@
 
       <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
-        <artifactId>maven-replacer-plugin</artifactId>
-        <version>1.4.1</version>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -114,7 +114,7 @@
           </execution>
         </executions>
         <configuration>
-          <file>src/main/resources/version/Version.java.template</file>
+          <file>${basedir}/src/main/resources/version/Version.java.template</file>
           <outputFile>${basedir}/target/generated-sources/java/nl/basjes/parse/httpdlog/Version.java</outputFile>
           <replacements>
             <replacement>
@@ -138,7 +138,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.8</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -161,8 +161,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
-
         <configuration>
           <minimizeJar>true</minimizeJar>
           <relocations>

@@ -21,9 +21,8 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -33,6 +32,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.parse.core.Casts.NO_CASTS;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
@@ -108,15 +109,31 @@ public class HttpUriDissector extends Dissector {
 
     // --------------------------------------------
 
-    private static BitSet badUriChars = new BitSet(256);
+
+    // ---------------------------- Characters disallowed within the URI syntax
+    // Excluded US-ASCII Characters are like control, space, delims and unwise
+
+    private static final BitSet BAD_URI_CHARS = new BitSet(256);
     static {
-        badUriChars.set(0, 255, true);
-        badUriChars.andNot(org.apache.commons.httpclient.URI.unwise);
-        badUriChars.andNot(org.apache.commons.httpclient.URI.space);
-        badUriChars.andNot(org.apache.commons.httpclient.URI.control);
-        badUriChars.set('<', false);
-        badUriChars.set('>', false);
-        badUriChars.set('"', false);
+        BAD_URI_CHARS.set(0, 255);
+        // Unwise
+        BAD_URI_CHARS.clear('{');
+        BAD_URI_CHARS.clear('}');
+        BAD_URI_CHARS.clear('|');
+        BAD_URI_CHARS.clear('\\');
+        BAD_URI_CHARS.clear('^');
+        BAD_URI_CHARS.clear('[');
+        BAD_URI_CHARS.clear(']');
+        BAD_URI_CHARS.clear('`');
+        // Space
+        BAD_URI_CHARS.clear(0x20);
+        // Control
+        BAD_URI_CHARS.clear(0, 0x1F);
+        BAD_URI_CHARS.clear(0x7F);
+        // Extra
+        BAD_URI_CHARS.clear('<');
+        BAD_URI_CHARS.clear('>');
+        BAD_URI_CHARS.clear('"');
     }
 
     // Match % encoded chars that are NOT followed by hex chars (may be at the end of the string)
@@ -137,11 +154,7 @@ public class HttpUriDissector extends Dissector {
 
         // First we cleanup the URI so we fail less often over 'garbage' URIs.
         // See: https://stackoverflow.com/questions/11038967/brackets-in-a-request-url-are-legal-but-not-in-a-uri-java
-        try {
-            uriString = URIUtil.encode(uriString, badUriChars, "UTF-8");
-        } catch (URIException e) {
-            throw new DissectionFailure("Failed to parse URI >>" + field.getValue().getString()+"<< because of : " +e.getMessage());
-        }
+        uriString = new String(URLCodec.encodeUrl(BAD_URI_CHARS, uriString.getBytes(UTF_8)), US_ASCII);
 
         // Before we hand it to the standard parser we hack it around a bit so we can parse
         // nasty edge cases that are illegal yet do occur in real clickstreams.

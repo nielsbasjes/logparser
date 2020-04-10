@@ -159,7 +159,7 @@ public class ModUniqueIdDissector extends Dissector {
 
         // This implementation is based on the observation that the encoding used by mod-unique-id is
         // the same as Base64 except that the last two letters are different.
-        // So by simply replacing the occurences of these letters in the source we reuse and existing
+        // So by simply replacing the occurrences of these letters in the source we reuse and existing
         // Base64 decode implementation.
 
         byte[] modUniqueIdBytes = modUniqueIdString.getBytes(CHARSET_UTF_8);
@@ -170,9 +170,6 @@ public class ModUniqueIdDissector extends Dissector {
             byte nextByte = modUniqueIdBytes[i];
             switch (nextByte) {
                 case '+':
-                    modUniqueIdBase64Bytes[i] = '@';
-                    break;
-
                 case '/':
                     modUniqueIdBase64Bytes[i] = '@';
                     break;
@@ -182,7 +179,12 @@ public class ModUniqueIdDissector extends Dissector {
                     break;
             }
         }
-        return Base64.decodeBase64(modUniqueIdBase64Bytes);
+
+        try {
+            return Base64.decodeBase64(modUniqueIdBase64Bytes);
+        } catch (IllegalArgumentException iae) {
+            return null;
+        }
     }
 
     private UniqueIdRec decode(String modUniqueIdString) {

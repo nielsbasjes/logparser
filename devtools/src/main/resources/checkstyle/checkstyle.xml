@@ -38,11 +38,15 @@
   <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
   <module name="Translation" />
 
-  <module name="FileLength" />
   <module name="FileTabCharacter" />
+
+  <module name="FileLength">
+    <property name="fileExtensions" value="!yaml"/>
+  </module>
 
   <module name="LineLength">
     <property name="max" value="150" />
+    <property name="fileExtensions" value="!yaml"/>
   </module>
 
   <module name="SuppressWithPlainTextCommentFilter">
@@ -52,8 +56,6 @@
   </module>
 
   <module name="TreeWalker">
-
-    <!--<module name="FileContentsHolder"/>-->
 
     <!-- Checks for Javadoc comments. -->
     <!-- See http://checkstyle.sf.net/config_javadoc.html -->
@@ -65,7 +67,11 @@
     <module name="LocalFinalVariableName" />
     <module name="LocalVariableName" />
     <module name="MemberName" />
-    <module name="MethodName" />
+    <module name="MethodName">
+      <property name="format" value="^[a-z][a-zA-Z0-9_]*[a-zA-Z0-9]+$"/>
+      <!--<message key="name.invalidPattern"-->
+               <!--message="Method name ''{0}'' must match pattern ''{1}''."/>-->
+    </module>
     <module name="PackageName" />
     <module name="ParameterName" />
     <module name="StaticVariableName" />
@@ -91,22 +97,10 @@
 
     <!-- Checks for imports -->
     <!-- See http://checkstyle.sf.net/config_import.html -->
-
     <module name="IllegalImport" /> <!-- defaults to sun.* packages -->
     <module name="AvoidStarImport"/>
     <module name="RedundantImport"/>
-    <module name="UnusedImports">
-      <property name="processJavadoc" value="true"/>
-    </module>
-
-    <module name="CustomImportOrder">
-      <property name="customImportOrderRules"
-                value="THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS###STANDARD_JAVA_PACKAGE###STATIC"/>
-      <property name="specialImportsRegExp" value="^javax\."/>
-      <property name="standardPackageRegExp" value="^java\."/>
-      <property name="sortImportsInGroupAlphabetically" value="true"/>
-      <property name="separateLineBetweenGroups" value="true"/>
-    </module>
+    <module name="UnusedImports"/>
 
     <module name="EmptyStatement"/>
     <module name="IllegalInstantiation"/>
@@ -119,7 +113,7 @@
     <!-- Checks for Size Violations. -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="MethodLength">
-      <property name="max" value="300" />
+      <property name="max" value="500" />
       <property name="countEmpty" value="false" />
     </module>
     <module name="ParameterNumber" />

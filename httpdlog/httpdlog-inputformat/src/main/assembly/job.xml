@@ -30,7 +30,6 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <excludes>
-        <exclude>commons-lang:commons-lang</exclude>
         <exclude>org.slf4j:slf4j-api</exclude>
       </excludes>
     </dependencySet>

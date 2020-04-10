@@ -50,7 +50,7 @@ public class HttpFirstLineDissector extends Dissector {
     // - HTTP version = HTTP/[0-9]+\.[0-9]+
     // The HTTP version has been made optional to allow parsing the log lines you get when the URI is > 8KB
     // In that scenario the HTTP/x.x part will not be logged at all.
-    // In case of using mod_reqtimeout simply opening a connection and wait for the timeout without enreting any data
+    // In case of using mod_reqtimeout simply opening a connection and wait for the timeout without entering any data
     // results in an empty firstline. I.e. a "-"
     // The actual regex has been reduced to '.*' because we want to continue even if someone throws in complete garbage.
     public static final String FIRSTLINE_REGEX =

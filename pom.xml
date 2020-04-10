@@ -35,28 +35,43 @@
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
-    <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
-    <checkstyle.version>8.29</checkstyle.version>
+    <checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
+    <checkstyle.version>8.31</checkstyle.version>
 
-    <lombok.version>1.18.4</lombok.version>
-    <slf4j.version>1.7.21</slf4j.version>
+    <lombok.version>1.18.12</lombok.version>
+    <slf4j.version>1.7.30</slf4j.version>
 
-    <hadoop.version>2.8.5</hadoop.version>
-    <hive.version>2.3.4</hive.version>
+    <junit5.version>5.6.2</junit5.version>
+    <hamcrest-core.version>2.2</hamcrest-core.version>
+
+    <hadoop.version>3.2.1</hadoop.version>
+    <hive.version>3.1.2</hive.version>
     <pig.version>0.17.0</pig.version>
-    <avro.version>1.8.2</avro.version>
-    <beam.version>2.16.0</beam.version>
-    <flink.version>1.9.1</flink.version>
-    <flink.scala.version>2.11</flink.scala.version>
+    <avro.version>1.9.2</avro.version>
+    <beam.version>2.19.0</beam.version>
+    <flink.version>1.10.0</flink.version>
+    <flink.scala.version>2.12</flink.scala.version>
     <storm.version>1.2.3</storm.version>
 
     <rat.version>0.13</rat.version>
-    <jacoco.version>0.8.2</jacoco.version>
+    <jacoco.version>0.8.5</jacoco.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine/>
     <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit5.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
 
@@ -68,14 +83,38 @@
 
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.9</version>
+      <artifactId>commons-text</artifactId>
+      <version>1.8</version>
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>${hamcrest-core.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -126,7 +165,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.4</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -141,7 +180,6 @@
             <!-- explicitly define maven-deploy-plugin after other to force exec order -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.2</version>
             <executions>
               <execution>
                 <id>deploy</id>
@@ -187,13 +225,14 @@
     <pluginManagement>
       <plugins>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.1.0</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.8.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.8.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-deploy-plugin</artifactId><version>3.0.0-M1</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.0.0-M1</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId><version>3.1.1</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.1.0</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.0.0-M3</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId><version>3.0.0-M2</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.0.0-M1</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId><version>3.2.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.1.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.2.1</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.0.0-M3</version></plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -276,9 +315,27 @@
           </executions>
         </plugin>
 
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.7</version>
+          <configuration>
+            <rulesUri>classpath:///maven-version-rules.xml</rulesUri>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>nl.basjes.parse.devtools</groupId>
+              <artifactId>devtools</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
       </plugins>
     </pluginManagement>
+
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -307,7 +364,7 @@
         <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
-        <version>2.2.6</version>
+        <version>4.0.0</version>
         <executions>
           <execution>
             <id>get-the-git-infos</id>
@@ -332,7 +389,7 @@
           <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-core</artifactId>
-            <version>1.9</version>
+            <version>1.9.1</version>
             <exclusions>
               <exclusion>
                 <groupId>xerces</groupId>
@@ -380,7 +437,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.8.1</version>
         <configuration>
           <source>${jdkLevel}</source>
           <target>${jdkLevel}</target>
@@ -390,7 +447,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.1</version>
       </plugin>
 
     </plugins>
