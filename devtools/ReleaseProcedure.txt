@@ -26,8 +26,8 @@ git status
 mvn clean package
 mvn clean
 
-RELEASEVERSION=5.2
-NEXTVERSION=5.3
+RELEASEVERSION=5.3
+NEXTVERSION=5.4
 
 # Creating and publishing the new Tagging
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
@@ -42,18 +42,16 @@ git status
 git commit -m"Version ${RELEASEVERSION}" -a
 git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
 
-mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
-git commit -m"Start development for ${NEXTVERSION}" -a
-
-# These two profiles are defined in ~/.m2/settings.xml
-git checkout v${RELEASEVERSION}
-mvn clean package -Prelease
+mvn clean deploy -Prelease -PdeployToSonatype
 
 #VERIFY If this all looks good
 
-mvn clean deploy -Prelease -Pdeploy-sonatype
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
 
-git checkout master
+# UPDATE the versions in this document
+
+git commit -m"Start development for ${NEXTVERSION}" -a
+
 
 # Finally is ALL went well we push it
 git push
