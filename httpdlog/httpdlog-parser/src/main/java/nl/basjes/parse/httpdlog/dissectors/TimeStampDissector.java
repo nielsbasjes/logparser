@@ -426,7 +426,7 @@ public class TimeStampDissector extends Dissector {
         if (wantAnyTZIndependent) {
             // Timezone independent
             if (wantTimezone) {
-                parsable.addDissection(inputname, "TIME.TIMEZONE", "timezone",
+                parsable.addDissection(inputname, "TIME.ZONE", "timezone",
                     dateTime.getZone().getDisplayName(TextStyle.FULL, locale));
             }
             if (wantEpoch) {

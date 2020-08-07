@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.3-SNAPSHOT
 ===
 - Updated many dependencies
+- Fixed extracting the timezone
 
 v5.2
 ===

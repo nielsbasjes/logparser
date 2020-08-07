@@ -66,6 +66,7 @@ public class TestTimeStampDissector {
             .expect("TIME.SECOND:second",           44L)
             .expect("TIME.DATE:date",               "2012-12-31")
             .expect("TIME.TIME:time",               "23:00:44")
+            .expect("TIME.ZONE:timezone",           "-07:00")
             .expect("TIME.YEAR:year_utc",           "2013")
             .expect("TIME.YEAR:year_utc",           2013L)
             .expect("TIME.MONTH:month_utc",         "1")
@@ -100,6 +101,7 @@ public class TestTimeStampDissector {
             .expectPossible("TIME.SECOND:second")
             .expectPossible("TIME.DATE:date")
             .expectPossible("TIME.TIME:time")
+            .expectPossible("TIME.ZONE:timezone")
             .expectPossible("TIME.YEAR:year_utc")
             .expectPossible("TIME.MONTH:month_utc")
             .expectPossible("TIME.MONTHNAME:monthname_utc")
@@ -133,6 +135,7 @@ public class TestTimeStampDissector {
             .expectPossible("TIME.SECOND:request.receive.time.second")
             .expectPossible("TIME.DATE:request.receive.time.date")
             .expectPossible("TIME.TIME:request.receive.time.time")
+            .expectPossible("TIME.ZONE:request.receive.time.timezone")
             .expectPossible("TIME.YEAR:request.receive.time.year_utc")
             .expectPossible("TIME.MONTH:request.receive.time.month_utc")
             .expectPossible("TIME.MONTHNAME:request.receive.time.monthname_utc")
@@ -207,6 +210,7 @@ public class TestTimeStampDissector {
             .expect("TIME.SECOND:request.receive.time.second",            44L)
             .expect("TIME.DATE:request.receive.time.date",                "2012-12-31")
             .expect("TIME.TIME:request.receive.time.time",                "23:00:44")
+            .expect("TIME.ZONE:request.receive.time.timezone",            "-07:00")
 
             .expect("TIME.YEAR:request.receive.time.year_utc",            "2013")
             .expect("TIME.YEAR:request.receive.time.year_utc",            2013L)
@@ -255,8 +259,6 @@ public class TestTimeStampDissector {
             .withInput(logline)
             .expect("TIME.EPOCH:request.receive.time.epoch",                    "1482349825000")
 
-            .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
-
             .expect("TIME.DATE:request.receive.time.date",                      "2016-12-21")
             .expect("TIME.TIME:request.receive.time.time",                      "20:50:25")
             .expect("TIME.YEAR:request.receive.time.year",                      "2016")
@@ -269,6 +271,7 @@ public class TestTimeStampDissector {
             .expect("TIME.MINUTE:request.receive.time.minute",                  "50")
             .expect("TIME.SECOND:request.receive.time.second",                  "25")
             .expect("TIME.MILLISECOND:request.receive.time.millisecond",        "0")
+            .expect("TIME.ZONE:request.receive.time.timezone",                  "+01:00")
 
             .expect("TIME.DATE:request.receive.time.date_utc",                  "2016-12-21")
             .expect("TIME.TIME:request.receive.time.time_utc",                  "19:50:25")
@@ -296,8 +299,6 @@ public class TestTimeStampDissector {
             .withInput(logline)
             .expect("TIME.EPOCH:request.receive.time.epoch",                    "1482361794000")
 
-            .expectAbsentString("TIME.ZONE:request.receive.time.timezone")
-
             .expect("TIME.DATE:request.receive.time.date",                      "2016-12-22")
             .expect("TIME.TIME:request.receive.time.time",                      "00:09:54")
             .expect("TIME.YEAR:request.receive.time.year",                      "2016")
@@ -310,6 +311,7 @@ public class TestTimeStampDissector {
             .expect("TIME.MINUTE:request.receive.time.minute",                  "9")
             .expect("TIME.SECOND:request.receive.time.second",                  "54")
             .expect("TIME.MILLISECOND:request.receive.time.millisecond",        "0")
+            .expect("TIME.ZONE:request.receive.time.timezone",                  "+01:00")
 
             .expect("TIME.DATE:request.receive.time.date_utc",                  "2016-12-21")
             .expect("TIME.TIME:request.receive.time.time_utc",                  "23:09:54")
