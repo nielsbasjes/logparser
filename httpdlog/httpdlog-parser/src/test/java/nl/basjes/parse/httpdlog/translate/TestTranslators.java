@@ -56,7 +56,8 @@ public class TestTranslators {
         DissectorTester.create()
             .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("0")
-            .expect("OUT:root", (String)null)
+            .expect("OUT:root", 0L)
+            .expect("OUT:root", "0")
             .checkExpectations();
     }
 
@@ -66,6 +67,7 @@ public class TestTranslators {
             .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("1")
             .expect("OUT:root", 1L)
+            .expect("OUT:root", "1")
             .checkExpectations();
     }
 

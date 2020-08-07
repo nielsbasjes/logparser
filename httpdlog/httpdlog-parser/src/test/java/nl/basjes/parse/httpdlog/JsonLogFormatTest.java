@@ -58,7 +58,7 @@ public class JsonLogFormatTest {
         tester.expectValuePresent("TIME.LOCALIZEDSTRING:request.receive.time")
               .expectValuePresent("STRING:connection.server.name")
               .expectValuePresent("NUMBER:connection.client.logname")
-              .expectValuePresent("STRING:connection.client.user")
+              .expectNull("STRING:connection.client.user")
               .expectValuePresent("HTTP.HEADER:request.header.x-forwarded-for")
               .expectValuePresent("HTTP.URI:request.referer")
               .expectValuePresent("HTTP.USERAGENT:request.user-agent")
@@ -71,9 +71,9 @@ public class JsonLogFormatTest {
               .expectValuePresent("STRING:request.status.last")
               .expectValuePresent("BYTES:response.body.bytes")
               .expectValuePresent("MICROSECONDS:response.server.processing.time")
-              .expectValuePresent("HTTP.QUERYSTRING:request.firstline.uri.query")
+              .expectAbsentString("HTTP.QUERYSTRING:request.firstline.uri.query")
               .expectValuePresent("HTTP.PATH:request.firstline.uri.path")
-              .expectValuePresent("HTTP.REF:request.firstline.uri.ref");
+              .expectAbsentString("HTTP.REF:request.firstline.uri.ref");
 
         for (String path: parser.getPossiblePaths()){
             tester.expectPossible(path);

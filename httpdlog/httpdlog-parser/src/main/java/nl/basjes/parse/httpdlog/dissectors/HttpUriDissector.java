@@ -213,33 +213,48 @@ public class HttpUriDissector extends Dissector {
 
         if (wantQuery || wantPath || wantRef) {
             if (wantQuery) {
-                String query = uri.getRawQuery();
-                if (query == null) {
-                    query = "";
+                String value = uri.getRawQuery();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.QUERYSTRING", "query", value);
                 }
-                parsable.addDissection(inputname, "HTTP.QUERYSTRING", "query", query);
             }
             if (wantPath) {
-                parsable.addDissection(inputname, "HTTP.PATH", "path", uri.getPath());
+                String value = uri.getPath();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.PATH", "path", value);
+                }
             }
             if (wantRef) {
-                parsable.addDissection(inputname, "HTTP.REF", "ref", uri.getFragment());
+                String value = uri.getFragment();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.REF", "ref", value);
+                }
             }
         }
 
         if (isUrl) {
             if (wantProtocol) {
-                parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", uri.getScheme());
+                String value = uri.getScheme();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.PROTOCOL", "protocol", value);
+                }
             }
             if (wantUserinfo) {
-                parsable.addDissection(inputname, "HTTP.USERINFO", "userinfo", uri.getUserInfo());
+                String value = uri.getUserInfo();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.USERINFO", "userinfo", value);
+                }
             }
             if (wantHost) {
-                parsable.addDissection(inputname, "HTTP.HOST", "host", uri.getHost());
+                String value = uri.getHost();
+                if (value != null && !value.isEmpty()) {
+                    parsable.addDissection(inputname, "HTTP.HOST", "host", value);
+                }
             }
             if (wantPort) {
-                if (uri.getPort() != -1) {
-                    parsable.addDissection(inputname, "HTTP.PORT", "port", uri.getPort());
+                int value = uri.getPort();
+                if (value != -1) {
+                    parsable.addDissection(inputname, "HTTP.PORT", "port", value);
                 }
             }
         }

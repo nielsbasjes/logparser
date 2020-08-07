@@ -328,7 +328,7 @@ public class NginxLogFormatTest {
             .printAllPossibleValues();
     }
 
-    private class SingleFieldTestcase {
+    private static class SingleFieldTestcase {
         String logformat;
         String logline;
         String fieldName;

@@ -31,10 +31,6 @@ public class ConvertNumberIntoCLF extends TypeConvertBaseDissector {
 
     @Override
     public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
-        if ("0".equals(value.getString())) {
-            parsable.addDissection(inputname, outputType, "", (String)null);
-        } else {
-            parsable.addDissection(inputname, outputType, "", value);
-        }
+        parsable.addDissection(inputname, outputType, "", value);
     }
 }

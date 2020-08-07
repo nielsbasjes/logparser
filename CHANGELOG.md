@@ -4,6 +4,7 @@ v5.3-SNAPSHOT
 ===
 - Updated many dependencies
 - Fixed extracting the timezone
+- In url parsing missing values are now 'absent' (i.e. not set)
 
 v5.2
 ===

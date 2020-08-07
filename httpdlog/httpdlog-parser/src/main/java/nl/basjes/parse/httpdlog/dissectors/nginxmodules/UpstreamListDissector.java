@@ -81,6 +81,10 @@ public class UpstreamListDissector extends Dissector {
 
         String fieldValue = field.getValue().getString();
 
+        if (fieldValue == null || fieldValue.isEmpty()) {
+            return; // Nothing to do.
+        }
+
         String[] servers = fieldValue.split(", ");
         int serverNr = 0;
         for (String server: servers) {

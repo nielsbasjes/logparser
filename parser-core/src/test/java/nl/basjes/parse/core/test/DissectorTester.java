@@ -139,11 +139,19 @@ public final class DissectorTester implements Serializable {
         return this;
     }
 
+    public DissectorTester expect(String fieldname, Integer expected) {
+        return expect(fieldname, Long.valueOf(expected));
+    }
+
     public DissectorTester expect(String fieldname, Double expected) {
         fieldname = addPrefix(fieldname);
         expectedDoubles.put(fieldname, expected);
         addDoubleSetter(fieldname);
         return this;
+    }
+
+    public DissectorTester expect(String fieldname, Float expected) {
+        return expect(fieldname, Double.valueOf(expected));
     }
 
     public DissectorTester expectNull(String fieldname) {
@@ -196,7 +204,7 @@ public final class DissectorTester implements Serializable {
         return this;
     }
 
-    private Pattern prefixInserter = Pattern.compile("([^:]+:)([^:]+)");
+    private static final Pattern PREFIX_INSERTER = Pattern.compile("([^:]+:)([^:]+)");
 
     public DissectorTester withPathPrefix(String prefix) {
         if (prefix == null || prefix.isEmpty()) {
@@ -211,7 +219,7 @@ public final class DissectorTester implements Serializable {
         if (pathPrefix.isEmpty()) {
             return field;
         }
-        return prefixInserter.matcher(field).replaceAll(pathPrefix);
+        return PREFIX_INSERTER.matcher(field).replaceAll(pathPrefix);
     }
 
     private static class ExpectationResult {
