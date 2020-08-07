@@ -5,6 +5,7 @@ v5.3-SNAPSHOT
 - Updated many dependencies
 - Fixed extracting the timezone
 - In url parsing missing values are now 'absent' (i.e. not set)
+- Handle loglines when the upstream module is not running (i.e. fields are a '-')
 
 v5.2
 ===
