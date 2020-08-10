@@ -212,4 +212,22 @@ public class TestHttpUriDissector {
             .checkExpectations();
     }
 
+    @Test
+    public void testHTMLEntities() {
+        DissectorTester.create()
+            .withDissector(new HttpUriDissector())
+            .withDissector(new QueryStringFieldDissector())
+
+            .withInput("https://www.basjes.nl/?utm_campaign=aaaa&utm_source=bbbb&utm_medium=email&utm_content=&gt;&euro;&foo;%2010x%20foo%20bar")
+
+            .expect("HTTP.HOST:host",               "www.basjes.nl")
+            // Note that the bad HTML entities have been converted into something "less bad"
+            .expect("HTTP.QUERYSTRING:query",       "&utm_campaign=aaaa&utm_source=bbbb&utm_medium=email&utm_content=%3E%E2%82%AC*foo;%2010x%20foo%20bar")
+            .expect("STRING:query.utm_campaign",    "aaaa")
+            .expect("STRING:query.utm_source",      "bbbb")
+            .expect("STRING:query.utm_medium",      "email")
+            .expect("STRING:query.utm_content",     ">€*foo; 10x foo bar")
+            .checkExpectations();
+    }
+
 }

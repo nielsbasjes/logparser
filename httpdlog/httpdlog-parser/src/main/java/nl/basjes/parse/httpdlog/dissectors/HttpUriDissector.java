@@ -37,6 +37,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.parse.core.Casts.NO_CASTS;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
+import static nl.basjes.parse.httpdlog.Utils.makeHTMLEncodedInert;
 
 public class HttpUriDissector extends Dissector {
     // --------------------------------------------
@@ -155,6 +156,9 @@ public class HttpUriDissector extends Dissector {
         // First we cleanup the URI so we fail less often over 'garbage' URIs.
         // See: https://stackoverflow.com/questions/11038967/brackets-in-a-request-url-are-legal-but-not-in-a-uri-java
         uriString = new String(URLCodec.encodeUrl(BAD_URI_CHARS, uriString.getBytes(UTF_8)), US_ASCII);
+
+        // Now we translate any HTML encoded entities/characters into URL UTF-8 encoded characters
+        uriString = makeHTMLEncodedInert(uriString);
 
         // Before we hand it to the standard parser we hack it around a bit so we can parse
         // nasty edge cases that are illegal yet do occur in real clickstreams.

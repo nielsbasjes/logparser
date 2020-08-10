@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v5.5-SNAPSHOT
 ===
-- ...
+- Handle HTML encoded values in the URL better
 
 v5.4
 ===

@@ -16,17 +16,25 @@
  */
 package nl.basjes.parse.httpdlog;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public final class Utils {
 
     private Utils() {}
 
-    private static final Pattern VALID_STANDARD         = Pattern.compile("%([0-9A-Fa-f]{2})");
     private static final Pattern CHOPPED_STANDARD       = Pattern.compile("%[0-9A-Fa-f]?$");
-    private static final Pattern VALID_NON_STANDARD     = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])([0-9A-Fa-f][0-9A-Fa-f])");
+    private static final Pattern VALID_NON_STANDARD     = Pattern.compile("%u([0-9A-Fa-f][0-9A-Fa-f])+");
     private static final Pattern CHOPPED_NON_STANDARD   = Pattern.compile("%u[0-9A-Fa-f]{0,3}$");
 
     /**
@@ -39,17 +47,16 @@ public final class Utils {
         String cookedInput = input;
 
         if (cookedInput.indexOf('%') > -1) {
-            // Transform all existing UTF-8 standard into UTF-16 standard.
-            cookedInput = VALID_STANDARD.matcher(cookedInput).replaceAll("%00%$1");
-
             // Discard chopped encoded char at the end of the line (there is no way to know what it was)
             cookedInput = CHOPPED_STANDARD.matcher(cookedInput).replaceAll("");
 
             // Handle non standard (rejected by W3C) encoding that is used anyway by some
             // See: https://stackoverflow.com/a/5408655/114196
             if (cookedInput.contains("%u")) {
-                // Transform all existing non standard into UTF-16 standard.
-                cookedInput = VALID_NON_STANDARD.matcher(cookedInput).replaceAll("%$1%$2");
+                cookedInput = replaceString(cookedInput, "%u00", "%u");
+
+                // Transform all existing non standard into UTF-8 standard.
+                cookedInput = VALID_NON_STANDARD.matcher(cookedInput).replaceAll("%$1");
 
                 // Discard chopped encoded char at the end of the line
                 cookedInput = CHOPPED_NON_STANDARD.matcher(cookedInput).replaceAll("");
@@ -57,7 +64,7 @@ public final class Utils {
         }
 
         try {
-            return URLDecoder.decode(cookedInput, "UTF-16");
+            return URLDecoder.decode(cookedInput, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // Will never happen because the encoding is hardcoded
             return null;
@@ -199,5 +206,99 @@ public final class Utils {
         }
         return sb.toString();
     }
+
+    private static final Map<String, String> HTML_ENTITY_REPLACE_MAP;
+
+    private static String htmlEntityToURLEncoded(String entity) {
+        try {
+            return URLEncoder.encode(StringEscapeUtils.unescapeHtml4(entity), StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            // This will never happen
+        }
+        return null;
+    }
+
+    static {
+        // The list of common entities I chose to support on their name.
+        List<String> entities = Arrays.asList(
+            "&nbsp;",
+            "&lt;",
+            "&gt;",
+            "&amp;",
+            "&quot;",
+            "&tilde;",
+            "&cent;",
+            "&pound;",
+            "&yen;",
+            "&euro;",
+            "&copy;",
+            "&reg;"
+        );
+
+        Map<String, String> aMap = new HashMap<>();
+        entities.forEach(entity -> aMap.put(entity, htmlEntityToURLEncoded(entity)));
+        HTML_ENTITY_REPLACE_MAP = Collections.unmodifiableMap(aMap);
+    }
+
+    /**
+     * Sometimes people put HTML encoded chars into a URL.
+     * Because it is very hard to correctly decode these we are just making them 'inert'
+     * so they do not break the rest of the processing.
+     * @param uriString The input URI
+     * @return Cleaned string
+     */
+    public static String makeHTMLEncodedInert(String uriString) {
+        String result = uriString;
+
+        // For some entities we have a valid replace value.
+        for (Map.Entry<String, String> entry: HTML_ENTITY_REPLACE_MAP.entrySet()) {
+            result = replaceString(result, entry.getKey(), entry.getValue());
+        }
+
+        // For the rest we simply make it inert
+        // TODO: Convert the codepoint to valid UTF-8
+        // Named entities ( like &gt; and &euro; )
+        result = result.replaceAll("&([a-zA-Z]+;)", "*$1");
+
+        // Numerical decimal entities
+        result = result.replaceAll("&(#[0-9a-fA-F]+;)", "*$1");
+
+        // Numerical hexadecimal entities
+        result = result.replaceAll("&(#x[0-9a-fA-F]+;)", "*$1");
+
+        return result;
+    }
+
+    // Copied from Yauaa
+    public static String replaceString(
+        final String input,
+        final String searchFor,
+        final String replaceWith
+    ){
+        //startIdx and idxSearchFor delimit various chunks of input; these
+        //chunks always end where searchFor begins
+        int startIdx = 0;
+        int idxSearchFor = input.indexOf(searchFor, startIdx);
+        if (idxSearchFor < 0) {
+            return input;
+        }
+        final StringBuilder result = new StringBuilder(input.length()+32);
+
+        while (idxSearchFor >= 0) {
+            //grab a part of input which does not include searchFor
+            result.append(input, startIdx, idxSearchFor);
+            //add replaceWith to take place of searchFor
+            result.append(replaceWith);
+
+            //reset the startIdx to just after the current match, to see
+            //if there are any further matches
+            startIdx = idxSearchFor + searchFor.length();
+            idxSearchFor = input.indexOf(searchFor, startIdx);
+        }
+        //the final chunk will go to the end of input
+        result.append(input.substring(startIdx));
+        return result.toString();
+    }
+
 
 }

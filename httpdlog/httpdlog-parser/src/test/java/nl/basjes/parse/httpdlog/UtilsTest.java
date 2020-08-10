@@ -19,6 +19,8 @@ package nl.basjes.parse.httpdlog;
 
 import org.junit.Test;
 
+import static nl.basjes.parse.httpdlog.Utils.makeHTMLEncodedInert;
+import static nl.basjes.parse.httpdlog.Utils.resilientUrlDecode;
 import static org.junit.Assert.assertEquals;
 
 public class UtilsTest {
@@ -26,25 +28,99 @@ public class UtilsTest {
     @Test
     public void testUrlDecoder() {
         // Normal cases
-        assertEquals("  ", Utils.resilientUrlDecode("  "));
-        assertEquals("  ", Utils.resilientUrlDecode(" %20"));
-        assertEquals("  ", Utils.resilientUrlDecode("%20 "));
-        assertEquals("  ", Utils.resilientUrlDecode("%20%20"));
-        assertEquals("  ", Utils.resilientUrlDecode("%u0020%u0020"));
-        assertEquals("  ", Utils.resilientUrlDecode("%20%u0020"));
-        assertEquals("  ", Utils.resilientUrlDecode("%u0020%20"));
+        assertEquals("  ", resilientUrlDecode("  "));
+        assertEquals("  ", resilientUrlDecode(" %20"));
+        assertEquals("  ", resilientUrlDecode("%20 "));
+        assertEquals("  ", resilientUrlDecode("%20%20"));
+        assertEquals("  ", resilientUrlDecode("%u0020%u0020"));
+        assertEquals("  ", resilientUrlDecode("%20%u0020"));
+        assertEquals("  ", resilientUrlDecode("%u0020%20"));
 
         // Deformed characters at the end of the line (desired is they are discarded)
-        assertEquals("x ", Utils.resilientUrlDecode("x %2"));
-        assertEquals("x ", Utils.resilientUrlDecode("x%20%2"));
-        assertEquals("x", Utils.resilientUrlDecode("x%u202"));
-        assertEquals("x", Utils.resilientUrlDecode("x%u20"));
-        assertEquals("x", Utils.resilientUrlDecode("x%u2"));
-        assertEquals("x", Utils.resilientUrlDecode("x%u"));
-        assertEquals("x", Utils.resilientUrlDecode("x%"));
+        assertEquals("x ", resilientUrlDecode("x %2"));
+        assertEquals("x ", resilientUrlDecode("x%20%2"));
+        assertEquals("x 2", resilientUrlDecode("x%u202"));
+        assertEquals("x ", resilientUrlDecode("x%u20"));
+        assertEquals("x", resilientUrlDecode("x%u2"));
+        assertEquals("x", resilientUrlDecode("x%u"));
+        assertEquals("x", resilientUrlDecode("x%"));
 
         // Combined test case (7 spaces and a chopped one)
-        assertEquals("       ", Utils.resilientUrlDecode("%20 %20%u0020%20 %20%2"));
+        assertEquals("       ", resilientUrlDecode("%20 %20%u0020%20 %20%2"));
+    }
+
+    @Test
+    public void testHtmlEncoding() {
+        assertEquals("<", resilientUrlDecode(makeHTMLEncodedInert("&lt;")));
+        assertEquals(">", resilientUrlDecode(makeHTMLEncodedInert("&gt;")));
+        assertEquals("€", resilientUrlDecode(makeHTMLEncodedInert("&euro;")));
+
+        assertEquals("*#x12345;", makeHTMLEncodedInert("&#x12345;"));
+        assertEquals("*#xaBcDeF;", makeHTMLEncodedInert("&#xaBcDeF;"));
+    }
+
+    @Test
+    public void testHtmlEncodingFull() {
+        // Normal cases
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("  ")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert(" %20")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("%20 ")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("%20%20")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("%u0020%u0020")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("%20%u0020")));
+        assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("%u0020%20")));
+
+        // Deformed characters at the end of the line (desired is they are discarded)
+        assertEquals("x ", resilientUrlDecode(makeHTMLEncodedInert("x %2")));
+        assertEquals("x ", resilientUrlDecode(makeHTMLEncodedInert("x%20%2")));
+        assertEquals("x 2", resilientUrlDecode(makeHTMLEncodedInert("x%u202")));
+        assertEquals("x ", resilientUrlDecode(makeHTMLEncodedInert("x%u20")));
+        assertEquals("x", resilientUrlDecode(makeHTMLEncodedInert("x%u2")));
+        assertEquals("x", resilientUrlDecode(makeHTMLEncodedInert("x%u")));
+        assertEquals("x", resilientUrlDecode(makeHTMLEncodedInert("x%")));
+
+        // Combined test case (7 spaces and a chopped one)
+        assertEquals("       ", resilientUrlDecode(makeHTMLEncodedInert("%20 %20%u0020%20 %20%2")));
+
+
+        // Normal cases
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert(" &gt; ")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert(" &gt;%20")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert("%20&gt; ")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert("%20&gt;%20")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert("%u0020&gt;%u0020")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert("%20&gt;%u0020")));
+        assertEquals(" > ", resilientUrlDecode(makeHTMLEncodedInert("%u0020&gt;%20")));
+
+        // Deformed characters at the end of the line (desired is they are discarded)
+        assertEquals(">x ", resilientUrlDecode(makeHTMLEncodedInert("&gt;x %2")));
+        assertEquals(">x ", resilientUrlDecode(makeHTMLEncodedInert("&gt;x%20%2")));
+        assertEquals(">x 2",  resilientUrlDecode(makeHTMLEncodedInert("&gt;x%u202")));
+        assertEquals(">x ",  resilientUrlDecode(makeHTMLEncodedInert("&gt;x%u20")));
+        assertEquals(">x",  resilientUrlDecode(makeHTMLEncodedInert("&gt;x%u2")));
+        assertEquals(">x",  resilientUrlDecode(makeHTMLEncodedInert("&gt;x%u")));
+        assertEquals(">x",  resilientUrlDecode(makeHTMLEncodedInert("&gt;x%")));
+
+
+        // Normal cases
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert(" &foobar; ")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert(" &foobar;%20")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert("%20&foobar; ")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert("%20&foobar;%20")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert("%u0020&foobar;%u0020")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert("%20&foobar;%u0020")));
+        assertEquals(" *foobar; ", resilientUrlDecode(makeHTMLEncodedInert("%u0020&foobar;%20")));
+
+        // Deformed characters at the end of the line (desired is they are discarded)
+        assertEquals("*foobar;x ", resilientUrlDecode(makeHTMLEncodedInert("&foobar;x %2")));
+        assertEquals("*foobar;x ", resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%20%2")));
+        assertEquals("*foobar;x 2",  resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%u202")));
+        assertEquals("*foobar;x ",  resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%u20")));
+        assertEquals("*foobar;x",  resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%u2")));
+        assertEquals("*foobar;x",  resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%u")));
+        assertEquals("*foobar;x",  resilientUrlDecode(makeHTMLEncodedInert("&foobar;x%")));
+
+        assertEquals("€",  resilientUrlDecode(makeHTMLEncodedInert("&euro;")));
     }
 
     @Test
