@@ -24,9 +24,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -154,8 +154,8 @@ public class TestRecord {
             assertTrue("Invalid type used, result must be a Set<?>", actualValue instanceof Set);
             Set<?> actualValues = (Set<?>)actualValue;
             for (Object actualValuee: actualValues) {
-                assertEquals("The field \"" + field + "\" should only have null values but we found: " +
-                    "(" + actualValue.getClass().getSimpleName() + ")\"" + actualValue + "\" ", null, actualValuee);
+                assertNull("The field \"" + field + "\" should only have null values but we found: " +
+                    "(" + actualValue.getClass().getSimpleName() + ")\"" + actualValue + "\" ", actualValuee);
             }
         } else {
             assertTrue("The field \""+field+"\" is missing (an entry of type "+value.getClass().getSimpleName()+" was expected).",

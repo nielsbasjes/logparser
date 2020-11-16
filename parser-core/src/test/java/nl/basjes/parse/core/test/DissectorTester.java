@@ -49,15 +49,15 @@ public final class DissectorTester implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(DissectorTester.class);
 
     private boolean verbose = false;
-    private List<String> inputValues = new ArrayList<>();
-    private Map<String, String> expectedStrings = new TreeMap<>();
-    private Map<String, Long> expectedLongs = new TreeMap<>();
-    private Map<String, Double> expectedDoubles = new TreeMap<>();
-    private List<String> expectedValuePresent = new ArrayList<>();
-    private List<String> expectedAbsentStrings = new ArrayList<>();
-    private List<String> expectedAbsentLongs = new ArrayList<>();
-    private List<String> expectedAbsentDoubles = new ArrayList<>();
-    private List<String> expectedPossible = new ArrayList<>();
+    private final List<String> inputValues = new ArrayList<>();
+    private final Map<String, String> expectedStrings = new TreeMap<>();
+    private final Map<String, Long> expectedLongs = new TreeMap<>();
+    private final Map<String, Double> expectedDoubles = new TreeMap<>();
+    private final List<String> expectedValuePresent = new ArrayList<>();
+    private final List<String> expectedAbsentStrings = new ArrayList<>();
+    private final List<String> expectedAbsentLongs = new ArrayList<>();
+    private final List<String> expectedAbsentDoubles = new ArrayList<>();
+    private final List<String> expectedPossible = new ArrayList<>();
     private Parser<TestRecord> parser = new Parser<>(TestRecord.class);
     private String pathPrefix = "";
 
