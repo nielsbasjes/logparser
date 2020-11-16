@@ -344,7 +344,7 @@ public class Parser<RECORD> implements Serializable {
         if (failOnMissingDissectors) {
             // Step 4: As a final step we verify that every required input can be found
             Set<String> missingDissectors = getTheMissingFields(locatedTargets);
-            if (missingDissectors != null && !missingDissectors.isEmpty()) {
+            if (!missingDissectors.isEmpty()) {
                 StringBuilder allMissing = new StringBuilder(missingDissectors.size() * 64);
                 for (String missing : missingDissectors) {
                     allMissing.append('\n').append(missing);
