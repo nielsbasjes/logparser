@@ -1,9 +1,16 @@
 This is intended as an overview of the major changes
 
-v5.5-SNAPSHOT
+v5.7-SNAPSHOT
+===
+-
+
+v5.6
+===
+- Fix bug that in some cases values would be reported multiple times.
+
+v5.5
 ===
 - Handle HTML encoded values in the URL better
-- Fix bug that in some cases values would be reported multiple times.
 
 v5.4
 ===

@@ -26,8 +26,8 @@ git status
 mvn clean package
 mvn clean
 
-RELEASEVERSION=5.6
-NEXTVERSION=5.7
+RELEASEVERSION=5.7
+NEXTVERSION=5.8
 
 # Creating and publishing the new Tagging
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
