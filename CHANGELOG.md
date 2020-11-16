@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.5-SNAPSHOT
 ===
 - Handle HTML encoded values in the URL better
+- Fix bug that in some cases values would be reported multiple times.
 
 v5.4
 ===
@@ -32,7 +33,7 @@ v5.1
 v5.0
 ===
 - The %u specifier allowed a space which broke parsing if the field after it also allowed space.
-- If a custom time format does not contain a timezone we assume a default timezone (UTC). 
+- If a custom time format does not contain a timezone we assume a default timezone (UTC).
 - Fix extracting milliseconds, added extracting microseconds and nanoseconds.
 - Allow `%{%usec_frac}t` in addition to `%{usec_frac}t` (same msec_frac).
 - Introduce a setterPolicy to determine if the setter is called in case of a NULL or EMPTY value.

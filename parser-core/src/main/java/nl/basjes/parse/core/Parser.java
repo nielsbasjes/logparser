@@ -189,6 +189,7 @@ public class Parser<RECORD> implements Serializable {
 
     // --------------------------------------------
     private void assembleDissectorPhases() throws InvalidDissectorException {
+        availableDissectors.clear();
         for (final Dissector dissector : allDissectors) {
             final String inputType = dissector.getInputType();
             if (inputType == null) {
