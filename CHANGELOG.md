@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v5.7-SNAPSHOT
 ===
--
+- Updated dependencies
 
 v5.6
 ===
