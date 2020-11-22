@@ -120,10 +120,10 @@ public class CookiesTest {
             "\"jquery-ui-theme=Eggplant; Apache=127.0.0.1.1351111543699529\" " +
             "\"" +
                 "NBA-0=, " +
-                "NBA-1=1234, " +
-                "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
-                "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
-                "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es" +
+                "NBA-1=1111, " +
+                "NBA-2=2222; expires=Wed, 01-Jan-2020 00:00:12 GMT, " +
+                "NBA-3=3333; expires=Wed, 01-Jan-2020 00:00:13 GMT; path=/, " +
+                "NBA-4=4444; expires=Wed, 01-Jan-2020 00:00:14 GMT; path=/; domain=.basj.es" +
             "\" \"-\" \"-\"";
 
     // ----------------------------
@@ -151,6 +151,11 @@ public class CookiesTest {
     }
 
     // ---------------
+
+    private void check(String expect, Map<String, String> results, String parameter) {
+        assertEquals(expect, results.get(parameter));
+    }
+
 
     @Test
     public void cookiesTest() throws Exception {
@@ -215,19 +220,18 @@ public class CookiesTest {
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));
         assertEquals("127.0.0.1.1351111543699529", results.get("HTTP.COOKIE:request.cookies.apache"));
         assertEquals("NBA-0=, " +
-                "NBA-1=1234, " +
-                "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +
-                "NBA-3=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/, " +
-                "NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
+                "NBA-1=1111, " +
+                "NBA-2=2222; expires=Wed, 01-Jan-2020 00:00:12 GMT, " +
+                "NBA-3=3333; expires=Wed, 01-Jan-2020 00:00:13 GMT; path=/, " +
+                "NBA-4=4444; expires=Wed, 01-Jan-2020 00:00:14 GMT; path=/; domain=.basj.es",
                 results.get("HTTP.SETCOOKIES:response.cookies"));
-        assertEquals("NBA-4=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT; path=/; domain=.basj.es",
+        assertEquals("NBA-4=4444; expires=Wed, 01-Jan-2020 00:00:14 GMT; path=/; domain=.basj.es",
                 results.get("HTTP.SETCOOKIE:response.cookies.nba-4"));
-        assertEquals("1234", results.get("STRING:response.cookies.nba-4.value"));
+        assertEquals("4444", results.get("STRING:response.cookies.nba-4.value"));
 
         // The returned value may be off by 1 or 2 seconds due to rounding.
-        assertEquals(1577836810D, Double.parseDouble(results.get("STRING:response.cookies.nba-4.expires")), 2D);
+        assertEquals(1577836814D, Double.parseDouble(results.get("STRING:response.cookies.nba-4.expires")), 2D);
         assertEquals("/", results.get("STRING:response.cookies.nba-4.path"));
         assertEquals(".basj.es", results.get("STRING:response.cookies.nba-4.domain"));
-
     }
 }
