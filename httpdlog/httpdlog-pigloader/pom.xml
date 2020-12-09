@@ -23,7 +23,7 @@
   <parent>
     <artifactId>httpdlog</artifactId>
     <groupId>nl.basjes.parse.httpdlog</groupId>
-    <version>5.7-SNAPSHOT</version>
+    <version>5.7</version>
   </parent>
 
   <artifactId>httpdlog-pigloader</artifactId>
