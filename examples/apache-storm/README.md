@@ -10,7 +10,7 @@ If you know why it goes wrong: Please tell me and put up a pull request.
 
 
     Apache HTTPD & NGINX Access log parsing made easy
-    Copyright (C) 2011-2019 Niels Basjes
+    Copyright (C) 2011-2021 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

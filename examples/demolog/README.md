@@ -7,13 +7,13 @@ This file is in the 'combined' LogFormat
 Although small (3456 lines) this is usefull to do testing on parsing and aggregating the data.
 
 All of these ips have accessed the /join_form URL.
-Although it exists this URL is nowhere advertised. 
+Although it exists this URL is nowhere advertised.
 So only if you already 'know' this url should exist will a visitor try this.
-No normal visitor knows this. Not even google knows this. 
+No normal visitor knows this. Not even google knows this.
 So the only people who 'know' this are hackers trying to break in (and fail in this case).
 
     Apache HTTPD & NGINX Access log parsing made easy
-    Copyright (C) 2011-2019 Niels Basjes
+    Copyright (C) 2011-2021 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
