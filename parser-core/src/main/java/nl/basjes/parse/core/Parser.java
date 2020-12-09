@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
@@ -900,19 +901,30 @@ public class Parser<RECORD> implements Serializable {
     /**
      * This method is for use by the developer to query the parser about
      * the possible paths that may be extracted.
-     * @return A list of all possible paths that could be determined automatically.
+     * @return A sorted list of all possible paths that could be determined automatically.
      */
     public List<String> getPossiblePaths() {
-        return getPossiblePaths(15);
+        return getPossiblePaths(15, true);
     }
 
     /**
      * This method is for use by the developer to query the parser about
      * the possible paths that may be extracted.
      * @param maxDepth The maximum recursion depth
-     * @return A list of all possible paths that could be determined automatically.
+     * @return A sorted list of all possible paths that could be determined automatically.
      */
     public List<String> getPossiblePaths(int maxDepth) {
+        return getPossiblePaths(maxDepth, true);
+    }
+
+    /**
+     * This method is for use by the developer to query the parser about
+     * the possible paths that may be extracted.
+     * @param maxDepth The maximum recursion depth
+     * @param sortList Must the list of paths be sorted?
+     * @return A list of all possible paths that could be determined automatically.
+     */
+    public List<String> getPossiblePaths(int maxDepth, boolean sortList) {
         if (allDissectors.isEmpty()) {
             return Collections.emptyList(); // nothing to do.
         }
@@ -960,6 +972,16 @@ public class Parser<RECORD> implements Serializable {
                 paths.add(remappedPath);
                 findAdditionalPossiblePaths(pathNodes, paths, typeRemappingSet.getKey(), typeRemapping, maxDepth - 1, "");
             }
+        }
+
+        if (sortList) {
+            // If so desired sort the list by the name of the field (i.e. NOT the name of the type)
+            paths = paths
+                .stream()
+                .map(s -> s.split(":")).map(splits -> splits[1]+":"+splits[0]) // Swap type and field
+                .sorted(String::compareTo)                                     // Sort by field
+                .map(s -> s.split(":")).map(splits -> splits[1]+":"+splits[0]) // Swap type and field back to normal
+                .collect(Collectors.toList());
         }
 
         return paths;

@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v5.8-SNAPSHOT
 ===
-- ...
+- getPossiblePaths sorts the list by fieldname.
 
 v5.7
 ===
