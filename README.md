@@ -109,7 +109,7 @@ Prebuilt plugins for these are provided in the distribution:
 * [Apache Pig](README-Pig.md)
 * [Apache Hive](README-Hive.md)
 
-For tools like Apache Flink, Beam and Storm there is only example code that is also used to verify that the build 
+For tools like Apache Flink, Beam and Storm there is only example code that is also used to verify that the build
 still works on those systems.
 * [Apache Flink](examples/apache-flink/src/test/java/nl/basjes/parse/httpdlog/flink)
 * [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
@@ -117,7 +117,7 @@ still works on those systems.
 
 Tools that ship a version of this parser in their distribution
 * [Apache Pig](https://github.com/apache/pig/blob/trunk/contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/apachelog/LogFormatLoader.java)
-* [Apache Drill](https://drill.apache.org/docs/httpd-storage-plugin/)
+* [Apache Drill](https://drill.apache.org/docs/httpd-format-plugin/)
 
 Internal structure and type remapping
 ===
