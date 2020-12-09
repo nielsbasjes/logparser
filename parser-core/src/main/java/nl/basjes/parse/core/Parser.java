@@ -449,8 +449,8 @@ public class Parser<RECORD> implements Serializable {
         if (mappings != null) {
             for (String mappedType : mappings) {
                 if (!compiledDissectors.containsKey(mappedType + ':' + subRootName)) {
-                    // Retyped targets are ALWAYS String ONLY.
-                    castsOfTargets.put(mappedType + ':' + subRootName, STRING_ONLY);
+                    // Retyped targets are ALWAYS String ONLY if they do not yet exist.
+                    castsOfTargets.putIfAbsent(mappedType + ':' + subRootName, STRING_ONLY);
                     findUsefulDissectorsFromField(possibleTargets, locatedTargets, mappedType, subRootName, false);
                 }
             }

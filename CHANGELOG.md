@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.7-SNAPSHOT
 ===
 - Updated dependencies
+- When adding a type remapping with an explicit cast this cast was lost and replaced by "STRING_ONLY".
 
 v5.6
 ===
