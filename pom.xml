@@ -36,7 +36,7 @@
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
     <checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
-    <checkstyle.version>8.37</checkstyle.version>
+    <checkstyle.version>8.38</checkstyle.version>
 
     <lombok.version>1.18.16</lombok.version>
     <slf4j.version>1.7.30</slf4j.version>
@@ -47,9 +47,9 @@
     <hadoop.version>3.3.0</hadoop.version>
     <hive.version>3.1.2</hive.version>
     <pig.version>0.17.0</pig.version>
-    <avro.version>1.10.0</avro.version>
+    <avro.version>1.10.1</avro.version>
     <beam.version>2.25.0</beam.version>
-    <flink.version>1.11.2</flink.version>
+    <flink.version>1.12.0</flink.version>
     <flink.scala.version>2.12</flink.scala.version>
     <storm.version>1.2.3</storm.version>
 

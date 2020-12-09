@@ -31,7 +31,7 @@
   <url>https://niels.basjes.nl</url>
 
   <properties>
-    <antlr.version>4.8-1</antlr.version>
+    <antlr.version>4.9</antlr.version>
   </properties>
 
   <dependencies>
