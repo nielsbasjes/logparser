@@ -22,6 +22,7 @@ import org.junit.Test;
 import static nl.basjes.parse.httpdlog.Utils.makeHTMLEncodedInert;
 import static nl.basjes.parse.httpdlog.Utils.resilientUrlDecode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class UtilsTest {
 
@@ -172,7 +173,7 @@ public class UtilsTest {
         // Specials
         assertEquals("\\q", Utils.decodeApacheHTTPDLogValue("\\q"));
         assertEquals("", Utils.decodeApacheHTTPDLogValue(""));
-        assertEquals(null, Utils.decodeApacheHTTPDLogValue(null));
+        assertNull(Utils.decodeApacheHTTPDLogValue(null));
     }
 
 }

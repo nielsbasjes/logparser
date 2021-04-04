@@ -307,18 +307,13 @@ public final class DissectorTester implements Serializable {
         int maxExpectedValue                = headerExpectedValue.length();
         int maxFailReason                   = headerFailReason   .length();
 
-        String nullString = " ";
         for (ExpectationResult expectationResult: results) {
             maxExpectation = Math.max(maxExpectation, expectationResult.expectation.length());
             maxFieldName = Math.max(maxFieldName, expectationResult.field.length());
-            if (expectationResult.value == null) {
-                maxExpectedValue = Math.max(maxExpectedValue, nullString.length());
-            } else {
+            if (expectationResult.value != null) {
                 maxExpectedValue = Math.max(maxExpectedValue, expectationResult.value.length());
             }
-            if (expectationResult.failReason == null) {
-                maxFailReason = Math.max(maxFailReason, nullString.length());
-            } else {
+            if (expectationResult.failReason != null) {
                 success = false;
                 maxFailReason = Math.max(maxFailReason, expectationResult.failReason.length());
             }
@@ -357,7 +352,7 @@ public final class DissectorTester implements Serializable {
                     .append(" | ");
                 String value = expectationResult.value;
                 if (expectationResult.value == null) {
-                    value = nullString;
+                    value = " ";
                 }
                 sb
                     .append(padding(value, maxExpectedValue)).append(value).append(" | ");
@@ -579,10 +574,12 @@ public final class DissectorTester implements Serializable {
                         "\"" + splitOutput[1] + "\" is not fully uppercase."));
                 }
 
-                assertNotNull("Dissector::prepareForDissect may NEVER return null!!", dissector.prepareForDissect("This will", "never exist"));
 //                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
 //                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
+            assertNotNull("Dissector::prepareForDissect may NEVER return null!!",
+                dissector.prepareForDissect("Checking for non-existing input handling",
+                                            "Checking for non-existing output handling"));
         }
         return results;
     }
