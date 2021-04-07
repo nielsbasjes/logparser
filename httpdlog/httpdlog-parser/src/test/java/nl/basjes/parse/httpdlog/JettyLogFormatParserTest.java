@@ -35,17 +35,17 @@ public class JettyLogFormatParserTest {
 
         @SuppressWarnings("UnusedDeclaration")
         @Field({
-             "IP:connection.client.host",
-             "NUMBER:connection.client.logname",
-             "STRING:connection.client.user",
-             "TIME.STAMP:request.receive.time",
-             "TIME.DAY:request.receive.time.day",
-             "HTTP.FIRSTLINE:request.firstline",
-             "STRING:request.status.last",
-             "BYTES:response.body.bytes",
-             "HTTP.URI:request.referer",
-             "HTTP.USERAGENT:request.user-agent",
-             "MICROSECONDS:response.server.processing.time"
+            "IP:connection.client.host",
+            "NUMBER:connection.client.logname",
+            "STRING:connection.client.user",
+            "TIME.STAMP:request.receive.time",
+            "TIME.DAY:request.receive.time.day",
+            "HTTP.FIRSTLINE:request.firstline",
+            "STRING:request.status.last",
+            "BYTES:response.body.bytes",
+            "HTTP.URI:request.referer",
+            "HTTP.USERAGENT:request.user-agent",
+            "MICROSECONDS:response.server.processing.time"
         })
         public void setValue(final String name, final String value) {
             results.put(name, value);

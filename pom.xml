@@ -36,7 +36,7 @@
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
     <checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
-    <checkstyle.version>8.38</checkstyle.version>
+    <checkstyle.version>8.41.1</checkstyle.version>
 
     <lombok.version>1.18.20</lombok.version>
     <slf4j.version>1.7.30</slf4j.version>

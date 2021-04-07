@@ -37,11 +37,11 @@ import java.util.regex.Pattern;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 
 @SuppressWarnings({
-        "PMD.LongVariable", // I like my variable names this way
-        "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
-        "PMD.BeanMembersShouldSerialize", // No beans here
-        "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
-    })
+    "PMD.LongVariable", // I like my variable names this way
+    "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
+    "PMD.BeanMembersShouldSerialize", // No beans here
+    "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
+})
 public abstract class TokenFormatDissector extends Dissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenFormatDissector.class);
@@ -288,9 +288,9 @@ public abstract class TokenFormatDissector extends Dissector {
 
     // --------------------------------------------
     @SuppressWarnings({ "PMD.AvoidInstantiatingObjectsInLoops",
-            "PMD.LongVariable", "PMD.ExcessiveMethodLength",
-            "PMD.DataflowAnomalyAnalysis", "PMD.NcssMethodCount",
-            "PMD.NPathComplexity" })
+        "PMD.LongVariable", "PMD.ExcessiveMethodLength",
+        "PMD.DataflowAnomalyAnalysis", "PMD.NcssMethodCount",
+        "PMD.NPathComplexity" })
     private List<Token> parseTokenLogFileDefinition(final String tokenLogFormat) {
 
         // Add all available parsers

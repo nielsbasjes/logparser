@@ -47,11 +47,11 @@ import java.util.regex.Pattern;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
 
 @SuppressWarnings({
-        "PMD.LongVariable", // I like my variable names this way
-        "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
-        "PMD.BeanMembersShouldSerialize", // No beans here
-        "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
-    })
+    "PMD.LongVariable", // I like my variable names this way
+    "PMD.CyclomaticComplexity", "PMD.OnlyOneReturn",
+    "PMD.BeanMembersShouldSerialize", // No beans here
+    "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
+})
 public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(NginxHttpdLogFormatDissector.class);

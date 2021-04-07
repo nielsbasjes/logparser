@@ -89,15 +89,15 @@ public class CookiesTest {
 
         @SuppressWarnings({"unused"}) // Used via reflection
         @Field({
-                "BYTESCLF:response.body.bytes",
-                "TIME.DAY:request.receive.time.day",
-                "TIME.HOUR:request.receive.time.hour",
-                "TIME.SECOND:request.receive.time.second",
-                "TIME.DAY:request.receive.time.day_utc",
-                "TIME.HOUR:request.receive.time.hour_utc",
-                "TIME.SECOND:request.receive.time.second_utc",
-                "TIME.EPOCH:request.receive.time.epoch",
-               })
+            "BYTESCLF:response.body.bytes",
+            "TIME.DAY:request.receive.time.day",
+            "TIME.HOUR:request.receive.time.hour",
+            "TIME.SECOND:request.receive.time.second",
+            "TIME.DAY:request.receive.time.day_utc",
+            "TIME.HOUR:request.receive.time.hour_utc",
+            "TIME.SECOND:request.receive.time.second_utc",
+            "TIME.EPOCH:request.receive.time.epoch",
+        })
         public void setValueLong(final String name, final Long value) {
             longResults.put(name, value);
         }
