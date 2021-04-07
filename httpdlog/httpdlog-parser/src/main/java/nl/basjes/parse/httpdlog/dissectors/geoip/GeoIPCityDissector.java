@@ -66,9 +66,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
         result.add("STRING:location.longitude");
         result.add("STRING:location.timezone");
         result.add("NUMBER:location.accuracyradius");
-        result.add("NUMBER:location.averageincome");
         result.add("NUMBER:location.metrocode");
-        result.add("NUMBER:location.populationdensity");
 
         return result;
     }
@@ -90,9 +88,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
     private boolean wantLocationLongitude          = false;
     private boolean wantLocationTimezone           = false;
     private boolean wantLocationAccuracyradius     = false;
-    private boolean wantLocationAverageincome      = false;
     private boolean wantLocationMetrocode          = false;
-    private boolean wantLocationPopulationdensity  = false;
     private boolean wantAnyLocation                = false;
 
 
@@ -168,20 +164,11 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
                 wantAnyLocation = true;
                 return STRING_ONLY;
 
-            case "location.averageincome":
-                wantLocationAverageincome = true;
-                wantAnyLocation = true;
-                return STRING_OR_LONG;
-
             case "location.metrocode":
                 wantLocationMetrocode = true;
                 wantAnyLocation = true;
                 return STRING_OR_LONG;
 
-            case "location.populationdensity":
-                wantLocationPopulationdensity = true;
-                wantAnyLocation = true;
-                return STRING_OR_LONG;
             default:
                 return NO_CASTS;
         }
@@ -257,22 +244,10 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
                 if (wantLocationAccuracyradius) {
                     parsable.addDissection(inputname, "NUMBER", "location.accuracyradius", location.getAccuracyRadius());
                 }
-                if (wantLocationAverageincome) {
-                    Integer value = location.getAverageIncome();
-                    if (value != null) {
-                        parsable.addDissection(inputname, "NUMBER", "location.averageincome", value);
-                    }
-                }
                 if (wantLocationMetrocode) {
                     Integer value = location.getMetroCode();
                     if (value != null) {
                         parsable.addDissection(inputname, "NUMBER", "location.metrocode", value);
-                    }
-                }
-                if (wantLocationPopulationdensity) {
-                    Integer value = location.getPopulationDensity();
-                    if (value != null) {
-                        parsable.addDissection(inputname, "NUMBER", "location.populationdensity", value);
                     }
                 }
             }

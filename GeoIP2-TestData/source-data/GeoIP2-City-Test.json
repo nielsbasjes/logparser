@@ -57,9 +57,7 @@
         "latitude": "52.5",
         "longitude": "5.75",
         "time_zone": "Europe/Amsterdam",
-        "metro_code" : "5",
-        "average_income" : 6,
-        "population_density" : 7
+        "metro_code" : "5"
       },
       "registered_country": {
         "geoname_id": 2750405,
@@ -136,9 +134,7 @@
         "latitude": "52.5",
         "longitude": "5.75",
         "time_zone": "Europe/Amsterdam",
-        "metro_code": "15",
-        "average_income": 16,
-        "population_density": 17
+        "metro_code": "15"
       },
       "registered_country": {
         "geoname_id": 2750405,

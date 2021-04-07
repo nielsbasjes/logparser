@@ -205,8 +205,6 @@ public class TestGeoIPDissectors {
             .expect("STRING:location.longitude",            5.75)
             .expect("NUMBER:location.accuracyradius",       4L)
             .expect("NUMBER:location.metrocode",            5L)
-            .expect("NUMBER:location.averageincome",        6L)
-            .expect("NUMBER:location.populationdensity",    7L)
 
             .checkExpectations();
     }
@@ -282,8 +280,6 @@ public class TestGeoIPDissectors {
             .expect("STRING:location.timezone",                 "Europe/Amsterdam")
             .expect("NUMBER:location.accuracyradius",           14L)
             .expect("NUMBER:location.metrocode",                15L)
-            .expect("NUMBER:location.averageincome",            16L)
-            .expect("NUMBER:location.populationdensity",        17L)
             .checkExpectations();
     }
 

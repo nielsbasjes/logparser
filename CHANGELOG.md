@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.8-SNAPSHOT
 ===
 - getPossiblePaths sorts the list by fieldname.
+- Removed GeoIP fields averageincome and populationdensity which are not part of any real mmdb file.
 
 v5.7
 ===
