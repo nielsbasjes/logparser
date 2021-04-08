@@ -30,6 +30,11 @@
   <artifactId>httpdlog-serde</artifactId>
   <name>Parser - Apache HTTPD - HCatalog SerDe</name>
 
+  <properties>
+    <!-- The Hadoop dependencies are too hard to make this check pass -->
+    <depencency-convergence.phase>none</depencency-convergence.phase>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.hadoop</groupId>

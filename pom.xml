@@ -35,6 +35,8 @@
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
+    <depencency-convergence.phase>validate</depencency-convergence.phase>
+
     <checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
     <checkstyle.version>8.41.1</checkstyle.version>
 
@@ -357,6 +359,20 @@
               </rules>
             </configuration>
           </execution>
+
+          <execution>
+            <id>dependency-convergence</id>
+            <phase>${depencency-convergence.phase}</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <dependencyConvergence/>
+              </rules>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
 

@@ -29,6 +29,12 @@
   <artifactId>apache-beam</artifactId>
   <name>Parser - Examples - Apache Beam</name>
 
+  <properties>
+    <!-- The mess of the dependencies is too big to make this check pass -->
+    <depencency-convergence.phase>none</depencency-convergence.phase>
+  </properties>
+
+
   <dependencies>
     <dependency>
       <groupId>nl.basjes.parse.httpdlog</groupId>

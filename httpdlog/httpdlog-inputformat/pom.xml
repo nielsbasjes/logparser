@@ -27,6 +27,11 @@
   <artifactId>httpdlog-inputformat</artifactId>
   <name>Parser - Apache HTTPD - Hadoop InputFormat</name>
 
+  <properties>
+    <!-- The Hadoop dependencies are too hard to make this check pass -->
+    <depencency-convergence.phase>none</depencency-convergence.phase>
+  </properties>
+
   <dependencies>
 
     <dependency>

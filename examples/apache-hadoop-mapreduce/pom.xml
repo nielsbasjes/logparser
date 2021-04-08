@@ -28,6 +28,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainClass>nl.basjes.hadoop.io.input.Wordcount</mainClass>
+
+      <!-- The Hadoop dependencies are too hard to make this check pass -->
+      <depencency-convergence.phase>none</depencency-convergence.phase>
   </properties>
 
   <dependencies>
@@ -36,6 +39,12 @@
       <artifactId>hadoop-client</artifactId>
       <version>${hadoop.version}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-text</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
