@@ -435,6 +435,7 @@
             <exclude>**/.settings/**</exclude>
             <exclude>**/.idea/**</exclude>
             <exclude>**/*.iml</exclude>
+            <exclude>**/*.json</exclude>
             <!-- Test and demo input files -->
             <exclude>**/src/test/resources/*.log</exclude>
             <exclude>**/demolog/*.log</exclude>
