@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM centos:7
+FROM centos:8
 
 WORKDIR /root
 
