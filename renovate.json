@@ -8,6 +8,12 @@
       "packagePatterns": ["*"],
       "allowedVersions": "!/^(?i).*[-_\\.](Alpha|Beta|RC|M|EA|Snap|snapshot|jboss|atlassian)[-_\\.]?[0-9]?.*$/",
       "groupName": "all dependencies"
+    },
+    {
+      "description": "Disable major updates for centos",
+      "matchPackageNames": ["centos"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }
