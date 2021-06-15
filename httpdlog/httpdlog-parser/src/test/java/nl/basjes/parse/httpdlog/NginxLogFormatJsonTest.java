@@ -19,12 +19,12 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NginxLogFormatJsonTest {
+class NginxLogFormatJsonTest {
 
     @Test
-    public void testJsonFormat() {
+    void testJsonFormat() {
 
         String logFormat =  "{ " +
             "\"message\":\"$request_uri\"," +

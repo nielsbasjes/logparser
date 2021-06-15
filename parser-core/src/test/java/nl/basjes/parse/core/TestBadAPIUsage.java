@@ -24,7 +24,7 @@ import nl.basjes.parse.core.reference.FooDissector;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.NormalValuesDissector;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -32,17 +32,20 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestBadAPIUsage {
 
-    @Test(expected = InvalidDissectorException.class)
-    public void testChangingInputTypeShouldNotBePossibleByDefault() throws InvalidDissectorException {
-        new DissectorTester.DummyDissector().setInputType("Change should not be allowed");
+    @Test
+    void testChangingInputTypeShouldNotBePossibleByDefault() {
+        assertThrows(InvalidDissectorException.class, () -> {
+            new DissectorTester.DummyDissector().setInputType("Change should not be allowed");
+        });
     }
 
     @Test
-    public void testDissectorString(){
+    void testDissectorString(){
         assertEquals(
             "{ BarDissector : BARINPUT --> " +
                 "[LONG:barlong, FLOAT:barfloat, STRING:barstring, INT:barint, DOUBLE:bardouble, ANY:barany] }",
@@ -67,9 +70,11 @@ public class TestBadAPIUsage {
         }
     }
 
-    @Test(expected = InvalidDissectorException.class)
-    public void testNullInputHandling() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(Object.class).addDissector(new NullInputDissector()).parse("Foo");
+    @Test
+    void testNullInputHandling() {
+        assertThrows(InvalidDissectorException.class, () -> {
+            new Parser<>(Object.class).addDissector(new NullInputDissector()).parse("Foo");
+        });
     }
 
     public static class NullOutputDissector extends Dissector {
@@ -90,9 +95,11 @@ public class TestBadAPIUsage {
         }
     }
 
-    @Test(expected = InvalidDissectorException.class)
-    public void testNullOutputHandling() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(Object.class).addDissector(new NullOutputDissector()).parse("Foo");
+    @Test
+    void testNullOutputHandling() {
+        assertThrows(InvalidDissectorException.class, () -> {
+            new Parser<>(Object.class).addDissector(new NullOutputDissector()).parse("Foo");
+        });
     }
 
     public static class EmptyOutputDissector extends Dissector {
@@ -112,36 +119,43 @@ public class TestBadAPIUsage {
             return STRING_ONLY;
         }
     }
-    @Test(expected = InvalidDissectorException.class)
-    public void testEmptyOutputHandling() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(Object.class).addDissector(new EmptyOutputDissector()).parse("Foo");
-    }
 
-    @Test(expected = MissingDissectorsException.class)
-    public void testFailZeroDissectors() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(TestRecord.class)
-            .setRootType("INPUT")
-            .failOnMissingDissectors()
-            .addParseTarget("setStringValue", "SOMETHING:that.is.not.present")
-            .addParseTarget("setStringValue", "STRING:string")
-            .parse("Doesn't matter");
-    }
-
-    @Test(expected = MissingDissectorsException.class)
-    public void testFailOnMissingDissectors() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(TestRecord.class)
-            .setRootType("INPUT")
-            .addDissector(new NormalValuesDissector())
-            .addDissector(new FooDissector())
-            .addDissector(new BarDissector())
-            .failOnMissingDissectors()
-            .addParseTarget("setStringValue", "SOMETHING:that.is.not.present")
-            .addParseTarget("setStringValue", "STRING:string")
-            .parse("Doesn't matter");
+    @Test
+    void testEmptyOutputHandling() {
+        assertThrows(InvalidDissectorException.class, () -> {
+            new Parser<>(Object.class).addDissector(new EmptyOutputDissector()).parse("Foo");
+        });
     }
 
     @Test
-    public void testIgnoreMissingDissectors() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testFailZeroDissectors() {
+        assertThrows(MissingDissectorsException.class, () -> {
+            new Parser<>(TestRecord.class)
+                .setRootType("INPUT")
+                .failOnMissingDissectors()
+                .addParseTarget("setStringValue", "SOMETHING:that.is.not.present")
+                .addParseTarget("setStringValue", "STRING:string")
+                .parse("Doesn't matter");
+        });
+    }
+
+    @Test
+    void testFailOnMissingDissectors() {
+        assertThrows(MissingDissectorsException.class, () -> {
+            new Parser<>(TestRecord.class)
+                .setRootType("INPUT")
+                .addDissector(new NormalValuesDissector())
+                .addDissector(new FooDissector())
+                .addDissector(new BarDissector())
+                .failOnMissingDissectors()
+                .addParseTarget("setStringValue", "SOMETHING:that.is.not.present")
+                .addParseTarget("setStringValue", "STRING:string")
+                .parse("Doesn't matter");
+        });
+    }
+
+    @Test
+    void testIgnoreMissingDissectors() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -153,21 +167,22 @@ public class TestBadAPIUsage {
             .parse("Doesn't matter");
     }
 
-
-    @Test(expected = NoSuchMethodException.class)
-    public void testNoSuchSetter() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
-        new Parser<>(TestRecord.class)
-            .setRootType("INPUT")
-            .addDissector(new NormalValuesDissector())
-            .addDissector(new FooDissector())
-            .addDissector(new BarDissector())
-            .ignoreMissingDissectors()
-            .addParseTarget("NoSetterWithThisName", "SOMETHING:that.is.not.present")
-            .parse("Doesn't matter");
+    @Test
+    void testNoSuchSetter() {
+        assertThrows(NoSuchMethodException.class, () -> {
+            new Parser<>(TestRecord.class)
+                .setRootType("INPUT")
+                .addDissector(new NormalValuesDissector())
+                .addDissector(new FooDissector())
+                .addDissector(new BarDissector())
+                .ignoreMissingDissectors()
+                .addParseTarget("NoSetterWithThisName", "SOMETHING:that.is.not.present")
+                .parse("Doesn't matter");
+        });
     }
 
     @Test
-    public void testBadParameters() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testBadParameters() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -182,7 +197,7 @@ public class TestBadAPIUsage {
     }
 
     @Test
-    public void testFieldCleanup() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testFieldCleanup() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())

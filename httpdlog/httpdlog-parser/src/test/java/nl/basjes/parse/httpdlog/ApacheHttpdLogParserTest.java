@@ -21,7 +21,7 @@ import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ApacheHttpdLogParserTest {
+class ApacheHttpdLogParserTest {
 
     // ------------------------------------------
 
@@ -101,7 +102,7 @@ public class ApacheHttpdLogParserTest {
      * Test of initialize method, of class ApacheHttpdLogParser.
      */
     @Test
-    public void fullTest1() throws Exception {
+    void fullTest1() throws Exception {
         String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [31/Dec/2012:23:49:40 +0100] "
                 + "\"GET /icons/powered_by_rh.png?aap=noot&res=1024x768 HTTP/1.1\" 200 1213 "
                 + "80 \"\" \"http://localhost/index.php?mies=wim\" 351 "
@@ -165,7 +166,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void fullTest2() throws Exception {
+    void fullTest2() throws Exception {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /icons/powered_by_rh.png HTTP/1.1\" 200 1213 80"
@@ -202,7 +203,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void fullTestTooLongUri() throws Exception {
+    void fullTestTooLongUri() throws Exception {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         String line = "%127.0.0.1 127.0.0.1 127.0.0.1 - - [10/Aug/2012:23:55:11 +0200] \"GET /ImagineAURLHereThatIsTooLong\" 414 1213 80"
@@ -248,7 +249,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void testMissing() throws Exception {
+    void testMissing() throws Exception {
         try {
             Parser<TestRecordMissing> parser = new HttpdLoglineParser<>(TestRecordMissing.class, LOG_FORMAT);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
@@ -268,7 +269,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void testMissing2() throws Exception {
+    void testMissing2() throws Exception {
         try {
             Parser<TestRecordMissing2> parser = new HttpdLoglineParser<>(TestRecordMissing2.class, LOG_FORMAT);
             parser.parse(""); // Just to trigger the internal assembly of things (that should fail).
@@ -281,7 +282,7 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void testGetPossiblePaths() {
+    void testGetPossiblePaths() {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> paths = parser.getPossiblePaths(5);
@@ -296,16 +297,16 @@ public class ApacheHttpdLogParserTest {
     // ------------------------------------------
 
     @Test
-    public void testGetPossiblePathsWithUnusableLogFormat() {
+    void testGetPossiblePathsWithUnusableLogFormat() {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, "Empty");
 
         List<String> paths = parser.getPossiblePaths(5);
-        assertTrue("The output should be empty!", paths == null || paths.isEmpty());
+        assertTrue(paths == null || paths.isEmpty(), "The output should be empty!");
     }
 
     // ------------------------------------------
     @Test
-    public void testLogFormatCleanup(){
+    void testLogFormatCleanup(){
         ApacheHttpdLogFormatDissector d = new ApacheHttpdLogFormatDissector();
 
         assertEquals("foo", d.cleanupLogFormat("foo"));
@@ -315,14 +316,14 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void verifyCommonFormatNamesMapping() {
+    void verifyCommonFormatNamesMapping() {
         ApacheHttpdLogFormatDissector dissector = new ApacheHttpdLogFormatDissector("combined");
         assertEquals("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"", dissector.getLogFormat());
     }
 
     // ------------------------------------------
 
-    public class EmptyTestRecord extends HashMap<String, String> {
+    public static class EmptyTestRecord extends HashMap<String, String> {
         @Override
         public String put(String key, String value) {
             return super.put(key, value);
@@ -331,7 +332,7 @@ public class ApacheHttpdLogParserTest {
     }
 
     @Test
-    public void testQueryStringDissector() throws Exception {
+    void testQueryStringDissector() throws Exception {
         String logformat = "%r";
 
         Parser<EmptyTestRecord> parser = new HttpdLoglineParser<>(EmptyTestRecord.class, logformat);
@@ -436,7 +437,7 @@ public class ApacheHttpdLogParserTest {
      * result in several fields failing to be parsed because they are different than the specifications.
      */
     @Test
-    public void test408ModReqTimeout() throws Exception {
+    void test408ModReqTimeout() throws Exception {
 
         final String logformat =
             "\"%%\" \"%a\" \"%{c}a\" \"%A\" \"%B\" \"%b\" \"%D\" \"%f\" \"%h\" \"%H\" \"%k\" " +
@@ -469,23 +470,25 @@ public class ApacheHttpdLogParserTest {
         parser.parse(new EmptyTestRecord(), line408);
     }
 
-    @Test(expected = MissingDissectorsException.class)
-    public void testFailOnMissingDissectors() throws Exception {
-        String line = "[09/Aug/2016:22:57:59 +0200]";
+    @Test
+    void testFailOnMissingDissectors() {
+        assertThrows(MissingDissectorsException.class, () -> {
+            String line = "[09/Aug/2016:22:57:59 +0200]";
 
-        String[] params = {
-            "STRING:request.firstline.uri.query.foo",
-            "TIME.EPOCH:request.receive.time.epoch",
-        };
+            String[] params = {
+                "STRING:request.firstline.uri.query.foo",
+                "TIME.EPOCH:request.receive.time.epoch",
+            };
 
-        new HttpdLoglineParser<>(EmptyTestRecord.class, "%t")
-            .addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params))
-            .failOnMissingDissectors()
-            .parse(new EmptyTestRecord(), line);
+            new HttpdLoglineParser<>(EmptyTestRecord.class, "%t")
+                .addParseTarget(EmptyTestRecord.class.getMethod("put", String.class, String.class), Arrays.asList(params))
+                .failOnMissingDissectors()
+                .parse(new EmptyTestRecord(), line);
+        });
     }
 
     @Test
-    public void testIgnoreMissingDissectors() throws Exception {
+    void testIgnoreMissingDissectors() throws Exception {
         String line = "[09/Aug/2016:22:57:59 +0200]";
 
         new HttpdLoglineParser<>(EmptyTestRecord.class, "%t")

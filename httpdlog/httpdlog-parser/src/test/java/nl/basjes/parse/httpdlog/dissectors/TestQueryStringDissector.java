@@ -18,12 +18,12 @@
 package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestQueryStringDissector {
 
     @Test
-    public void testQueryString() {
+    void testQueryString() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
             .withDissector(new QueryStringFieldDissector())

@@ -18,7 +18,7 @@
 package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Parser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,7 @@ public class BasicOverallTest {
 
 
     @Test
-    public void testBasicParsing() throws Exception {
+    void testBasicParsing() throws Exception {
         Parser<MyRecord> parser = new HttpdLoglineParser<>(MyRecord.class, LOG_FORMAT);
         MyRecord         record = new MyRecord();
 
@@ -124,12 +124,12 @@ public class BasicOverallTest {
         for (String logline : LOG_LINES) {
             record.clear();
             parser.parse(record, logline);
-            System.out.println(record.toString());
+            System.out.println(record);
         }
     }
 
     @Test
-    public void ensureAllOutputsAreThere() {
+    void ensureAllOutputsAreThere() {
         Parser<MyRecord> parser = new HttpdLoglineParser<>(MyRecord.class, LOG_FORMAT);
         List<String> paths = parser.getPossiblePaths(15, true); // Get the list presorted
 

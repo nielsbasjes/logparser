@@ -19,11 +19,11 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EdgeCasesTest {
+class EdgeCasesTest {
     @Test
-    public void testInvalidFirstLine() {
+    void testInvalidFirstLine() {
         String logFormat = "%a %{Host}i %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %{Content-length}i %P %A";
         String testLine = "1.2.3.4 - - [03/Apr/2017:03:27:28 -0600] \"\\x16\\x03\\x01\" 404 419 \"-\" \"-\" - 115052 5.6.7.8";
         DissectorTester.create()
@@ -58,7 +58,7 @@ public class EdgeCasesTest {
 
 
     @Test
-    public void checkErrorLogging(){
+    void checkErrorLogging(){
         HttpdLogFormatDissector dissector = new HttpdLogFormatDissector();
         dissector
             // Apache format

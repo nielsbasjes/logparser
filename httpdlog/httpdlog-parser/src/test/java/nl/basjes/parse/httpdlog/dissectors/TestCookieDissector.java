@@ -18,12 +18,12 @@
 package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TestCookieDissector {
+class TestCookieDissector {
 
     @Test
-    public void testRequestCookies() {
+    void testRequestCookies() {
         DissectorTester.create()
             .withDissector("cookies", new RequestCookieListDissector())
 
@@ -41,7 +41,7 @@ public class TestCookieDissector {
     }
 
     @Test
-    public void testResponseSetCookies() {
+    void testResponseSetCookies() {
 
         DissectorTester.create()
             .withDissector("cookies", new ResponseSetCookieListDissector())

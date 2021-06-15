@@ -21,12 +21,12 @@ import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.apache.pig.builtin.mock.Storage.resetData;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestGeoIPDissectorsPig {
 
@@ -39,7 +39,7 @@ public class TestGeoIPDissectorsPig {
     private static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
 
     @Test
-    public void testGeoIPCountryASNDissectorPig() throws Exception {
+    void testGeoIPCountryASNDissectorPig() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 
@@ -91,7 +91,7 @@ public class TestGeoIPDissectorsPig {
     }
 
     @Test
-    public void testGeoIPCityISPDissectorPig() throws Exception {
+    void testGeoIPCityISPDissectorPig() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 

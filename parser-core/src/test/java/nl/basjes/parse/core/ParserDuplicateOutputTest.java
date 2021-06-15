@@ -18,33 +18,33 @@ package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 
-public class ParserDuplicateOutputTest {
+class ParserDuplicateOutputTest {
 
-    public abstract static class TestDissector extends SimpleDissector {
+    public abstract static class MyDissector extends SimpleDissector {
         private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
         static {
             dissectorConfig.put("STRING:output",   STRING_ONLY);
         }
 
-        public TestDissector() {
+        public MyDissector() {
             super("INPUT", dissectorConfig);
         }
     }
 
-    public static class FooDissector extends TestDissector {
+    public static class FooDissector extends MyDissector {
         @Override
         public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
             parsable.addDissection(inputname, "STRING", "output", "foo");
         }
     }
-    public static class BarDissector extends TestDissector {
+    public static class BarDissector extends MyDissector {
         @Override
         public void dissect(Parsable<?> parsable, String inputname, Value value) throws DissectionFailure {
             parsable.addDissection(inputname, "STRING", "output", "bar");
@@ -53,7 +53,7 @@ public class ParserDuplicateOutputTest {
 
     // Verify: If you have two dissectors doing the SAME input/output you should get BOTH
     @Test
-    public void testParseString() {
+    void testParseString() {
         DissectorTester.create()
             .verbose()
             .withDissector(new FooDissector())

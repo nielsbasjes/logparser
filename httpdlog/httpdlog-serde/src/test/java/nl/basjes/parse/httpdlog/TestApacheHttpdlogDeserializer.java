@@ -22,19 +22,20 @@ import org.apache.hadoop.hive.serde.serdeConstants;
 import org.apache.hadoop.hive.serde2.AbstractDeserializer;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.io.Text;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestApacheHttpdlogDeserializer {
+class TestApacheHttpdlogDeserializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestApacheHttpdlogDeserializer.class);
 
@@ -72,7 +73,7 @@ public class TestApacheHttpdlogDeserializer {
         "\" \"-\" \"-\"";
 
     @Test
-    public void testBasicParse() throws Throwable {
+    void testBasicParse() throws Throwable {
         // Create the SerDe
         AbstractDeserializer serDe = getTestSerDe();
 
@@ -94,8 +95,8 @@ public class TestApacheHttpdlogDeserializer {
         assertEquals(600L,            rowArray.get(4));
     }
 
-    @Test (expected = SerDeException.class)
-    public void testHighFailRatio1() throws Throwable {
+    @Test
+    void testHighFailRatio1() throws Throwable {
         AbstractDeserializer serDe = getTestSerDe();
 
         // Data
@@ -116,15 +117,14 @@ public class TestApacheHttpdlogDeserializer {
             row = serDe.deserialize(goodLine);
             assertNotNull(row);
         }
-        for (int i = 0; i < 99; i++) {
-            // Deserialize bad line
-            row = serDe.deserialize(badLine);
-            assertNull(row);
-
-            // Deserialize good line
-            row = serDe.deserialize(goodLine);
-            assertNotNull(row);
-        }
+        assertThrows(SerDeException.class, () -> {
+            Object extraRow;
+            for (int i = 0; i < 99; i++) {
+                // Deserialize bad line
+                extraRow = serDe.deserialize(badLine);
+                assertNull(extraRow);
+            }
+        });
     }
 
     private AbstractDeserializer getTestSerDe() throws SerDeException {

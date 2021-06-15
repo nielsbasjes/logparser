@@ -23,7 +23,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // CHECKSTYLE.OFF: LineLength
 public class NginxLogFormatTest {
@@ -39,7 +39,7 @@ public class NginxLogFormatTest {
     private static final Logger LOG = LoggerFactory.getLogger(NginxLogFormatTest.class);
 
     @Test
-    public void testBasicLogFormat() {
+    void testBasicLogFormat() {
         // From: http://articles.slicehost.com/2010/8/27/customizing-nginx-web-logs
         String logFormat = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
         String logLine = "123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
@@ -54,7 +54,7 @@ public class NginxLogFormatTest {
     }
 
     @Test
-    public void testBasicLogFormatDissector() {
+    void testBasicLogFormatDissector() {
         // From: http://articles.slicehost.com/2010/8/27/customizing-nginx-web-logs
         String logFormat = "combined";
         String logLine = "123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
@@ -75,7 +75,7 @@ public class NginxLogFormatTest {
     }
 
     @Test
-    public void testBasicLogFormatWithUnknownField() {
+    void testBasicLogFormatWithUnknownField() {
         // $remote_user_age is fake and doesn't exist.
         String logFormat = "$foobar $remote_user_age $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
         String logLine = "something 42 123.65.150.10 - - [23/Aug/2010:03:50:59 +0000] \"POST /wordpress3/wp-admin/admin-ajax.php HTTP/1.1\" 200 2 \"http://www.example.com/wordpress3/wp-admin/post-new.php\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.25 Safari/534.3\"";
@@ -93,7 +93,7 @@ public class NginxLogFormatTest {
 
 
     @Test
-    public void testCompareApacheAndNginxOutput() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testCompareApacheAndNginxOutput() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
 
         String logFormatNginx  = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
 
@@ -191,12 +191,12 @@ public class NginxLogFormatTest {
         for (String field: checkFields) {
             boolean apacheHasValue = apacheRecord.hasStringValue(field);
             boolean nginxHasValue = nginxRecord.hasStringValue(field);
-            assertEquals("Apache and Nginx values for field " + field + " are different.", apacheHasValue, nginxHasValue);
+            assertEquals(apacheHasValue, nginxHasValue, "Apache and Nginx values for field " + field + " are different.");
 
             if (apacheRecord.hasStringValue(field)) {
                 String apacheValue = apacheRecord.getStringValue(field);
                 String nginxValue = nginxRecord.getStringValue(field);
-                assertEquals("Apache and Nginx values for field " + field + " are different.", apacheValue, nginxValue);
+                assertEquals(apacheValue, nginxValue, "Apache and Nginx values for field " + field + " are different.");
             }
 
         }
@@ -205,7 +205,7 @@ public class NginxLogFormatTest {
 
 
     @Test
-    public void testFullTestAllFields() {
+    void testFullTestAllFields() {
         String logFormat =
                 "# \"$status\" " +
                 "# \"$time_iso8601\" " +
@@ -445,7 +445,7 @@ public class NginxLogFormatTest {
     }
 
     @Test
-    public void validateAllFieldsPrefix() {
+    void validateAllFieldsPrefix() {
         List<SingleFieldTestcase> fieldsTests = new ArrayList<>();
 
         final String useragent = "Mozilla/5.0 (Foo)";
@@ -469,7 +469,7 @@ public class NginxLogFormatTest {
 
 
     @Test
-    public void bugReport60(){
+    void bugReport60(){
 
         String logFormat = "$the_real_ip - [$the_real_ip] - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status $req_id";
 

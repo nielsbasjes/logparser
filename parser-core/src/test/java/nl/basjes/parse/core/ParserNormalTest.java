@@ -21,7 +21,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.test.NormalValuesDissector;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,19 +32,20 @@ import java.util.List;
 import java.util.Set;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ParserNormalTest {
+class ParserNormalTest {
 
-    public static class TestDissector extends Dissector {
+    public static class MyDissector extends Dissector {
         private String      inputType;
         private String      outputType;
         private String      outputName;
         private final Set<String> outputNames = new HashSet<>();
 
-        public TestDissector(String inputType, String outputType, String outputName) {
+        public MyDissector(String inputType, String outputType, String outputName) {
             this.inputType = inputType;
             this.outputType = outputType;
             this.outputName = outputName;
@@ -60,7 +61,7 @@ public class ParserNormalTest {
 
         @Override
         protected void initializeNewInstance(Dissector newInstance) {
-            ((TestDissector)newInstance).init(inputType, outputType, outputName);
+            ((MyDissector)newInstance).init(inputType, outputType, outputName);
         }
 
         @Override
@@ -95,32 +96,32 @@ public class ParserNormalTest {
         }
     }
 
-    public static class TestDissectorOne extends TestDissector {
-        public TestDissectorOne() {
+    public static class MyDissectorOne extends MyDissector {
+        public MyDissectorOne() {
             super("INPUTTYPE", "SOMETYPE", "output1");
         }
     }
 
-    public static class TestDissectorTwo extends TestDissector {
-        public TestDissectorTwo() {
+    public static class MyDissectorTwo extends MyDissector {
+        public MyDissectorTwo() {
             super("INPUTTYPE", "OTHERTYPE", "output2");
         }
     }
 
-    public static class TestDissectorThree extends TestDissector {
-        public TestDissectorThree() {
+    public static class MyDissectorThree extends MyDissector {
+        public MyDissectorThree() {
             super("SOMETYPE", "FOO", "foo");
         }
     }
 
-    public static class TestDissectorFour extends TestDissector {
-        public TestDissectorFour() {
+    public static class MyDissectorFour extends MyDissector {
+        public MyDissectorFour() {
             super("SOMETYPE", "BAR", "bar");
         }
     }
 
-    public static class TestDissectorWildCard extends TestDissector {
-        public TestDissectorWildCard() {
+    public static class MyDissectorWildCard extends MyDissector {
+        public MyDissectorWildCard() {
             super("SOMETYPE", "WILD", "*");
         }
 
@@ -129,27 +130,26 @@ public class ParserNormalTest {
     public static class TestParser<RECORD> extends Parser<RECORD> {
         public TestParser(final Class<RECORD> clazz) {
             super(clazz);
-            addDissector(new TestDissectorOne());
-            addDissector(new TestDissectorTwo());
-            addDissector(new TestDissectorThree());
-            addDissector(new TestDissectorFour());
-            addDissector(new TestDissectorWildCard());
+            addDissector(new MyDissectorOne());
+            addDissector(new MyDissectorTwo());
+            addDissector(new MyDissectorThree());
+            addDissector(new MyDissectorFour());
+            addDissector(new MyDissectorWildCard());
             setRootType("INPUTTYPE");
         }
     }
 
     @Test
-    public void testParseString() throws Exception {
-        // setLoggingLevel(Level.ALL);
-        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
+    void testParseString() throws Exception {
+        Parser<ParserNormalTestRecord> parser = new TestParser<>(ParserNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
         parser
-            .addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params))
-            .dropDissector(TestDissectorWildCard.class)
-            .addDissector(new TestDissectorWildCard());
+            .addParseTarget(ParserNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params))
+            .dropDissector(MyDissectorWildCard.class)
+            .addDissector(new MyDissectorWildCard());
 
-        ParserNormalRecordTest output = new ParserNormalRecordTest();
+        ParserNormalTestRecord output = new ParserNormalTestRecord();
         parser.parse(output, "Something");
         assertEquals("SOMETYPE1:SOMETYPE:output1:Something", output.getOutput1());
         assertEquals("OTHERTYPE2:OTHERTYPE:output2:Something", output.getOutput2());
@@ -166,14 +166,13 @@ public class ParserNormalTest {
 
     // ---------------------------------------------
     @Test
-    public void testParseStringInstantiate() throws Exception {
-        // setLoggingLevel(Level.ALL);
-        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
+    void testParseStringInstantiate() throws Exception {
+        Parser<ParserNormalTestRecord> parser = new TestParser<>(ParserNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
+        parser.addParseTarget(ParserNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
-        ParserNormalRecordTest output = parser.parse("Something");
+        ParserNormalTestRecord output = parser.parse("Something");
 
         assertEquals("SOMETYPE1:SOMETYPE:output1:Something", output.getOutput1());
         assertEquals("OTHERTYPE2:OTHERTYPE:output2:Something", output.getOutput2());
@@ -190,25 +189,26 @@ public class ParserNormalTest {
 
     // ---------------------------------------------
 
-    @Test(expected = MissingDissectorsException.class)
-    public void testMissingDissector() throws Exception {
-        // setLoggingLevel(Level.ALL);
-        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
+    @Test
+    void testMissingDissector() {
+        Parser<ParserNormalTestRecord> parser = new TestParser<>(ParserNormalTestRecord.class);
 
         // Cripple the parser
-        parser.dropDissector(TestDissectorTwo.class);
+        parser.dropDissector(MyDissectorTwo.class);
 
-        ParserNormalRecordTest output = new ParserNormalRecordTest();
-        parser.parse(output, "Something"); // Should fail.
+        ParserNormalTestRecord output = new ParserNormalTestRecord();
+
+        assertThrows(MissingDissectorsException.class, () -> {
+            parser.parse(output, "Something"); // Should fail.
+        });
     }
 
     @Test
-    public void testGetPossiblePaths() throws Exception {
-        // setLoggingLevel(Level.ALL);
-        Parser<ParserNormalRecordTest> parser = new TestParser<>(ParserNormalRecordTest.class);
+    void testGetPossiblePaths() throws Exception {
+        Parser<ParserNormalTestRecord> parser = new TestParser<>(ParserNormalTestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(ParserNormalRecordTest.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
+        parser.addParseTarget(ParserNormalTestRecord.class.getMethod("setValue2", String.class, String.class), Arrays.asList(params));
 
         List<String> paths = parser.getPossiblePaths(3);
         for (String path : paths) {
@@ -218,7 +218,7 @@ public class ParserNormalTest {
     }
 
     @Test
-    public void testAddTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testAddTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -232,7 +232,7 @@ public class ParserNormalTest {
     }
 
     @Test
-    public void testAddTypeRemappings() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testAddTypeRemappings() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -246,7 +246,7 @@ public class ParserNormalTest {
     }
 
     @Test
-    public void testSetTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testSetTypeRemapping() throws NoSuchMethodException, InvalidDissectorException, DissectionFailure {
         try{
             new Parser<>(TestRecord.class)
                 .setRootType("INPUT")

@@ -29,7 +29,7 @@ public class PojoGenerator {
     @Option(name = "-logformat", usage = "<Apache HTTPD Logformat>", required = true)
     private static String logFormat = "common";
 
-    class MyRecord {
+    static class MyRecord {
         public void setter(String name, String value) {
             System.out.println("SETTER CALLED FOR \"" + name + "\" = \"" + value + "\"");
         }

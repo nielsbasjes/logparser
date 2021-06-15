@@ -18,12 +18,12 @@
 package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestModUniqueIdDissector {
 
     @Test
-    public void testUniqueId1() {
+    void testUniqueId1() {
         // This test case was verified using https://github.com/web-online/mod-unique-id-decode
         //$ ./mod_unique_id_uudecoder -i VaGTKApid0AAALpaNo0AAAAC
         //unique_id.stamp = Sun Jul 12 00:05:28 2015
@@ -44,7 +44,7 @@ public class TestModUniqueIdDissector {
     }
 
     @Test
-    public void testUniqueId2() {
+    void testUniqueId2() {
         // This test case was verified using https://github.com/web-online/mod-unique-id-decode
         //$ ./mod_unique_id_uudecoder -i Ucdv38CoEJwAAEusp6EAAADz
         //unique_id.stamp = Sun Jun 23 23:59:59 2013
@@ -65,7 +65,7 @@ public class TestModUniqueIdDissector {
     }
 
     @Test
-    public void testBadUniqueIdTooShort() {
+    void testBadUniqueIdTooShort() {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD") // BAD: 1 letter too short
@@ -78,7 +78,7 @@ public class TestModUniqueIdDissector {
     }
 
     @Test
-    public void testBadUniqueIdNotBase64() {
+    void testBadUniqueIdNotBase64() {
         DissectorTester.create()
             .withDissector(new ModUniqueIdDissector())
             .withInput("Ucdv38CoEJwAAEusp6EAAAD!") // BAD: 1 letter wrong

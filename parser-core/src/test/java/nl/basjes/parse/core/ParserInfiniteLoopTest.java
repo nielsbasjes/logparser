@@ -17,13 +17,15 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ParserInfiniteLoopTest {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ParserInfiniteLoopTest {
 
     public static class TestDissector extends Dissector {
 
@@ -78,11 +80,11 @@ public class ParserInfiniteLoopTest {
      * @throws Exception in case of error
      */
     @Test
-    public void testInfiniteRecursionAvoidance() throws Exception {
+    void testInfiniteRecursionAvoidance() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         parser.addTypeRemapping("string", "INPUT_TYPE");
         TestRecord output = new TestRecord();
-        parser.parse(output, "Something");
+        assertNotNull(parser.parse(output, "Something"));
         // If this works then it will cleanly end (instead of a stack overflow)
     }
 

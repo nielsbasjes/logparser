@@ -19,21 +19,21 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CookiesTest {
+class CookiesTest {
 
-    private class EmptyTestRecord {
+    private static class EmptyTestRecord {
     }
 
-    public class TestRecord {
+    public static class TestRecord {
 
         private final Map<String, String> results     = new HashMap<>(32);
         private final Map<String, Long>   longResults = new HashMap<>(32);
@@ -129,7 +129,7 @@ public class CookiesTest {
     // ----------------------------
 
     @Test
-    public void testEmptyRecordPossibles() {
+    void testEmptyRecordPossibles() {
         Parser<EmptyTestRecord> parser = new HttpdLoglineParser<>(EmptyTestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
@@ -141,7 +141,7 @@ public class CookiesTest {
     // ---------------
 
     @Test
-    public void testRecordPossibles() {
+    void testRecordPossibles() {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 
         List<String> possibles = parser.getPossiblePaths();
@@ -158,7 +158,7 @@ public class CookiesTest {
 
 
     @Test
-    public void cookiesTest() throws Exception {
+    void cookiesTest() throws Exception {
 
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOG_FORMAT);
 

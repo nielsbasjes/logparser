@@ -22,13 +22,13 @@ import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.apache.pig.builtin.mock.Storage.resetData;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestOutputTypes {
 
@@ -96,24 +96,24 @@ public class TestOutputTypes {
         int index=-1;
 
         // Pig is apparently capable of doing more casts then what we have normally
-        assertEquals("any_string    :", "42",       getString(resultTuple.get(++index)));           // any_string
-        assertEquals("any_long      :", 42L,        getLong(resultTuple.get(++index)).longValue()); // any_long
-        assertEquals("any_double    :", 42D,        getDouble(resultTuple.get(++index)), 0.1D);     // any_double
-        assertEquals("string_string :", "FortyTwo", getString(resultTuple.get(++index)));           // string_string
-        assertEquals("string_long   :", null,       getLong(resultTuple.get(++index)));             // string_long
-        assertEquals("string_double :", null,       getDouble(resultTuple.get(++index)));           // string_double
-        assertEquals("int_string    :", "42",       getString(resultTuple.get(++index)));           // int_string
-        assertEquals("int_long      :", 42L,        getLong(resultTuple.get(++index)).longValue()); // int_long
-        assertEquals("int_double    :", 42D,        getDouble(resultTuple.get(++index)), 0.1D);     // int_double
-        assertEquals("long_string   :", "42",       getString(resultTuple.get(++index)));           // long_string
-        assertEquals("long_long     :", 42L,        getLong(resultTuple.get(++index)).longValue()); // long_long
-        assertEquals("long_double   :", 42D,        getDouble(resultTuple.get(++index)), 0.1D);     // long_double
-        assertEquals("float_string  :", "42.0",     getString(resultTuple.get(++index)));           // float_string
-        assertEquals("float_long    :", 42L,        getLong(resultTuple.get(++index)).longValue()); // float_long
-        assertEquals("float_double  :", 42D,        getDouble(resultTuple.get(++index)), 0.1D);     // float_double
-        assertEquals("double_string :", "42.0",     getString(resultTuple.get(++index)));           // double_string
-        assertEquals("double_long   :", 42L,        getLong(resultTuple.get(++index)).longValue()); // double_long
-        assertEquals("double_double :", 42D,        getDouble(resultTuple.get(++index)), 0.1D);     // double_double
+        assertEquals("42",       getString(resultTuple.get(++index)),               "any_string    :");
+        assertEquals(42L,        getLong(resultTuple.get(++index)).longValue(),     "any_long      :");
+        assertEquals(42D,        getDouble(resultTuple.get(++index)), 0.1D,         "any_double    :");
+        assertEquals("FortyTwo", getString(resultTuple.get(++index)),               "string_string :");
+        assertEquals(null,       getLong(resultTuple.get(++index)),                 "string_long   :");
+        assertEquals(null,       getDouble(resultTuple.get(++index)),               "string_double :");
+        assertEquals("42",       getString(resultTuple.get(++index)),               "int_string    :");
+        assertEquals(42L,        getLong(resultTuple.get(++index)).longValue(),     "int_long      :");
+        assertEquals(42D,        getDouble(resultTuple.get(++index)), 0.1D,         "int_double    :");
+        assertEquals("42",       getString(resultTuple.get(++index)),               "long_string   :");
+        assertEquals(42L,        getLong(resultTuple.get(++index)).longValue(),     "long_long     :");
+        assertEquals(42D,        getDouble(resultTuple.get(++index)), 0.1D,         "long_double   :");
+        assertEquals("42.0",     getString(resultTuple.get(++index)),               "float_string  :");
+        assertEquals(42L,        getLong(resultTuple.get(++index)).longValue(),     "float_long    :");
+        assertEquals(42D,        getDouble(resultTuple.get(++index)), 0.1D,         "float_double  :");
+        assertEquals("42.0",     getString(resultTuple.get(++index)),               "double_string :");
+        assertEquals(42L,        getLong(resultTuple.get(++index)).longValue(),     "double_long   :");
+        assertEquals(42D,        getDouble(resultTuple.get(++index)), 0.1D,         "double_double :");
     }
 
     private String getString(Object object) {

@@ -16,12 +16,12 @@
  */
 package nl.basjes.parse.core.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TestUltimateDummyDissector {
+class TestUltimateDummyDissector {
 
     @Test
-    public void verifyUltimateDummyDissector() {
+    void verifyUltimateDummyDissector() {
         DissectorTester.create()
             .withDissector(new NormalValuesDissector())
             .withInput("Doesn't matter")

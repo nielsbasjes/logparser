@@ -20,12 +20,12 @@ package nl.basjes.parse.httpdlog.translate;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertCLFIntoNumber;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestTranslators {
 
     @Test
-    public void testCLFToNumberMin() {
+    void testCLFToNumberMin() {
         DissectorTester.create()
             .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput(null) // A '-' in the input file goes into the dissector as a null value
@@ -34,7 +34,7 @@ public class TestTranslators {
     }
 
     @Test
-    public void testCLFToNumber0() {
+    void testCLFToNumber0() {
         DissectorTester.create()
             .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput("0")
@@ -43,7 +43,7 @@ public class TestTranslators {
     }
 
     @Test
-    public void testCLFToNumber1() {
+    void testCLFToNumber1() {
         DissectorTester.create()
             .withDissector("root", new ConvertCLFIntoNumber("IN", "OUT"))
             .withInput("1")
@@ -52,7 +52,7 @@ public class TestTranslators {
     }
 
     @Test
-    public void testNumberToCLF0() {
+    void testNumberToCLF0() {
         DissectorTester.create()
             .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("0")
@@ -62,7 +62,7 @@ public class TestTranslators {
     }
 
     @Test
-    public void testNumberToCLF1() {
+    void testNumberToCLF1() {
         DissectorTester.create()
             .withDissector("root", new ConvertNumberIntoCLF("IN", "OUT"))
             .withInput("1")

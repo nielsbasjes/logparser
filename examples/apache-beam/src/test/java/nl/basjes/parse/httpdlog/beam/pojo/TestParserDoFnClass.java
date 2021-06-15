@@ -42,8 +42,8 @@ import java.util.List;
 @RunWith(JUnit4.class)
 public class TestParserDoFnClass implements Serializable {
 
-    public static class MyParserDoFn extends DoFn<String, TestRecord> {
-        private Parser<TestRecord> parser;
+    public static class MyParserDoFn extends DoFn<String, MyRecord> {
+        private Parser<MyRecord> parser;
 
         public MyParserDoFn() throws NoSuchMethodException {
             super();
@@ -66,11 +66,11 @@ public class TestParserDoFnClass implements Serializable {
         // Apply Create, passing the list and the coder, to create the PCollection.
         PCollection<String> input = pipeline.apply(Create.of(logLines)).setCoder(StringUtf8Coder.of());
 
-        PCollection<TestRecord> filledTestRecords = input
+        PCollection<MyRecord> filledTestRecords = input
             .apply("Extract Elements from logline",
                 ParDo.of(new MyParserDoFn()));
 
-        TestRecord expected = new TestRecord().setFullValid();
+        MyRecord expected = new MyRecord().setFullValid();
 
         PAssert.that(filledTestRecords).containsInAnyOrder(expected);
 

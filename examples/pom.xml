@@ -53,6 +53,18 @@
         </configuration>
       </plugin>
 
+      <!-- Disable dependency convergence checks on the examples -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dependency-convergence</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

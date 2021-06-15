@@ -21,14 +21,14 @@ import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.builtin.mock.Storage;
 import org.apache.pig.data.Tuple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.apache.pig.builtin.mock.Storage.map;
 import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestLoader {
 
@@ -71,7 +71,7 @@ public class TestLoader {
     }
 
     @Test
-    public void testBasicLoader() throws Exception {
+    void testBasicLoader() throws Exception {
         PigServer pigServer = createPigServerWithLoader();
         Storage.Data data = resetData(pigServer);
         pigServer.registerQuery("STORE Clicks INTO 'Clicks' USING mock.Storage();");
@@ -110,7 +110,7 @@ public class TestLoader {
     }
 
     @Test
-    public void testBasicLoaderWithPushDown() throws Exception {
+    void testBasicLoaderWithPushDown() throws Exception {
         PigServer pigServer = createPigServerWithLoader();
         Storage.Data data = resetData(pigServer);
 

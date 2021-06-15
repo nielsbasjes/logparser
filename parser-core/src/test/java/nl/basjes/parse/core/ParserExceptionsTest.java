@@ -20,7 +20,7 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.InvalidFieldMethodSignature;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +28,12 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ParserExceptionsTest {
+class ParserExceptionsTest {
 
     public static class TestDissector extends Dissector {
         private String inputType;
@@ -192,8 +194,7 @@ public class ParserExceptionsTest {
     }
 
     @Test
-    public void testParseString() throws Exception {
-//        setLoggingLevel(Level.ALL);
+    void testParseString() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
@@ -214,7 +215,7 @@ public class ParserExceptionsTest {
     }
 
     @Test
-    public void testGetPossiblePaths() throws Exception {
+    void testGetPossiblePaths() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
@@ -228,28 +229,24 @@ public class ParserExceptionsTest {
         assertTrue(paths.contains("OTHERTYPE:output2"));
     }
 
-
-
-    @Test(expected=InvalidFieldMethodSignature.class)
-    public void testBadSetter1() throws Exception {
-//        setLoggingLevel(Level.ALL);
+    @Test
+    void testBadSetter1() {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("badSetter1"), Arrays.asList(params));
-
-        parser.getPossiblePaths(3);
+        assertThrows(InvalidFieldMethodSignature.class, () -> {
+            parser.addParseTarget(TestRecord.class.getMethod("badSetter1"), Arrays.asList(params));
+        });
     }
 
-    @Test(expected=InvalidFieldMethodSignature.class)
-    public void testBadSetter2() throws Exception {
-//        setLoggingLevel(Level.ALL);
+    @Test
+    void testBadSetter2() {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         String[] params = {"OTHERTYPE:output2"};
-        parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), Arrays.asList(params));
-
-        parser.getPossiblePaths(3);
+        assertThrows(InvalidFieldMethodSignature.class, ()-> {
+            parser.addParseTarget(TestRecord.class.getMethod("badSetter2", String.class, Float.class), Arrays.asList(params));
+        });
     }
 
     public static class BrokenTestDissector extends Dissector {
@@ -289,49 +286,68 @@ public class ParserExceptionsTest {
         }
     }
 
-    @Test(expected=InvalidDissectorException.class)
-    public void testBrokenDissector() throws Exception {
+    @Test
+    void testBrokenDissector() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         Dissector dissector = new BrokenTestDissector();
         parser.setRootType(dissector.getInputType());
         parser.addParseTarget(TestRecord.class.getMethod("setValue8", String.class, String.class), "FOO:bar");
         parser.addDissector(dissector);
-        parser.parse("Something");
+        assertThrows(InvalidDissectorException.class, ()-> {
+            parser.parse("Something");
+        });
+    }
+
+    public static class BrokenTestDissector2 extends BrokenTestDissector {
+        // Non public constructor
+        BrokenTestDissector2() {
+        }
     }
 
     @Test
-    public void testChangeAfterStart() throws Exception {
+    void testBrokenDissector2() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
-        parser.parse("Something");
-        parser.addDissector(new BrokenTestDissector());
+        Dissector dissector = new BrokenTestDissector2();
+        parser.setRootType(dissector.getInputType());
+        parser.addParseTarget(TestRecord.class.getMethod("setValue8", String.class, String.class), "FOO:bar");
+        parser.addDissector(dissector);
+        assertThrows(InvalidDissectorException.class, ()-> {
+            parser.parse("Something");
+        });
     }
 
-    @Test(expected=MissingDissectorsException.class)
-    public void testDropDissector1() throws Exception {
-        // setLoggingLevel(Level.ALL);
+    @Test
+    void testChangeAfterStart() throws Exception {
+        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
+        parser.parse("Something");
+        assertNotNull(parser.addDissector(new BrokenTestDissector()));
+    }
+
+    @Test
+    void testDropDissector1() {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.dropDissector(TestDissectorOne.class);
-        parser.parse("Something");
+        assertThrows(MissingDissectorsException.class, () -> {
+            parser.parse("Something");
+        });
     }
 
     @Test
-    public void testDropDissector2() {
-        // setLoggingLevel(Level.ALL);
+    void testDropDissector2() {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.dropDissector(TestDissectorOne.class);
         parser.addDissector(new TestDissectorOne());
-        parser.getPossiblePaths();
+        assertNotNull(parser.getPossiblePaths());
     }
 
-    @Test//(expected=CannotChangeDissectorsAfterConstructionException.class)
-    public void testDropDissector3() throws Exception {
-        // setLoggingLevel(Level.ALL);
+    @Test
+    void testDropDissector3() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         parser.parse("Something");
-        parser.dropDissector(TestDissectorOne.class);
+        assertNotNull(parser.dropDissector(TestDissectorOne.class));
     }
 
 }

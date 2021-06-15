@@ -24,6 +24,7 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import org.apache.commons.codec.binary.Base64;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -132,7 +133,7 @@ public class ModUniqueIdDissector extends Dissector {
     }
     // --------------------------------------------
 
-    private class UniqueIdRec {
+    private static class UniqueIdRec {
         long timestamp;
         long ipaddr;
         String ipaddrStr;
@@ -144,7 +145,7 @@ public class ModUniqueIdDissector extends Dissector {
     // 1 letter = 6 bits of data = 2^6 = 64 letters needed to do the mapping
     // 4 letters = 4*6 = 24 = 3*8 = 3 bytes
     // So 24 letters = 24*6 = 144 bits = 18 bytes
-    public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
+    public static final Charset CHARSET_UTF_8 = StandardCharsets.UTF_8;
 
     private byte[] decodeToBytes(String modUniqueIdString) {
         if (modUniqueIdString.length() != 24) {

@@ -22,21 +22,17 @@ import nl.basjes.parse.httpdlog.flink.TestCase;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+class TestParserMapFunctionClass implements Serializable {
 
-@RunWith(JUnit4.class)
-public class TestParserMapFunctionClass implements Serializable {
-
-    public static class MyParserMapper extends RichMapFunction<String, TestRecord> {
-        private Parser<TestRecord> parser;
+    public static class MyParserMapper extends RichMapFunction<String, MyRecord> {
+        private Parser<MyRecord> parser;
 
         @Override
         public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
@@ -44,7 +40,7 @@ public class TestParserMapFunctionClass implements Serializable {
         }
 
         @Override
-        public TestRecord map(String line) throws Exception {
+        public MyRecord map(String line) throws Exception {
             return parser.parse(line);
         }
     }
@@ -57,16 +53,16 @@ public class TestParserMapFunctionClass implements Serializable {
 
         DataSet<String> input = env.fromElements(TestCase.getInputLine());
 
-        DataSet<TestRecord> filledTestRecords = input
+        DataSet<MyRecord> filledTestRecords = input
             .map(new MyParserMapper())
             .name("Extract Elements from logline");
 
         filledTestRecords.print();
 
-        List<TestRecord> result = filledTestRecords.collect();
+        List<MyRecord> result = filledTestRecords.collect();
 
         assertEquals(1, result.size());
-        assertEquals(new TestRecord().setFullValid(), result.get(0));
+        assertEquals(new MyRecord().setFullValid(), result.get(0));
     }
 
 }

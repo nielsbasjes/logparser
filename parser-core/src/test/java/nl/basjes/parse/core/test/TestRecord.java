@@ -24,11 +24,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestRecord {
 
@@ -148,24 +148,23 @@ public class TestRecord {
 
     private void isPresent(Map<String, ?> results, String field, Object value) {
         if (value == null) {
-            assertTrue("The field \""+field+"\" is missing (a null value was expected).", results.containsKey(field));
+            assertTrue(results.containsKey(field), "The field \""+field+"\" is missing (a null value was expected).");
             Object actualValue = results.get(field);
-            assertNotNull("The field \"" + field + "\" should be present but it is not", actualValue);
-            assertTrue("Invalid type used, result must be a Set<?>", actualValue instanceof Set);
+            assertNotNull(actualValue, "The field \"" + field + "\" should be present but it is not");
+            assertTrue(actualValue instanceof Set, "Invalid type used, result must be a Set<?>");
             Set<?> actualValues = (Set<?>)actualValue;
             for (Object actualValuee: actualValues) {
-                assertNull("The field \"" + field + "\" should only have null values but we found: " +
-                    "(" + actualValue.getClass().getSimpleName() + ")\"" + actualValue + "\" ", actualValuee);
+                assertNull(actualValuee, "The field \"" + field + "\" should only have null values but we found: " +
+                    "(" + actualValue.getClass().getSimpleName() + ")\"" + actualValue + "\" ");
             }
         } else {
-            assertTrue("The field \""+field+"\" is missing (an entry of type "+value.getClass().getSimpleName()+" was expected).",
-                results.containsKey(field));
+            assertTrue(results.containsKey(field),
+                "The field \""+field+"\" is missing (an entry of type "+value.getClass().getSimpleName()+" was expected).");
             Object result = results.get(field);
-            assertTrue("Invalid type used, result must be a Set<?>", result instanceof Set);
+            assertTrue(result instanceof Set, "Invalid type used, result must be a Set<?>");
             Set<?> resultSet = (Set<?>)result;
-            assertTrue("The field \"" + field + "\" should have the value (" +
-                value
-                + ")\"" + value.toString() + "\"is missing", resultSet.contains(value));
+            assertTrue(resultSet.contains(value),
+                "The field \"" + field + "\" should have the value (" + value + ")\"" + value + "\"is missing");
         }
     }
 
@@ -189,7 +188,8 @@ public class TestRecord {
         if (value != null) {
             fail("The value \""+value+"\" was found for field \""+field+"\"");
         } else {
-            assertFalse("A null value was found for field \"" + field + "\"", results.containsKey(field) || results.get(field) != null);
+            assertFalse(results.containsKey(field) || results.get(field) != null,
+                "A null value was found for field \"" + field + "\"");
         }
     }
 

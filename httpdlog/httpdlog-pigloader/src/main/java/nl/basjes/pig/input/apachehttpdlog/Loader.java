@@ -65,7 +65,6 @@ public class Loader
 
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
 
-    @SuppressWarnings("rawtypes")
     private ApacheHttpdLogfileRecordReader  reader;
 
     // If we ONLY want the example or the list of fields we set this to true.
@@ -334,7 +333,7 @@ public class Loader
     // ------------------------------------------
 
     @Override
-    public void prepareToRead(@SuppressWarnings("rawtypes") RecordReader newReader, PigSplit pigSplit) {
+    public void prepareToRead(RecordReader newReader, PigSplit pigSplit) {
         // Note that for this Loader, we don't care about the PigSplit.
         if (newReader instanceof ApacheHttpdLogfileRecordReader) {
             this.reader = (ApacheHttpdLogfileRecordReader) newReader;

@@ -30,21 +30,18 @@ import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.configuration.Configuration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.List;
 
 import static nl.basjes.parse.httpdlog.flink.TestCase.CITY_TEST_MMDB;
 import static nl.basjes.parse.httpdlog.flink.TestCase.ISP_TEST_MMDB;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // CHECKSTYLE.OFF: LineLength
 // CHECKSTYLE.OFF: LeftCurly
-@RunWith(JUnit4.class)
-public class TestParserMapFunctionAvroClass implements Serializable {
+class TestParserMapFunctionAvroClass implements Serializable {
 
     public static class ClickSetter implements Builder<Click> {
 
@@ -107,7 +104,7 @@ public class TestParserMapFunctionAvroClass implements Serializable {
     }
 
     @Test
-    public void testClassDefinitionAvro() throws Exception {
+    void testClassDefinitionAvro() throws Exception {
         // set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 

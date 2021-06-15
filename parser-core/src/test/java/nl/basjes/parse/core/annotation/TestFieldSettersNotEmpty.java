@@ -23,7 +23,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.test.EmptyValuesDissector;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
 
@@ -87,7 +87,7 @@ public class TestFieldSettersNotEmpty {
     }
 
     @Test
-    public void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordString.class)
             .setRootType("INPUT")
             .addDissector(new EmptyValuesDissector())
@@ -102,7 +102,7 @@ public class TestFieldSettersNotEmpty {
     }
 
     @Test
-    public void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordLong.class)
             .setRootType("INPUT")
             .addDissector(new EmptyValuesDissector())
@@ -114,7 +114,7 @@ public class TestFieldSettersNotEmpty {
     }
 
     @Test
-    public void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordDouble.class)
             .setRootType("INPUT")
             .addDissector(new EmptyValuesDissector())

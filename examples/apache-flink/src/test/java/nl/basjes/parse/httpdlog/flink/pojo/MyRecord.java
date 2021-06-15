@@ -15,45 +15,46 @@
  * limitations under the License.
  */
 
-package nl.basjes.parse.httpdlog.beam.pojo;
+package nl.basjes.parse.httpdlog.flink.pojo;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnNumber;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnOrganization;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedBui;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCityName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedConnectionClientHost;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedContinentCode;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedContinentName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCountryIso;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedCountryName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedGoogleQuery;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedIspName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedIspOrganization;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedLocationLatitude;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedLocationLongitude;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedPostalCode;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedReferrer;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedRequestReceiveTime;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenHeight;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenResolution;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedScreenWidth;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedSubdivisionIso;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedSubdivisionName;
-import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedUseragent;
-import static org.junit.Assert.assertEquals;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnNumber;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedAsnOrganization;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedBui;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCityName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedConnectionClientHost;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentCode;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedContinentName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedCountryName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedGoogleQuery;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedIspOrganization;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLatitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedLocationLongitude;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedPostalCode;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedReferrer;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedRequestReceiveTime;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenHeight;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenResolution;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedScreenWidth;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionIso;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedSubdivisionName;
+import static nl.basjes.parse.httpdlog.flink.TestCase.getExpectedUseragent;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // CHECKSTYLE.OFF: ParamPad
 @ToString
 @EqualsAndHashCode
-public class TestRecord implements Serializable {
+public class MyRecord implements Serializable {
 
     @Getter @Setter private String connectionClientHost = null;
     @Getter @Setter private String requestReceiveTime   = null;
@@ -109,7 +110,7 @@ public class TestRecord implements Serializable {
         assertEquals(getExpectedLocationLongitude(),    getLocationLongitude());
     }
 
-    public TestRecord setFullValid() {
+    public MyRecord setFullValid() {
         setConnectionClientHost (getExpectedConnectionClientHost());
         setRequestReceiveTime   (getExpectedRequestReceiveTime());
         setReferrer             (getExpectedReferrer());
@@ -141,15 +142,17 @@ public class TestRecord implements Serializable {
 
 
     @Test
-    public void checkTestMethodsPass() {
-        TestRecord testRecord = new TestRecord().setFullValid();
+    void checkTestMethodsPass() {
+        MyRecord testRecord = new MyRecord().setFullValid();
         testRecord.assertIsValid();
     }
 
-    @Test(expected = AssertionError.class)
-    public void checkTestMethodsFail() {
-        TestRecord testRecord = new TestRecord();
-        testRecord.assertIsValid();
+    @Test
+    void checkTestMethodsFail() {
+        assertThrows(AssertionError.class, () -> {
+            MyRecord testRecord = new MyRecord();
+            testRecord.assertIsValid();
+        });
     }
 
 }

@@ -429,6 +429,8 @@
             <!-- Version control files -->
             <exclude>**/.git/**</exclude>
             <exclude>**/.gitignore</exclude>
+            <!-- File that cannot be polluted -->
+            <exclude>**/.github/FUNDING.yml</exclude>
             <!-- IDE settings and files -->
             <exclude>**/.classpath</exclude>
             <exclude>**/.project</exclude>

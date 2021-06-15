@@ -25,23 +25,18 @@ import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCountryDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestGeoIPDissectors {
+class TestGeoIPDissectors {
 
     private static final String TEST_MMDB_BASE_DIR = "../../GeoIP2-TestData/test-data/";
-    private static final String ASN_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoLite2-ASN-Test.mmdb";
-    private static final String ISP_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
-    private static final String CITY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
+    private static final String ASN_TEST_MMDB     = TEST_MMDB_BASE_DIR + "GeoLite2-ASN-Test.mmdb";
+    private static final String ISP_TEST_MMDB     = TEST_MMDB_BASE_DIR + "GeoIP2-ISP-Test.mmdb";
+    private static final String CITY_TEST_MMDB    = TEST_MMDB_BASE_DIR + "GeoIP2-City-Test.mmdb";
     private static final String COUNTRY_TEST_MMDB = TEST_MMDB_BASE_DIR + "GeoIP2-Country-Test.mmdb";
-
-    @Rule
-    public final transient ExpectedException expectedEx = ExpectedException.none();
-
 
     DissectorTester createTester(Dissector dissector) {
         return DissectorTester.create()
@@ -62,49 +57,49 @@ public class TestGeoIPDissectors {
     // =================================================================================================================
     // No such file
     @Test
-    public void testBadFileASN() {
-        expectedEx.expect(AssertionError.class);
-        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
-        createTester(new GeoIPASNDissector("Does not exist"))
-            .withInput("80.100.47.45")
-            .expect("ASN:asn.number",         "4444")
-            .checkExpectations();
+    void testBadFileASN() {
+        AssertionError assertionError = assertThrows(AssertionError.class, ()->
+            createTester(new GeoIPASNDissector("Does not exist"))
+                .withInput("80.100.47.45")
+                .expect("ASN:asn.number",         "4444")
+                .checkExpectations());
+        assertTrue(assertionError.getMessage().contains("Does not exist (No such file or directory)"));
     }
 
     @Test
-    public void testBadFileISP() {
-        expectedEx.expect(AssertionError.class);
-        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
-        createTester(new GeoIPISPDissector("Does not exist"))
-            .withInput("80.100.47.45")
-            .expect("ASN:asn.number",         "4444")
-            .checkExpectations();
+    void testBadFileISP() {
+        AssertionError assertionError = assertThrows(AssertionError.class, () ->
+            createTester(new GeoIPISPDissector("Does not exist"))
+                .withInput("80.100.47.45")
+                .expect("ASN:asn.number", "4444")
+                .checkExpectations());
+        assertTrue(assertionError.getMessage().contains("Does not exist (No such file or directory)"));
     }
 
     @Test
-    public void testBadFileCity() {
-        expectedEx.expect(AssertionError.class);
-        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
-        createTester(new GeoIPCityDissector("Does not exist"))
-            .withInput("80.100.47.45")
-            .expect("STRING:continent.name", "Europe")
-            .checkExpectations();
+    void testBadFileCity() {
+        AssertionError assertionError = assertThrows(AssertionError.class, () ->
+            createTester(new GeoIPCityDissector("Does not exist"))
+                .withInput("80.100.47.45")
+                .expect("STRING:continent.name", "Europe")
+                .checkExpectations());
+        assertTrue(assertionError.getMessage().contains("Does not exist (No such file or directory)"));
     }
 
     @Test
-    public void testBadFileCountry() {
-        expectedEx.expect(AssertionError.class);
-        expectedEx.expectMessage(containsString("Does not exist (No such file or directory)"));
-        createTester(new GeoIPCountryDissector("Does not exist"))
-            .withInput("80.100.47.45")
-            .expect("STRING:continent.name", "Europe")
-            .checkExpectations();
+    void testBadFileCountry() {
+        AssertionError assertionError = assertThrows(AssertionError.class, () ->
+            createTester(new GeoIPCountryDissector("Does not exist"))
+                .withInput("80.100.47.45")
+                .expect("STRING:continent.name", "Europe")
+                .checkExpectations());
+        assertTrue(assertionError.getMessage().contains("Does not exist (No such file or directory)"));
     }
 
     // =================================================================================================================
     // IP not in index
     @Test
-    public void testUnknownIPASN() {
+    void testUnknownIPASN() {
         createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("ASN:asn.number")
@@ -112,7 +107,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownIPISP() {
+    void testUnknownIPISP() {
         createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("ASN:asn.number")
@@ -120,7 +115,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownIPCity() {
+    void testUnknownIPCity() {
         createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("STRING:continent.name")
@@ -128,7 +123,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testUnknownIPCountry() {
+    void testUnknownIPCountry() {
         createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("1.2.3.4")
             .expectAbsentString("STRING:continent.name")
@@ -139,7 +134,7 @@ public class TestGeoIPDissectors {
 
     // Tests with IPv4
     @Test
-    public void testGeoIPASN() {
+    void testGeoIPASN() {
         createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("80.100.47.45")
             .expect("ASN:asn.number",               "4444")
@@ -149,7 +144,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPISP() {
+    void testGeoIPISP() {
         createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("80.100.47.45")
             .expect("ASN:asn.number",               "4444")
@@ -161,7 +156,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCountry() {
+    void testGeoIPCountry() {
         createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("80.100.47.45")
             .expect("STRING:continent.name",                "Europe")
@@ -176,7 +171,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCity() {
+    void testGeoIPCity() {
         createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("80.100.47.45")
             .expect("STRING:continent.name",                "Europe")
@@ -213,7 +208,7 @@ public class TestGeoIPDissectors {
     // Tests with IPv6
 
     @Test
-    public void testGeoIPASNIpv6() {
+    void testGeoIPASNIpv6() {
         createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .expect("ASN:asn.number",               "6666")
@@ -223,7 +218,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPISPIpv6() {
+    void testGeoIPISPIpv6() {
         createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .expect("ASN:asn.number",               "6666")
@@ -235,7 +230,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCountryIpv6() {
+    void testGeoIPCountryIpv6() {
         createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .expect("STRING:continent.name",                    "Europe")
@@ -250,7 +245,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCityIpv6() {
+    void testGeoIPCityIpv6() {
         createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("2001:980:91c0:1:21c:c0ff:fe06:e580")
             .expect("STRING:continent.name",                    "Europe")
@@ -287,7 +282,7 @@ public class TestGeoIPDissectors {
     // Tests with localhost ... which is NOT in the database
 
     @Test
-    public void testGeoIPISPLocalhost() {
+    void testGeoIPISPLocalhost() {
         createTester(new GeoIPISPDissector(ISP_TEST_MMDB))
             .withInput("127.0.0.1")
             .expectAbsentString("ASN:asn.number")
@@ -299,7 +294,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPASNLocalhost() {
+    void testGeoIPASNLocalhost() {
         createTester(new GeoIPASNDissector(ASN_TEST_MMDB))
             .withInput("127.0.0.1")
             .expectAbsentString("ASN:asn.number")
@@ -309,7 +304,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCountryLocalhost() {
+    void testGeoIPCountryLocalhost() {
         createTester(new GeoIPCountryDissector(COUNTRY_TEST_MMDB))
             .withInput("127.0.0.1")
             .expectAbsentString("STRING:continent.name")
@@ -324,7 +319,7 @@ public class TestGeoIPDissectors {
     }
 
     @Test
-    public void testGeoIPCityLocalhost() {
+    void testGeoIPCityLocalhost() {
         createTester(new GeoIPCityDissector(CITY_TEST_MMDB))
             .withInput("127.0.0.1")
             .expectAbsentString("STRING:continent.name")

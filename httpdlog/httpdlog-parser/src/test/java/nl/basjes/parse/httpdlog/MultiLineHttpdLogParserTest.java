@@ -22,14 +22,14 @@ import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MultiLineHttpdLogParserTest {
+class MultiLineHttpdLogParserTest {
 
     // ------------------------------------------
 
@@ -61,7 +61,7 @@ public class MultiLineHttpdLogParserTest {
      * Test of initialize method, of class ApacheHttpdLogParser.
      */
     @Test
-    public void fullTest1() throws Exception {
+    void fullTest1() throws Exception {
 
         String logFormat = LOG_FORMAT_1 + '\n'
                          + '\n'

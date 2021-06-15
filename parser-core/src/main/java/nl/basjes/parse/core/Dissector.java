@@ -132,16 +132,18 @@ public abstract class Dissector implements Serializable {
      * In order to optimize per node we need separate instances.
      * @return New instance of this Dissector
      */
-    public Dissector getNewInstance() {
+    public Dissector getNewInstance() throws InvalidDissectorException {
         try {
             Constructor<? extends Dissector> co = this.getClass().getConstructor();
             Dissector newInstance = co.newInstance();
             initializeNewInstance(newInstance);
             return newInstance;
         } catch (Exception e) {
-            LOG.error("Unable to create instance of {}: {}", this.getClass().getCanonicalName(), e);
+            String error = "Unable to create instance of " + this.getClass().getCanonicalName() + ": " +
+                e.getClass().getSimpleName() + ": " + e.getMessage();
+            LOG.error("{}",  error);
+            throw new InvalidDissectorException(error, e);
         }
-        return null;
     }
 
     public String extractFieldName(final String inputname, final String outputname){

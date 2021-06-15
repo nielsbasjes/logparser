@@ -19,14 +19,14 @@ package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.Field;
 import nl.basjes.parse.core.Parser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JettyLogFormatParserTest {
+class JettyLogFormatParserTest {
 
     // ------------------------------------------
 
@@ -59,7 +59,7 @@ public class JettyLogFormatParserTest {
     // ------------------------------------------
 
     @Test
-    public void buggyJettyLogline() throws Exception {
+    void buggyJettyLogline() throws Exception {
         // In Jetty
         // - an extra space is included if the useragent is absent (the >"-"  < near the end).
         // - two extra spaces are included if the user field is absent ( " - " instead of "-" )

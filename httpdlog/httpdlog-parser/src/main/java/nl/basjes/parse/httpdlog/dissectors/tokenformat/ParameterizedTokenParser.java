@@ -88,7 +88,6 @@ public class ParameterizedTokenParser extends TokenParser {
         final int end = matcher.end();
         // the end is index of the last matching character + 1
 
-
         Token token = new Token(
             getRegex(),
             startOffset + start, end - start,

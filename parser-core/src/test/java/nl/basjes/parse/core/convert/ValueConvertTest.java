@@ -24,14 +24,14 @@ import nl.basjes.parse.core.Value;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValueConvertTest {
 

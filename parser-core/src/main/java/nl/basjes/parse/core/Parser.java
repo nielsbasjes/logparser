@@ -363,7 +363,7 @@ public class Parser<RECORD> implements Serializable {
             final Set<String> possibleTargets,
             final Set<String> locatedTargets,
             final String subRootType, final String subRootName,
-            final boolean thisIsTheRoot) {
+            final boolean thisIsTheRoot) throws InvalidDissectorException {
 
         String subRootId = subRootType + ':' + subRootName;
 

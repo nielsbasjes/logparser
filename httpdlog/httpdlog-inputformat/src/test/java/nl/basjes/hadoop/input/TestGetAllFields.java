@@ -18,7 +18,7 @@ package nl.basjes.hadoop.input;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.RecordReader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,12 +27,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestGetAllFields {
+class TestGetAllFields {
 
     @Test
-    public void testGetAllField() throws IOException, InterruptedException {
+    void testGetAllField() throws IOException, InterruptedException {
         ApacheHttpdLogfileInputFormat inputFormat =
             new ApacheHttpdLogfileInputFormat(
                 "common",
@@ -67,7 +67,7 @@ public class TestGetAllFields {
     }
 
     @Test
-    public void checkPossibleFields(){
+    void checkPossibleFields(){
         List<String> possibleFields = new ApacheHttpdLogfileInputFormat().listPossibleFields("common");
         assertTrue(possibleFields.containsAll(Arrays.asList(
             // A subset of all fields that come out

@@ -19,7 +19,7 @@ package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -28,15 +28,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 // CHECKSTYLE.OFF: LineLength
-public class TestTimeStampDissector {
+class TestTimeStampDissector {
 
     @Test
-    public void ensureDefaultLocaleFollowsISOWeekFields() {
+    void ensureDefaultLocaleFollowsISOWeekFields() {
         WeekFields localeWeekFields = WeekFields.of(new TimeStampDissector().getLocale());
         WeekFields isoWeekFields    = WeekFields.ISO;
         assertEquals(localeWeekFields.getFirstDayOfWeek(), isoWeekFields.getFirstDayOfWeek());
@@ -44,7 +44,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testTimeStampDissector() {
+    void testTimeStampDissector() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
             .withInput("31/Dec/2012:23:00:44 -0700")
@@ -87,7 +87,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testTimeStampDissectorPossibles() {
+    void testTimeStampDissectorPossibles() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
 
@@ -116,7 +116,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrftimeStampDissectorPossibles() {
+    void testStrftimeStampDissectorPossibles() {
 
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%Y-%m-%dT%H:%M:%S%z}t"))
@@ -151,7 +151,7 @@ public class TestTimeStampDissector {
 
 
     @Test
-    public void testTimeStamUpperLowerCaseVariations() {
+    void testTimeStamUpperLowerCaseVariations() {
         DissectorTester.create()
             .withDissector(new TimeStampDissector())
 
@@ -172,7 +172,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testHandlingOfNotYetImplementedSpecialTimeFormat() {
+    void testHandlingOfNotYetImplementedSpecialTimeFormat() {
         // Test both the original form and the documented workaround.
         String logformat = "%{%Y-%m-%dT%H:%M:%S%z}t | %{timestamp}i";
         String input     = "2012-12-31T23:00:44 -0700 | 2012-12-31T23:00:44 -0700";
@@ -186,7 +186,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormat() {
+    void testSpecialTimeFormat() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%Y-%m-%dT%H:%M:%S%z}t"))
 
@@ -232,7 +232,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatBegin() {
+    void testSpecialTimeFormatBegin() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{begin:%Y-%m-%dT%H:%M:%S%z}t"))
             .withInput("2012-12-31T23:00:44-0700")
@@ -241,7 +241,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatEnd() {
+    void testSpecialTimeFormatEnd() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{end:%Y-%m-%dT%H:%M:%S%z}t"))
             .withInput("2012-12-31T23:00:44-0700")
@@ -250,7 +250,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatMultiFields1() {
+    void testSpecialTimeFormatMultiFields1() {
         String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 1482349825 25 3 2016 +0100";
         String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t";
 
@@ -290,7 +290,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeFormatMultiFields2() {
+    void testSpecialTimeFormatMultiFields2() {
         String logline = "127.0.0.1 - - [22/Dec/2016:00:09:54 +0100] \"GET / HTTP/1.1\" 200 3525 \"12/22/16 2016-12-22 00:09 00:09:54 12:09:54 AM Thu Thursday Dec December 22 2016 Dec 00 12 357  0 12 12 09 AM 1482361794 54 4 2016 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
         String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
@@ -330,7 +330,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeLeadingSpaces1() {
+    void testSpecialTimeLeadingSpaces1() {
         String logline = "12/21/16 2016-12-21 20:50 20:50:25 08:50:25 PM Wed Wednesday Dec December 21 2016 Dec 20 08 356 20  8 12 50 PM 1482349825 25 3 2016 +0100";
         String logformat = "%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %s %S %u %Y %z}t";
 
@@ -342,7 +342,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testSpecialTimeLeadingSpaces2a() {
+    void testSpecialTimeLeadingSpaces2a() {
         String logline = "127.0.0.1 - - [01/Jan/2017:13:01:21 +0100] \"GET / HTTP/1.1\" 200 3525 \"01/01/17 2017-01-01 13:01 13:01:21 01:01:21 PM Sun Sunday Jan January 01 2017 Jan 13 01 001 13  1 01 01 PM 21 7 2017 +0100\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36\"";
         String logformat = "%h %l %u %t \"%r\" %>s %O \"%{%D %F %R %T %r %a %A %b %B %d %G %h %H %I %j %k %l %m %M %p %S %u %Y %z}t\" \"%{User-Agent}i\"";
 
@@ -354,7 +354,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testMultipleSpecialTime() {
+    void testMultipleSpecialTime() {
         // As described here: http://httpd.apache.org/docs/current/mod/mod_log_config.html#examples
         // You can use the %{format}t directive multiple times to build up a time format using the extended format tokens like msec_frac:
         // Timestamp including milliseconds
@@ -379,7 +379,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testReportedSpecialTime() {
+    void testReportedSpecialTime() {
         String logline = "28/feb/2017:03:39:40 +0800";
         String logformat = "%{%d/%b/%Y:%H:%M:%S %z}t";
 
@@ -391,7 +391,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testAllStrfFieldsLowValues() {
+    void testAllStrfFieldsLowValues() {
         ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2001, 1, 2, 3, 4, 5, 678901234), ZoneId.of("CET"));
 
         checkStrfField(dateTime, "%a", "Tue");           // The abbreviated name of the day of the week according to the current locale.
@@ -440,7 +440,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testAllStrfFieldsHighValues() {
+    void testAllStrfFieldsHighValues() {
         ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.of(2017, 11, 12, 23, 14, 15, 678901234), ZoneId.of("CET"));
 
         checkStrfField(dateTime, "%a", "Sun");           // The abbreviated name of the day of the week according to the current locale.
@@ -494,14 +494,14 @@ public class TestTimeStampDissector {
             DateTimeFormatter dateTimeFormatter = StrfTimeToDateTimeFormatter.convert(strffield, ZoneId.of("CET"));
             assertNotNull(dateTimeFormatter);
             String result = dateTime.format(dateTimeFormatter);
-            assertEquals("Incorrect field " + strffield, expected, result);
+            assertEquals(expected, result, "Incorrect field " + strffield);
         } catch (DateTimeException dte) {
             fail("DateTimeException for field " + strffield + " "+ dte.getMessage());
         }
     }
 
     @Test
-    public void ensureUnsupportedFields() {
+    void ensureUnsupportedFields() {
         checkUnsupported("%c"); // The preferred date and time representation for the current locale.
         checkUnsupported("%C"); // The century number (year/100) as a 2-digit integer.
         checkUnsupported("%U"); // The week number of the current year as a decimal number, range 00 to 53, starting with the first Sunday as the first day of week 01. See also %V and %W.
@@ -523,7 +523,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void strfTimeWithMissingTimeZone() {
+    void strfTimeWithMissingTimeZone() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%{%F %H:%M:%S}t"))
             .withInput("2017-12-25 00:00:00")
@@ -540,7 +540,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrfTimeMsecfrac() {
+    void testStrfTimeMsecfrac() {
         String logformat = "%a %l %u %{%F %H:%M:%S.msec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
         String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
         DissectorTester.create()
@@ -558,7 +558,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrfTimeMsecfracP() {
+    void testStrfTimeMsecfracP() {
         String logformat = "%a %l %u %{%F %H:%M:%S.%msec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
         String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
         DissectorTester.create()
@@ -576,7 +576,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrfTimeUsecfrac() {
+    void testStrfTimeUsecfrac() {
         String logformat = "%a %l %u %{%F %H:%M:%S.usec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
         String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123456 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
         DissectorTester.create()
@@ -594,7 +594,7 @@ public class TestTimeStampDissector {
     }
 
     @Test
-    public void testStrfTimeUsecfracP() {
+    void testStrfTimeUsecfracP() {
         String logformat = "%a %l %u %{%F %H:%M:%S.%usec_frac}t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\" t=%D";
         String logline = "192.168.85.3 - - 2017-12-25 00:00:42.123456 \"GET /up.html HTTP/1.0\" 203 8 \"-\" \"HTTP-Monitor/1.1\" \"-\" t=4920";
         DissectorTester.create()

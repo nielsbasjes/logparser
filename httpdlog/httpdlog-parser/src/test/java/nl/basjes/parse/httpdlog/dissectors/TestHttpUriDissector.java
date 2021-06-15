@@ -18,12 +18,12 @@
 package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestHttpUriDissector {
 
     @Test
-    public void testFullUrl1() {
+    void testFullUrl1() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -40,7 +40,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl2() {
+    void testFullUrl2() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -57,7 +57,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl3() {
+    void testFullUrl3() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -74,7 +74,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl4() {
+    void testFullUrl4() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -91,7 +91,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testFullUrl5() {
+    void testFullUrl5() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -108,7 +108,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testAndroidApp1() {
+    void testAndroidApp1() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -125,7 +125,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testAndroidApp2() {
+    void testAndroidApp2() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -142,7 +142,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURI() {
+    void testBadURI() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -160,7 +160,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURIEncoding() {
+    void testBadURIEncoding() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -179,7 +179,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testBadURIMultiPercentEncoding() {
+    void testBadURIMultiPercentEncoding() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
             .withDissector(new QueryStringFieldDissector())
@@ -198,7 +198,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testDoubleHashes() {
+    void testDoubleHashes() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
 
@@ -213,7 +213,7 @@ public class TestHttpUriDissector {
     }
 
     @Test
-    public void testHTMLEntities() {
+    void testHTMLEntities() {
         DissectorTester.create()
             .withDissector(new HttpUriDissector())
             .withDissector(new QueryStringFieldDissector())

@@ -17,13 +17,13 @@
 
 package nl.basjes.parse.core.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestDissectorTester {
+public class MyDissectorTester {
     @Test
-    public void testPrefixInserter(){
+    void testPrefixInserter(){
         DissectorTester tester = DissectorTester.create();
 
         tester.withPathPrefix("Prefix.");

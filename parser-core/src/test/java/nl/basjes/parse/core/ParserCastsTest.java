@@ -17,7 +17,7 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -32,14 +32,14 @@ import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Casts.STRING_OR_DOUBLE;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ParserCastsTest {
+class ParserCastsTest {
 
-    public static class TestDissector extends Dissector {
+    public static class MyDissector extends Dissector {
 
-        public TestDissector() {
+        public MyDissector() {
             // Empty
         }
 
@@ -117,15 +117,15 @@ public class ParserCastsTest {
         }
     }
 
-    public static class TestParser<RECORD> extends Parser<RECORD> {
-        public TestParser(final Class<RECORD> clazz) {
+    public static class MyParser<RECORD> extends Parser<RECORD> {
+        public MyParser(final Class<RECORD> clazz) {
             super(clazz);
-            addDissector(new TestDissector());
+            addDissector(new MyDissector());
             setRootType("INPUT_TYPE");
         }
     }
 
-    public static class TestRecord {
+    public static class MyRecord {
         private int count = 0;
         @Field({"OUTPUT_TYPE:string_null",
                 "OUTPUT_TYPE:string_long_null",
@@ -201,9 +201,9 @@ public class ParserCastsTest {
     }
 
     @Test
-    public void testValidCasting() throws Exception {
-        Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
-        TestRecord output = new TestRecord();
+    void testValidCasting() throws Exception {
+        Parser<MyRecord> parser = new MyParser<>(MyRecord.class);
+        MyRecord output = new MyRecord();
         parser.parse(output, "Something");
         assertEquals(22, output.count);
 

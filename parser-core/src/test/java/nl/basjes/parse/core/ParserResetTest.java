@@ -20,7 +20,7 @@ import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.test.NormalValuesDissector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Map;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ParserResetTest {
+class ParserResetTest {
 
     public static class WildCardDissector extends SimpleDissector {
 
@@ -78,7 +78,7 @@ public class ParserResetTest {
 
 
     @Test
-    public void testParserReset() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testParserReset() throws NoSuchMethodException, InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<DuplicateTestRecord> parser = new Parser<>(DuplicateTestRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())

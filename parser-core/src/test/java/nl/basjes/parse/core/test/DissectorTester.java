@@ -41,8 +41,8 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public final class DissectorTester implements Serializable {
 
@@ -573,13 +573,11 @@ public final class DissectorTester implements Serializable {
                         splitOutput[1].toLowerCase(Locale.ENGLISH),
                         "\"" + splitOutput[1] + "\" is not fully uppercase."));
                 }
-
-//                assertEquals(baseMsg + " which is not fully uppercase", splitOutput[0].toUpperCase(Locale.ENGLISH), splitOutput[0]);
-//                assertEquals(baseMsg + " which is not fully lowercase", splitOutput[1].toLowerCase(Locale.ENGLISH), splitOutput[1]);
             }
-            assertNotNull("Dissector::prepareForDissect may NEVER return null!!",
+            assertNotNull(
                 dissector.prepareForDissect("Checking for non-existing input handling",
-                                            "Checking for non-existing output handling"));
+                                            "Checking for non-existing output handling"),
+                "Dissector::prepareForDissect may NEVER return null!!");
         }
         return results;
     }

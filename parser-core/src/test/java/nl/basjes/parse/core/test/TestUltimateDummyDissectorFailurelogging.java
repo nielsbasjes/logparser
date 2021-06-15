@@ -16,85 +16,90 @@
  */
 package nl.basjes.parse.core.test;
 
-import nl.basjes.parse.core.test.expectfailure.ExpectedFailure;
-import nl.basjes.parse.core.test.expectfailure.TestShouldFail;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TestUltimateDummyDissectorFailurelogging {
-    @Rule
-    public ExpectedFailure expectedFailure = new ExpectedFailure();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    @TestShouldFail({
-        "[ERROR] | ANY:any       | String value  |             43 | Wrong value: 42       |",
-        "[ERROR] | DOUBLE:double | String value  |           43.0 | Wrong value: 42.0     |",
-        "[ERROR] | FLOAT:float   | String value  |           43.0 | Wrong value: 42.0     |",
-        "[ERROR] | INT:int       | String value  |             43 | Wrong value: 42       |",
-        "[ERROR] | LONG:long     | String value  |             43 | Wrong value: 42       |",
-        "[ERROR] | STRING:string | String value  |     FortyThree | Wrong value: FortyTwo |",
-        "[ERROR] | ANY:any       | Long value    |             43 | Wrong value: 42       |",
-        "[ERROR] | INT:int       | Long value    |             43 | Wrong value: 42       |",
-        "[ERROR] | LONG:long     | Long value    |             43 | Wrong value: 42       |",
-        "[ERROR] | ANY:any       | Double value  |           43.0 | Wrong value: 42.0     |",
-        "[ERROR] | DOUBLE:double | Double value  |           43.0 | Wrong value: 42.0     |",
-        "[ERROR] | FLOAT:float   | Double value  |           43.0 | Wrong value: 42.0     |",
-        "[ERROR] | STRING:string | String absent |       FortyTwo | Present               |",
-        "[     ] | STRING:string | Long absent   |                |                       |",
-        "[     ] | FLOAT:float   | Long absent   |                |                       |",
-        "[     ] | DOUBLE:double | Long absent   |                |                       |",
-        "[ERROR] | INT:int       | Long absent   |             42 | Present               |",
-        "[ERROR] | LONG:long     | Long absent   |             42 | Present               |",
-        "[     ] | STRING:string | Double absent |                |                       |",
-        "[     ] | INT:int       | Double absent |                |                       |",
-        "[     ] | LONG:long     | Double absent |                |                       |",
-        "[ERROR] | FLOAT:float   | Double absent |           42.0 | Present               |",
-        "[ERROR] | DOUBLE:double | Double absent |           42.0 | Present               |"
-    })
+class TestUltimateDummyDissectorFailurelogging {
+
     @Test
-    public void verifyErrorSituation() {
-        DissectorTester.create()
-            .withDissector(new NormalValuesDissector())
-            .withInput("Doesn't matter")
-            // All good
-            .expect("ANY:any",        "42")
-            .expect("ANY:any",        42L)
-            .expect("ANY:any",        42D)
-            .expect("STRING:string",  "FortyTwo")
-            .expectAbsentLong("STRING:string")
-            .expectAbsentDouble("STRING:string")
-            .expect("INT:int",        "42")
-            .expect("INT:int",        42L)
-            .expectAbsentDouble("INT:int")
-            .expect("LONG:long",      "42")
-            .expect("LONG:long",      42L)
-            .expectAbsentDouble("LONG:long")
-            .expect("FLOAT:float",    "42.0")
-            .expectAbsentLong("FLOAT:float")
-            .expect("FLOAT:float",    42D)
-            .expect("DOUBLE:double",  "42.0")
-            .expectAbsentLong("DOUBLE:double")
-            .expect("DOUBLE:double",  42D)
+    void verifyErrorSituation() {
+        AssertionError assertionError = assertThrows(AssertionError.class, () ->
+            DissectorTester.create()
+                .withDissector(new NormalValuesDissector())
+                .withInput("Doesn't matter")
+                // All good
+                .expect("ANY:any", "42")
+                .expect("ANY:any", 42L)
+                .expect("ANY:any", 42D)
+                .expect("STRING:string", "FortyTwo")
+                .expectAbsentLong("STRING:string")
+                .expectAbsentDouble("STRING:string")
+                .expect("INT:int", "42")
+                .expect("INT:int", 42L)
+                .expectAbsentDouble("INT:int")
+                .expect("LONG:long", "42")
+                .expect("LONG:long", 42L)
+                .expectAbsentDouble("LONG:long")
+                .expect("FLOAT:float", "42.0")
+                .expectAbsentLong("FLOAT:float")
+                .expect("FLOAT:float", 42D)
+                .expect("DOUBLE:double", "42.0")
+                .expectAbsentLong("DOUBLE:double")
+                .expect("DOUBLE:double", 42D)
 
-            // All bad
-            .expect("ANY:any",        "43")
-            .expect("ANY:any",        43L)
-            .expect("ANY:any",        43D)
-            .expect("STRING:string",  "FortyThree")
-            .expectAbsentString("STRING:string")
-            .expect("INT:int",        "43")
-            .expect("INT:int",        43L)
-            .expectAbsentLong("INT:int")
-            .expect("LONG:long",      "43")
-            .expect("LONG:long",      43L)
-            .expectAbsentLong("LONG:long")
-            .expect("FLOAT:float",    "43.0")
-            .expectAbsentDouble("FLOAT:float")
-            .expect("FLOAT:float",    43D)
-            .expect("DOUBLE:double",  "43.0")
-            .expectAbsentDouble("DOUBLE:double")
-            .expect("DOUBLE:double",  43D)
-            .verbose()
-            .checkExpectations();
+                // All bad
+                .expect("ANY:any", "43")
+                .expect("ANY:any", 43L)
+                .expect("ANY:any", 43D)
+                .expect("STRING:string", "FortyThree")
+                .expectAbsentString("STRING:string")
+                .expect("INT:int", "43")
+                .expect("INT:int", 43L)
+                .expectAbsentLong("INT:int")
+                .expect("LONG:long", "43")
+                .expect("LONG:long", 43L)
+                .expectAbsentLong("LONG:long")
+                .expect("FLOAT:float", "43.0")
+                .expectAbsentDouble("FLOAT:float")
+                .expect("FLOAT:float", 43D)
+                .expect("DOUBLE:double", "43.0")
+                .expectAbsentDouble("DOUBLE:double")
+                .expect("DOUBLE:double", 43D)
+                .verbose()
+                .checkExpectations()
+        );
+
+        assertEquals("\n" +
+            "[     ] /========================================================================\\\n"+
+            "[     ] | Field         | Check         | Expected Value | Fail reason           |\n"+
+            "[     ] +---------------+---------------+----------------+-----------------------+\n"+
+            "[ERROR] | ANY:any       | String value  |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | DOUBLE:double | String value  |           43.0 | Wrong value: 42.0     |\n" +
+            "[ERROR] | FLOAT:float   | String value  |           43.0 | Wrong value: 42.0     |\n" +
+            "[ERROR] | INT:int       | String value  |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | LONG:long     | String value  |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | STRING:string | String value  |     FortyThree | Wrong value: FortyTwo |\n" +
+            "[ERROR] | ANY:any       | Long value    |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | INT:int       | Long value    |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | LONG:long     | Long value    |             43 | Wrong value: 42       |\n" +
+            "[ERROR] | ANY:any       | Double value  |           43.0 | Wrong value: 42.0     |\n" +
+            "[ERROR] | DOUBLE:double | Double value  |           43.0 | Wrong value: 42.0     |\n" +
+            "[ERROR] | FLOAT:float   | Double value  |           43.0 | Wrong value: 42.0     |\n" +
+            "[ERROR] | STRING:string | String absent |       FortyTwo | Present               |\n" +
+            "[     ] | STRING:string | Long absent   |                |                       |\n" +
+            "[     ] | FLOAT:float   | Long absent   |                |                       |\n" +
+            "[     ] | DOUBLE:double | Long absent   |                |                       |\n" +
+            "[ERROR] | INT:int       | Long absent   |             42 | Present               |\n" +
+            "[ERROR] | LONG:long     | Long absent   |             42 | Present               |\n" +
+            "[     ] | STRING:string | Double absent |                |                       |\n" +
+            "[     ] | INT:int       | Double absent |                |                       |\n" +
+            "[     ] | LONG:long     | Double absent |                |                       |\n" +
+            "[ERROR] | FLOAT:float   | Double absent |           42.0 | Present               |\n" +
+            "[ERROR] | DOUBLE:double | Double absent |           42.0 | Present               |\n" +
+            "[     ] \\========================================================================/\n",
+            assertionError.getMessage());
     }
 
 }

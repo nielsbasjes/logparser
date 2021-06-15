@@ -17,17 +17,18 @@
 
 package nl.basjes.parse.httpdlog;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static nl.basjes.parse.httpdlog.Utils.makeHTMLEncodedInert;
 import static nl.basjes.parse.httpdlog.Utils.resilientUrlDecode;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UtilsTest {
+class UtilsTest {
 
     @Test
-    public void testUrlDecoder() {
+    void testUrlDecoder() {
         // Normal cases
         assertEquals("  ", resilientUrlDecode("  "));
         assertEquals("  ", resilientUrlDecode(" %20"));
@@ -51,7 +52,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testHtmlEncoding() {
+    void testHtmlEncoding() {
         assertEquals("<", resilientUrlDecode(makeHTMLEncodedInert("&lt;")));
         assertEquals(">", resilientUrlDecode(makeHTMLEncodedInert("&gt;")));
         assertEquals("€", resilientUrlDecode(makeHTMLEncodedInert("&euro;")));
@@ -61,7 +62,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testHtmlEncodingFull() {
+    void testHtmlEncodingFull() {
         // Normal cases
         assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert("  ")));
         assertEquals("  ", resilientUrlDecode(makeHTMLEncodedInert(" %20")));
@@ -125,7 +126,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testHexToByte() {
+    void testHexToByte() {
         // Test basic character decoder
         assertEquals((byte) 0x00, Utils.hexCharsToByte('0', '0'));
         assertEquals((byte) 0x11, Utils.hexCharsToByte('1', '1'));
@@ -151,18 +152,22 @@ public class UtilsTest {
         assertEquals((byte) 0xFF, Utils.hexCharsToByte('F', 'F'));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testHexToByteIllegalLeft() {
-        Utils.hexCharsToByte('X', '0');
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testHexToByteIllegalRight() {
-        Utils.hexCharsToByte('0', 'X');
+    @Test
+    void testHexToByteIllegalLeft() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Utils.hexCharsToByte('X', '0');
+        });
     }
 
     @Test
-    public void testApacheLogDecoder() {
+    void testHexToByteIllegalRight() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Utils.hexCharsToByte('0', 'X');
+        });
+    }
+
+    @Test
+    void testApacheLogDecoder() {
         // Decoding a value
         assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla bla bla"));
         assertEquals("bla bla bla", Utils.decodeApacheHTTPDLogValue("bla\\x20bla bla"));

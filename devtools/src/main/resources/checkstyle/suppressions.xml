@@ -22,4 +22,9 @@
 <suppressions>
   <!-- Avoid any reports about generated code -->
   <suppress files=".*[\\/]target[\\/]" checks=".*" />
+
+  <!-- Junit 5 does not want 'public' -->
+  <!-- Without public this rule enforces removing public from constructors -->
+  <!-- Causing the tests to fail because now the reflection no longer works. -->
+  <suppress checks="RedundantModifier" files=".*[\\/]src[\\/](test|it)[\\/]"/>
 </suppressions>

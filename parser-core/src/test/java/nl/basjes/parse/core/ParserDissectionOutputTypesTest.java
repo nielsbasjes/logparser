@@ -17,7 +17,7 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -29,9 +29,9 @@ import static nl.basjes.parse.core.Casts.NO_CASTS;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
 import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ParserDissectionOutputTypesTest {
+class ParserDissectionOutputTypesTest {
 
     public static class TestDissector extends Dissector {
 
@@ -121,7 +121,7 @@ public class ParserDissectionOutputTypesTest {
     }
 
     public static class TestParser<RECORD> extends Parser<RECORD> {
-        public TestParser(final Class<RECORD> clazz) {
+        TestParser(final Class<RECORD> clazz) {
             super(clazz);
             addDissector(new TestDissector());
             setRootType("INPUT_TYPE");
@@ -219,7 +219,7 @@ public class ParserDissectionOutputTypesTest {
     }
 
     @Test
-    public void testSetterTypes() throws Exception {
+    void testSetterTypes() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
         TestRecord output = new TestRecord();
         parser.parse(output, "Something");

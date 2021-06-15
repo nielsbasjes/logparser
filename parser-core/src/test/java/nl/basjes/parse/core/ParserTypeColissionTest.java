@@ -17,14 +17,14 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ParserTypeColissionTest {
 
@@ -159,7 +159,7 @@ public class ParserTypeColissionTest {
     }
 
     @Test
-    public void testParseString() throws Exception {
+    void testParseString() throws Exception {
         Parser<TestRecord> parser = new TestParser<>(TestRecord.class);
 
         TestRecord output = new TestRecord();

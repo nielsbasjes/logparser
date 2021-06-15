@@ -23,11 +23,11 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import nl.basjes.parse.core.test.NormalValuesDissector;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
 
-public class TestFieldSettersAlwaysCombined {
+class TestFieldSettersAlwaysCombined {
 
     public static class TestRecordString extends TestRecord {
         @Field(value = {
@@ -67,7 +67,7 @@ public class TestFieldSettersAlwaysCombined {
 
 
     @Test
-    public void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testString() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordString.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -82,7 +82,7 @@ public class TestFieldSettersAlwaysCombined {
     }
 
     @Test
-    public void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testLong() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordLong.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -94,7 +94,7 @@ public class TestFieldSettersAlwaysCombined {
     }
 
     @Test
-    public void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testDouble() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestRecordDouble.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())

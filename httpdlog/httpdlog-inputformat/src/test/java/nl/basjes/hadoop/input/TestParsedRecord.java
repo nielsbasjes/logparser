@@ -18,7 +18,7 @@ package nl.basjes.hadoop.input;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.io.Writable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,9 +26,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestParsedRecord {
 
@@ -61,7 +61,7 @@ public class TestParsedRecord {
 
     @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "ObjectEqualsNull", "EqualsWithItself"})
     @Test
-    public void testParsedRecordSerialization() throws IOException, InstantiationException, IllegalAccessException {
+    void testParsedRecordSerialization() throws IOException, InstantiationException, IllegalAccessException {
         ParsedRecord record = new ParsedRecord();
 
         // Set and verify
@@ -74,11 +74,11 @@ public class TestParsedRecord {
         // Compare both before and after records
         checkAllValues(record);
         checkAllValues(deserialized);
-        assertTrue("Equals failed!", record.equals(deserialized));
-        assertTrue("Equals failed!", record.equals(record));
-        assertFalse("Equals failed!", record.equals(null));
-        assertFalse("Equals failed!", record.equals(this));
-        assertEquals("Hashcode is different!", record.hashCode(), deserialized.hashCode());
+        assertTrue(record.equals(deserialized), "Equals failed!");
+        assertTrue(record.equals(record), "Equals failed!");
+        assertFalse(record.equals(null), "Equals failed!");
+        assertFalse(record.equals(this), "Equals failed!");
+        assertEquals(record.hashCode(), deserialized.hashCode(), "Hashcode is different!");
         record.clear();
     }
 
@@ -112,27 +112,27 @@ public class TestParsedRecord {
     }
 
     private void checkAllValues(ParsedRecord record) {
-        assertEquals("String A", "42",          record.getString("String A"));
-        assertEquals("String B", "42",          record.getString("String B"));
-        assertEquals("String C", "42",          record.getString("String C"));
-        assertEquals("String D", "42",          record.getString("String D"));
-        assertEquals("Long A",   (Long)42L,     record.getLong("Long A"));
-        assertEquals("Long B",   (Long)42L,     record.getLong("Long B"));
-        assertEquals("Long C",   (Long)42L,     record.getLong("Long C"));
-        assertEquals("Long D",   (Long)42L,     record.getLong("Long D"));
-        assertEquals("Double A", (Double)42D,   record.getDouble("Double A"));
-        assertEquals("Double B", (Double)42D,   record.getDouble("Double B"));
-        assertEquals("Double C", (Double)42D,   record.getDouble("Double C"));
-        assertEquals("Double D", (Double)42D,   record.getDouble("Double D"));
+        assertEquals("42",          record.getString("String A"),              "String A");
+        assertEquals("42",          record.getString("String B"),              "String B");
+        assertEquals("42",          record.getString("String C"),              "String C");
+        assertEquals("42",          record.getString("String D"),              "String D");
+        assertEquals((Long)42L,     record.getLong("Long A"),                  "Long A");
+        assertEquals((Long)42L,     record.getLong("Long B"),                  "Long B");
+        assertEquals((Long)42L,     record.getLong("Long C"),                  "Long C");
+        assertEquals((Long)42L,     record.getLong("Long D"),                  "Long D");
+        assertEquals((Double)42D,   record.getDouble("Double A"),              "Double A");
+        assertEquals((Double)42D,   record.getDouble("Double B"),              "Double B");
+        assertEquals((Double)42D,   record.getDouble("Double C"),              "Double C");
+        assertEquals((Double)42D,   record.getDouble("Double D"),              "Double D");
 
-        assertEquals("Multi_A.* --> 1", "Foo",  record.getStringSet("Multi_A.*").get("1"));
-        assertEquals("Multi_A.* --> 2", "Bar",  record.getStringSet("Multi_A.*").get("2"));
+        assertEquals("Foo",         record.getStringSet("Multi_A.*").get("1"), "Multi_A.* --> 1");
+        assertEquals("Bar",         record.getStringSet("Multi_A.*").get("2"), "Multi_A.* --> 2");
 
-        assertEquals("Multi_B.* --> 1", "Foo",  record.getStringSet("Multi_B.*").get("1"));
-        assertEquals("Multi_B.* --> 2", "Bar",  record.getStringSet("Multi_B.*").get("2"));
+        assertEquals("Foo",         record.getStringSet("Multi_B.*").get("1"), "Multi_B.* --> 1");
+        assertEquals("Bar",         record.getStringSet("Multi_B.*").get("2"), "Multi_B.* --> 2");
 
-        assertEquals("Multi_C.* --> 1", "Foo",  record.getStringSet("Multi_C.*").get("1"));
-        assertEquals("Multi_C.* --> 2", "Bar",  record.getStringSet("Multi_C.*").get("2"));
+        assertEquals("Foo",         record.getStringSet("Multi_C.*").get("1"), "Multi_C.* --> 1");
+        assertEquals("Bar",         record.getStringSet("Multi_C.*").get("2"), "Multi_C.* --> 2");
     }
 
 }

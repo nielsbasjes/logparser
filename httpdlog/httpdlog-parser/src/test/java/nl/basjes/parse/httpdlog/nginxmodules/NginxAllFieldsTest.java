@@ -20,18 +20,18 @@ package nl.basjes.parse.httpdlog.nginxmodules;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
 import nl.basjes.parse.httpdlog.HttpdLoglineParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 // This test simply checks which of the fields known in the Nginx documentation have been implemented.
-public class NginxAllFieldsTest {
+class NginxAllFieldsTest {
     // All variables mentioned on https://nginx.org/en/docs/varindex.html
 
     @Test
-    public void ensureAllFieldsAreHandled() {
+    void ensureAllFieldsAreHandled() {
         checkVariable("$arg_");                        // ngx_http_core_module
         checkVariable("$args");                        // ngx_http_core_module
         checkVariable("$binary_remote_addr");          // ngx_http_core_module
@@ -295,7 +295,7 @@ public class NginxAllFieldsTest {
                 .withParser(new HttpdLoglineParser<>(TestRecord.class, "# " + variableName + " #"))
                 .getPossible();
 
-        allPossible.forEach(p -> assertFalse(p, p.startsWith("UNKNOWN_NGINX_VARIABLE")));
+        allPossible.forEach(p -> assertFalse(p.startsWith("UNKNOWN_NGINX_VARIABLE"), p));
 
     }
 

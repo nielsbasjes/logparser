@@ -18,11 +18,11 @@
 package nl.basjes.parse.httpdlog.dissectors;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestHttpFirstLineDissector {
     @Test
-    public void testNormal() {
+    void testNormal() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -35,7 +35,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testChoppedFirstLine() {
+    void testChoppedFirstLine() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -48,7 +48,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testInvalidFirstLine() {
+    void testInvalidFirstLine() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withInput("\\x16\\x03\\x01")
@@ -58,7 +58,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testStrangeCommandVersionControl() {
+    void testStrangeCommandVersionControl() {
         DissectorTester.create()
             .withDissector(new HttpFirstLineDissector())
             .withDissector(new HttpFirstLineProtocolDissector())
@@ -71,7 +71,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testProtocol() {
+    void testProtocol() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("FOO/1.2")
@@ -81,7 +81,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testChoppedProtocol() {
+    void testChoppedProtocol() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("FOO")
@@ -91,7 +91,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testEmptyProtocol1() {
+    void testEmptyProtocol1() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("")
@@ -101,7 +101,7 @@ public class TestHttpFirstLineDissector {
     }
 
     @Test
-    public void testEmptyProtocol2() {
+    void testEmptyProtocol2() {
         DissectorTester.create()
             .withDissector("protocol", new HttpFirstLineProtocolDissector())
             .withInput("-")

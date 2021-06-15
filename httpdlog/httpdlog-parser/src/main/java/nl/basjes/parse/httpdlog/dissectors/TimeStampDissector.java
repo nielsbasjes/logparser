@@ -353,7 +353,6 @@ public class TimeStampDissector extends Dissector {
 
     // --------------------------------------------
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void prepareForRun() {
         // As parsed

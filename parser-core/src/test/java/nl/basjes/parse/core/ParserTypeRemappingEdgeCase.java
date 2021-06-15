@@ -17,7 +17,7 @@
 package nl.basjes.parse.core;
 
 import nl.basjes.parse.core.exceptions.DissectionFailure;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.TreeMap;
 
 import static nl.basjes.parse.core.Casts.LONG_ONLY;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ParserTypeRemappingEdgeCase {
 
@@ -79,7 +79,7 @@ public class ParserTypeRemappingEdgeCase {
     }
 
     @Test
-    public void testParseString() throws Exception {
+    void testParseString() throws Exception {
         Parser<Record> parser = new TestParser<>(Record.class);
         parser
             .addParseTarget(Record.class.getMethod("set1", String.class, String.class), "LONG_AS_STRING:long_as_string")

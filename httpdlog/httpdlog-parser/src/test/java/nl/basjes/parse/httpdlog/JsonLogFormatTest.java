@@ -20,11 +20,11 @@ package nl.basjes.parse.httpdlog;
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 // CHECKSTYLE.OFF: LineLength
-public class JsonLogFormatTest {
+class JsonLogFormatTest {
     // As seen here: http://mail-archives.apache.org/mod_mbox/kafka-users/201408.mbox/%3C1407447350019.7022@roomkey.com%3E
     // LogFormat "{\"@timestamp\":\"%{%Y-%m-%dT%H:%M:%S%z}t\",\"mod_proxy\":{\"x-forwarded-for\":\"%{X-Forwarded-For}i\"},\"mod_headers\":{\"referer\":\"%{Referer}i\",\"user-agent\":\"%{User-Agent}i\",\"host\":\"%{Host}i\"},\"mod_log\":{\"server_name\":\"%V\",\"remote_logname\":\"%l\",\"remote_user\":\"%u\",\"first_request\":\"%r\",\"last_request_status\":\"%>s\",\"response_size_bytes\":%B,\"duration_usec\":%D,\"@version\":1 }" logstash_json
 
@@ -44,7 +44,7 @@ public class JsonLogFormatTest {
     };
 
     @Test
-    public void testBasicParsing() {
+    void testBasicParsing() {
         Parser<TestRecord> parser = new HttpdLoglineParser<>(TestRecord.class, LOGFORMAT);
 
         DissectorTester tester = DissectorTester.create()

@@ -25,7 +25,7 @@ import nl.basjes.parse.core.test.EmptyValuesDissector;
 import nl.basjes.parse.core.test.NormalValuesDissector;
 import nl.basjes.parse.core.test.NullValuesDissector;
 import nl.basjes.parse.core.test.TestRecord;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static nl.basjes.parse.core.Parser.SetterPolicy.ALWAYS;
 import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_EMPTY;
@@ -33,7 +33,7 @@ import static nl.basjes.parse.core.Parser.SetterPolicy.NOT_NULL;
 
 // CHECKSTYLE.OFF: ParenPad
 // CHECKSTYLE.OFF: LeftCurly
-public class TestFieldSetters {
+class TestFieldSetters {
 
     public static class TestFieldSettersRecord extends TestRecord {
         private void setS(String prefix, String name, String value) {
@@ -124,7 +124,7 @@ public class TestFieldSetters {
     }
 
     @Test
-    public void testNormalValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testNormalValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         new Parser<>(TestFieldSettersRecord.class)
             .setRootType("INPUT")
             .addDissector(new NormalValuesDissector())
@@ -212,7 +212,7 @@ public class TestFieldSetters {
     }
 
     @Test
-    public void testEmptyValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testEmptyValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<TestFieldSettersRecord> parser = new Parser<>(TestFieldSettersRecord.class);
         parser.setRootType("INPUT");
         parser.addDissector(new EmptyValuesDissector());
@@ -226,18 +226,18 @@ public class TestFieldSetters {
             .expectString(  "D-LONG:long",      "")
             .expectString(  "D-FLOAT:float",    "")
             .expectString(  "D-DOUBLE:double",  "")
-            .expectLong(    "D-ANY:any",        null)
+            .expectLong(    "D-ANY:any",        (Long)null)
             .noLong(     "D-STRING:string")
-            .expectLong(    "D-INT:int",        null)
-            .expectLong(    "D-LONG:long",      null)
+            .expectLong(    "D-INT:int",        (Long)null)
+            .expectLong(    "D-LONG:long",      (Long)null)
             .noLong(     "D-FLOAT:float")
             .noLong(     "D-DOUBLE:double")
-            .expectDouble(  "D-ANY:any",        null)
+            .expectDouble(  "D-ANY:any",        (Double)null)
             .noDouble(   "D-STRING:string")
             .noDouble(   "D-INT:int")
             .noDouble(   "D-LONG:long")
-            .expectDouble(  "D-FLOAT:float",    null)
-            .expectDouble(  "D-DOUBLE:double",  null)
+            .expectDouble(  "D-FLOAT:float",    (Double)null)
+            .expectDouble(  "D-DOUBLE:double",  (Double)null)
 
             // Always
             .expectString(  "A-ANY:any",        "")
@@ -246,18 +246,18 @@ public class TestFieldSetters {
             .expectString(  "A-LONG:long",      "")
             .expectString(  "A-FLOAT:float",    "")
             .expectString(  "A-DOUBLE:double",  "")
-            .expectLong(    "A-ANY:any",        null)
+            .expectLong(    "A-ANY:any",        (Long)null)
             .noLong(     "A-STRING:string")
-            .expectLong(    "A-INT:int",        null)
-            .expectLong(    "A-LONG:long",      null)
+            .expectLong(    "A-INT:int",        (Long)null)
+            .expectLong(    "A-LONG:long",      (Long)null)
             .noLong(     "A-FLOAT:float")
             .noLong(     "A-DOUBLE:double")
-            .expectDouble(  "A-ANY:any",        null)
+            .expectDouble(  "A-ANY:any",        (Double)null)
             .noDouble(   "A-STRING:string")
             .noDouble(   "A-INT:int")
             .noDouble(   "A-LONG:long")
-            .expectDouble(  "A-FLOAT:float",    null)
-            .expectDouble(  "A-DOUBLE:double",  null)
+            .expectDouble(  "A-FLOAT:float",    (Double)null)
+            .expectDouble(  "A-DOUBLE:double",  (Double)null)
 
             // Not Null
             .expectString(  "N-ANY:any",        "")
@@ -302,7 +302,7 @@ public class TestFieldSetters {
     }
 
     @Test
-    public void testNullValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
+    void testNullValues() throws InvalidDissectorException, MissingDissectorsException, DissectionFailure {
         Parser<TestFieldSettersRecord> parser = new Parser<>(TestFieldSettersRecord.class);
         parser.setRootType("INPUT");
         parser.addDissector(new NullValuesDissector());
@@ -310,44 +310,44 @@ public class TestFieldSetters {
 
         testRecord
             // Default (== Always)
-            .expectString(  "D-ANY:any",        null)
-            .expectString(  "D-STRING:string",  null)
-            .expectString(  "D-INT:int",        null)
-            .expectString(  "D-LONG:long",      null)
-            .expectString(  "D-FLOAT:float",    null)
-            .expectString(  "D-DOUBLE:double",  null)
-            .expectLong(    "D-ANY:any",        null)
+            .expectString(  "D-ANY:any",        (String)null)
+            .expectString(  "D-STRING:string",  (String)null)
+            .expectString(  "D-INT:int",        (String)null)
+            .expectString(  "D-LONG:long",      (String)null)
+            .expectString(  "D-FLOAT:float",    (String)null)
+            .expectString(  "D-DOUBLE:double",  (String)null)
+            .expectLong(    "D-ANY:any",        (Long)null)
             .noLong(     "D-STRING:string")
-            .expectLong(    "D-INT:int",        null)
-            .expectLong(    "D-LONG:long",      null)
+            .expectLong(    "D-INT:int",        (Long)null)
+            .expectLong(    "D-LONG:long",      (Long)null)
             .noLong(     "D-FLOAT:float")
             .noLong(     "D-DOUBLE:double")
-            .expectDouble(  "D-ANY:any",        null)
+            .expectDouble(  "D-ANY:any",        (Double)null)
             .noDouble(   "D-STRING:string")
             .noDouble(   "D-INT:int")
             .noDouble(   "D-LONG:long")
-            .expectDouble(  "D-FLOAT:float",    null)
-            .expectDouble(  "D-DOUBLE:double",  null)
+            .expectDouble(  "D-FLOAT:float",    (Double)null)
+            .expectDouble(  "D-DOUBLE:double",  (Double)null)
 
             // Always
-            .expectString(  "A-ANY:any",        null)
-            .expectString(  "A-STRING:string",  null)
-            .expectString(  "A-INT:int",        null)
-            .expectString(  "A-LONG:long",      null)
-            .expectString(  "A-FLOAT:float",    null)
-            .expectString(  "A-DOUBLE:double",  null)
-            .expectLong(    "A-ANY:any",        null)
+            .expectString(  "A-ANY:any",        (String)null)
+            .expectString(  "A-STRING:string",  (String)null)
+            .expectString(  "A-INT:int",        (String)null)
+            .expectString(  "A-LONG:long",      (String)null)
+            .expectString(  "A-FLOAT:float",    (String)null)
+            .expectString(  "A-DOUBLE:double",  (String)null)
+            .expectLong(    "A-ANY:any",        (Long)null)
             .noLong(     "A-STRING:string")
-            .expectLong(    "A-INT:int",        null)
-            .expectLong(    "A-LONG:long",      null)
+            .expectLong(    "A-INT:int",        (Long)null)
+            .expectLong(    "A-LONG:long",      (Long)null)
             .noLong(     "A-FLOAT:float")
             .noLong(     "A-DOUBLE:double")
-            .expectDouble(  "A-ANY:any",        null)
+            .expectDouble(  "A-ANY:any",        (Double)null)
             .noDouble(   "A-STRING:string")
             .noDouble(   "A-INT:int")
             .noDouble(   "A-LONG:long")
-            .expectDouble(  "A-FLOAT:float",    null)
-            .expectDouble(  "A-DOUBLE:double",  null)
+            .expectDouble(  "A-FLOAT:float",    (Double)null)
+            .expectDouble(  "A-DOUBLE:double",  (Double)null)
 
             // Not Null
             .noString(  "N-ANY:any")

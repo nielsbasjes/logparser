@@ -21,7 +21,7 @@ import nl.basjes.parse.core.Dissector;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -201,13 +201,7 @@ public class ReferenceTestDouble {
         public EnumSet<Casts> prepareForDissect(String inputname, String outputname) {
             return STRING_ONLY;
         }
-
-        @Override
-        protected void initializeNewInstance(Dissector newInstance) {
-        }
-
     }
-
 
 
     public static class FooInputDissector extends FooDissector {

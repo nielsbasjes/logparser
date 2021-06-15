@@ -18,13 +18,13 @@
 package nl.basjes.parse.httpdlog;
 
 import nl.basjes.parse.core.test.DissectorTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ApacheHttpdAllFieldsTest {
+class ApacheHttpdAllFieldsTest {
 
     private void verifyFieldAvailability(String logformat, String... expectedFields) {
 
@@ -33,13 +33,13 @@ public class ApacheHttpdAllFieldsTest {
             .getPossible();
 
         for (String expectedField:expectedFields) {
-            assertTrue("Logformat >>>" + logformat + "<<< should produce " + expectedField +
-                " instead we found: " + possible, possible.contains(expectedField));
+            assertTrue(possible.contains(expectedField),
+                "Logformat >>>" + logformat + "<<< should produce " + expectedField + " instead we found: " + possible);
         }
     }
 
     @Test
-    public void checkDeprecationMessage() {
+    void checkDeprecationMessage() {
         DissectorTester.create()
             .withDissector(new HttpdLogFormatDissector("%b %D Deprecated"))
             .withInput("1 2 Deprecated")
@@ -58,7 +58,7 @@ public class ApacheHttpdAllFieldsTest {
     }
 
     @Test
-    public void testAllFieldsAvailability() {
+    void testAllFieldsAvailability() {
         verifyFieldAvailability("%a",                   "IP:connection.client.ip",
                                                         "IP:connection.client.ip.last");
         verifyFieldAvailability("%<a",                  "IP:connection.client.ip.original");
