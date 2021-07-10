@@ -405,7 +405,7 @@
         <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
-        <version>4.0.5</version>
+        <version>4.9.9</version>
         <executions>
           <execution>
             <id>get-the-git-infos</id>
