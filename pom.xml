@@ -402,10 +402,10 @@
       </plugin>
 
       <plugin>
-        <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <version>4.0.5</version>
+        <!-- Description: https://github.com/git-commit-id/git-commit-id-maven-plugin -->
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>5.0.0</version>
         <executions>
           <execution>
             <id>get-the-git-infos</id>
