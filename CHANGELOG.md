@@ -6,6 +6,7 @@ v5.8-SNAPSHOT
 - Removed GeoIP fields averageincome and populationdensity which are not part of any real mmdb file.
 - Dropped the already disabled Storm example
 - Fully switched to Junit 5
+- Require JDK 11 or newer to build
 
 v5.7
 ===

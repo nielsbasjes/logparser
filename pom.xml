@@ -368,12 +368,16 @@
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>enforce-maven</id>
+            <id>Check build environment requirements</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
+                <requireJavaVersion>
+                  <version>[11,)</version>
+                  <message>Although the target JVM is JRE 8, the build MUST be done with JDK 11 or higher.</message>
+                </requireJavaVersion>
                 <requireMavenVersion>
                   <version>[${maven.minimal.version},)</version>
                   <message>You must use Maven version ${maven.minimal.version} or newer to build this project.</message>
