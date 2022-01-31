@@ -32,18 +32,18 @@ import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
 
 public class BarDissector extends SimpleDissector {
 
-    private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
+    private static final HashMap<String, EnumSet<Casts>> DISSECTOR_CONFIG = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:barany",         STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:barstring",   STRING_ONLY);
-        dissectorConfig.put("INT:barint",         STRING_OR_LONG);
-        dissectorConfig.put("LONG:barlong",       STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:barfloat",     STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:bardouble",   STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("ANY:barany",         STRING_OR_LONG_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("STRING:barstring",   STRING_ONLY);
+        DISSECTOR_CONFIG.put("INT:barint",         STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("LONG:barlong",       STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("FLOAT:barfloat",     STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("DOUBLE:bardouble",   STRING_OR_DOUBLE);
     }
 
     public BarDissector() {
-        super("BARINPUT", dissectorConfig);
+        super("BARINPUT", DISSECTOR_CONFIG);
     }
 
     @Override

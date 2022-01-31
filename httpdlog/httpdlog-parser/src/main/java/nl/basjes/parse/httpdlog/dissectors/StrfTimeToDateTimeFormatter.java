@@ -82,9 +82,9 @@ public final class StrfTimeToDateTimeFormatter extends StrfTimeBaseListener impl
         return converter.build();
     }
 
-    private String strfformat;
-    private DateTimeFormatterBuilder builder;
-    private ZoneId defaultZone;
+    private final String strfformat;
+    private final DateTimeFormatterBuilder builder;
+    private final ZoneId defaultZone;
     private boolean zoneWasSpecified = false;
 
     private StrfTimeToDateTimeFormatter(String inputStrfformat, ZoneId newDefaultZone) {

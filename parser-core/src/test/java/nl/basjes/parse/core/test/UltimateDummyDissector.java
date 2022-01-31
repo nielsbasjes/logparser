@@ -32,22 +32,22 @@ import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
  */
 public abstract class UltimateDummyDissector extends SimpleDissector {
 
-    private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
+    private static final HashMap<String, EnumSet<Casts>> DISSECTOR_CONFIG = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:any",         STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:string",   STRING_ONLY);
-        dissectorConfig.put("INT:int",         STRING_OR_LONG);
-        dissectorConfig.put("LONG:long",       STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:float",     STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:double",   STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("ANY:any",         STRING_OR_LONG_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("STRING:string",   STRING_ONLY);
+        DISSECTOR_CONFIG.put("INT:int",         STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("LONG:long",       STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("FLOAT:float",     STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("DOUBLE:double",   STRING_OR_DOUBLE);
     }
 
     public UltimateDummyDissector() {
-        super("INPUT", dissectorConfig);
+        super("INPUT", DISSECTOR_CONFIG);
     }
 
     public UltimateDummyDissector(String inputType) {
-        super(inputType, dissectorConfig);
+        super(inputType, DISSECTOR_CONFIG);
     }
 
     @Override

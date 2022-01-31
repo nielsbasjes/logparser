@@ -20,7 +20,7 @@ package nl.basjes.parse.httpdlog.dissectors;
 import nl.basjes.parse.core.test.DissectorTester;
 import org.junit.jupiter.api.Test;
 
-public class TestQueryStringDissector {
+class TestQueryStringDissector {
 
     @Test
     void testQueryString() {

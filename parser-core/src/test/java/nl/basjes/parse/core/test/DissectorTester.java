@@ -223,10 +223,10 @@ public final class DissectorTester implements Serializable {
     }
 
     private static class ExpectationResult {
-        String expectation;
-        String field;
-        String value;
-        String failReason;
+        final String expectation;
+        final String field;
+        final String value;
+        final String failReason;
 
         ExpectationResult(String expectation, String field, Object value, String failReason) {
             this.expectation = expectation;

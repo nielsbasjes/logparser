@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BasicOverallTest {
+class BasicOverallTest {
     public static class MyRecord {
 
         private final List<String> results = new ArrayList<>();

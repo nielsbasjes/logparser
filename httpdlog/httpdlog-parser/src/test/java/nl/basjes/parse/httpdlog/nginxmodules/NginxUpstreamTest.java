@@ -28,15 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 // CHECKSTYLE.OFF: LineLength
-public class NginxUpstreamTest {
+class NginxUpstreamTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(NginxUpstreamTest.class);
 
     private static class SingleFieldTestcase {
-        String logformat;
-        String logline;
-        String fieldName;
-        String expectedValue;
+        final String logformat;
+        final String logline;
+        final String fieldName;
+        final String expectedValue;
 
         SingleFieldTestcase(String logformat, String logline, String fieldName, String expectedValue) {
             this.logformat = logformat;

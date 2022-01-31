@@ -52,7 +52,7 @@ import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
     "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
 })
-public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
+public class NginxHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(NginxHttpdLogFormatDissector.class);
 
@@ -118,21 +118,21 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         return value;
     }
 
-    private static List<NginxModule> modules = new ArrayList<>();
+    private static final List<NginxModule> MODULES = new ArrayList<>();
     static {
-        modules.add(new CoreLogModule());
-        modules.add(new UpstreamModule());
-        modules.add(new SslModule());
-        modules.add(new GeoIPModule());
-        modules.add(new VariousModule());
-        modules.add(new KubernetesIngressModule());
+        MODULES.add(new CoreLogModule());
+        MODULES.add(new UpstreamModule());
+        MODULES.add(new SslModule());
+        MODULES.add(new GeoIPModule());
+        MODULES.add(new VariousModule());
+        MODULES.add(new KubernetesIngressModule());
     }
 
     // --------------------------------------------
     @Override
     protected List<TokenParser> createAllTokenParsers() {
         List<TokenParser> parsers = new ArrayList<>();
-        modules.forEach(m -> parsers.addAll(m.getTokenParsers()));
+        MODULES.forEach(m -> parsers.addAll(m.getTokenParsers()));
 
         return parsers;
     }
@@ -145,21 +145,21 @@ public final class NginxHttpdLogFormatDissector extends TokenFormatDissector {
         parser.addDissector(new ConvertSecondsWithMillisStringDissector("TIME.EPOCH_SECOND_MILLIS", "TIME.EPOCH"));
         parser.addDissector(new ConvertMillisecondsIntoMicroseconds("MILLISECONDS", "MICROSECONDS"));
 
-        modules.forEach(m -> parser.addDissectors(m.getDissectors()));
+        MODULES.forEach(m -> parser.addDissectors(m.getDissectors()));
     }
 
     public static class BinaryIPDissector extends SimpleDissector {
 
-        private static HashMap<String, EnumSet<Casts>> epochMillisConfig = new HashMap<>();
+        private static final HashMap<String, EnumSet<Casts>> EPOCH_MILLIS_CONFIG = new HashMap<>();
         static {
-            epochMillisConfig.put("IP:", STRING_OR_LONG);
+            EPOCH_MILLIS_CONFIG.put("IP:", STRING_OR_LONG);
         }
         public BinaryIPDissector() {
-            super("IP_BINARY", epochMillisConfig);
+            super("IP_BINARY", EPOCH_MILLIS_CONFIG);
         }
 
         private static final String CAPTURE_HEX_BYTE = "\\\\x([0-9a-fA-F][0-9a-fA-F])";
-        Pattern binaryIPPattern = Pattern.compile(
+        final Pattern binaryIPPattern = Pattern.compile(
             CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE+CAPTURE_HEX_BYTE
         );
 

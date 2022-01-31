@@ -32,7 +32,7 @@ import static nl.basjes.parse.core.Casts.STRING_ONLY;
 
 public class StrfTimeStampDissector extends Dissector {
 
-    private TimeStampDissector timeStampDissector;
+    private final TimeStampDissector timeStampDissector;
 
     private String strfDateTimePattern = null;
     private String inputType = "TIME.?????";

@@ -32,18 +32,18 @@ import static nl.basjes.parse.core.Casts.STRING_OR_LONG_OR_DOUBLE;
 
 public class FooDissector extends SimpleDissector {
 
-    private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
+    private static final HashMap<String, EnumSet<Casts>> DISSECTOR_CONFIG = new HashMap<>();
     static {
-        dissectorConfig.put("ANY:fooany",         STRING_OR_LONG_OR_DOUBLE);
-        dissectorConfig.put("STRING:foostring",   STRING_ONLY);
-        dissectorConfig.put("INT:fooint",         STRING_OR_LONG);
-        dissectorConfig.put("LONG:foolong",       STRING_OR_LONG);
-        dissectorConfig.put("FLOAT:foofloat",     STRING_OR_DOUBLE);
-        dissectorConfig.put("DOUBLE:foodouble",   STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("ANY:fooany",         STRING_OR_LONG_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("STRING:foostring",   STRING_ONLY);
+        DISSECTOR_CONFIG.put("INT:fooint",         STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("LONG:foolong",       STRING_OR_LONG);
+        DISSECTOR_CONFIG.put("FLOAT:foofloat",     STRING_OR_DOUBLE);
+        DISSECTOR_CONFIG.put("DOUBLE:foodouble",   STRING_OR_DOUBLE);
     }
 
     public FooDissector() {
-        super("FOOINPUT", dissectorConfig);
+        super("FOOINPUT", DISSECTOR_CONFIG);
     }
 
     @Override

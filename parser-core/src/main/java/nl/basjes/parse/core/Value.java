@@ -25,7 +25,7 @@ public class Value {
         DOUBLE
     }
 
-    private Filled filled;
+    private final Filled filled;
     private String s = null;
     private Long l = null;
     private Double d = null;
@@ -80,7 +80,7 @@ public class Value {
                     return null;
                 }
             case LONG:
-                return l == null ? null : new Double(l);
+                return l == null ? null : Double.valueOf(l);
             default: // == case DOUBLE:
                 return d;
         }

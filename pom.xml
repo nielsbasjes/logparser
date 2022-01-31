@@ -40,7 +40,7 @@
     <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
     <checkstyle.version>9.3</checkstyle.version>
 
-    <lombok.version>1.18.20</lombok.version>
+    <lombok.version>1.18.22</lombok.version>
     <slf4j.version>1.7.35</slf4j.version>
 
     <junit5.version>5.8.2</junit5.version>

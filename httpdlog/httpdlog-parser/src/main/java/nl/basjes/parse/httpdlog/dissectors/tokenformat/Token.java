@@ -30,7 +30,7 @@ import java.util.Set;
 public class Token implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(Token.class);
 
-    private List<TokenOutputField> outputFields = new ArrayList<>();
+    private final List<TokenOutputField> outputFields = new ArrayList<>();
     private final String regex;
     private final int startPos;
     private final int length;

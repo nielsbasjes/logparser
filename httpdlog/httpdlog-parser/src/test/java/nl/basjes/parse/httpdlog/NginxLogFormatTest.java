@@ -329,10 +329,10 @@ public class NginxLogFormatTest {
     }
 
     private static class SingleFieldTestcase {
-        String logformat;
-        String logline;
-        String fieldName;
-        String expectedValue;
+        final String logformat;
+        final String logline;
+        final String fieldName;
+        final String expectedValue;
 
         SingleFieldTestcase(String logformat, String logline, String fieldName, String expectedValue) {
             this.logformat = logformat;

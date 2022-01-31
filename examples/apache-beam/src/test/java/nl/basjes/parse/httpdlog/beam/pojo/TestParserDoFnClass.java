@@ -43,7 +43,7 @@ import java.util.List;
 public class TestParserDoFnClass implements Serializable {
 
     public static class MyParserDoFn extends DoFn<String, MyRecord> {
-        private Parser<MyRecord> parser;
+        private final Parser<MyRecord> parser;
 
         public MyParserDoFn() throws NoSuchMethodException {
             super();

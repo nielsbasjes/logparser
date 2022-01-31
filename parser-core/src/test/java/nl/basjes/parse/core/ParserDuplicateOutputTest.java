@@ -28,13 +28,13 @@ import static nl.basjes.parse.core.Casts.STRING_ONLY;
 class ParserDuplicateOutputTest {
 
     public abstract static class MyDissector extends SimpleDissector {
-        private static HashMap<String, EnumSet<Casts>> dissectorConfig = new HashMap<>();
+        private static final HashMap<String, EnumSet<Casts>> DISSECTOR_CONFIG = new HashMap<>();
         static {
-            dissectorConfig.put("STRING:output",   STRING_ONLY);
+            DISSECTOR_CONFIG.put("STRING:output",   STRING_ONLY);
         }
 
         public MyDissector() {
-            super("INPUT", dissectorConfig);
+            super("INPUT", DISSECTOR_CONFIG);
         }
     }
 

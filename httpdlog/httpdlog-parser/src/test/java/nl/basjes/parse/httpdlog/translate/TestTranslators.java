@@ -22,7 +22,7 @@ import nl.basjes.parse.httpdlog.dissectors.translate.ConvertCLFIntoNumber;
 import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
 import org.junit.jupiter.api.Test;
 
-public class TestTranslators {
+class TestTranslators {
 
     @Test
     void testCLFToNumberMin() {

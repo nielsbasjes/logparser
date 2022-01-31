@@ -50,7 +50,7 @@ import static nl.basjes.parse.httpdlog.dissectors.tokenformat.TokenParser.FORMAT
     "PMD.BeanMembersShouldSerialize", // No beans here
     "PMD.DataflowAnomalyAnalysis" // Results in a lot of mostly useless messages.
     })
-public final class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
+public class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpdLogFormatDissector.class);
 

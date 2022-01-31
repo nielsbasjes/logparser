@@ -67,7 +67,7 @@ public class TokenParser implements Serializable {
     // ---------------------------------------
 
     private final String logFormatToken;
-    private List<TokenOutputField> outputFields = new ArrayList<>();
+    private final List<TokenOutputField> outputFields = new ArrayList<>();
     private final String regex;
     private final int prio;
     protected String warningMessageWhenUsed;

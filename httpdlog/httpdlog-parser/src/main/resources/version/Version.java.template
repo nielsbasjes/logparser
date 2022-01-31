@@ -18,20 +18,20 @@ package nl.basjes.parse.httpdlog;
 
 public final class Version {
 
-    private static final String git_commit_id_describe_short  = "@git.commit.id.describe-short@";
-    private static final String maven_build_timestamp         = "@maven.build.timestamp@";
-    private static final String project_version               = "@project.version@";
+    public static final String GIT_COMMIT_ID_DESCRIBE_SHORT  = "@git.commit.id.describe-short@";
+    public static final String MAVEN_BUILD_TIMESTAMP         = "@maven.build.timestamp@";
+    public static final String PROJECT_VERSION               = "@project.version@";
 
     public static String getGitCommitIdDescribeShort() {
-        return git_commit_id_describe_short;
+        return GIT_COMMIT_ID_DESCRIBE_SHORT;
     }
 
     public static String getBuildTimestamp() {
-        return maven_build_timestamp;
+        return MAVEN_BUILD_TIMESTAMP;
     }
 
     public static String getProjectVersion() {
-        return project_version;
+        return PROJECT_VERSION;
     }
 
 }

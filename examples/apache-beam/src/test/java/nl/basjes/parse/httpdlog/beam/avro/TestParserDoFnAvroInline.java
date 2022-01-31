@@ -55,7 +55,7 @@ public class TestParserDoFnAvroInline implements Serializable {
 
     public static class ClickSetter implements Builder<Click> {
 
-        Click.Builder builder = Click.newBuilder();
+        final Click.Builder builder = Click.newBuilder();
 
         @Field("TIME.EPOCH:request.receive.time.epoch")             public void setRequestReceiveTime(Long value)       { builder.setTimestamp(value);                          }
 

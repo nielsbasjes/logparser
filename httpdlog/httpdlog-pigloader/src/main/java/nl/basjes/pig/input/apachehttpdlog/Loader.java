@@ -77,7 +77,7 @@ public class Loader
     private final Map<String, Set<String>>  typeRemappings          = new HashMap<>();
     private final List<Dissector>           additionalDissectors    = new ArrayList<>();
     private final TupleFactory              tupleFactory;
-    private ApacheHttpdLogfileInputFormat   theInputFormat;
+    private final ApacheHttpdLogfileInputFormat   theInputFormat;
 
     // These are purely retained to make it possible to create a working example
     private final ArrayList<String>         specialParameters    = new ArrayList<>();

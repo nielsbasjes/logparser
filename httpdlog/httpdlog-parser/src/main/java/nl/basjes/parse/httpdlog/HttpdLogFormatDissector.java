@@ -44,8 +44,8 @@ public class HttpdLogFormatDissector extends Dissector {
     // This value MUST be the same for all formats this dissector can wrap
     public static final String INPUT_TYPE = "HTTPLOGLINE";
 
-    private List<String> registeredLogFormats;
-    private List<TokenFormatDissector> dissectors;
+    private final List<String> registeredLogFormats;
+    private final List<TokenFormatDissector> dissectors;
     private TokenFormatDissector activeDissector;
 
     public HttpdLogFormatDissector() {
