@@ -16,7 +16,7 @@
  */
 package nl.basjes.parse.httpdlog.beam.avro;
 
-import nl.basjes.parse.record.Click;
+import nl.basjes.parse.webevents.Click;
 
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnNumber;
 import static nl.basjes.parse.httpdlog.beam.TestCase.getExpectedAsnOrganization;

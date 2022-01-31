@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@namespace("nl.basjes.parse.record")
+@namespace("nl.basjes.parse.webevents")
 
 protocol BeamTestRecord {
 

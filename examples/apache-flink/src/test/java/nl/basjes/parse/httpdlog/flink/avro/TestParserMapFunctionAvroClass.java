@@ -24,7 +24,7 @@ import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.httpdlog.flink.TestCase;
-import nl.basjes.parse.record.Click;
+import nl.basjes.parse.webevents.Click;
 import org.apache.commons.lang3.builder.Builder;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.DataSet;
