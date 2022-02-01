@@ -20,6 +20,9 @@ package nl.basjes.parse.httpdlog.dissectors;
 import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.httpdlog.HttpdLogFormatDissector;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -27,9 +30,17 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
+import java.util.Locale;
+import java.util.stream.Stream;
 
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.ROOT;
+import static java.util.Locale.UK;
+import static java.util.Locale.US;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 // CHECKSTYLE.OFF: LineLength
@@ -169,6 +180,70 @@ class TestTimeStampDissector {
             .expect("TIME.DAY:day_utc",         "30")
 
             .checkExpectations();
+    }
+
+    private static Stream<Arguments> locales() {
+        return Stream.of(
+            Arguments.of("Root",    ROOT),
+            Arguments.of("English", ENGLISH),
+            Arguments.of("US",      US),
+            Arguments.of("UK",      UK),
+            Arguments.of("AU",      new Locale("en", "AU")),
+            Arguments.of("NL",      new Locale("nl", "NL"))
+        );
+    }
+    @ParameterizedTest(name = "Test {index}: {0} ({1})")
+    @MethodSource("locales")
+    void testTimeStampMonthNameVariations(String name, Locale locale) {
+        DissectorTester.create()
+            .withDissector(new TimeStampDissector().setLocale(locale))
+            .withInput("30/jun/2016:00:00:06 +0000")
+            .withInput("30/June/2016:00:00:06 +0000")
+            .expect("TIME.YEAR:year_utc",       "2016")
+            .expect("TIME.MONTH:month_utc",     "6")
+            .expect("TIME.DAY:day_utc",         "30")
+            .checkExpectations();
+
+        DissectorTester.create()
+            .withDissector(new TimeStampDissector().setLocale(locale))
+            .withInput("30/jul/2016:00:00:06 +0000")
+            .withInput("30/July/2016:00:00:06 +0000")
+            .expect("TIME.YEAR:year_utc",       "2016")
+            .expect("TIME.MONTH:month_utc",     "7")
+            .expect("TIME.DAY:day_utc",         "30")
+            .checkExpectations();
+
+        DissectorTester.create()
+            .withDissector(new TimeStampDissector().setLocale(locale))
+            .withInput("30/sep/2016:00:00:06 +0000")
+            .withInput("30/Sept/2016:00:00:06 +0000")
+            .expect("TIME.YEAR:year_utc",       "2016")
+            .expect("TIME.MONTH:month_utc",     "9")
+            .expect("TIME.DAY:day_utc",         "30")
+            .checkExpectations();
+
+        AssertionError dissectionFailure;
+        dissectionFailure = assertThrows(AssertionError.class, () -> {
+            DissectorTester.create()
+                .withDissector(new TimeStampDissector().setLocale(locale))
+                .withInput("30/xyz/2016:00:00:06 +0000") // Intentionally bad : xyz
+                .expect("TIME.YEAR:year_utc", "2016")
+                .expect("TIME.MONTH:month_utc", "9")
+                .expect("TIME.DAY:day_utc", "30")
+                .checkExpectations();
+        });
+        assertTrue(dissectionFailure.getMessage().contains("could not be parsed at index"));
+
+        dissectionFailure = assertThrows(AssertionError.class, () -> {
+            DissectorTester.create()
+                .withDissector(new TimeStampDissector().setLocale(locale))
+                .withInput("30/sepr/2016:00:00:06 +0000") // Intentionally bad: sepr
+                .expect("TIME.YEAR:year_utc", "2016")
+                .expect("TIME.MONTH:month_utc", "9")
+                .expect("TIME.DAY:day_utc", "30")
+                .checkExpectations();
+        });
+        assertTrue(dissectionFailure.getMessage().contains("could not be parsed at index"));
     }
 
     @Test

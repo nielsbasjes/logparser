@@ -22,6 +22,7 @@ import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.ParsedField;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
 
+import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import static nl.basjes.parse.core.Casts.NO_CASTS;
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
@@ -49,7 +51,10 @@ public class TimeStampDissector extends Dissector {
 
     private transient DateTimeFormatter formatter;
     private String dateTimePattern;
-    private Locale locale = Locale.UK; // The default Locale that follows the ISO-8601 WeekFields
+    private Locale locale;
+
+    // The month abbreviations this locale supports, used in attempts in recovering parse errors.
+    private String[] localeMonths;
 
     @SuppressWarnings("UnusedDeclaration")
     public TimeStampDissector() {
@@ -68,10 +73,12 @@ public class TimeStampDissector extends Dissector {
         } else {
             setDateTimePattern(newDateTimePattern);
         }
+        setLocale(Locale.UK); // The default Locale that follows the ISO-8601 WeekFields and has sensible names.
     }
 
     public TimeStampDissector setLocale(Locale newLocale) {
-        this.locale = newLocale;
+        locale = newLocale;
+        localeMonths = new DateFormatSymbols(locale).getShortMonths();
         return this;
     }
 
@@ -406,6 +413,19 @@ public class TimeStampDissector extends Dissector {
         dissect(field, parsable, inputname);
     }
 
+    private ZonedDateTime parse(String fieldValue) throws DateTimeParseException {
+        ZonedDateTime dateTime;
+        try {
+            dateTime = getFormatter().parse(fieldValue, ZonedDateTime::from);
+        } catch (DateTimeParseException dtpe) {
+            // Some parse errors can be fixed.
+            fieldValue = attemptRecoverParseError(fieldValue, dtpe);
+            // Retry parsing with an adjusted fieldValue.
+            dateTime = getFormatter().parse(fieldValue, ZonedDateTime::from);
+        }
+        return dateTime;
+    }
+
     protected void dissect(ParsedField field, final Parsable<?> parsable, final String inputname) throws DissectionFailure {
         String fieldValue = field.getValue().getString();
         if (fieldValue == null || fieldValue.isEmpty()) {
@@ -414,7 +434,7 @@ public class TimeStampDissector extends Dissector {
 
         ZonedDateTime dateTime;
         try {
-            dateTime = getFormatter().parse(fieldValue, ZonedDateTime::from);
+            dateTime = parse(fieldValue);
         } catch (DateTimeParseException dtpe) {
             throw new DissectionFailure(dtpe.getMessage()+
                 "\n          10        20        30        40        50        60        70        80        90        100       110       120" +
@@ -563,5 +583,110 @@ public class TimeStampDissector extends Dissector {
     }
 
     // --------------------------------------------
+
+    // Get the month abbreviations in (American) "English" as commonly used in logging.
+    final String[] englishMonths = new String[] {
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "may",
+        "jun",
+        "jul",
+        "aug",
+        "sep",
+        "oct",
+        "nov",
+        "dec",
+    };
+
+    // Performance optimization
+    final String[] pqEnglishMonths = new String[] {
+        Pattern.quote("jan"),
+        Pattern.quote("feb"),
+        Pattern.quote("mar"),
+        Pattern.quote("apr"),
+        Pattern.quote("may"),
+        Pattern.quote("jun"),
+        Pattern.quote("jul"),
+        Pattern.quote("aug"),
+        Pattern.quote("sep"),
+        Pattern.quote("oct"),
+        Pattern.quote("nov"),
+        Pattern.quote("dec"),
+    };
+
+    // In some cases we have these specials
+    final String[] englishMonths4 = new String[] {
+        null,
+        null,
+        null,
+        null,
+        null,
+        "june",
+        "july",
+        null,
+        "sept",
+        null,
+        null,
+        null,
+        null,
+    };
+
+    // Performance optimization
+    final String[] pqEnglishMonths4 = new String[] {
+        null,
+        null,
+        null,
+        null,
+        null,
+        Pattern.quote("june"),
+        Pattern.quote("july"),
+        null,
+        Pattern.quote("sept"),
+        null,
+        null,
+        null,
+        null,
+    };
+
+    private String attemptRecoverParseError(String fieldValue, DateTimeParseException dtpe) {
+        // Error handling: We may have the wrong name for the month here.
+        // Unicode CLDR has for different locales different "short" names
+        // for some months: Jun/June, Jul/July and Sep/Sept.
+        // At this point there is no parser I have that can handle these variations
+        // transparently, so in case of an exception: Try to apply a fix and redo.
+        // See
+        //   https://stackoverflow.com/questions/70928852/customize-a-locale-in-java/
+        //   https://unicode-org.atlassian.net/browse/CLDR-15317
+
+        fieldValue = fieldValue.toLowerCase(Locale.ROOT);
+
+        String updatedFieldValue = fieldValue;
+
+        // Fix idea: Convert some of the "well known" ways the Months names appear
+        //           into what the current Locale expects.
+        // FIXME: This does NOT fix all cases where this goes wrong.
+        for (int i = 0; i < englishMonths.length; i++) {
+            String value = englishMonths4[i];
+            if (value != null && updatedFieldValue.contains(value)) {
+                updatedFieldValue = updatedFieldValue
+                    .replaceAll(pqEnglishMonths4[i], localeMonths[i]);
+                continue;
+            }
+            value = englishMonths[i];
+            if (value != null && updatedFieldValue.contains(value)) {
+                updatedFieldValue = updatedFieldValue
+                    .replaceAll(pqEnglishMonths[i], localeMonths[i]);
+            }
+        }
+
+
+        if (fieldValue.equals(updatedFieldValue)) {
+            // No changes were actually applied: Apparently this was something different.
+            throw dtpe;
+        }
+        return updatedFieldValue;
+    }
 
 }
