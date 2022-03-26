@@ -50,8 +50,8 @@
     <hive.version>3.1.2</hive.version>
     <pig.version>0.17.0</pig.version>
     <avro.version>1.11.0</avro.version>
-    <beam.version>2.35.0</beam.version>
-    <flink.version>1.14.3</flink.version>
+    <beam.version>2.37.0</beam.version>
+    <flink.version>1.14.4</flink.version>
     <flink.scala.version>2.12</flink.scala.version>
 
     <rat.version>0.13</rat.version>

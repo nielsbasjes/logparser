@@ -13,6 +13,7 @@ target
 *.swp
 *~
 bin
+__*
 
 #Eclipse stuff
 .metadata
