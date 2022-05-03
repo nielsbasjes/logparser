@@ -48,7 +48,7 @@ class EdgeCasesTest {
             .expect("HTTP.URI:request.referer",                     (String)null) // Is present AND is null
 
             // This thing should be unparsable
-            .expect("HTTP.FIRSTLINE:request.firstline",             "\\x16\\x03\\x01")
+            .expect("HTTP.FIRSTLINE:request.firstline",             "\u0016\u0003\u0001")
             .expectAbsentString("HTTP.METHOD:request.firstline.method")
             .expectAbsentString("HTTP.URI:request.firstline.uri")
             .expectAbsentString("HTTP.PROTOCOL:request.firstline.protocol")

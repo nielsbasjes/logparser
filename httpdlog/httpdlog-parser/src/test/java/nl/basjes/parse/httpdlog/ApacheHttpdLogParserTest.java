@@ -155,7 +155,7 @@ class ApacheHttpdLogParserTest {
         assertEquals("Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl",
                 results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant", results.get("HTTP.COOKIES:request.cookies"));
-        assertEquals("\\\"3780ff-4bd-4c1ce3df91380\\\"", results.get("HTTP.HEADER:response.header.etag"));
+        assertEquals("\"3780ff-4bd-4c1ce3df91380\"", results.get("HTTP.HEADER:response.header.etag"));
 
         assertEquals("Eggplant", results.get("HTTP.COOKIE:request.cookies.jquery-ui-theme"));
         assertEquals("Apache=127.0.0.1.1344635380111339; path=/; domain=.basjes.nl", results.get("HTTP.SETCOOKIE:response.cookies.apache"));
@@ -196,7 +196,7 @@ class ApacheHttpdLogParserTest {
         assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
                 results.get("HTTP.COOKIES:request.cookies"));
-        assertEquals("\\\"3780ff-4bd-4c1ce3df91380\\\"", results.get("HTTP.HEADER:response.header.etag"));
+        assertEquals("\"3780ff-4bd-4c1ce3df91380\"", results.get("HTTP.HEADER:response.header.etag"));
         // assertEquals("351",results.get("COOKIE:request.cookie.jquery-ui-theme"));
     }
 
@@ -235,7 +235,7 @@ class ApacheHttpdLogParserTest {
         assertEquals(null, results.get("HTTP.SETCOOKIES:response.cookies"));
         assertEquals("jquery-ui-theme=Eggplant; Apache=127.0.0.1.1344635667182858",
                 results.get("HTTP.COOKIES:request.cookies"));
-        assertEquals("\\\"3780ff-4bd-4c1ce3df91380\\\"", results.get("HTTP.HEADER:response.header.etag"));
+        assertEquals("\"3780ff-4bd-4c1ce3df91380\"", results.get("HTTP.HEADER:response.header.etag"));
         // assertEquals("351",results.get("COOKIE:request.cookie.jquery-ui-theme"));
     }
 

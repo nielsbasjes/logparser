@@ -8,6 +8,7 @@ v5.8-SNAPSHOT
 - Fully switched to Junit 5
 - Require JDK 11 or newer to build
 - Workaround for change in Unicode CLDR(and thus Java 17): they changed the short name of "September" in Locale.UK to "Sept" which causes parse errors.
+- Fixed bug regarding escaped characters in headers.
 
 v5.7
 ===

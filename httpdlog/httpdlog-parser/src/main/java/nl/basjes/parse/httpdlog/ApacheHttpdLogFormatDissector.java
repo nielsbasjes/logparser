@@ -186,9 +186,11 @@ public class ApacheHttpdLogFormatDissector extends TokenFormatDissector {
         // In versions prior to 2.0.46, no escaping was performed on these strings so you had to be quite careful
         // when dealing with raw log files.
 
-        if (value.equals("request.firstline")   ||  // %r         First line of request.
-            value.startsWith("request.header.") ||  // %{Foobar}i The contents of Foobar: request header line(s).
-            value.startsWith("response.header.")) { // %{Foobar}o The contents of Foobar: response header line(s).
+        if (tokenName.equals("request.firstline")       ||  // %r         First line of request.
+            tokenName.equals("request.user-agent")      ||  // %{User-Agent}i The contents of the User-Agent request header.
+            tokenName.equals("request.user-agent.last") ||  // %{User-Agent}i The contents of the User-Agent request header.
+            tokenName.startsWith("request.header.")     ||  // %{Foobar}i The contents of Foobar: request header line(s).
+            tokenName.startsWith("response.header."))   {   // %{Foobar}o The contents of Foobar: response header line(s).
             return Utils.decodeApacheHTTPDLogValue(value);
         }
 
