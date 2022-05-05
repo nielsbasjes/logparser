@@ -15,13 +15,11 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse</groupId>
   <artifactId>parser-parent</artifactId>
-  <version>5.8-SNAPSHOT</version>
+  <version>5.8</version>
   <packaging>pom</packaging>
   <name>Parser -</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
@@ -58,7 +56,7 @@
     <jacoco.version>0.8.8</jacoco.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
-    <jacoco.surefireArgLine/>
+    <jacoco.surefireArgLine />
     <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>
   </properties>
 
@@ -417,7 +415,7 @@
             </goals>
             <configuration>
               <rules>
-                <dependencyConvergence/>
+                <dependencyConvergence />
               </rules>
             </configuration>
           </execution>
@@ -553,6 +551,7 @@
     <url>https://github.com/nielsbasjes/logparser</url>
     <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
     <developerConnection>scm:git:file:///${project.basedir}</developerConnection>
+    <tag>v5.8</tag>
   </scm>
 
 </project>
