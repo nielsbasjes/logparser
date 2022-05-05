@@ -14,7 +14,7 @@ First you put something like this in your pom.xml file:
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>5.7</version>
+        <version>5.8</version>
     </dependency>
 
 I assume we have a logformat variable that looks something like this:
