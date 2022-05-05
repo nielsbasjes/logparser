@@ -364,6 +364,27 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+
+          <scmCommentPrefix>Release:</scmCommentPrefix>
+          <scmReleaseCommitComment>Release: Version @{releaseLabel}</scmReleaseCommitComment>
+          <scmDevelopmentCommitComment>Release: Start development of next version</scmDevelopmentCommitComment>
+          <scmRollbackCommitComment>Release: Rollback the release of @{releaseLabel}</scmRollbackCommitComment>
+
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+
+          <preparationGoals>-PprepareRelease -PpackageForRelease clean verify</preparationGoals>
+          <releaseProfiles>packageForRelease,release,deployToSonatype</releaseProfiles>
+          <pushChanges>false</pushChanges>
+          <remoteTagging>false</remoteTagging>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
@@ -529,9 +550,9 @@
   </developers>
 
   <scm>
-    <developerConnection>scm:git:.</developerConnection>
-    <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
     <url>https://github.com/nielsbasjes/logparser</url>
+    <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
+    <developerConnection>scm:git:file:///${project.basedir}</developerConnection>
   </scm>
 
 </project>
