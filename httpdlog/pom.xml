@@ -20,7 +20,7 @@
   <parent>
     <artifactId>parser-parent</artifactId>
     <groupId>nl.basjes.parse</groupId>
-    <version>5.8</version>
+    <version>5.9-SNAPSHOT</version>
   </parent>
 
   <groupId>nl.basjes.parse.httpdlog</groupId>

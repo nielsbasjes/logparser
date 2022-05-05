@@ -21,7 +21,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>5.8</version>
+    <version>5.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>apache-flink</artifactId>
@@ -172,9 +172,4 @@
 
     </plugins>
   </build>
-
-
-  <scm>
-    <tag>v5.8</tag>
-  </scm>
 </project>

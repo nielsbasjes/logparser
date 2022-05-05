@@ -21,7 +21,7 @@
   <parent>
     <groupId>nl.basjes.parse.utils</groupId>
     <artifactId>parse-utils</artifactId>
-    <version>5.8</version>
+    <version>5.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>PojoGenerator</artifactId>
@@ -45,9 +45,4 @@
       <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
-
-
-  <scm>
-    <tag>v5.8</tag>
-  </scm>
 </project>

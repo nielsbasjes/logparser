@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse</groupId>
   <artifactId>parser-parent</artifactId>
-  <version>5.8</version>
+  <version>5.9-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parser -</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java, Hadoop and Pig.</description>
@@ -551,7 +551,7 @@
     <url>https://github.com/nielsbasjes/logparser</url>
     <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
     <developerConnection>scm:git:file:///${project.basedir}</developerConnection>
-    <tag>v5.8</tag>
+    <tag>HEAD</tag>
   </scm>
 
 </project>
