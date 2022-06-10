@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,6 +44,14 @@ public class TestRecord {
     }
 
     boolean verbose = false;
+
+    public Set<String> getAllNames() {
+        Set<String> allNames = new TreeSet<>();
+        allNames.addAll(stringMap.keySet());
+        allNames.addAll(longMap.keySet());
+        allNames.addAll(doubleMap.keySet());
+        return allNames;
+    }
 
     public void setStringValue(final String name, final String value) {
         if (verbose) {

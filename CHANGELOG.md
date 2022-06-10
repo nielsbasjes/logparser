@@ -1,6 +1,10 @@
 This is intended as an overview of the major changes
 
-v5.8-SNAPSHOT
+v5.9-SNAPSHOT
+===
+- Print the parsed values of a wildcard in DissectorTester::printAllPossibleValues
+
+v5.8
 ===
 - getPossiblePaths sorts the list by fieldname.
 - Removed GeoIP fields averageincome and populationdensity which are not part of any real mmdb file.

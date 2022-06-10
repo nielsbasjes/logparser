@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static nl.basjes.parse.core.Casts.STRING_ONLY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -655,12 +656,35 @@ public final class DissectorTester implements Serializable {
                 for (String fieldName : possibleFieldNames) {
                     longestFieldName = Math.max(longestFieldName, fieldName.length());
                 }
+                for (String fieldName : result.getAllNames()) {
+                    longestFieldName = Math.max(longestFieldName, fieldName.length());
+                }
                 for (String fieldName : possibleFieldNames) {
                     String value = result.getStringValue(fieldName);
                     if (value == null) {
-                        value = "<<<null>>>";
+                        String wildcardEnd = ".*";
+                        if (fieldName.endsWith(wildcardEnd)) {
+                            String fieldNamePrefix = fieldName.substring(0, fieldName.length() - wildcardEnd.length());
+                            List<String> allNames = result.getAllNames().stream()
+                                .filter(f -> f.startsWith(fieldNamePrefix))
+                                .filter(f -> !f.substring(fieldNamePrefix.length()+1).contains("."))
+                                .sorted()
+                                .collect(Collectors.toList());
+
+                            if (allNames.isEmpty()) {
+                                LOG.info("Found values for {}{} = []", fieldName, padding(fieldName, longestFieldName));
+                            } else {
+                                LOG.info("Found values for {}", fieldName);
+                                for (String name : allNames) {
+                                    LOG.info("             --> {}{} = {}", name, padding(name, longestFieldName), result.getStringValue(name));
+                                }
+                            }
+                            continue;
+                        } else {
+                            value = "<<<null>>>";
+                        }
                     }
-                    LOG.info("Found value for {}{} = {}", fieldName, padding(fieldName, longestFieldName), value);
+                    LOG.info("Found value for {}{}  = {}", fieldName, padding(fieldName, longestFieldName), value);
                 }
 
             }
