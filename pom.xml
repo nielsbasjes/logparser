@@ -52,7 +52,7 @@
     <flink.version>1.14.4</flink.version>
     <flink.scala.version>2.12</flink.scala.version>
 
-    <rat.version>0.13</rat.version>
+    <rat.version>0.14</rat.version>
     <jacoco.version>0.8.8</jacoco.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
