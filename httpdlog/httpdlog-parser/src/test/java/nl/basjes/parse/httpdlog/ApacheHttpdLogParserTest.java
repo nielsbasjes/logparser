@@ -540,7 +540,18 @@ class ApacheHttpdLogParserTest {
                 .addTypeRemapping("server.environment.unique_id", "MOD_UNIQUE_ID"))
             .withInput(logLine)
             .printPossible()
-            .printAllPossibleValues();
+            .printAllPossibleValues()
+            // A normal field
+            .expect("IP:connection.client.host", "10.102.4.254")
+            // The timestamp was parsed and normalized to the Epoch milliseconds
+            .expect("TIME.EPOCH:request.receive.time.epoch", "1386068039000")
+            // A cookie with a very strange name
+            .expect("HTTP.COOKIE:request.cookies.carte::kerberoslexicon_getdomain", "6701c1320dd96688b2e40b92ce748eee7ae99722")
+            // A cookie value that needed a lot of decoding
+            .expect("HTTP.COOKIE:request.cookies.hsfirstvisit", "http://www.domain.com/|http://www.google.co.in/url?sa=t&rct=j&q=domain.com&source=web&cd=1&ved=0CB0QFjAA&url=http://www.domain.com/&ei=DmuSULW3AcTLhAfJ24CoDA&usg=AFQjCNGvPmmyn8Bk67OUv-HwjVU4Ff3q1w|1351772962000")
+            // This is the IP which was extracted from the UNIQUE_ID ( "Up24RwpmBAwAAA1LWJsAAAAR" in this case).
+            .expect("IP:server.environment.unique_id.ip", "10.102.4.12")
+            .checkExpectations();
     }
 
 
