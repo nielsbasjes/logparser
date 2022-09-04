@@ -29,7 +29,7 @@
   <url>https://niels.basjes.nl</url>
 
   <properties>
-    <antlr.version>4.10.1</antlr.version>
+    <antlr.version>4.11.1</antlr.version>
     <jackson.version>2.13.4</jackson.version>
     <jackson-databind.version>2.13.4</jackson-databind.version>
   </properties>
