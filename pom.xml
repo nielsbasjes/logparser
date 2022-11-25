@@ -39,7 +39,7 @@
     <checkstyle.version>10.4</checkstyle.version>
 
     <lombok.version>1.18.22</lombok.version>
-    <slf4j.version>2.0.4</slf4j.version>
+    <slf4j.version>2.0.5</slf4j.version>
 
     <junit5.version>5.9.1</junit5.version>
     <hamcrest-core.version>2.2</hamcrest-core.version>
