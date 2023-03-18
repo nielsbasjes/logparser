@@ -36,10 +36,10 @@
     <depencency-convergence.phase>validate</depencency-convergence.phase>
 
     <checkstyle-plugin.version>3.2.1</checkstyle-plugin.version>
-    <checkstyle.version>10.8.1</checkstyle.version>
+    <checkstyle.version>10.9.1</checkstyle.version>
 
     <lombok.version>1.18.22</lombok.version>
-    <slf4j.version>2.0.6</slf4j.version>
+    <slf4j.version>2.0.7</slf4j.version>
 
     <junit5.version>5.9.2</junit5.version>
     <hamcrest-core.version>2.2</hamcrest-core.version>
