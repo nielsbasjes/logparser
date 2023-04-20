@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -583,13 +584,17 @@ public final class DissectorTester implements Serializable {
         return results;
     }
 
+    private String centerPadding(String name, char center, int longestLeftSide) {
+        return padding(name.substring(0, name.indexOf(center)), longestLeftSide);
+    }
+
     private String padding(String name, int longestFieldName) {
         return padding(name, longestFieldName, ' ');
     }
 
     private String padding(String name, int longestFieldName, char pad) {
         int length = longestFieldName - name.length();
-        if (length == 0) {
+        if (length <= 0) {
             return "";
         }
         StringBuilder sb = new StringBuilder(length);
@@ -638,7 +643,12 @@ public final class DissectorTester implements Serializable {
         }
 
         try {
-            List<String> possibleFieldNames = parser.getPossiblePaths();
+            List<String> possibleFieldNames = parser
+                .getPossiblePaths()
+                .stream()
+                .sorted(Comparator.comparing(o -> o.substring(o.indexOf(":"))))
+                .collect(Collectors.toList());
+
             for (String path: possibleFieldNames) {
                 parser.addParseTarget(TestRecord.class.getMethod("setStringValue", String.class, String.class), path);
             }
@@ -653,12 +663,15 @@ public final class DissectorTester implements Serializable {
                 TestRecord result = parser.parse(inputValue);
 
                 int longestFieldName = 0;
+                int longestTypeIndicator = 0;
                 for (String fieldName : possibleFieldNames) {
-                    longestFieldName = Math.max(longestFieldName, fieldName.length());
+                    longestFieldName = Math.max(longestFieldName, fieldName.substring(fieldName.indexOf(":")).length());
+                    longestTypeIndicator = Math.max(longestTypeIndicator, fieldName.indexOf(":"));
                 }
                 for (String fieldName : result.getAllNames()) {
-                    longestFieldName = Math.max(longestFieldName, fieldName.length());
+                    longestFieldName = Math.max(longestFieldName, fieldName.substring(fieldName.indexOf(":")).length());
                 }
+                longestFieldName += 4;
                 for (String fieldName : possibleFieldNames) {
                     String value = result.getStringValue(fieldName);
                     if (value == null) {
@@ -671,12 +684,16 @@ public final class DissectorTester implements Serializable {
                                 .sorted()
                                 .collect(Collectors.toList());
 
+                            String leftPadding = centerPadding(fieldName, ':', longestTypeIndicator);
+                            String rightPadding = padding(fieldName.substring(fieldName.indexOf(":")), longestFieldName);
                             if (allNames.isEmpty()) {
-                                LOG.info("Found values for {}{} = []", fieldName, padding(fieldName, longestFieldName));
+                                LOG.info("Found values for {}{}{}  = []", leftPadding, fieldName, rightPadding);
                             } else {
-                                LOG.info("Found values for {}", fieldName);
+                                LOG.info("Found values for {}{}", leftPadding, fieldName);
                                 for (String name : allNames) {
-                                    LOG.info("             --> {}{} = {}", name, padding(name, longestFieldName), result.getStringValue(name));
+                                    leftPadding = centerPadding(name, ':', longestTypeIndicator);
+                                    rightPadding = padding(name.substring(name.indexOf(":")), longestFieldName);
+                                    LOG.info("             --> {}{}{}  = {}", leftPadding, name, rightPadding, result.getStringValue(name));
                                 }
                             }
                             continue;
@@ -684,7 +701,9 @@ public final class DissectorTester implements Serializable {
                             value = "<<<null>>>";
                         }
                     }
-                    LOG.info("Found value for {}{}  = {}", fieldName, padding(fieldName, longestFieldName), value);
+                    String leftPadding = centerPadding(fieldName, ':', longestTypeIndicator);
+                    String rightPadding = padding(fieldName.substring(fieldName.indexOf(":")), longestFieldName);
+                    LOG.info("Found value for  {}{}{}  = {}", leftPadding, fieldName, rightPadding, value);
                 }
 
             }
