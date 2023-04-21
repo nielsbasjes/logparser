@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.9-SNAPSHOT
 ===
 - Print the parsed values of a wildcard in DissectorTester::printAllPossibleValues
+- Allow bad requests to be parsed anyway.
 
 v5.8
 ===

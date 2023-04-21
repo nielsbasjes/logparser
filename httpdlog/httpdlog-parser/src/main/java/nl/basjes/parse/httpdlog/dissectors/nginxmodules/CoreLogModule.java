@@ -288,16 +288,14 @@ public class CoreLogModule implements NginxModule {
         // user name supplied with the Basic authentication
         parsers.add(new TokenParser("$remote_user",
             "connection.client.user", "STRING",
-            STRING_ONLY, FORMAT_STRING));
+            STRING_ONLY, FORMAT_NO_SPACE_STRING));
 
         // -------
         // $request
         // full original request line
         parsers.add(new TokenParser("$request",
             "request.firstline", "HTTP.FIRSTLINE",
-            STRING_ONLY, FORMAT_NO_SPACE_STRING + " " +
-            FORMAT_NO_SPACE_STRING + " " +
-            FORMAT_NO_SPACE_STRING, -2));
+            STRING_ONLY, FORMAT_STRING, -2));
 
         // -------
         // $request_body

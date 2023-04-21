@@ -343,87 +343,87 @@ public class NginxLogFormatTest {
     }
 
     @Test
-    public void validateAllFields() {
+    void validateAllFields() {
         List<SingleFieldTestcase> fieldsTests = new ArrayList<>();
 
-        fieldsTests.add(new SingleFieldTestcase("$status",                   "200",                                 "STRING:request.status.last",         "200"));
-        fieldsTests.add(new SingleFieldTestcase("$time_iso8601",             "2017-01-03T15:56:36+01:00",           "TIME.ISO8601:request.receive.time", "2017-01-03T15:56:36+01:00"));
-        fieldsTests.add(new SingleFieldTestcase("$time_local",               "03/Jan/2017:15:56:36 +0100",          "TIME.STAMP:request.receive.time",    "03/Jan/2017:15:56:36 +0100"));
+        fieldsTests.add(new SingleFieldTestcase("$status",                   "200",                                 "STRING:request.status.last",                                   "200"));
+        fieldsTests.add(new SingleFieldTestcase("$time_iso8601",             "2017-01-03T15:56:36+01:00",           "TIME.ISO8601:request.receive.time",                            "2017-01-03T15:56:36+01:00"));
+        fieldsTests.add(new SingleFieldTestcase("$time_local",               "03/Jan/2017:15:56:36 +0100",          "TIME.STAMP:request.receive.time",                              "03/Jan/2017:15:56:36 +0100"));
 
-        fieldsTests.add(new SingleFieldTestcase("$time_iso8601",             "2017-01-03T15:56:36+01:00",           "TIME.EPOCH:request.receive.time.epoch",   "1483455396000"));
-        fieldsTests.add(new SingleFieldTestcase("$time_local",               "03/Jan/2017:15:56:36 +0100",          "TIME.EPOCH:request.receive.time.epoch",   "1483455396000"));
-        fieldsTests.add(new SingleFieldTestcase("$msec",                     "1483455396.639",                      "TIME.EPOCH:request.receive.time.epoch",   "1483455396639"));
+        fieldsTests.add(new SingleFieldTestcase("$time_iso8601",             "2017-01-03T15:56:36+01:00",           "TIME.EPOCH:request.receive.time.epoch",                        "1483455396000"));
+        fieldsTests.add(new SingleFieldTestcase("$time_local",               "03/Jan/2017:15:56:36 +0100",          "TIME.EPOCH:request.receive.time.epoch",                        "1483455396000"));
+        fieldsTests.add(new SingleFieldTestcase("$msec",                     "1483455396.639",                      "TIME.EPOCH:request.receive.time.epoch",                        "1483455396639"));
 
-        fieldsTests.add(new SingleFieldTestcase("$remote_addr",              "127.0.0.1",                           "IP:connection.client.host",            "127.0.0.1"));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr",       "\\x7F\\x00\\x00\\x01",                "IP_BINARY:connection.client.host",     "\\x7F\\x00\\x00\\x01"));
-        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr",       "\\x7F\\x00\\x00\\x01",                "IP:connection.client.host",            "127.0.0.1"));
+        fieldsTests.add(new SingleFieldTestcase("$remote_addr",              "127.0.0.1",                           "IP:connection.client.host",                                    "127.0.0.1"));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr",       "\\x7F\\x00\\x00\\x01",                "IP_BINARY:connection.client.host",                             "\\x7F\\x00\\x00\\x01"));
+        fieldsTests.add(new SingleFieldTestcase("$binary_remote_addr",       "\\x7F\\x00\\x00\\x01",                "IP:connection.client.host",                                    "127.0.0.1"));
 
-        fieldsTests.add(new SingleFieldTestcase("$remote_port",              "44448",                               "PORT:connection.client.port",        "44448"));
-        fieldsTests.add(new SingleFieldTestcase("$remote_user",              "-",                                   "STRING:connection.client.user",      null));
+        fieldsTests.add(new SingleFieldTestcase("$remote_port",              "44448",                               "PORT:connection.client.port",                                  "44448"));
+        fieldsTests.add(new SingleFieldTestcase("$remote_user",              "-",                                   "STRING:connection.client.user",                                null));
 
-        fieldsTests.add(new SingleFieldTestcase("$is_args",                  "?",                                   "STRING:request.firstline.uri.is_args",   "?"));
-        fieldsTests.add(new SingleFieldTestcase("$query_string",             "aap&noot=&mies=wim",                  "HTTP.QUERYSTRING:request.firstline.uri.query", "aap&noot=&mies=wim"));
-        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "HTTP.QUERYSTRING:request.firstline.uri.query", "aap&noot=&mies=wim"));
-        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.aap",           ""));
-        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.noot",          ""));
-        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.mies",          "wim"));
-        fieldsTests.add(new SingleFieldTestcase("$arg_name",                 "foo",                                 "STRING:request.firstline.uri.query.name",          "foo"));
+        fieldsTests.add(new SingleFieldTestcase("$is_args",                  "?",                                   "STRING:request.firstline.uri.is_args",                         "?"));
+        fieldsTests.add(new SingleFieldTestcase("$query_string",             "aap&noot=&mies=wim",                  "HTTP.QUERYSTRING:request.firstline.uri.query",                 "aap&noot=&mies=wim"));
+        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "HTTP.QUERYSTRING:request.firstline.uri.query",                 "aap&noot=&mies=wim"));
+        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.aap",                       ""));
+        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.noot",                      ""));
+        fieldsTests.add(new SingleFieldTestcase("$args",                     "aap&noot=&mies=wim",                  "STRING:request.firstline.uri.query.mies",                      "wim"));
+        fieldsTests.add(new SingleFieldTestcase("$arg_name",                 "foo",                                 "STRING:request.firstline.uri.query.name",                      "foo"));
 
-        fieldsTests.add(new SingleFieldTestcase("$bytes_sent",               "694",                                 "BYTES:response.bytes",             "694"));
-        fieldsTests.add(new SingleFieldTestcase("$bytes_received",           "694",                                 "BYTES:request.bytes",             "694"));
-        fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent",          "436",                                 "BYTES:response.body.bytes",        "436"));
-        fieldsTests.add(new SingleFieldTestcase("$connection",               "5",                                   "NUMBER:connection.serial_number",  "5"));
-        fieldsTests.add(new SingleFieldTestcase("$connection_requests",      "4",                                   "NUMBER:connection.requestnr",      "4"));
-        fieldsTests.add(new SingleFieldTestcase("$https",                    "",                                    "STRING:connection.https",          ""));
-        fieldsTests.add(new SingleFieldTestcase("$content_length",           "-",                                   "HTTP.HEADER:request.header.content_length",                             null));
-        fieldsTests.add(new SingleFieldTestcase("$content_type",             "-",                                   "HTTP.HEADER:request.header.content_type",                                 null));
-        fieldsTests.add(new SingleFieldTestcase("$cookie_name",              "Something",                           "HTTP.COOKIE:request.cookies.name",                                       "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$bytes_sent",               "694",                                 "BYTES:response.bytes",                                         "694"));
+        fieldsTests.add(new SingleFieldTestcase("$bytes_received",           "694",                                 "BYTES:request.bytes",                                          "694"));
+        fieldsTests.add(new SingleFieldTestcase("$body_bytes_sent",          "436",                                 "BYTES:response.body.bytes",                                    "436"));
+        fieldsTests.add(new SingleFieldTestcase("$connection",               "5",                                   "NUMBER:connection.serial_number",                              "5"));
+        fieldsTests.add(new SingleFieldTestcase("$connection_requests",      "4",                                   "NUMBER:connection.requestnr",                                  "4"));
+        fieldsTests.add(new SingleFieldTestcase("$https",                    "",                                    "STRING:connection.https",                                      ""));
+        fieldsTests.add(new SingleFieldTestcase("$content_length",           "-",                                   "HTTP.HEADER:request.header.content_length",                    null));
+        fieldsTests.add(new SingleFieldTestcase("$content_type",             "-",                                   "HTTP.HEADER:request.header.content_type",                      null));
+        fieldsTests.add(new SingleFieldTestcase("$cookie_name",              "Something",                           "HTTP.COOKIE:request.cookies.name",                             "Something"));
 
         fieldsTests.add(new SingleFieldTestcase("$document_root",            "/var/www/html",                       "STRING:request.firstline.document_root",                       "/var/www/html"));
         fieldsTests.add(new SingleFieldTestcase("$realpath_root",            "/var/www/html",                       "STRING:request.firstline.realpath_root",                       "/var/www/html"));
 
         fieldsTests.add(new SingleFieldTestcase("$host",                     "localhost",                           "STRING:connection.server.name",                                "localhost"));
         fieldsTests.add(new SingleFieldTestcase("$hostname",                 "hackbox",                             "STRING:connection.client.host",                                "hackbox"));
-        fieldsTests.add(new SingleFieldTestcase("$http_foobar",              "Something",                           "HTTP.HEADER:request.header.foobar",                          "Something"));
-        fieldsTests.add(new SingleFieldTestcase("$sent_http_foobar",         "Something",                           "HTTP.HEADER:response.header.foobar",                         "Something"));
-        fieldsTests.add(new SingleFieldTestcase("$sent_trailer_foobar",      "Something",                           "HTTP.TRAILER:response.trailer.foobar",                        "Something"));
-        fieldsTests.add(new SingleFieldTestcase("$nginx_version",            "1.10.0",                              "STRING:server.nginx.version",                                "1.10.0"));
-        fieldsTests.add(new SingleFieldTestcase("$pid",                      "5137",                                "NUMBER:connection.server.child.processid",                   "5137"));
-        fieldsTests.add(new SingleFieldTestcase("$pipe",                     ".",                                   "STRING:connection.nginx.pipe",                               "."));
-        fieldsTests.add(new SingleFieldTestcase("$pipe",                     "p",                                   "STRING:connection.nginx.pipe",                               "p"));
-        fieldsTests.add(new SingleFieldTestcase("$protocol",                 "TCP",                                 "STRING:connection.protocol",                                 "TCP"));
-        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr",      "1.2.3.4",                             "IP:connection.client.proxy.host",                            "1.2.3.4"));
+        fieldsTests.add(new SingleFieldTestcase("$http_foobar",              "Something",                           "HTTP.HEADER:request.header.foobar",                            "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_http_foobar",         "Something",                           "HTTP.HEADER:response.header.foobar",                           "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_trailer_foobar",      "Something",                           "HTTP.TRAILER:response.trailer.foobar",                         "Something"));
+        fieldsTests.add(new SingleFieldTestcase("$nginx_version",            "1.10.0",                              "STRING:server.nginx.version",                                  "1.10.0"));
+        fieldsTests.add(new SingleFieldTestcase("$pid",                      "5137",                                "NUMBER:connection.server.child.processid",                     "5137"));
+        fieldsTests.add(new SingleFieldTestcase("$pipe",                     ".",                                   "STRING:connection.nginx.pipe",                                 "."));
+        fieldsTests.add(new SingleFieldTestcase("$pipe",                     "p",                                   "STRING:connection.nginx.pipe",                                 "p"));
+        fieldsTests.add(new SingleFieldTestcase("$protocol",                 "TCP",                                 "STRING:connection.protocol",                                   "TCP"));
+        fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_addr",      "1.2.3.4",                             "IP:connection.client.proxy.host",                              "1.2.3.4"));
         fieldsTests.add(new SingleFieldTestcase("$proxy_protocol_port",      "1234",                                "PORT:connection.client.proxy.port",                            "1234"));
-        fieldsTests.add(new SingleFieldTestcase("$request",                  "GET /?aap&noot=&mies=wim HTTP/1.1",   "HTTP.FIRSTLINE:request.firstline",                           "GET /?aap&noot=&mies=wim HTTP/1.1"));
-        fieldsTests.add(new SingleFieldTestcase("$request_completion",       "OK",                                  "STRING:request.completion",                                  "OK"));
-        fieldsTests.add(new SingleFieldTestcase("$request_filename",         "/var/www/html/index.html",            "FILENAME:server.filename",                                   "/var/www/html/index.html"));
-        fieldsTests.add(new SingleFieldTestcase("$request_length",           "491",                                 "BYTES:request.bytes",                                        "491"));
-        fieldsTests.add(new SingleFieldTestcase("$request_method",           "GET",                                 "HTTP.METHOD:request.firstline.method",                       "GET"));
+        fieldsTests.add(new SingleFieldTestcase("$request",                  "GET /?aap&noot=&mies=wim HTTP/1.1",   "HTTP.FIRSTLINE:request.firstline",                             "GET /?aap&noot=&mies=wim HTTP/1.1"));
+        fieldsTests.add(new SingleFieldTestcase("$request_completion",       "OK",                                  "STRING:request.completion",                                    "OK"));
+        fieldsTests.add(new SingleFieldTestcase("$request_filename",         "/var/www/html/index.html",            "FILENAME:server.filename",                                     "/var/www/html/index.html"));
+        fieldsTests.add(new SingleFieldTestcase("$request_length",           "491",                                 "BYTES:request.bytes",                                          "491"));
+        fieldsTests.add(new SingleFieldTestcase("$request_method",           "GET",                                 "HTTP.METHOD:request.firstline.method",                         "GET"));
 
-        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "SECOND_MILLIS:response.server.processing.time",              "123.456"));
-        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "MILLISECONDS:response.server.processing.time",               "123456"));
-        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "MICROSECONDS:response.server.processing.time",               "123456000"));
+        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "SECOND_MILLIS:response.server.processing.time",                "123.456"));
+        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "MILLISECONDS:response.server.processing.time",                 "123456"));
+        fieldsTests.add(new SingleFieldTestcase("$request_time",             "123.456",                             "MICROSECONDS:response.server.processing.time",                 "123456000"));
 
-        fieldsTests.add(new SingleFieldTestcase("$request_uri",              "/?aap&noot=&mies=wim",                "HTTP.URI:request.firstline.uri",                             "/?aap&noot=&mies=wim"));
-        fieldsTests.add(new SingleFieldTestcase("$scheme",                   "http",                                "HTTP.PROTOCOL:request.firstline.uri.protocol",               "http"));
-        fieldsTests.add(new SingleFieldTestcase("$sent_http_etag",           "W/\\x22586bbb8b-29e\\x22",            "HTTP.HEADER:response.header.etag",                           "W/\\x22586bbb8b-29e\\x22"));
-        fieldsTests.add(new SingleFieldTestcase("$sent_http_last_modified", "Tue, 03 Jan 2017 14:56:11 GMT",       "HTTP.HEADER:response.header.last_modified",                  "Tue, 03 Jan 2017 14:56:11 GMT"));
-        fieldsTests.add(new SingleFieldTestcase("$server_addr",              "127.0.0.1",                           "IP:connection.server.ip",                                    "127.0.0.1"));
-        fieldsTests.add(new SingleFieldTestcase("$server_name",              "_",                                   "STRING:connection.server.name",                              "_"));
-        fieldsTests.add(new SingleFieldTestcase("$server_port",              "80",                                  "PORT:connection.server.port",                                "80"));
-        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL_VERSION:request.firstline.protocol",           "HTTP/1.1"));
-        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL:request.firstline.protocol",                   "HTTP"));
-        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version",   "1.1"));
-        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rtt",              "52",                                  "MICROSECONDS:connection.tcpinfo.rtt",                        "52"));
-        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar",           "30",                                  "MICROSECONDS:connection.tcpinfo.rttvar",                     "30"));
-        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd",         "10",                                  "BYTES:connection.tcpinfo.send.cwnd",                         "10"));
-        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space",        "43690",                               "BYTES:connection.tcpinfo.receive.space",                     "43690"));
-        fieldsTests.add(new SingleFieldTestcase("$uri",                      "/index.html",                         "HTTP.URI:request.firstline.uri.normalized",                  "/index.html"));
-        fieldsTests.add(new SingleFieldTestcase("$document_uri",             "/index.html",                         "HTTP.URI:request.firstline.uri.normalized",                  "/index.html"));
-        fieldsTests.add(new SingleFieldTestcase("$http_user_agent",          "Mozilla/5.0 (Foo)",                   "HTTP.USERAGENT:request.user-agent",                          "Mozilla/5.0 (Foo)"));
-        fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent",      "Mozilla/5.0 (Foo)",                   "HTTP.HEADER:request.header.foo_user_agent",                  "Mozilla/5.0 (Foo)"));
-        fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo",      "Mozilla/5.0 (Foo)",                   "HTTP.HEADER:request.header.user_agent_foo",                  "Mozilla/5.0 (Foo)"));
-        fieldsTests.add(new SingleFieldTestcase("$http_referer",             "http://localhost/",                   "HTTP.URI:request.referer",                                   "http://localhost/"));
+        fieldsTests.add(new SingleFieldTestcase("$request_uri",              "/?aap&noot=&mies=wim",                "HTTP.URI:request.firstline.uri",                               "/?aap&noot=&mies=wim"));
+        fieldsTests.add(new SingleFieldTestcase("$scheme",                   "http",                                "HTTP.PROTOCOL:request.firstline.uri.protocol",                 "http"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_http_etag",           "W/\\x22586bbb8b-29e\\x22",            "HTTP.HEADER:response.header.etag",                             "W/\\x22586bbb8b-29e\\x22"));
+        fieldsTests.add(new SingleFieldTestcase("$sent_http_last_modified",  "Tue, 03 Jan 2017 14:56:11 GMT",       "HTTP.HEADER:response.header.last_modified",                    "Tue, 03 Jan 2017 14:56:11 GMT"));
+        fieldsTests.add(new SingleFieldTestcase("$server_addr",              "127.0.0.1",                           "IP:connection.server.ip",                                      "127.0.0.1"));
+        fieldsTests.add(new SingleFieldTestcase("$server_name",              "_",                                   "STRING:connection.server.name",                                "_"));
+        fieldsTests.add(new SingleFieldTestcase("$server_port",              "80",                                  "PORT:connection.server.port",                                  "80"));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL_VERSION:request.firstline.protocol",             "HTTP/1.1"));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL:request.firstline.protocol",                     "HTTP"));
+        fieldsTests.add(new SingleFieldTestcase("$server_protocol",          "HTTP/1.1",                            "HTTP.PROTOCOL.VERSION:request.firstline.protocol.version",     "1.1"));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rtt",              "52",                                  "MICROSECONDS:connection.tcpinfo.rtt",                          "52"));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rttvar",           "30",                                  "MICROSECONDS:connection.tcpinfo.rttvar",                       "30"));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_snd_cwnd",         "10",                                  "BYTES:connection.tcpinfo.send.cwnd",                           "10"));
+        fieldsTests.add(new SingleFieldTestcase("$tcpinfo_rcv_space",        "43690",                               "BYTES:connection.tcpinfo.receive.space",                       "43690"));
+        fieldsTests.add(new SingleFieldTestcase("$uri",                      "/index.html",                         "HTTP.URI:request.firstline.uri.normalized",                    "/index.html"));
+        fieldsTests.add(new SingleFieldTestcase("$document_uri",             "/index.html",                         "HTTP.URI:request.firstline.uri.normalized",                    "/index.html"));
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent",          "Mozilla/5.0 (Foo)",                   "HTTP.USERAGENT:request.user-agent",                            "Mozilla/5.0 (Foo)"));
+        fieldsTests.add(new SingleFieldTestcase("$http_foo_user_agent",      "Mozilla/5.0 (Foo)",                   "HTTP.HEADER:request.header.foo_user_agent",                    "Mozilla/5.0 (Foo)"));
+        fieldsTests.add(new SingleFieldTestcase("$http_user_agent_foo",      "Mozilla/5.0 (Foo)",                   "HTTP.HEADER:request.header.user_agent_foo",                    "Mozilla/5.0 (Foo)"));
+        fieldsTests.add(new SingleFieldTestcase("$http_referer",             "http://localhost/",                   "HTTP.URI:request.referer",                                     "http://localhost/"));
 
         // TODO: Check if these are REALLY "not intended for logging"
         fieldsTests.add(new SingleFieldTestcase("$request_body",             "-",                                   "NOT_IMPLEMENTED:nginx_parameter_not_intended_for_logging__request_body",         null));
@@ -552,8 +552,71 @@ public class NginxLogFormatTest {
             .expect("UPSTREAM_STATUS_LIST:nginxmodule.upstream.status",               (String)null)
             .expect("UPSTREAM_SECOND_MILLIS_LIST:nginxmodule.upstream.response.time", (String)null)
             .expect("UPSTREAM_ADDR_LIST:nginxmodule.upstream.addr",                   (String)null)
-//            .printPossible()
-//            .printAllPossibleValues()
+            .checkExpectations();
+    }
+
+    @Test
+    void bugReport227_bad(){
+        String logFormat = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\" \"-\"";
+        String logLine = "94.232.44.112 - - [28/Feb/2021:03:54:40 +0800] \"x00Cookie: mstshash=Administr\" 400 157 \"-\" \"-\" \"-\"";
+        DissectorTester.create()
+//            .verbose()
+            .withParser(new HttpdLoglineParser<>(TestRecord.class, logFormat))
+            .withInput(logLine)
+            .expect("IP:connection.client.host",                                            "94.232.44.112")
+            .expect("STRING:connection.client.user",                                        (String)null)
+            .expect("HTTP.FIRSTLINE:request.firstline",                                     "x00Cookie: mstshash=Administr")
+            .expectAbsentString("HTTP.METHOD:request.firstline.method")
+            .expectAbsentString("HTTP.URI:request.firstline.uri")
+            .expectAbsentString("HTTP.PROTOCOL:request.firstline.protocol")
+            .expect("TIME.STAMP:request.receive.time",                                      "28/Feb/2021:03:54:40 +0800")
+            .expect("TIME.DATE:request.receive.time.date",                                  "2021-02-28")
+            .expect("TIME.TIME:request.receive.time.time",                                  "03:54:40")
+            .expect("TIME.ZONE:request.receive.time.timezone",                              "+08:00")
+            .expect("TIME.YEAR:request.receive.time.year",                                  "2021")
+            .expect("TIME.MONTH:request.receive.time.month",                                "2")
+            .expect("TIME.DAY:request.receive.time.day",                                    "28")
+            .expect("TIME.HOUR:request.receive.time.hour",                                  "3")
+            .expect("TIME.MINUTE:request.receive.time.minute",                              "54")
+            .expect("TIME.SECOND:request.receive.time.second",                              "40")
+            .expect("TIME.EPOCH:request.receive.time.epoch",                                "1614455680000")
+            .expect("HTTP.URI:request.referer",                                             (String)null)
+            .expect("STRING:request.status.last",                                           "400")
+            .expect("BYTES:response.body.bytes",                                            "157")
+            .expect("HTTP.USERAGENT:request.user-agent",                                    (String)null)
+            .checkExpectations();
+    }
+
+    @Test
+    void bugReport227_empty() {
+        String logFormat = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\" \"-\"";
+        String logLine = "207.154.195.167 - - [01/Mar/2021:03:25:25 +0800] \"\" 400 0 \"-\" \"-\" \"-\"";
+        DissectorTester.create()
+//            .verbose()
+            .withParser(new HttpdLoglineParser<>(TestRecord.class, logFormat))
+            .withInput(logLine)
+
+            .expect("IP:connection.client.host",                                            "207.154.195.167")
+            .expect("STRING:connection.client.user",                                        (String)null)
+            .expect("HTTP.FIRSTLINE:request.firstline",                                     "")
+            .expectAbsentString("HTTP.METHOD:request.firstline.method")
+            .expectAbsentString("HTTP.URI:request.firstline.uri")
+            .expectAbsentString("HTTP.PROTOCOL:request.firstline.protocol")
+            .expect("TIME.STAMP:request.receive.time",                                      "01/Mar/2021:03:25:25 +0800")
+            .expect("TIME.DATE:request.receive.time.date",                                  "2021-03-01")
+            .expect("TIME.TIME:request.receive.time.time",                                  "03:25:25")
+            .expect("TIME.ZONE:request.receive.time.timezone",                              "+08:00")
+            .expect("TIME.YEAR:request.receive.time.year",                                  "2021")
+            .expect("TIME.MONTH:request.receive.time.month",                                "3")
+            .expect("TIME.DAY:request.receive.time.day",                                    "1")
+            .expect("TIME.HOUR:request.receive.time.hour",                                  "3")
+            .expect("TIME.MINUTE:request.receive.time.minute",                              "25")
+            .expect("TIME.SECOND:request.receive.time.second",                              "25")
+            .expect("TIME.EPOCH:request.receive.time.epoch",                                "1614540325000")
+            .expect("HTTP.URI:request.referer",                                             (String)null)
+            .expect("STRING:request.status.last",                                           "400")
+            .expect("BYTES:response.body.bytes",                                            "0")
+            .expect("HTTP.USERAGENT:request.user-agent",                                    (String)null)
             .checkExpectations();
     }
 }
