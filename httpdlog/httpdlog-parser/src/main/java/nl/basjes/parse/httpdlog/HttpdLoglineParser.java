@@ -31,10 +31,6 @@ import nl.basjes.parse.httpdlog.dissectors.translate.ConvertNumberIntoCLF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static nl.basjes.parse.httpdlog.Version.GIT_COMMIT_ID_DESCRIBE_SHORT;
-import static nl.basjes.parse.httpdlog.Version.MAVEN_BUILD_TIMESTAMP;
-import static nl.basjes.parse.httpdlog.Version.PROJECT_VERSION;
-
 public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpdLoglineParser.class);
@@ -89,8 +85,8 @@ public class HttpdLoglineParser<RECORD> extends Parser<RECORD> {
     // --------------------------------------------
 
     public static String getVersion() {
-        return "LogParser " + PROJECT_VERSION +
-            " (" + GIT_COMMIT_ID_DESCRIBE_SHORT + " @ " + MAVEN_BUILD_TIMESTAMP + ")";
+        return "LogParser " + Version.getProjectVersion() +
+            " (" + Version.getGitCommitIdDescribeShort() + " @ " + Version.getBuildTimestamp() + ")";
     }
 
     public HttpdLoglineParser(
