@@ -15,42 +15,22 @@
 # limitations under the License.
 #
 
-The maven release plugin turned out to be too hard to handle.
-So we do it manually.
-
 # Ensure all has been committed
 
 git status
-
-# Ensure it all works
-mvn clean package
-mvn clean
-
-RELEASEVERSION=5.7
-NEXTVERSION=5.8
-
-# Creating and publishing the new Tagging
-mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
+git pull
 
 # Update the version number in all of the examples in the README*md files
-sed -i "s@<version>[0-9\.]*</version>@<version>${RELEASEVERSION}</version>@g" *md
-git diff README*.md
-
-vim README*.md
+vim CHANGELOG.md README*.md
 
 git status
-git commit -m"Version ${RELEASEVERSION}" -a
-git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
+git commit -m"docs: Updated documentation to show the latest release" -a
 
-mvn clean deploy -Prelease -PdeployToSonatype
+
+mvn release:prepare
+mvn release:perform
 
 #VERIFY If this all looks good
-
-mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
-
-# UPDATE the versions in this document
-
-git commit -m"Start development for ${NEXTVERSION}" -a
 
 
 # Finally is ALL went well we push it
