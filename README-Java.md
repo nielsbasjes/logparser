@@ -2,7 +2,7 @@ Apache HTTPD logparser
 ===
 This is a Logparsing framework intended to make parsing Apache HTTPD logfiles much easier.
 
-The basic idea is that you should be able to have a parser that you can construct by simply 
+The basic idea is that you should be able to have a parser that you can construct by simply
 telling it with what configuration options the line was written.
 
 Usage (Java)
@@ -61,16 +61,16 @@ You will get a list that looks something like this:
     STRING:request.referer.query.*
     HTTP.USERAGENT:request.user-agent
 
-Now some of these lines contain a * . 
+Now some of these lines contain a * .
 This is a wildcard that can be replaced with any 'name' if you need a specific value.
 You can also leave the '*' and get everything that is found in the actual log line.
 
-**Step 2 Create the receiving POJO** 
+**Step 2 Create the receiving POJO**
 
-We need to create the receiving record class that is simply a POJO that does not need any interface or inheritance. 
+We need to create the receiving record class that is simply a POJO that does not need any interface or inheritance.
 In this class we create setters that will be called when the specified field has been found in the line.
 
-So we can now add to this class a setter that simply receives a single value: 
+So we can now add to this class a setter that simply receives a single value:
 
     @Field("IP:connection.client.host")
     public void setIP(final String value) {
@@ -93,7 +93,7 @@ This latter form is very handy because this way we can obtain all values for a w
 
 Or a combination of the above examples where you specify multiple field patterns
 
-    @Field({"IP:connection.client.host", 
+    @Field({"IP:connection.client.host",
             "STRING:request.firstline.uri.query.*"})
     public void setValue(final String name, final String value) {
         results.put(name, value);
@@ -128,11 +128,11 @@ There are two ways to do this:
 1) Let the parser create and a new instance of "MyRecord" for each parsed line (think about the GC consequences!!):
 
        MyRecord record = parser.parse(logline);
- 
+
 2) Reuse the same instance.
 So you do this only once:
 
-       MyRecord record = new MyRecord(); 
+       MyRecord record = new MyRecord();
 
 And then for each logline:
 
@@ -149,12 +149,15 @@ To avoid weird effects please install the "Lombok Plugin" in IntelliJ IDEA to us
 
 License
 ===
+    Apache HTTPD & NGINX Access log parsing made easy
+    Copyright (C) 2011-2023 Niels Basjes
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
     https://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

@@ -4,6 +4,7 @@ v5.9-SNAPSHOT
 ===
 - Print the parsed values of a wildcard in DissectorTester::printAllPossibleValues
 - Allow bad requests to be parsed anyway.
+- Drop Apache Pig support (this tool is no longer used by anyone)
 
 v5.8
 ===
