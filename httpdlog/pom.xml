@@ -32,21 +32,8 @@
     <module>httpdlog-parser</module>
     <module>httpdlog-inputformat</module>
     <module>httpdlog-pigloader</module>
+    <module>httpdlog-serde</module>
   </modules>
-
-  <profiles>
-    <profile>
-      <id>JDK11</id>
-      <activation><jdk>[11,12)</jdk></activation>
-      <!-- Some udfs will only build on JDK 11 because of the much strikter module enforcement  -->
-      <!-- Building these under JDK 17 will fail with Exceptions like:                          -->
-      <!--    Caused by: java.lang.reflect.InaccessibleObjectException:                         -->
-      <!--        Unable to ... accessible: module java.base does not "opens java.net" to ...  -->
-      <modules>
-        <module>httpdlog-serde</module>
-      </modules>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>

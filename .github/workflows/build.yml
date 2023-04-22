@@ -27,34 +27,33 @@ jobs:
   build:
     name: Build with Java ${{ matrix.java }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java:
-          - '11'
-          - '17'
 
     steps:
     - name: Checkout sourcecode
-      uses: actions/checkout@v3
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
     - name: Cache Local Maven Repository
-      uses: actions/cache@v3
+      uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Setup Java ${{ matrix.java }}
-      uses: actions/setup-java@v3
+
+    - name: 'Setup: Install JDK 8, 11 & 17'
+      uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2 # v3.11.0
       with:
-        java-version: ${{ matrix.java }}
         distribution: 'adopt'
+        java-version: |
+          8
+          11
+          17
 
     - name: Build Logparser
       run: mvn -B clean package
 
     - name: Codecov
-      uses: codecov/codecov-action@v3.1.3
+      uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2 # v3.1.3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
