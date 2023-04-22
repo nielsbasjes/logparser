@@ -68,7 +68,6 @@
 
   <modules>
     <module>java-pojo</module>
-    <module>apache-pig</module>
     <module>apache-hadoop-mapreduce</module>
     <module>apache-flink</module>
     <module>apache-beam</module>

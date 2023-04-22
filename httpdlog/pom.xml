@@ -31,7 +31,6 @@
   <modules>
     <module>httpdlog-parser</module>
     <module>httpdlog-inputformat</module>
-    <module>httpdlog-pigloader</module>
     <module>httpdlog-serde</module>
   </modules>
 

@@ -84,10 +84,10 @@ Building
 Simply type : mvn package
 and the whole thing should build.
 
-Java, Apache {Hadoop, PIG, Hive, Drill, Flink, Beam}
+Java, Apache {Hadoop, Hive, Drill, Flink, Beam}
 ===
-I'm a big user of bigdata tools like Apache Pig, Hadoop, Hive, etc. .
-So in here are also a Hadoop inputformat, a Pig Loader and a Hive/HCatalog Serde that are wrappers around this library.
+I'm a big user of bigdata tools like Apache Hadoop, Hive, etc. .
+So in here are also a Hadoop inputformat and a Hive/HCatalog Serde that are wrappers around this library.
 
 Usage (Overview)
 ===
@@ -106,7 +106,6 @@ The languages that are supported in this version:
 * [Java](README-Java.md)
 
 Prebuilt plugins for these are provided in the distribution:
-* [Apache Pig](README-Pig.md)
 * [Apache Hive](README-Hive.md)
 
 For tools like Apache Flink and Beam there is only example code that is also used to verify that the build
@@ -115,7 +114,7 @@ still works on those systems.
 * [Apache Beam](examples/apache-beam/src/test/java/nl/basjes/parse/httpdlog/beam)
 
 Tools that ship a version of this parser in their distribution
-* [Apache Pig](https://github.com/apache/pig/blob/trunk/contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/apachelog/LogFormatLoader.java)
+* ~~[Apache Pig](https://github.com/apache/pig/blob/trunk/contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/apachelog/LogFormatLoader.java)~~
 * [Apache Drill](https://drill.apache.org/docs/httpd-format-plugin/)
 
 Internal structure and type remapping
@@ -139,11 +138,6 @@ Java: Call these against the parser instance right after construction
 
     parser.addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI", Casts.STRING_ONLY);
     parser.addTypeRemapping("request.firstline.uri.query.r", "HTTP.URI", Casts.STRING_ONLY);
-
-Pig: Add these to the list of requested fields
-
-    '-map:request.firstline.uri.query.g:HTTP.URI',
-    '-map:request.firstline.uri.query.r:HTTP.URI',
 
 Hive: Add these to the SERDEPROPERTIES
 
@@ -196,6 +190,9 @@ If this project has business value for you then don't hesitate to support me wit
 
 License
 ===
+    Apache HTTPD & NGINX Access log parsing made easy
+    Copyright (C) 2011-2023 Niels Basjes
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at

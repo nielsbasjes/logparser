@@ -34,8 +34,7 @@ yy
 z
 zz
 
-#Pig/Hive/Hadoop logs
-pig_*.log
+#Hive/Hadoop logs
 SecurityAuth-*.audit
 hadoop*.log
 *-audit.log

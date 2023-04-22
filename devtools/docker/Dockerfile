@@ -87,15 +87,6 @@ ENV MAVEN_OPTS -Xms256m -Xmx512m
 RUN wget https://raw.githubusercontent.com/juven/maven-bash-completion/master/bash_completion.bash -O /etc/bash_completion.d/maven
 
 # --------------------------------
-# Install Pig
-ENV PIG_VERSION=0.17.0
-RUN cd /usr/local/ && wget "https://www.apache.org/dyn/closer.lua?action=download&filename=/pig/pig-${PIG_VERSION}/pig-${PIG_VERSION}.tar.gz" -O "pig-${PIG_VERSION}.tar.gz"
-RUN cd /usr/local/ && tar xzf pig-${PIG_VERSION}.tar.gz
-ENV PIG_HOME /usr/local/pig-*/
-ENV PATH ${PIG_HOME}/bin:${PATH}
-RUN chmod a+rwX -R ${PIG_HOME}/bin
-
-# --------------------------------
 # Install shellcheck
 RUN cd /usr/local/bin && \
      wget https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz && \

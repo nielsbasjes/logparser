@@ -1,6 +1,6 @@
 Dissect IP using GeoIP2 information
 ===
-This project also contains a dissector that uses the [MaxMind](https://www.maxmind.com) GeoIP2 data to 
+This project also contains a dissector that uses the [MaxMind](https://www.maxmind.com) GeoIP2 data to
 dissect IP addresses into things like Country, City, ASN, etc.
 
 Where are the datafiles?
@@ -8,7 +8,7 @@ Where are the datafiles?
 Simple: I didn't include them.
 
 The data is owned by MaxMind and in order to use it you must either purchase a license for 'accurate' GeoIP2
-data or download a 'slightly less accurate' free GeoLite2 version. 
+data or download a 'slightly less accurate' free GeoLite2 version.
 Also adding these files would make the repo very big.
 
 See https://dev.maxmind.com/ for the both the paid GeoIP2 and the free GeoLite2 downloadable databases.
@@ -40,13 +40,13 @@ ASN
 ---
 * Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector
 * Input: Needs the path to the GeoLite2-ASN.mmdb to function.
-* Output: ASN number and organization. 
+* Output: ASN number and organization.
 
 ISP
 ---
 * Class: nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector
 * Input: Needs the path to the GeoIP2-ISP.mmdb or GeoLite2-ISP.mmdb to function.
-* Output: ASN number and organization, ISP name and organization. 
+* Output: ASN number and organization, ISP name and organization.
 
 Country
 ---
@@ -61,49 +61,11 @@ City
 * Output: Information about continent, country, subdivision, city, postalcode and latitude/longitude.
 
 
-In Apache Pig you can do something like this now:
-
-    Clicks =
-        LOAD 'ip.log'
-        USING nl.basjes.pig.input.apachehttpdlog.Loader(
-            '"%h"',
-            'IP:connection.client.host',
-
-            '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector:/var/lib/GeoIP/GeoLite2-City.mmdb',
-            'STRING:connection.client.host.continent.name',
-            'STRING:connection.client.host.continent.code',
-            'STRING:connection.client.host.country.name',
-            'STRING:connection.client.host.country.iso',
-            'STRING:connection.client.host.subdivision.name',
-            'STRING:connection.client.host.subdivision.iso',
-            'STRING:connection.client.host.city.name',
-            'STRING:connection.client.host.postal.code',
-            'STRING:connection.client.host.location.latitude',
-            'STRING:connection.client.host.location.longitude',
-
-            '-load:nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPASNDissector:/var/lib/GeoIP/GeoLite2-ASN.mmdb',
-            'ASN:connection.client.host.asn.number',
-            'STRING:connection.client.host.asn.organization'
-        ) AS (
-            ip:chararray,
-
-            continent_name:chararray,
-            continent_code:chararray,
-            country_name:chararray,
-            country_iso:chararray,
-            subdivision_name:chararray,
-            subdivision_iso:chararray,
-            city_name:chararray,
-            postal_code:chararray,
-            location_latitude:double,
-            location_longitude:double,
-
-            asn_number:long,
-            asn_organization:chararray
-        )
-
 License
 ===
+    Apache HTTPD & NGINX Access log parsing made easy
+    Copyright (C) 2011-2023 Niels Basjes
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
