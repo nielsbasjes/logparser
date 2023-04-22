@@ -63,12 +63,14 @@ public class ResponseSetCookieDissector extends Dissector {
     public EnumSet<Casts> prepareForDissect(final String inputname, final String outputname) {
         String name = extractFieldName(inputname, outputname);
         switch (name) {
-            case "value":   return STRING_ONLY;
-            case "expires": return STRING_OR_LONG;
-            case "path":    return STRING_ONLY;
-            case "domain":  return STRING_ONLY;
-            case "comment": return STRING_ONLY;
-            default:        return STRING_ONLY;
+            case "expires":
+                return STRING_OR_LONG;
+            case "value":
+            case "path":
+            case "domain":
+            case "comment":
+            default:
+                return STRING_ONLY;
         }
     }
 

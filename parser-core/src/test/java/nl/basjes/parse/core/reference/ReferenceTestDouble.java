@@ -155,11 +155,6 @@ public class ReferenceTestDouble {
 
     public static class InputCreatingDissector extends Dissector {
         @Override
-        public boolean initializeFromSettingsParameter(String settings) {
-            return true;
-        }
-
-        @Override
         public void dissect(Parsable<?> parsable, String inputname) throws DissectionFailure {
             parsable.addDissection(inputname, "BASEINPUT", "something", "42");
         }

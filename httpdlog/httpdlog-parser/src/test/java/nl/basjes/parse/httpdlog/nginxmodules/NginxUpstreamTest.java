@@ -112,7 +112,7 @@ class NginxUpstreamTest {
     }
 
     @Test
-    public void validateAllFields() {
+    void validateAllFields() {
         List<SingleFieldTestcase> fieldsTests = new ArrayList<>();
 
         String addrList = "192.168.1.1:80, 192.168.1.2:80, unix:/tmp/sock : 192.168.10.1:80, 192.168.10.2:80";

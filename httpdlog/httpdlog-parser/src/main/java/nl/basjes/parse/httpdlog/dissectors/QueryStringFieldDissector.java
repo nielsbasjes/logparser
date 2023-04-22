@@ -97,7 +97,7 @@ public class QueryStringFieldDissector extends Dissector {
                 if (wantAllFields || requestedParameters.contains(name)) {
                     try {
                         parsable.addDissection(inputname, "STRING", name,
-                                resilientUrlDecode(value.substring(equalPos + 1, value.length())));
+                                resilientUrlDecode(value.substring(equalPos + 1)));
                     } catch (IllegalArgumentException e) {
                         // This usually means that there was invalid encoding in the line
                         throw new DissectionFailure(e.getMessage());

@@ -30,13 +30,13 @@ import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestLoader {
+class TestLoader {
 
     private PigServer createPigServerWithLoader() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         pigServer.registerQuery(
             "Clicks = " +
-            "    LOAD '" + getClass().getResource("/access.log").toString() + "' " +
+            "    LOAD '" + getClass().getResource("/access.log") + "' " +
             "    USING nl.basjes.pig.input.apachehttpdlog.Loader(" +
             "            '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"'," +
             "            'IP:connection.client.host'," +
@@ -52,7 +52,7 @@ public class TestLoader {
             "            'STRING:request.firstline.uri.query.FOO'," +
             "            'HTTP.USERAGENT:request.user-agent'" +
             "            )" +
-            "" +
+
             "         AS (" +
             "            ConnectionClientHost:chararray," +
             "            Hour:long," +

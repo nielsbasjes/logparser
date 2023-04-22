@@ -29,14 +29,14 @@ import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestLoadMultiFormat {
+class TestLoadMultiFormat {
 
     private static final String LOGFORMAT_1 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
     private static final String LOGFORMAT_2 = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"";
     private final String logfile = getClass().getResource("/dual-format-access.log").toString();
 
     @Test
-    public void remappedLoaderTest() throws Exception {
+    void remappedLoaderTest() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 

@@ -97,7 +97,7 @@ public class RequestCookieListDissector extends Dissector {
             } else {
                 String theName = value.substring(0, equalPos).trim().toLowerCase();
                 if (wantAllCookies || requestedCookies.contains(theName)) {
-                    String theValue = value.substring(equalPos + 1, value.length()).trim();
+                    String theValue = value.substring(equalPos + 1).trim();
                     try {
                         parsable.addDissection(inputname, "HTTP.COOKIE", theName,
                                 Utils.resilientUrlDecode(theValue));
