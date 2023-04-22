@@ -1,6 +1,6 @@
 Apache HTTPD & NGINX access log parser
 ======================================
-[![Github actions Build status](https://img.shields.io/github/actions/workflow/status/nielsbasjes/logparser/build.yml?branch=master)](https://github.com/nielsbasjes/logparser/actions)
+[![Github actions Build status](https://img.shields.io/github/actions/workflow/status/nielsbasjes/logparser/build.yml?branch=main)](https://github.com/nielsbasjes/logparser/actions)
 [![Coverage Status](https://img.shields.io/codecov/c/github/nielsbasjes/logparser)](https://app.codecov.io/gh/nielsbasjes/logparser)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Maven Central](https://img.shields.io/maven-central/v/nl.basjes.parse/parser-parent.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22nl.basjes.parse.httpdlog%22)
