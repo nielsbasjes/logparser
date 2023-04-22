@@ -4,7 +4,7 @@ This file is in the 'combined' LogFormat
 
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
 
-Although small (3456 lines) this is usefull to do testing on parsing and aggregating the data.
+Although small (3456 lines) this is useful to do testing on parsing and aggregating the data.
 
 All of these ips have accessed the /join_form URL.
 Although it exists this URL is nowhere advertised.
@@ -13,7 +13,7 @@ No normal visitor knows this. Not even google knows this.
 So the only people who 'know' this are hackers trying to break in (and fail in this case).
 
     Apache HTTPD & NGINX Access log parsing made easy
-    Copyright (C) 2011-2021 Niels Basjes
+    Copyright (C) 2011-2023 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
