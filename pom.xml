@@ -364,9 +364,8 @@
             <versionTag>^v([0-9]+\.[0-9]+(?:\.[0-9]+)?)$</versionTag>
           </projectVersionPolicyConfig>
 
-          <preparationProfiles>prepareRelease,packageForRelease</preparationProfiles>
           <preparationGoals>clean verify</preparationGoals>
-          <releaseProfiles>packageForRelease,release,deployToSonatype</releaseProfiles>
+          <releaseProfiles>release,deployToSonatype</releaseProfiles>
           <pushChanges>false</pushChanges>
           <remoteTagging>false</remoteTagging>
         </configuration>
