@@ -26,9 +26,10 @@
   <url>https://github.com/nielsbasjes/logparser</url>
 
   <properties>
-    <jdkLevel>1.8</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.release>8</maven.compiler.release>
 
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
@@ -53,7 +54,7 @@
     <flink.scala.version>2.12</flink.scala.version>
 
     <rat.version>0.15</rat.version>
-    <jacoco.version>0.8.9</jacoco.version>
+    <jacoco-maven-plugin.version>0.8.9</jacoco-maven-plugin.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine />
@@ -202,42 +203,6 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
           </plugin>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <version>4.3.0</version>
-            <configuration>
-              <relativeReportDirs>
-                <relativeReportDir>/jacoco-ut</relativeReportDir>
-                <!--<relativeReportDir>/jacoco-it</relativeReportDir>-->
-              </relativeReportDirs>
-            </configuration>
-            <dependencies>
-              <!-- Explicit dep on jaxb-api to avoid problems with
-                JDK9 and later, until a new version of
-                coveralls-maven-plugin is released.
-                See also https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-              <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
-              </dependency>
-
-              <!-- API, java.xml.bind module -->
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>4.0.0</version>
-              </dependency>
-
-              <!-- Runtime, com.sun.xml.bind module -->
-              <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>4.0.2</version>
-              </dependency>
-            </dependencies>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -298,7 +263,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco.version}</version>
+          <version>${jacoco-maven-plugin.version}</version>
           <executions>
             <!--
                 Prepares the property pointing to the JaCoCo runtime agent which
@@ -310,8 +275,6 @@
                 <goal>prepare-agent</goal>
               </goals>
               <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
-                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
                 <!--
                     Sets the name of the property containing the settings
                     for JaCoCo runtime agent.
@@ -329,12 +292,6 @@
               <goals>
                 <goal>report</goal>
               </goals>
-              <configuration>
-                <!-- Sets the path to the file which contains the execution data. -->
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <!-- Sets the output directory for the code coverage report. -->
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -362,8 +319,34 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>11</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>3.0.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>nl.basjes.maven.release</groupId>
+            <artifactId>conventional-commits-version-policy</artifactId>
+            <version>1.0.1</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
 
@@ -373,8 +356,13 @@
           <scmRollbackCommitComment>Release: Rollback the release of @{releaseLabel}</scmRollbackCommitComment>
 
           <tagNameFormat>v@{project.version}</tagNameFormat>
+          <projectVersionPolicyId>ConventionalCommitsVersionPolicy</projectVersionPolicyId>
+          <projectVersionPolicyConfig>
+            <versionTag>^v([0-9]+\.[0-9]+(?:\.[0-9]+)?)$</versionTag>
+          </projectVersionPolicyConfig>
 
-          <preparationGoals>-PprepareRelease -PpackageForRelease clean verify</preparationGoals>
+          <preparationProfiles>prepareRelease,packageForRelease</preparationProfiles>
+          <preparationGoals>clean verify</preparationGoals>
           <releaseProfiles>packageForRelease,release,deployToSonatype</releaseProfiles>
           <pushChanges>false</pushChanges>
           <remoteTagging>false</remoteTagging>
@@ -504,10 +492,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
-        <configuration>
-          <source>${jdkLevel}</source>
-          <target>${jdkLevel}</target>
-        </configuration>
       </plugin>
 
       <plugin>
