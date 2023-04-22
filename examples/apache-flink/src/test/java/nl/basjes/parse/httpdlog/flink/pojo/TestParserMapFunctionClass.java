@@ -46,7 +46,7 @@ class TestParserMapFunctionClass implements Serializable {
     }
 
     @Test
-    public void testClassDefinition() throws Exception {
+    void testClassDefinition() throws Exception {
 
         // set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();

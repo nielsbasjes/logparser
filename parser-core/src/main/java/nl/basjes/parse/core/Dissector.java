@@ -73,7 +73,7 @@ public abstract class Dissector implements Serializable {
      * @return true if everything went right. false otherwise.
      */
     public boolean initializeFromSettingsParameter(String settings) {
-        // Default behaviour is do nothing.
+        // Default behaviour is to do nothing.
         return true;
     }
 
@@ -96,7 +96,7 @@ public abstract class Dissector implements Serializable {
 
     /**
      * What are all possible outputs that can be provided.
-     * @return array of "type:name" values that indicates all the possible outputs. Never a null!
+     * @return List of "type:name" values that indicates all the possible outputs. Never a null!
      */
     public abstract List<String> getPossibleOutput();
 

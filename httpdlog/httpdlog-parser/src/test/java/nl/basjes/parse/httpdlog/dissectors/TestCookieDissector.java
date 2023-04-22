@@ -27,7 +27,7 @@ class TestCookieDissector {
         DissectorTester.create()
             .withDissector("cookies", new RequestCookieListDissector())
 
-            .withInput("" +
+            .withInput(
                 "NBA-0; " +
                 "NBA-1=; " +
                 "NBA-2=1234; ")
@@ -47,7 +47,7 @@ class TestCookieDissector {
             .withDissector("cookies", new ResponseSetCookieListDissector())
             .withDissector(new ResponseSetCookieDissector())
 
-            .withInput("" +
+            .withInput(
                 "NBA-0=, " +
                 "NBA-1=1234, " +
                 "NBA-2=1234; expires=Wed, 01-Jan-2020 00:00:10 GMT, " +

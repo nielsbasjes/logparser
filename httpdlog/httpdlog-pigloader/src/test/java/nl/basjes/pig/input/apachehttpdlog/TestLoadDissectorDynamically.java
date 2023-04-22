@@ -29,13 +29,13 @@ import static org.apache.pig.builtin.mock.Storage.resetData;
 import static org.apache.pig.builtin.mock.Storage.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestLoadDissectorDynamically {
+class TestLoadDissectorDynamically {
 
     private static final String LOGFORMAT = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Cookie}i\"";
     private final String logfile = getClass().getResource("/omniture-access.log").toString();
 
     @Test
-    public void remappedLoaderTest() throws Exception {
+    void remappedLoaderTest() throws Exception {
         PigServer pigServer = new PigServer(ExecType.LOCAL);
         Storage.Data data = resetData(pigServer);
 

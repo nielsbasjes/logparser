@@ -74,9 +74,9 @@ public class NamedTokenParser extends TokenParser {
         // the end is index of the last matching character + 1
 
         Token token = new Token(
-                getRegex(),
-                startOffset + start, end - start,
-                getPrio());
+            getRegex(),
+            startOffset + start, end - start,
+            getPrio());
 
         for (TokenOutputField tokenOutputField: getOutputFields()) {
             token.addOutputField(
