@@ -21,7 +21,7 @@
   <parent>
     <artifactId>httpdlog-examples</artifactId>
     <groupId>nl.basjes.parse.httpdlog.examples</groupId>
-    <version>5.9.0</version>
+    <version>5.9.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>apache-flink</artifactId>

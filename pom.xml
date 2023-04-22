@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.basjes.parse</groupId>
   <artifactId>parser-parent</artifactId>
-  <version>5.9.0</version>
+  <version>5.9.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parser -</name>
   <description>A library to allow easy parsing of Apache HTTPD access logs with Java.</description>
@@ -31,7 +31,7 @@
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.release>8</maven.compiler.release>
 
-    <project.build.outputTimestamp>2023-04-22T15:25:31Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-04-22T15:26:10Z</project.build.outputTimestamp>
 
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
@@ -537,7 +537,7 @@
     <url>https://github.com/nielsbasjes/logparser</url>
     <connection>scm:https://github.com/nielsbasjes/logparser.git</connection>
     <developerConnection>scm:git:file:///${project.basedir}</developerConnection>
-    <tag>v5.9.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
 </project>
