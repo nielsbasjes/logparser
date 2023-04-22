@@ -31,6 +31,8 @@
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.release>8</maven.compiler.release>
 
+    <project.build.outputTimestamp>2023-04-22T13:51:36Z</project.build.outputTimestamp>
+
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
@@ -222,6 +224,7 @@
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.4.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.0.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-assembly-plugin</artifactId><version>3.5.0</version></plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -320,6 +323,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <goals>
