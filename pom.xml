@@ -55,7 +55,7 @@
     <flink.scala.version>2.12</flink.scala.version>
 
     <rat.version>0.15</rat.version>
-    <jacoco-maven-plugin.version>0.8.9</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine />
