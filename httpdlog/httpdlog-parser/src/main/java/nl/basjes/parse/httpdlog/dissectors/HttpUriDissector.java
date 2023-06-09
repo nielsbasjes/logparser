@@ -174,7 +174,7 @@ public class HttpUriDissector extends Dissector {
         // We may have ?x=x&y=y?z=z so we normalize it always
         // to:  ?&x=x&y=y&z=z
         if (firstAmpersand != -1 || firstQuestionMark != -1) {
-            uriString = uriString.replaceAll("\\?", "&");
+            uriString = uriString.replace("?", "&");
             uriString = uriString.replaceFirst("&", "?&");
         }
 
