@@ -1,13 +1,14 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)"
   ],
   "packageRules": [
     {
-      "groupSlug": "all",
-      "packagePatterns": ["*"],
-      "allowedVersions": "!/^(?i).*[-_\\.](Alpha|Beta|RC|M|EA|Snap|snapshot|jboss|atlassian)[-_\\.]?[0-9]?.*$/",
-      "groupName": "all dependencies"
+      "description": "Disable special versions",
+      "matchPackagePatterns": ["*"],
+      "allowedVersions": "!/^(?i).*[-_\\.](Alpha|Beta|RC|M|EA|Snap|snapshot|jboss|atlassian)[-_\\.]?[0-9]?.*$/"
     },
     {
       "description": "Disable major updates for centos",
