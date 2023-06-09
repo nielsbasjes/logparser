@@ -1,6 +1,10 @@
 This is intended as an overview of the major changes
 
-v5.10.0-SNAPSHOT
+v5.11.0-SNAPSHOT
+===
+- ...
+
+v5.10.0
 ===
 - Do not fail on logline specific parse errors, simply not provide the expected dissections.
 
