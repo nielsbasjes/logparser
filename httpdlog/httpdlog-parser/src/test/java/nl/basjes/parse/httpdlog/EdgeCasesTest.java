@@ -42,10 +42,10 @@ class EdgeCasesTest {
             .expect("NUMBER:connection.server.child.processid",     "115052")
             .expect("BYTES:response.bytes",                         "419")
             .expect("STRING:request.status.last",                   "404")
-            .expect("HTTP.USERAGENT:request.user-agent",            (String)null) // Is present AND is null
-            .expect("HTTP.HEADER:request.header.host",              (String)null) // Is present AND is null
-            .expect("HTTP.HEADER:request.header.content-length",    (String)null) // Is present AND is null
-            .expect("HTTP.URI:request.referer",                     (String)null) // Is present AND is null
+            .expectNull("HTTP.USERAGENT:request.user-agent")
+            .expectNull("HTTP.HEADER:request.header.host")
+            .expectNull("HTTP.HEADER:request.header.content-length")
+            .expectNull("HTTP.URI:request.referer")
 
             // This thing should be unparsable
             .expect("HTTP.FIRSTLINE:request.firstline",             "\u0016\u0003\u0001")
