@@ -436,6 +436,7 @@ public class TimeStampDissector extends Dissector {
         try {
             dateTime = parse(fieldValue);
         } catch (DateTimeParseException dtpe) {
+            // If this fails it is not a line specific problem but a configuration problem.
             throw new DissectionFailure(dtpe.getMessage()+
                 "\n          10        20        30        40        50        60        70        80        90        100       110       120" +
                 "\n_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_" +

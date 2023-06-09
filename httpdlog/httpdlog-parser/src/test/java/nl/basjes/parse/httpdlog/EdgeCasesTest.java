@@ -21,6 +21,8 @@ import nl.basjes.parse.core.test.DissectorTester;
 import nl.basjes.parse.core.test.TestRecord;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class EdgeCasesTest {
     @Test
     void testInvalidFirstLine() {
@@ -56,6 +58,38 @@ class EdgeCasesTest {
             .checkExpectations();
     }
 
+    void checkBadUri(String logLine, String expectedUri) {
+        String logFormat = "common";
+        assertDoesNotThrow(() -> {
+            DissectorTester.create()
+                .withParser(new HttpdLoglineParser<>(TestRecord.class, logFormat))
+                .withInput(logLine)
+                .expect("HTTP.URI:request.firstline.uri", expectedUri)
+                .expectAbsentString("HTTP.HOST:request.firstline.uri.host")
+                .expectAbsentString("HTTP.PATH:request.firstline.uri.path")
+                .expectAbsentString("HTTP.PORT:request.firstline.uri.port")
+                .expectAbsentString("HTTP.PROTOCOL:request.firstline.uri.protocol")
+                .expectAbsentString("HTTP.QUERYSTRING:request.firstline.uri.query")
+                .expectAbsentString("HTTP.REF:request.firstline.uri.ref")
+                .expectAbsentString("HTTP.USERINFO:request.firstline.uri.userinfo")
+                .printAllPossibleValues();
+        });
+    }
+
+    @Test
+    void testBadUri() {
+        checkBadUri(
+            "10.10.10.10 - - [28/Feb/2023:16:48:52 +0800] \"GET :@bxss.me::80/rpb.png HTTP/1.1\" 400 1160",
+            ":@bxss.me::80/rpb.png");
+
+        checkBadUri(
+            "10.10.10.10 - - [28/Feb/2023:16:48:51 +0800] \"GET @bxss.me::80/rpb.png HTTP/1.1\" 400 1160",
+            "@bxss.me::80/rpb.png");
+
+        checkBadUri(
+            "10.10.10.10 - - [28/Feb/2023:16:48:51 +0800] \"GET :@bxss.me/rpb.png HTTP/1.1\" 400 1160",
+            ":@bxss.me/rpb.png");
+    }
 
     @Test
     void checkErrorLogging(){

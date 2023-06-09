@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v5.10.0-SNAPSHOT
 ===
-- ...
+- Do not fail on logline specific parse errors, simply not provide the expected dissections.
 
 v5.9.0
 ===
