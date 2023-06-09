@@ -79,6 +79,10 @@
           <groupId>org.apache.commons</groupId>
           <artifactId>commons-lang3</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>commons-collections</groupId>
+          <artifactId>commons-collections</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -101,7 +105,7 @@
 
     <dependency>
       <groupId>org.apache.flink</groupId>
-      <artifactId>flink-clients_${flink.scala.version}</artifactId>
+      <artifactId>flink-clients</artifactId>
       <version>${flink.version}</version>
       <scope>test</scope>
       <exclusions>
@@ -137,7 +141,6 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
-        <version>${avro.version}</version>
         <executions>
           <!--<execution>-->
             <!--<id>schemas</id>-->
