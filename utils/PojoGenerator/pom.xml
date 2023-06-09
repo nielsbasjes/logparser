@@ -21,7 +21,7 @@
   <parent>
     <groupId>nl.basjes.parse.utils</groupId>
     <artifactId>parse-utils</artifactId>
-    <version>5.10.0</version>
+    <version>5.10.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>PojoGenerator</artifactId>
