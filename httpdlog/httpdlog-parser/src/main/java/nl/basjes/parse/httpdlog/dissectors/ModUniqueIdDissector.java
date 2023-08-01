@@ -34,7 +34,7 @@ import static nl.basjes.parse.core.Casts.STRING_OR_LONG;
 
 /**
  * The documentation of mod_unique_id clearly states:
- * http://httpd.apache.org/docs/current/mod/mod_unique_id.html
+ * https://httpd.apache.org/docs/current/mod/mod_unique_id.html
  * ... it should be emphasized that applications should not dissect the encoding. ...
  * Applications should treat the entire encoded UNIQUE_ID as an opaque token,
  * which can be compared against other UNIQUE_IDs for equality only.
@@ -110,30 +110,30 @@ public class ModUniqueIdDissector extends Dissector {
             return; // Nothing to do here
         }
 
-        UniqueIdRec record = decode(fieldValue);
-        if (record == null) {
+        UniqueIdRec uniqueIdRec = decode(fieldValue);
+        if (uniqueIdRec == null) {
             return;
         }
 
         if (wantTime) {
-            parsable.addDissection(inputname, "TIME.EPOCH",   "epoch",       record.timestamp);
+            parsable.addDissection(inputname, "TIME.EPOCH",   "epoch",       uniqueIdRec.timestamp);
         }
         if (wantIp) {
-            parsable.addDissection(inputname, "IP",           "ip",          record.ipaddrStr);
+            parsable.addDissection(inputname, "IP",           "ip",          uniqueIdRec.ipaddrStr);
         }
         if (wantProcessId) {
-            parsable.addDissection(inputname, "PROCESSID",    "processid",   record.pid);
+            parsable.addDissection(inputname, "PROCESSID",    "processid",   uniqueIdRec.pid);
         }
         if (wantCounter) {
-            parsable.addDissection(inputname, "COUNTER",      "counter",     record.counter);
+            parsable.addDissection(inputname, "COUNTER",      "counter",     uniqueIdRec.counter);
         }
         if (wantThreadIndex) {
-            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", record.threadIndex);
+            parsable.addDissection(inputname, "THREAD_INDEX", "threadindex", uniqueIdRec.threadIndex);
         }
     }
     // --------------------------------------------
 
-    private static class UniqueIdRec {
+    private static final class UniqueIdRec {
         long timestamp;
         long ipaddr;
         String ipaddrStr;

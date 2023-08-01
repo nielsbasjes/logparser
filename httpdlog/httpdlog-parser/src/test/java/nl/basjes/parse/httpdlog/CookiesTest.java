@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CookiesTest {
 
-    private static class EmptyTestRecord {
+    private static final class EmptyTestRecord {
     }
 
     public static class TestRecord {
