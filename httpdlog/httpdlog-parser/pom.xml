@@ -194,10 +194,42 @@
         <artifactId>maven-shade-plugin</artifactId>
         <configuration>
           <minimizeJar>true</minimizeJar>
+          <filters>
+            <filter>
+              <artifact>org.antlr:antlr4-runtime</artifact>
+              <excludes>
+                <exclude>META-INF/services/**</exclude>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+              </excludes>
+            </filter>
+            <filter>
+              <artifact>org.apache.commons:commons-text</artifact>
+              <excludes>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+                <!-- If not excluded shading overwrites the module-info.class for Yauaa -->
+                <exclude>META-INF/versions/9/module-info.class</exclude>
+              </excludes>
+            </filter>
+            <filter>
+              <!-- Pulled in as a dependency for commons-text -->
+              <artifact>org.apache.commons:commons-lang3</artifact>
+              <excludes>
+                <exclude>META-INF/MANIFEST.MF</exclude>
+              </excludes>
+            </filter>
+          </filters>
           <relocations>
             <relocation>
               <pattern>org.antlr</pattern>
-              <shadedPattern>nl.basjes.parse.httpdlog.shaded.org.antlr</shadedPattern>
+              <shadedPattern>${project.groupId}.${project.artifactId}.shaded.org.antlr</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>org.apache.commons.text</pattern>
+              <shadedPattern>${project.groupId}.${project.artifactId}.shaded.org.apache.commons.text</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>org.apache.commons.lang3</pattern>
+              <shadedPattern>${project.groupId}.${project.artifactId}.shaded.org.apache.commons.lang3</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
@@ -213,6 +245,10 @@
               <artifactSet>
                 <includes>
                   <include>org.antlr:antlr4-runtime</include>
+                  <!-- These are shaded in because of backward compatibility problems when using logparser -->
+                  <!-- in an environment which has already loaded an older version of either of these.     -->
+                  <include>org.apache.commons:commons-text</include>
+                  <include>org.apache.commons:commons-lang3</include>
                 </includes>
               </artifactSet>
             </configuration>
