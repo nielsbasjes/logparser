@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM perl:5.38.0-buster
+FROM perl:5.38.2-buster
 
 RUN cpan File::Slurper
 RUN cpan Cpanel::JSON::XS
