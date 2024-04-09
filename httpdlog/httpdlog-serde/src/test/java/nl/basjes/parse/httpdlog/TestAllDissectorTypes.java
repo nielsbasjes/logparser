@@ -19,7 +19,7 @@ package nl.basjes.parse.httpdlog;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
-import org.apache.hadoop.hive.serde2.AbstractDeserializer;
+import org.apache.hadoop.hive.serde2.AbstractSerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
@@ -36,26 +36,10 @@ public class TestAllDissectorTypes {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestAllDissectorTypes.class);
 
-    /**
-    * Returns the union of table and partition properties,
-    * with partition properties taking precedence.
-    * @param tblProps table properties
-    * @param partProps partitioning properties
-    * @return the overlayed properties
-    */
-    private static Properties createOverlayedProperties(Properties tblProps, Properties partProps) {
-        Properties props = new Properties();
-        props.putAll(tblProps);
-        if (partProps != null) {
-            props.putAll(partProps);
-        }
-        return props;
-    }
-
     @Test
     void testAllDissectorOutputTypes() throws Throwable {
         // Create the SerDe
-        AbstractDeserializer serDe = getTestSerDe();
+        AbstractSerDe serDe = getTestSerDe();
 
         // Data
         Text t = new Text("Doesn't matter");
@@ -96,7 +80,7 @@ public class TestAllDissectorTypes {
         assertEquals(42D,             rowArray.get(++index)); // double_double
     }
 
-    private AbstractDeserializer getTestSerDe() throws SerDeException {
+    private AbstractSerDe getTestSerDe() throws SerDeException {
         // Create the SerDe
         Properties schema = new Properties();
         schema.setProperty(serdeConstants.LIST_COLUMNS,
@@ -163,8 +147,8 @@ public class TestAllDissectorTypes {
         schema.setProperty("field:double_long",    "DOUBLE:double");
         schema.setProperty("field:double_double",  "DOUBLE:double");
 
-        AbstractDeserializer serDe = new ApacheHttpdlogDeserializer();
-        serDe.initialize(new Configuration(), createOverlayedProperties(schema, null));
+        AbstractSerDe serDe = new ApacheHttpdlogDeserializer();
+        serDe.initialize(new Configuration(), schema, null);
         return serDe;
     }
 

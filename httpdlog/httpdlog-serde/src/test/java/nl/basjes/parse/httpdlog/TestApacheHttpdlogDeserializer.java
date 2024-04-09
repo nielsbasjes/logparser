@@ -19,7 +19,7 @@ package nl.basjes.parse.httpdlog;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
-import org.apache.hadoop.hive.serde2.AbstractDeserializer;
+import org.apache.hadoop.hive.serde2.AbstractSerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
@@ -38,22 +38,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 class TestApacheHttpdlogDeserializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestApacheHttpdlogDeserializer.class);
-
-    /**
-    * Returns the union of table and partition properties,
-    * with partition properties taking precedence.
-    * @param tblProps table properties
-    * @param partProps partitioning properties
-    * @return the overlayed properties
-    */
-    private static Properties createOverlayedProperties(Properties tblProps, Properties partProps) {
-        Properties props = new Properties();
-        props.putAll(tblProps);
-        if (partProps != null) {
-            props.putAll(partProps);
-        }
-        return props;
-    }
 
     private final String logformat = "%h %a %A %l %u %t \"%r\" " +
         "%>s %b %p \"%q\" \"%{Referer}i\" %D \"%{User-agent}i\" " +
@@ -75,7 +59,7 @@ class TestApacheHttpdlogDeserializer {
     @Test
     void testBasicParse() throws Throwable {
         // Create the SerDe
-        AbstractDeserializer serDe = getTestSerDe();
+        AbstractSerDe serDe = getTestSerDe();
 
         // Data
         Text t = new Text(testLogLine);
@@ -97,7 +81,7 @@ class TestApacheHttpdlogDeserializer {
 
     @Test
     void testHighFailRatio1() throws Throwable {
-        AbstractDeserializer serDe = getTestSerDe();
+        AbstractSerDe serDe = getTestSerDe();
 
         // Data
         Text goodLine = new Text(testLogLine);
@@ -127,7 +111,7 @@ class TestApacheHttpdlogDeserializer {
         });
     }
 
-    private AbstractDeserializer getTestSerDe() throws SerDeException {
+    private AbstractSerDe getTestSerDe() throws SerDeException {
         // Create the SerDe
         Properties schema = new Properties();
         schema.setProperty(serdeConstants.LIST_COLUMNS,
@@ -144,8 +128,8 @@ class TestApacheHttpdlogDeserializer {
         schema.setProperty("field:screenWidth",   "SCREENWIDTH:request.firstline.uri.query.s.width");
         schema.setProperty("field:screenHeight",  "SCREENHEIGHT:request.firstline.uri.query.s.height");
 
-        AbstractDeserializer serDe = new ApacheHttpdlogDeserializer();
-        serDe.initialize(new Configuration(), createOverlayedProperties(schema, null));
+        AbstractSerDe serDe = new ApacheHttpdlogDeserializer();
+        serDe.initialize(new Configuration(), schema, null);
         return serDe;
     }
 

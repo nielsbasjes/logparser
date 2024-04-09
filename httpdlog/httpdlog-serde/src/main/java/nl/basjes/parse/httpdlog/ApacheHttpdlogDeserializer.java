@@ -26,7 +26,7 @@ import nl.basjes.parse.core.exceptions.InvalidDissectorException;
 import nl.basjes.parse.core.exceptions.MissingDissectorsException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
-import org.apache.hadoop.hive.serde2.AbstractDeserializer;
+import org.apache.hadoop.hive.serde2.AbstractSerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.SerDeStats;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
@@ -101,7 +101,7 @@ import static org.apache.hadoop.hive.serde.serdeConstants.STRING_TYPE_NAME;
 //    RegexSerDe.INPUT_REGEX, RegexSerDe.OUTPUT_FORMAT_STRING,
 //    RegexSerDe.INPUT_REGEX_CASE_SENSITIVE
 //})
-public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
+public class ApacheHttpdlogDeserializer extends AbstractSerDe {
     private static final Logger      LOG = LoggerFactory.getLogger(ApacheHttpdlogDeserializer.class);
     private static final String      FIELD = "field:";
 
@@ -134,19 +134,18 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
     private final List<ColumnToGetterMapping> columnToGetterMappings = new ArrayList<>();
 
     @Override
-    public void initialize(Configuration conf, Properties props)
-        throws SerDeException {
+    public void initialize(Configuration conf, Properties tableProperties, Properties partitionProperties) throws SerDeException {
 
         boolean usable = true;
         linesInput = 0;
         linesBad   = 0;
 
-        String logformat = props.getProperty("logformat");
+        String logformat = tableProperties.getProperty("logformat");
 
         Map<String, Set<String>> typeRemappings = new HashMap<>();
         List<Dissector> additionalDissectors = new ArrayList<>();
 
-        for (Map.Entry<Object, Object> property: props.entrySet()){
+        for (Map.Entry<Object, Object> property: tableProperties.entrySet()){
             String key = (String)property.getKey();
 
             if (key.startsWith(MAP_FIELD)) {
@@ -192,8 +191,8 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
 //        List<String>            fieldList;
         int                     numColumns;
 
-        String columnNameProperty  = props.getProperty(serdeConstants.LIST_COLUMNS);
-        String columnTypeProperty  = props.getProperty(serdeConstants.LIST_COLUMN_TYPES);
+        String columnNameProperty  = tableProperties.getProperty(serdeConstants.LIST_COLUMNS);
+        String columnTypeProperty  = tableProperties.getProperty(serdeConstants.LIST_COLUMN_TYPES);
         List<String> columnNames   = Arrays.asList(columnNameProperty.split(","));
         List<TypeInfo> columnTypes = TypeInfoUtils.getTypeInfosFromTypeString(columnTypeProperty);
         assert columnNames.size() == columnTypes.size();
@@ -211,7 +210,7 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
                 String columnName = columnNames.get(columnNr);
                 TypeInfo columnType = columnTypes.get(columnNr);
 
-                String fieldValue = props.getProperty(FIELD + columnName);
+                String fieldValue = tableProperties.getProperty(FIELD + columnName);
 
                 if (fieldValue == null) {
                     LOG.error("MUST have Field value for column \"{}\".", columnName);
@@ -313,6 +312,11 @@ public class ApacheHttpdlogDeserializer extends AbstractDeserializer {
         }
 
         return row;
+    }
+
+    @Override
+    public Class<? extends Writable> getSerializedClass() {
+        return null; // This is NOT a Serializer, ONLY a Deserializer!
     }
 
     @Override
