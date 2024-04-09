@@ -86,7 +86,7 @@ public class QueryStringFieldDissector extends Dissector {
         for (String value : allValues) {
             int equalPos = value.indexOf('=');
             if (equalPos == -1) {
-                if (!"".equals(value)) {
+                if (!value.isEmpty()) {
                     String name = value.toLowerCase();
                     if (wantAllFields || requestedParameters.contains(name)) {
                         parsable.addDissection(inputname, "STRING", name, "");
