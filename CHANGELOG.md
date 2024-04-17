@@ -1,6 +1,10 @@
 This is intended as an overview of the major changes
 
-v5.11.0-SNAPSHOT
+v5.12.0-SNAPSHOT
+===
+- ...
+
+v5.11.0
 ===
 - Update Serde to Hive 4.0.0
 
