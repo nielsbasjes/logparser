@@ -30,7 +30,7 @@
 
   <properties>
     <antlr.version>4.13.2</antlr.version>
-    <jackson.version>2.18.0</jackson.version>
+    <jackson.version>2.18.1</jackson.version>
   </properties>
 
   <dependencies>
