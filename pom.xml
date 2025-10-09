@@ -39,7 +39,7 @@
     <depencency-convergence.phase>validate</depencency-convergence.phase>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
-    <checkstyle.version>11.1.0</checkstyle.version>
+    <checkstyle.version>12.0.0</checkstyle.version>
 
     <lombok.version>1.18.28</lombok.version>
     <slf4j.version>2.0.17</slf4j.version>
