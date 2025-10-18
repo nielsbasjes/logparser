@@ -53,7 +53,7 @@
     <beam.version>2.48.0</beam.version>
     <flink.version>1.17.1</flink.version>
 
-    <rat.version>0.16.1</rat.version>
+    <rat.version>0.17</rat.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
