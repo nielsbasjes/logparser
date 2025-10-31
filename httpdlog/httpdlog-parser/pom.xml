@@ -30,7 +30,7 @@
 
   <properties>
     <antlr.version>4.13.2</antlr.version>
-    <jackson.version>2.20.0</jackson.version>
+    <jackson.version>2.20.1</jackson.version>
     <!-- Now decoupled ... -->
     <jackson-annotations.version>2.20</jackson-annotations.version>
   </properties>
