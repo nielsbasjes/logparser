@@ -454,31 +454,31 @@
         <configuration>
           <consoleOutput>true</consoleOutput>
           <excludeSubProjects>false</excludeSubProjects>
-          <excludes>
+          <inputExcludes>
             <!-- Version control files -->
-            <exclude>**/.git/**</exclude>
-            <exclude>**/.gitignore</exclude>
+            <inputExclude>**/.git/**</inputExclude>
+            <inputExclude>**/.gitignore</inputExclude>
             <!-- File that cannot be polluted -->
-            <exclude>**/.github/FUNDING.yml</exclude>
+            <inputExclude>**/.github/FUNDING.yml</inputExclude>
             <!-- IDE settings and files -->
-            <exclude>**/.classpath</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.idea/**</exclude>
-            <exclude>**/*.iml</exclude>
-            <exclude>**/*.json</exclude>
+            <inputExclude>**/.classpath</inputExclude>
+            <inputExclude>**/.project</inputExclude>
+            <inputExclude>**/.settings/**</inputExclude>
+            <inputExclude>**/.idea/**</inputExclude>
+            <inputExclude>**/*.iml</inputExclude>
+            <inputExclude>**/*.json</inputExclude>
             <!-- Test and demo input files -->
-            <exclude>**/src/test/resources/*.log</exclude>
-            <exclude>**/demolog/*.log</exclude>
-            <exclude>GeoIP2-TestData/**</exclude>
+            <inputExclude>**/src/test/resources/*.log</inputExclude>
+            <inputExclude>**/demolog/*.log</inputExclude>
+            <inputExclude>GeoIP2-TestData/**</inputExclude>
             <!-- File generated during build -->
-            <exclude>**/target/**</exclude>
-            <exclude>**/dependency-reduced-pom.xml</exclude>
-            <exclude>docker/_m2/**</exclude>
+            <inputExclude>**/target/**</inputExclude>
+            <inputExclude>**/dependency-reduced-pom.xml</inputExclude>
+            <inputExclude>docker/_m2/**</inputExclude>
             <!-- Documentation and website config -->
-            <exclude>**/CNAME</exclude>
-            <exclude>**/_config.yml</exclude>
-          </excludes>
+            <inputExclude>**/CNAME</inputExclude>
+            <inputExclude>**/_config.yml</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
 
