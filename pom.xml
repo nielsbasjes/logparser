@@ -178,23 +178,39 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
+                <configuration>
+                  <!-- TODO: Remove workaround for issue https://github.com/apache/maven-javadoc-plugin/issues/1244 when fixed -->
+                  <disableNoFonts>true</disableNoFonts>
+                </configuration>
               </execution>
             </executions>
           </plugin>
 
+          <!-- https://central.sonatype.org/publish/publish-portal-maven/ -->
           <plugin>
-            <!-- explicitly define maven-deploy-plugin after other to force exec order -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy</goal>
-                </goals>
-              </execution>
-            </executions>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.9.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <deploymentName>Logparser ${project.version}</deploymentName>
+              <!--              <autoPublish>true</autoPublish>-->
+              <!--              <waitUntil>published</waitUntil>-->
+              <waitUntil>validated</waitUntil>
+              <excludeArtifacts>
+                <!-- Devtools -->
+                <excludeArtifact>devtools</excludeArtifact>
+                <excludeArtifact>parse-utils</excludeArtifact>
+                <excludeArtifact>PojoGenerator</excludeArtifact>
+                <!-- Examples -->
+                <excludeArtifact>httpdlog-examples</excludeArtifact>
+                <excludeArtifact>java-pojo</excludeArtifact>
+                <excludeArtifact>apache-hadoop-mapreduce</excludeArtifact>
+                <excludeArtifact>apache-flink</excludeArtifact>
+                <excludeArtifact>apache-beam</excludeArtifact>
+              </excludeArtifacts>
+            </configuration>
           </plugin>
 
         </plugins>

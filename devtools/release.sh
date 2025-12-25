@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Apache HTTPD & NGINX Access log parsing made easy
-# Copyright (C) 2011-2023 Niels Basjes
+# Copyright (C) 2011-2025 Niels Basjes
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -97,11 +97,14 @@ else
 fi
 
 # ----------------------------------------------------------------------------------------------------
-## Update the top of the CHANGELOG.md and website frontpage
-vim CHANGELOG.md README*md
-git commit -m"docs: Updated CHANGELOG and website before release" CHANGELOG.md README*md
+# Forcing a manual gpg signing action to ensure the password is known
+(
+  cd /tmp || die "Unable to enter /tmp"
+  echo x > ReleaseProcess-$$.txt
+  gpg --clearsign ReleaseProcess-$$.txt
+  rm ReleaseProcess-$$.txt ReleaseProcess-$$.txt.asc
+)
 
-# ----------------------------------------------------------------------------------------------------
 info "GPG workaround: Starting"
 runGpgSignerInBackGround(){
   while : ; do date ; echo "test" | gpg --clearsign ; sleep 10s ; done
@@ -138,8 +141,8 @@ fi
 # Check if build for this tag is reproducible
 git checkout "$(git describe --abbrev=0)"
 # ----------------------------------------------------------------------------------------------------
-info "Publishing for reproduction check to Local reproduceTest Repo"
-mvn clean install
+info "Publishing for reproduction check to Local repo"
+mvn clean install -PpackageForRelease -PskipQuality
 reproCheckPublishStatus=$?
 if [ ${reproCheckPublishStatus} -ne 0 ];
 then
@@ -180,8 +183,11 @@ fi
 #
 # Now check SONATYPE
 #
-info "Now verify Sonatype"
-warn "Press any key abort or 'c' to continue"
+RELEASEVERSION=$(git describe --abbrev=0| sed 's/^v//')
+
+info "Now verify Sonatype to release version ${RELEASEVERSION}"
+info "Go to https://central.sonatype.com/publishing/deployments"
+warn "Press any key abort or 'c' to continue and update the website"
 read -n 1 k <&1
 if [[ $k = c ]] ;
 then
@@ -190,6 +196,7 @@ else
   die "Aborting, nothing was pushed."
 fi
 
+# ----------------------------------------------------------------------------------------------------
 warn "Now go and manually push it all"
 
 # ----------------------------------------------------------------------------------------------------
