@@ -57,7 +57,7 @@ public abstract class SimpleDissector extends Dissector {
 
     @Override
     public List<String> getPossibleOutput() {
-        return new ArrayList<>(outputTypes.keySet());
+        return new ArrayList<>(outputTypes.keySet().stream().sorted().toList());
     }
 
     @Override

@@ -48,7 +48,7 @@ public class TestBadAPIUsage {
     void testDissectorString(){
         assertEquals(
             "{ BarDissector : BARINPUT --> " +
-                "[LONG:barlong, FLOAT:barfloat, STRING:barstring, INT:barint, DOUBLE:bardouble, ANY:barany] }",
+                "[ANY:barany, DOUBLE:bardouble, FLOAT:barfloat, INT:barint, LONG:barlong, STRING:barstring] }",
             new BarDissector().toString());
     }
 
