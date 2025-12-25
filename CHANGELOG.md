@@ -2,8 +2,8 @@ This is intended as an overview of the major changes
 
 v5.12.0-SNAPSHOT
 ===
-- Updated to need Java 17
 - Updated to need Java 21
+- Update Serde to Hive 4.2.0
 - GeoIP update no longer supports the "metrocode"
 
 v5.11.0
