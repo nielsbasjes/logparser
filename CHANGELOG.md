@@ -2,8 +2,8 @@ This is intended as an overview of the major changes
 
 v5.12.0-SNAPSHOT
 ===
-- ...
 - Updated to need Java 17
+- GeoIP update no longer supports the "metrocode"
 
 v5.11.0
 ===

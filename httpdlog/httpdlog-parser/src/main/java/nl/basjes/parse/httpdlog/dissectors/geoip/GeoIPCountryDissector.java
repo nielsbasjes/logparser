@@ -17,7 +17,7 @@
 package nl.basjes.parse.httpdlog.dissectors.geoip;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
-import com.maxmind.geoip2.model.AbstractCountryResponse;
+import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Continent;
 import com.maxmind.geoip2.record.Country;
@@ -120,41 +120,58 @@ public class GeoIPCountryDissector extends AbstractGeoIPDissector {
         } catch (IOException | GeoIp2Exception e) {
             return;
         }
-        extractCountryFields(parsable, inputname, response);
+        extractCountryResponseFields(parsable, inputname, response);
     }
 
-    protected void extractCountryFields(final Parsable<?> parsable, final String inputname, AbstractCountryResponse response)
+    protected void extractCountryResponseFields(final Parsable<?> parsable, final String inputname, CountryResponse response)
         throws DissectionFailure {
         if (wantAnyContinent) {
-            Continent continent = response.getContinent();
-            if (continent != null) {
-                if (wantContinentName) {
-                    parsable.addDissection(inputname, "STRING", "continent.name", continent.getName());
-                }
-                if (wantContinentCode) {
-                    parsable.addDissection(inputname, "STRING", "continent.code", continent.getCode());
-                }
-            }
+            extractContinentFields(parsable, inputname, response.continent());
         }
         if (wantAnyCountry) {
-            Country country = response.getCountry();
-            if (country != null) {
-                if (wantCountryName) {
-                    parsable.addDissection(inputname, "STRING", "country.name", country.getName());
-                }
-                if (wantCountryIso) {
-                    parsable.addDissection(inputname, "STRING", "country.iso", country.getIsoCode());
-                }
+            extractCountryFields(parsable, inputname, response.country());
+        }
+    }
 
-                if (wantCountryGetConfidence) {
-                    parsable.addDissection(inputname, "NUMBER", "country.getconfidence", country.getConfidence());
-                }
-                if (wantCountryIsInEuropeanUnion) {
-                    parsable.addDissection(inputname, "BOOLEAN", "country.isineuropeanunion", country.isInEuropeanUnion() ? 1L : 0L);
-                }
+    // --------------------------------------------
+    // The EXACT same function but now for a CityResponse ...
+    protected void extractCityResponseFields(final Parsable<?> parsable, final String inputname, CityResponse response) throws DissectionFailure {
+        if (wantAnyContinent) {
+            extractContinentFields(parsable, inputname, response.continent());
+        }
+        if (wantAnyCountry) {
+            extractCountryFields(parsable, inputname, response.country());
+        }
+    }
+
+    protected void extractContinentFields(final Parsable<?> parsable, final String inputname, Continent continent)
+        throws DissectionFailure {
+        if (continent != null) {
+            if (wantContinentName) {
+                parsable.addDissection(inputname, "STRING", "continent.name", continent.name());
+            }
+            if (wantContinentCode) {
+                parsable.addDissection(inputname, "STRING", "continent.code", continent.code());
             }
         }
     }
-    // --------------------------------------------
 
+    protected void extractCountryFields(final Parsable<?> parsable, final String inputname, Country country)
+        throws DissectionFailure {
+        if (country != null) {
+            if (wantCountryName) {
+                parsable.addDissection(inputname, "STRING", "country.name", country.name());
+            }
+            if (wantCountryIso) {
+                parsable.addDissection(inputname, "STRING", "country.iso", country.isoCode());
+            }
+
+            if (wantCountryGetConfidence) {
+                parsable.addDissection(inputname, "NUMBER", "country.getconfidence", country.confidence());
+            }
+            if (wantCountryIsInEuropeanUnion) {
+                parsable.addDissection(inputname, "BOOLEAN", "country.isineuropeanunion", country.isInEuropeanUnion() ? 1L : 0L);
+            }
+        }
+    }
 }

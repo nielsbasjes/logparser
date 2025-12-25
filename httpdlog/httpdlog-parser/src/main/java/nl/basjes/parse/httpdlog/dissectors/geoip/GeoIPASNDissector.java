@@ -18,6 +18,7 @@ package nl.basjes.parse.httpdlog.dissectors.geoip;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.AsnResponse;
+import com.maxmind.geoip2.model.IspResponse;
 import nl.basjes.parse.core.Casts;
 import nl.basjes.parse.core.Parsable;
 import nl.basjes.parse.core.exceptions.DissectionFailure;
@@ -89,10 +90,20 @@ public class GeoIPASNDissector extends AbstractGeoIPDissector {
 
     protected void extractAsnFields(final Parsable<?> parsable, final String inputname, AsnResponse response) throws DissectionFailure {
         if (wantAsnNumber) {
-            parsable.addDissection(inputname, "ASN", "asn.number", response.getAutonomousSystemNumber());
+            parsable.addDissection(inputname, "ASN", "asn.number", response.autonomousSystemNumber());
         }
         if (wantAsnOrganization) {
-            parsable.addDissection(inputname, "STRING", "asn.organization", response.getAutonomousSystemOrganization());
+            parsable.addDissection(inputname, "STRING", "asn.organization", response.autonomousSystemOrganization());
+        }
+    }
+
+    // The EXACT same function but now for an IspResponse ...
+    protected void extractAsnFields(final Parsable<?> parsable, final String inputname, IspResponse response) throws DissectionFailure {
+        if (wantAsnNumber) {
+            parsable.addDissection(inputname, "ASN", "asn.number", response.autonomousSystemNumber());
+        }
+        if (wantAsnOrganization) {
+            parsable.addDissection(inputname, "STRING", "asn.organization", response.autonomousSystemOrganization());
         }
     }
     // --------------------------------------------

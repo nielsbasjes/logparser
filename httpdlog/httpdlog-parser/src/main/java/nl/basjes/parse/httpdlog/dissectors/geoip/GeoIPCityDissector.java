@@ -17,7 +17,6 @@
 package nl.basjes.parse.httpdlog.dissectors.geoip;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
-import com.maxmind.geoip2.model.AbstractCityResponse;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.City;
 import com.maxmind.geoip2.record.Location;
@@ -66,7 +65,6 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
         result.add("STRING:location.longitude");
         result.add("STRING:location.timezone");
         result.add("NUMBER:location.accuracyradius");
-        result.add("NUMBER:location.metrocode");
 
         return result;
     }
@@ -87,8 +85,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
     private boolean wantLocationLatitude           = false;
     private boolean wantLocationLongitude          = false;
     private boolean wantLocationTimezone           = false;
-    private boolean wantLocationAccuracyradius     = false;
-    private boolean wantLocationMetrocode          = false;
+    private boolean wantLocationAccuracyRadius     = false;
     private boolean wantAnyLocation                = false;
 
 
@@ -155,7 +152,7 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
                 return STRING_OR_DOUBLE;
 
             case "location.accuracyradius":
-                wantLocationAccuracyradius = true;
+                wantLocationAccuracyRadius = true;
                 wantAnyLocation = true;
                 return STRING_OR_LONG;
 
@@ -163,11 +160,6 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
                 wantLocationTimezone = true;
                 wantAnyLocation = true;
                 return STRING_ONLY;
-
-            case "location.metrocode":
-                wantLocationMetrocode = true;
-                wantAnyLocation = true;
-                return STRING_OR_LONG;
 
             default:
                 return NO_CASTS;
@@ -185,71 +177,75 @@ public class GeoIPCityDissector extends GeoIPCountryDissector {
             return;
         }
 
-        extractCountryFields(parsable, inputname, response);
-        extractCityFields(parsable, inputname, response);
+        extractCityResponseFields(parsable, inputname, response);
     }
 
-    protected void extractCityFields(final Parsable<?> parsable, final String inputname, AbstractCityResponse response) throws DissectionFailure {
+    protected void extractCityResponseFields(final Parsable<?> parsable, final String inputname, CityResponse response) throws DissectionFailure {
+        super.extractCityResponseFields(parsable, inputname, response);
+
         if (wantAnySubdivision) {
-            Subdivision subdivision = response.getMostSpecificSubdivision();
-            if (subdivision != null) {
-                if (wantSubdivisionName) {
-                    parsable.addDissection(inputname, "STRING", "subdivision.name", subdivision.getName());
-                }
-                if (wantSubdivisionIso) {
-                    parsable.addDissection(inputname, "STRING", "subdivision.iso", subdivision.getIsoCode());
-                }
-            }
+            extractSubdivisionFields(parsable, inputname, response.mostSpecificSubdivision());
         }
-
         if (wantAnyCity) {
-            City city = response.getCity();
-            if (city != null) {
-                if (wantCityName) {
-                    parsable.addDissection(inputname, "STRING", "city.name", city.getName());
-                }
-                if (wantCityConfidence) {
-                    parsable.addDissection(inputname, "NUMBER", "city.confidence", city.getConfidence());
-                }
-                if (wantCityGeoNameId) {
-                    parsable.addDissection(inputname, "NUMBER", "city.geonameid", city.getGeoNameId());
-                }
-            }
+            extractCityFields(parsable, inputname, response.city());
         }
-
         if (wantAnyPostal) {
-            Postal postal = response.getPostal();
-            if (postal != null) {
-                if (wantPostalCode) {
-                    parsable.addDissection(inputname, "STRING", "postal.code", postal.getCode());
-                }
-                if (wantPostalConfidence) {
-                    parsable.addDissection(inputname, "NUMBER", "postal.confidence", postal.getConfidence());
-                }
+            extractPostalFields(parsable, inputname, response.postal());
+        }
+        if (wantAnyLocation) {
+            extractLocationFields(parsable, inputname, response.location());
+        }
+    }
+
+    protected void extractSubdivisionFields(final Parsable<?> parsable, final String inputname, Subdivision subdivision) throws DissectionFailure {
+        if (subdivision != null) {
+            if (wantSubdivisionName) {
+                parsable.addDissection(inputname, "STRING", "subdivision.name", subdivision.name());
+            }
+            if (wantSubdivisionIso) {
+                parsable.addDissection(inputname, "STRING", "subdivision.iso", subdivision.isoCode());
             }
         }
+    }
 
-        if (wantAnyLocation) {
-            Location location = response.getLocation();
-            if (location != null) {
-                if (wantLocationLatitude) {
-                    parsable.addDissection(inputname, "STRING", "location.latitude", location.getLatitude());
-                }
-                if (wantLocationLongitude) {
-                    parsable.addDissection(inputname, "STRING", "location.longitude", location.getLongitude());
-                }
-                if (wantLocationTimezone) {
-                    parsable.addDissection(inputname, "STRING", "location.timezone", location.getTimeZone());
-                }
-                if (wantLocationAccuracyradius) {
-                    parsable.addDissection(inputname, "NUMBER", "location.accuracyradius", location.getAccuracyRadius());
-                }
-                if (wantLocationMetrocode) {
-                    Integer value = location.getMetroCode();
-                    if (value != null) {
-                        parsable.addDissection(inputname, "NUMBER", "location.metrocode", value);
-                    }
-                }
+    protected void extractCityFields(final Parsable<?> parsable, final String inputname, City city) throws DissectionFailure {
+        if (city != null) {
+            if (wantCityName) {
+                parsable.addDissection(inputname, "STRING", "city.name", city.name());
+            }
+            if (wantCityConfidence) {
+                parsable.addDissection(inputname, "NUMBER", "city.confidence", city.confidence());
+            }
+            if (wantCityGeoNameId) {
+                parsable.addDissection(inputname, "NUMBER", "city.geonameid", city.geonameId());
+            }
+        }
+    }
+
+    protected void extractPostalFields(final Parsable<?> parsable, final String inputname, Postal postal) throws DissectionFailure {
+        if (postal != null) {
+            if (wantPostalCode) {
+                parsable.addDissection(inputname, "STRING", "postal.code", postal.code());
+            }
+            if (wantPostalConfidence) {
+                parsable.addDissection(inputname, "NUMBER", "postal.confidence", postal.confidence());
+            }
+        }
+    }
+
+    protected void extractLocationFields(final Parsable<?> parsable, final String inputname, Location location) throws DissectionFailure {
+        if (location != null) {
+            if (wantLocationLatitude) {
+                parsable.addDissection(inputname, "STRING", "location.latitude", location.latitude());
+            }
+            if (wantLocationLongitude) {
+                parsable.addDissection(inputname, "STRING", "location.longitude", location.longitude());
+            }
+            if (wantLocationTimezone) {
+                parsable.addDissection(inputname, "STRING", "location.timezone", location.timeZone());
+            }
+            if (wantLocationAccuracyRadius) {
+                parsable.addDissection(inputname, "NUMBER", "location.accuracyradius", location.accuracyRadius());
             }
         }
     }

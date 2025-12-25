@@ -92,10 +92,10 @@ public class GeoIPISPDissector extends GeoIPASNDissector {
 
     protected void extractIspFields(final Parsable<?> parsable, final String inputname, IspResponse response) throws DissectionFailure {
         if (wantIspName) {
-            parsable.addDissection(inputname, "STRING", "isp.name", response.getIsp());
+            parsable.addDissection(inputname, "STRING", "isp.name", response.isp());
         }
         if (wantIspOrganization) {
-            parsable.addDissection(inputname, "STRING", "isp.organization", response.getOrganization());
+            parsable.addDissection(inputname, "STRING", "isp.organization", response.organization());
         }
     }
 
