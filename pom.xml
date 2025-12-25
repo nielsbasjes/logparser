@@ -41,7 +41,7 @@
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
     <checkstyle.version>12.3.0</checkstyle.version>
 
-    <lombok.version>1.18.28</lombok.version>
+    <lombok.version>1.18.42</lombok.version>
     <slf4j.version>2.0.17</slf4j.version>
 
     <junit5.version>6.0.1</junit5.version>
@@ -486,6 +486,16 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.14.1</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+
       </plugin>
 
       <plugin>
