@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v5.12.0-SNAPSHOT
 ===
 - ...
+- Updated to need Java 17
 
 v5.11.0
 ===

@@ -28,13 +28,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.release>8</maven.compiler.release>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.release>17</maven.compiler.release>
 
     <project.build.outputTimestamp>2024-04-17T10:35:44Z</project.build.outputTimestamp>
 
     <!-- In order for everything to work correctly we need atleast this version of maven. -->
-    <maven.minimal.version>3.5.2</maven.minimal.version>
+    <maven.minimal.version>3.9.11</maven.minimal.version>
 
     <depencency-convergence.phase>validate</depencency-convergence.phase>
 
@@ -325,7 +325,7 @@
               <goal>select-jdk-toolchain</goal>
             </goals>
             <configuration>
-              <version>[11,12)</version>
+              <version>[17,18)</version>
             </configuration>
           </execution>
         </executions>
@@ -375,8 +375,8 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[11,)</version>
-                  <message>Although the target JVM is JRE 8, the build MUST be done with JDK 11 or higher.</message>
+                  <version>[17,)</version>
+                  <message>Need Java 17 or newer to build.</message>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <version>[${maven.minimal.version},)</version>
