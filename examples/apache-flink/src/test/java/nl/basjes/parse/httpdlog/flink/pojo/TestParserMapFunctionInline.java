@@ -19,9 +19,11 @@ package nl.basjes.parse.httpdlog.flink.pojo;
 
 import nl.basjes.parse.core.Parser;
 import nl.basjes.parse.httpdlog.flink.TestCase;
+import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.java.DataSet;
-import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -34,16 +36,17 @@ class TestParserMapFunctionInline implements Serializable {
     @Test
     void testInlineDefinition() throws Exception {
         // set up the execution environment
-        final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
+        final StreamExecutionEnvironment env = LocalStreamEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
 
-        DataSet<String> input = env.fromElements(TestCase.getInputLine());
+        DataStream<String> input = env.fromData(TestCase.getInputLine());
 
-        DataSet<MyRecord> filledTestRecords = input
+        DataStream<MyRecord> filledTestRecords = input
             .map(new RichMapFunction<String, MyRecord>() {
                 private Parser<MyRecord> parser;
 
                 @Override
-                public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
+                public void open(OpenContext openContext) throws Exception {
                     parser = TestCase.createTestParser();
                 }
 
@@ -55,10 +58,10 @@ class TestParserMapFunctionInline implements Serializable {
 
         filledTestRecords.print();
 
-        List<MyRecord> result = filledTestRecords.collect();
+        List<MyRecord> result = filledTestRecords.executeAndCollect(100);
 
         assertEquals(1, result.size());
-        assertEquals(new MyRecord().setFullValid(), result.get(0));
+        assertEquals(new MyRecord().setFullValid(), result.getFirst());
     }
 
 }

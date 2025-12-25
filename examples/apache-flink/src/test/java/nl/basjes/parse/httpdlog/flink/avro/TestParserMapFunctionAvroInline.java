@@ -26,9 +26,11 @@ import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.webevents.Click;
 import org.apache.commons.lang3.builder.Builder;
+import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.java.DataSet;
-import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -80,16 +82,17 @@ class TestParserMapFunctionAvroInline implements Serializable {
     @Test
     void testInlineDefinitionAvro() throws Exception {
         // set up the execution environment
-        final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
+        final StreamExecutionEnvironment env = LocalStreamEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
 
-        DataSet<String> input = env.fromElements(TestCase.getInputLine());
+        DataStream<String> input = env.fromData(TestCase.getInputLine());
 
-        DataSet<Click> filledTestRecords = input
+        DataStream<Click> filledTestRecords = input
             .map(new RichMapFunction<String, Click>() {
                 private Parser<ClickSetter> parser;
 
                 @Override
-                public void open(org.apache.flink.configuration.Configuration parameters) {
+                public void open(OpenContext openContext) {
                     parser = new HttpdLoglineParser<>(ClickSetter.class, TestCase.getLogFormat())
                         .addDissector(new ScreenResolutionDissector())
                         .addTypeRemapping("request.firstline.uri.query.g", "HTTP.URI")
@@ -107,10 +110,10 @@ class TestParserMapFunctionAvroInline implements Serializable {
 
         filledTestRecords.print();
 
-        List<Click> result = filledTestRecords.collect();
+        List<Click> result = filledTestRecords.executeAndCollect(100);
 
         assertEquals(1, result.size());
-        assertEquals(ExpectedClick.create(), result.get(0));
+        assertEquals(ExpectedClick.create(), result.getFirst());
     }
 
 }
