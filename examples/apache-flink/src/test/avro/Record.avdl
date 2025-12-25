@@ -17,7 +17,7 @@
 
 @namespace("nl.basjes.parse.webevents")
 
-protocol BeamTestRecord {
+protocol FlinkTestRecord {
 
   record Device {
     long   screenWidth    ; // "SCREENWIDTH:request.firstline.uri.query.s.width"
