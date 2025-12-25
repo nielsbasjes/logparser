@@ -30,8 +30,8 @@
     <!-- The Hadoop dependencies are too hard to make this check pass -->
     <depencency-convergence.phase>none</depencency-convergence.phase>
 
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.release>17</maven.compiler.release>
+     <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.release>21</maven.compiler.release>
   </properties>
 
   <dependencies>
@@ -139,7 +139,7 @@
               <goal>select-jdk-toolchain</goal>
             </goals>
             <configuration>
-              <version>[17,18)</version>
+              <version>[21,22)</version>
             </configuration>
           </execution>
         </executions>

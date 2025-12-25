@@ -28,8 +28,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.release>21</maven.compiler.release>
 
     <project.build.outputTimestamp>2024-04-17T10:35:44Z</project.build.outputTimestamp>
 
@@ -325,7 +325,7 @@
               <goal>select-jdk-toolchain</goal>
             </goals>
             <configuration>
-              <version>[17,18)</version>
+              <version>[21,22)</version>
             </configuration>
           </execution>
         </executions>
@@ -375,8 +375,8 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[17,)</version>
-                  <message>Need Java 17 or newer to build.</message>
+                  <version>[21,)</version>
+                  <message>Need Java 21 or newer to build.</message>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <version>[${maven.minimal.version},)</version>
