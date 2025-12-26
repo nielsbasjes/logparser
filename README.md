@@ -77,8 +77,10 @@ So using it in a Java based project is as simple as adding this to your dependen
     <dependency>
         <groupId>nl.basjes.parse.httpdlog</groupId>
         <artifactId>httpdlog-parser</artifactId>
-        <version>5.11.0</version>
+        <version>6.0.0</version>
     </dependency>
+
+Note that starting with version 6.0.0 Java 21 is needed as a runtime because of several dependencies that have updated to that.
 
 Building
 ===
