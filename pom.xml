@@ -47,7 +47,7 @@
     <junit5.version>6.0.3</junit5.version>
     <hamcrest-core.version>3.0</hamcrest-core.version>
 
-    <hadoop.version>3.4.2</hadoop.version>
+    <hadoop.version>3.4.3</hadoop.version>
     <hive.version>4.2.0</hive.version>
     <avro.version>1.12.1</avro.version>
     <beam.version>2.70.0</beam.version>
