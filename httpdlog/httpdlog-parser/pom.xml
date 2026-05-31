@@ -32,7 +32,7 @@
     <antlr.version>4.13.2</antlr.version>
     <jackson.version>2.21.4</jackson.version>
     <!-- Now decoupled ... -->
-    <jackson-annotations.version>2.21</jackson-annotations.version>
+    <jackson-annotations.version>2.22</jackson-annotations.version>
   </properties>
 
   <dependencies>
