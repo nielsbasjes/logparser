@@ -154,7 +154,7 @@ else
 fi
 
 # ----------------------------------------------------------------------------------------------------
-info "Checking build reproducability ... "
+info "Checking build reproducibility ... "
 mvn clean verify artifact:compare
 reproducibleStatus=$?
 git switch -
