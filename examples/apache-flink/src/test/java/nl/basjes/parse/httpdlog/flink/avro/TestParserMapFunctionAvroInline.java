@@ -25,6 +25,7 @@ import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.httpdlog.flink.TestCase;
 import nl.basjes.parse.webevents.Click;
+import org.apache.avro.util.ClassSecurityValidator;
 import org.apache.commons.lang3.builder.Builder;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.functions.RichMapFunction;
@@ -81,6 +82,19 @@ class TestParserMapFunctionAvroInline implements Serializable {
 
     @Test
     void testInlineDefinitionAvro() throws Exception {
+        // Needed because of a security feature in Apache Avro
+        ClassSecurityValidator.setGlobal(
+            ClassSecurityValidator.builder()
+                .add("nl.basjes.parse.webevents.Browser")
+                .add("nl.basjes.parse.webevents.Click")
+                .add("nl.basjes.parse.webevents.Device")
+                .add("nl.basjes.parse.webevents.FlinkTestRecord")
+                .add("nl.basjes.parse.webevents.Visitor")
+                .add("nl.basjes.parse.webevents.ISP")
+                .add("nl.basjes.parse.webevents.GeoLocation")
+                .build()
+        );
+
         // set up the execution environment
         final StreamExecutionEnvironment env = LocalStreamEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
