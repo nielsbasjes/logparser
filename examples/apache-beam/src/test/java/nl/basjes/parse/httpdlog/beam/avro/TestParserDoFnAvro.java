@@ -28,6 +28,7 @@ import nl.basjes.parse.httpdlog.dissectors.ScreenResolutionDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPCityDissector;
 import nl.basjes.parse.httpdlog.dissectors.geoip.GeoIPISPDissector;
 import nl.basjes.parse.webevents.Click;
+import org.apache.avro.util.ClassSecurityValidator;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
@@ -121,6 +122,19 @@ public class TestParserDoFnAvro implements Serializable {
 
     @Test
     public void testClassDefinitionAvro() {
+        // Needed because of a security feature in Apache Avro
+        ClassSecurityValidator.setGlobal(
+            ClassSecurityValidator.builder()
+                .add("nl.basjes.parse.webevents.Browser")
+                .add("nl.basjes.parse.webevents.Click")
+                .add("nl.basjes.parse.webevents.Device")
+                .add("nl.basjes.parse.webevents.FlinkTestRecord")
+                .add("nl.basjes.parse.webevents.Visitor")
+                .add("nl.basjes.parse.webevents.ISP")
+                .add("nl.basjes.parse.webevents.GeoLocation")
+                .build()
+        );
+
         List<String> logLines = Collections.singletonList(TestCase.getInputLine());
 
         // Apply Create, passing the list and the coder, to create the PCollection.
