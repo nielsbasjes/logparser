@@ -373,7 +373,7 @@
           </projectVersionPolicyConfig>
 
           <preparationGoals>clean verify</preparationGoals>
-          <releaseProfiles>release,deployToSonatype</releaseProfiles>
+          <releaseProfiles>release</releaseProfiles>
           <pushChanges>false</pushChanges>
           <remoteTagging>false</remoteTagging>
         </configuration>
